@@ -68,6 +68,14 @@ them into the main branch.)
 -> Then team members can review the code, leave comments.
 -> After the review process, pull request can be merged into the main branch.
 
+
+/------------------------------------------------------ OTHERS ---------------------------------------------/
+
+List available branches:			git branch
+Switch branch: 					git checkout branch-name
+Pull changes from repo:				git pull
+
+
 /-----------------------------------------------------------------------------------------------------------/
 
 
