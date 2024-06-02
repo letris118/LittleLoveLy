@@ -1,5 +1,6 @@
 package com.vtcorp.store.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "order")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Order {
 
     @Id
@@ -30,17 +32,21 @@ public class Order {
     private Integer totalPoint;
     private String trackingCode;
 
+    @JsonIgnoreProperties({"orders", "vouchers", "productReviews"})
     @ManyToOne
     @JoinColumn(name = "fk_username")
     private User user;
 
+    @JsonIgnoreProperties({"orders", "users"})
     @ManyToOne
     @JoinColumn(name = "fk_voucher_id")
     private Voucher voucher;
 
+    @JsonIgnoreProperties("order")
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
 
+    @JsonIgnoreProperties("order")
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GiftIncluding> giftIncludings;
 
