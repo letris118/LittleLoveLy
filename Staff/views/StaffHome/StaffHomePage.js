@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import './StaffHomePage.css'; 
 
 class StaffHomePage extends React.Component {
