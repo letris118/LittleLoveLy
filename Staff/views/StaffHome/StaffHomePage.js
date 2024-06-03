@@ -23,26 +23,36 @@ class StaffHomePage extends React.Component {
         document.head.appendChild(fontLink);
 
         return (
-            <div>
+            <div>                
                 <header>
+                    {/* logo + store name to return home page */}
                     <div className="store-name">
                         <a href="staffHomePage.html" style={{ color: '#fff' }}>Little Lovely</a>
                     </div>
+
+                    {/* search bar + button*/}
                     <div className="search-bar">
                         <input type="text" placeholder="Tìm kiếm..." />
                         <button type="submit">Tìm</button>
                     </div>
                 </header>
+
+                {/* navigation bar + home page content*/}
                 <div className="content">
+
                     <div className="side-bar">
                         <div className="nav-bar">
                             {navItems.map((item, index) => (
                                 <a key={index} href="" style={{ color: '#222f3e' }}>{item}</a>
                             ))}
+
                             <div className="content-detail"></div>
+
                         </div>
                     </div>
+                    
                 </div>
+
             </div>
         );
     }
