@@ -14,17 +14,17 @@ class StaffHomePage extends React.Component {
             'Đăng Xuất'
         ];
 
+        // Set document title
+        document.title = 'Trang chủ';
+
+        // link gg font
+        const fontLink = document.createElement('link');
+        fontLink.href = 'https://fonts.googleapis.com/css2?family=Sevillana&display=swap';
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
+
         return (
             <div>
-                <Helmet>
-                    <link rel="preconnect" href="https://fonts.googleapis.com" />
-                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-                    <link href="https://fonts.googleapis.com/css2?family=Sevillana&display=swap" rel="stylesheet" />
-                    <meta charset="utf-8" />
-                    <title>Trang chủ</title>
-                    <link rel="stylesheet" href="./css/StaffHomePage.css" />
-                </Helmet>
-
                 <header>
                     <div className="store-name">
                         <a href="staffHomePage.html" style={{ color: '#fff' }}>Little Lovely</a>
