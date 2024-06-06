@@ -1,5 +1,6 @@
 package com.vtcorp.store.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,12 +22,14 @@ public class Article {
     private String content;
     private boolean active;
 
+    @JsonIgnoreProperties({"articles", "orderDetails", "productReviews"})
     @ManyToMany
     @JoinTable(name = "product_featuring",
             joinColumns = @JoinColumn(name = "fk_article_id"),
             inverseJoinColumns = @JoinColumn(name = "fk_product_id"))
     private List<Product> products;
 
+    @JsonIgnoreProperties("article")
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArticleImage> articleImages;
 

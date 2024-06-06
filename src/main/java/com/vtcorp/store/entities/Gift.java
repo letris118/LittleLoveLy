@@ -1,5 +1,6 @@
 package com.vtcorp.store.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class Gift {
     private String imagePath;
     private boolean active;
 
+    @JsonIgnoreProperties("gift")
     @OneToMany(mappedBy = "gift", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GiftIncluding> giftIncludings;
 
