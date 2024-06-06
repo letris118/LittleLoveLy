@@ -26,6 +26,9 @@ export default function Login() {
   return (
     <div className="ftco-section-login">
       <div className="container">
+        <div className="top">
+          <a>⭠ Quay lại trang chủ</a>
+        </div>
         <div className="row justify-content-center">
           <div className="col-md-6 col-lg-4">
             <div className="login-wrap p-0">
@@ -62,7 +65,7 @@ export default function Login() {
                   <button
                     onClick={() => {
                       navigate({
-                        pathname: routes.home,
+                        pathname: routes.homePage,
                       });
                     }}
                     type="submit"
