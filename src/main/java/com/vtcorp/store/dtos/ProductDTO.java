@@ -14,7 +14,7 @@ public class ProductDTO {
     private String name;
     private Double listedPrice;
     private Double sellingPrice;
-    private Integer noSold = 0;
+    private String noSold = "0";
     private Integer stock;
     private boolean active = true;
 
