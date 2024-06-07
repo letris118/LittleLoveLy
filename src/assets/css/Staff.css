@@ -153,7 +153,7 @@ img {
 }
 
 
-/*==================================================== Profile ============================================== */
+/*==================================================== Profile + Update ProfileProfile ============================================== */
 .profile {
     flex-grow: 1;
     padding: 20px;
@@ -190,14 +190,16 @@ img {
     background-color: #f9f9f9; 
 }
 
-.update-info {
+.update-info,
+.update-info-btn {
     text-align: center;
     margin-top: 20px;
 }
 
-.update-info button {
+.update-info button,
+.update-info-btn button {
     padding: 10px 20px;
-    background-color:  #dfe6e9;
+    background-color: #dfe6e9;
     color: black;
     border: none;
     border-radius: 4px;
@@ -206,7 +208,8 @@ img {
     font-family: "Montserrat", sans-serif;
 }
 
-.update-info button:hover {
+.update-info button:hover,
+.update-info-btn button:hover {
     background-color: #b2bec3;
 }
 
