@@ -74,7 +74,9 @@ export default function StaffHomePage() {
 
                         {/* button to update profile*/}
                         <div className="update-info">
-                            <button>Sửa Thông Tin</button>
+                            <Link to={routes.StaffProfileUpdate}>
+                                <button>Chỉnh Sửa Thông Tin</button>
+                            </Link>                          
                         </div>
                     
                     </div>
