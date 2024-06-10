@@ -1,13 +1,13 @@
 package interfaces;
 
+import com.vtcorp.store.dtos.ProductDTO;
 import com.vtcorp.store.entities.Product;
-import com.vtcorp.store.repositories.ProductRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IProductService {
-    public List<Product> getActiveProducts();
-    public Product geProductById(Long id);
-
+    List<Product> getActiveProducts();
+    Product getProductById(Long id);
+    Product saveProduct(ProductDTO productDTO);
+    Product updateProduct(ProductDTO productDTO);
 }

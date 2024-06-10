@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +31,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -46,10 +49,18 @@ public class SecurityConfig {
     }
 
     @Bean
+    public GrantedAuthoritiesMapper authoritiesMapper() {
+        return (authorities) -> authorities.stream()
+                .map(a -> new SimpleGrantedAuthority(a.getAuthority().replace("ROLE_", "")))
+                .collect(Collectors.toList());
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setAuthoritiesMapper(authoritiesMapper());
         return new ProviderManager(authProvider);
     }
 
@@ -61,9 +72,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/register").permitAll()
+                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/api/users/**").hasRole("admin")
+                        .requestMatchers("/api/auth/**").anonymous()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.decoder(jwtDecoder())))
@@ -74,7 +85,8 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -95,7 +107,7 @@ public class SecurityConfig {
         JWKSet jwkSet = new JWKSet(jwk);
 
         // Create an ImmutableJWKSet using the JWKSet. This is a thread-safe, immutable JWK set.
-        ImmutableJWKSet<SecurityContext> immutableJWKSet = new ImmutableJWKSet<SecurityContext>(jwkSet);
+        ImmutableJWKSet<SecurityContext> immutableJWKSet = new ImmutableJWKSet<>(jwkSet);
 
         // Create a NimbusJwtEncoder using the ImmutableJWKSet. This encoder can be used to create JWTs.
         return new NimbusJwtEncoder(immutableJWKSet);

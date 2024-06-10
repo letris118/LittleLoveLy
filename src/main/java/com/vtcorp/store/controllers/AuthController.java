@@ -3,16 +3,15 @@ package com.vtcorp.store.controllers;
 import com.vtcorp.store.dtos.LoginDTO;
 import com.vtcorp.store.dtos.UserDTO;
 import com.vtcorp.store.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/auth")
 public class AuthController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AuthController.class);
 
     private final UserService userService;
 
@@ -21,12 +20,20 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public UserDTO login(@RequestBody LoginDTO loginDTO) {
-        return userService.login(loginDTO);
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+        try {
+            return ResponseEntity.ok(userService.login(loginDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/register")
-    public UserDTO register(@RequestBody UserDTO userDTO) {
-        return userService.saveCustomer(userDTO);
+    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
+        try {
+            return ResponseEntity.ok(userService.saveCustomer(userDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

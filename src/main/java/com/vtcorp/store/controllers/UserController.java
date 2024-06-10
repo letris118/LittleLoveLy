@@ -23,16 +23,20 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<?> getAllUsers() {
+        try {
+            return ResponseEntity.ok(userService.getAllUsers());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{username}")
-    ResponseEntity<User> getUserById(@PathVariable String username) {
-        User user = userService.getUserById(username);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
+    ResponseEntity<?> getUserById(@PathVariable String username) {
+        try {
+            return ResponseEntity.ok(userService.getUserById(username));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return ResponseEntity.ok(user);
     }
 }

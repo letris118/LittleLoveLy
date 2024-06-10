@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,11 +37,13 @@ public class UserService {
     public UserDTO login(LoginDTO loginDTO) {
         try {
             // generate token
+            String username = loginDTO.getUsername();
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    loginDTO.getUsername(), loginDTO.getPassword()));
+                    username, loginDTO.getPassword()));
             String token = tokenService.generateToken(authentication);
+            System.out.println("Role:[" + tokenService.decodeToken(token).getClaims().get("role") + "]");
 
-            User user = userRepository.findById(loginDTO.getUsername()).orElse(null);
+            User user = userRepository.findByUsernameOrMail(username, username).orElse(null);
             UserDTO userDTO = userMapper.toDTO(user);
             userDTO.setToken(token);
             return userDTO;
@@ -51,15 +52,14 @@ public class UserService {
         }
     }
 
-    public UserDTO saveCustomer(UserDTO userDTO) {
+    public User saveCustomer(UserDTO userDTO) {
         if (userRepository.findById(userDTO.getUsername()).isPresent()) {
             throw new IllegalArgumentException("User already exists");
         }
         User user = userMapper.toEntity(userDTO);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRole("customer");
-        userRepository.save(user);
-        return userMapper.toDTO(user);
+        return userRepository.save(user);
     }
 
     public List<User> getAllUsers() {

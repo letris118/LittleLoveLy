@@ -14,12 +14,14 @@ public class ProductDTO {
     private String name;
     private Double listedPrice;
     private Double sellingPrice;
+    private String description;
     private String noSold = "0";
     private Integer stock;
     private boolean active = true;
 
     private long brandId;
     private List<Long> categoryIds;
-    private List<MultipartFile> productImages;
+    private List<Long> imageProductIds;
 
+    private List<MultipartFile> newImageFiles;
 }
