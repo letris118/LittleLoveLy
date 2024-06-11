@@ -4,4 +4,6 @@ export const routes = {
   register: "/register",
   forgotPassword: "/forgotPassword",
   resetPassword: "/resetPassword",
+  products: "/products",
+  productDetail: "/products/:id",
 };

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../assets/css/homePage.css";
 import Header from "../components/Header";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import Footer from "../components/Footer";
 import { toast } from "react-toastify";
+// import { products } from "../services/auth/UsersService";
 
 export default function HomePage() {
+  const [productList, setProductList] = useState([]);
   const navigate = useNavigate();
   // Cái này sẽ dùng cho trang staff member admin "LOGOUT"
   const handleLogout = (e) => {
@@ -15,6 +17,25 @@ export default function HomePage() {
     navigate(routes.login); // chuyển về trang chưa đăng nhập
     toast.success("Đăng xuất thành công");
   };
+
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     try {
+  //       let response = await products();
+  //       console.log(response);
+  //       if (response) {
+  //         setProductList(response);
+  //       } else {
+  //         setProductList([]);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching products:", error);
+  //       toast.error("Không thể tải sản phẩm");
+  //       setProductList([]);
+  //     }
+  //   };
+  //   fetchProducts();
+  // }, []);
 
   return (
     <div>
@@ -106,10 +127,30 @@ export default function HomePage() {
         </div>
 
         <div className="content-detail">
-          <button onClick={handleLogout}>Đăng xuất</button>
+          {/* <button onClick={handleLogout}>Đăng xuất</button> */}
+          <div className="content-display ">
+            <div className="content-row-1">
+              <Link to="">link nè</Link>
+            </div>
+            <div className="content-row-2">2</div>
+            <div className="content-row-3">3</div>
+          </div>
         </div>
       </div>
       <Footer />
     </div>
   );
+}
+
+{
+  /* in ra sản phẩm */
+}
+
+{
+  /* {productList.map((product) => (
+              <div key={product.id}>
+                <div>{product.name}</div>
+                <div>{product.description}</div>
+              </div>
+            ))} */
 }

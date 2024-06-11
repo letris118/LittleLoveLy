@@ -7,4 +7,8 @@ const loginAPI = (username, password) => {
   });
 };
 
-export { loginAPI };
+const products = () => {
+  return instance.get("/products");
+};
+
+export { loginAPI, products };
