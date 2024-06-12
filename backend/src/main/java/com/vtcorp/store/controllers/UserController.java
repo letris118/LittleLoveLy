@@ -1,15 +1,10 @@
 package com.vtcorp.store.controllers;
 
-import com.vtcorp.store.entities.User;
+import com.vtcorp.store.dtos.UserDTO;
 import com.vtcorp.store.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -35,6 +30,20 @@ public class UserController {
     ResponseEntity<?> getUserById(@PathVariable String username) {
         try {
             return ResponseEntity.ok(userService.getUserById(username));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addUser(@RequestBody UserDTO userDTO) {
+        String role = userDTO.getRole();
+        if (role == null || (!role.equals("ROLE_ADMIN") && !role.equals("ROLE_CUSTOMER")
+                && !role.equals("ROLE_STAFF"))) {
+            return ResponseEntity.badRequest().body("Invalid role");
+        }
+        try {
+            return ResponseEntity.ok(userService.addUser(userDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
