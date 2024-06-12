@@ -10,7 +10,6 @@ import com.vtcorp.store.repositories.BrandRepository;
 import com.vtcorp.store.repositories.CategoryRepository;
 import com.vtcorp.store.repositories.ProductImageRepository;
 import com.vtcorp.store.repositories.ProductRepository;
-import interfaces.IProductService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class ProductService implements IProductService {
+public class ProductService {
 
     private static final String UPLOAD_DIR = "src/main/resources/static/images/products";
     private final ProductRepository productRepository;
@@ -45,18 +44,15 @@ public class ProductService implements IProductService {
         this.productImageRepository = productImageRepository;
     }
 
-    @Override
     public List<Product> getActiveProducts() {
         return productRepository.findProductsByActive(true);
     }
 
-    @Override
     public Product getProductById(Long id) {
         return productRepository.getReferenceById(id);
     }
 
     @Transactional
-    @Override
     public Product saveProduct(ProductDTO productDTO) {
         Brand brand = brandRepository.findById(productDTO.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found"));
