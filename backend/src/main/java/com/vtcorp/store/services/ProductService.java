@@ -45,7 +45,7 @@ public class ProductService {
     }
 
     public List<Product> getActiveProducts() {
-        return productRepository.findProductsByActive(true);
+        return productRepository.findByActive(true);
     }
 
     public List<Product> getAllProducts() { return productRepository.findAll(); }

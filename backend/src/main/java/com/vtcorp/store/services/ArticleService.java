@@ -19,6 +19,10 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
+    public List<Article> getActiveArticles() {
+        return articleRepository.findByActive(true);
+    }
+
     public Article getArticleById(Long id) {
         return articleRepository.findById(id).orElse(null);
     }

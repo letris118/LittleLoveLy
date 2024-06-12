@@ -21,6 +21,10 @@ public class VoucherService {
         return voucherRepository.findAll();
     }
 
+    public List<Voucher> getActiveVouchers() {
+        return voucherRepository.findByActive(true);
+    }
+
     public Voucher getVoucherById(Long id) {
         return voucherRepository.findById(id).orElse(null);
     }

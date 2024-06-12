@@ -22,9 +22,14 @@ public class VoucherController {
         this.voucherService = voucherService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Voucher> getAllVouchers() {
         return voucherService.getAllVouchers();
+    }
+
+    @GetMapping
+    public List<Voucher> getActiveVouchers() {
+        return voucherService.getActiveVouchers();
     }
 
     @GetMapping("/{id}")
