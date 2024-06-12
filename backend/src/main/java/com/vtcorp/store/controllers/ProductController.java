@@ -17,9 +17,18 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllProducts() {
+    public ResponseEntity<?> getActiveProducts() {
         try {
             return ResponseEntity.ok(productService.getActiveProducts());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllProducts() {
+        try {
+            return ResponseEntity.ok(productService.getAllProducts());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
