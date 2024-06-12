@@ -20,9 +20,14 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Article> getAllArticles() {
         return articleService.getAllArticles();
+    }
+
+    @GetMapping
+    public List<Article> getActiveArticles() {
+        return articleService.getActiveArticles();
     }
 
     @GetMapping("/{id}")

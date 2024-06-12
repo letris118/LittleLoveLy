@@ -1,5 +1,6 @@
 package com.vtcorp.store.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,6 +18,7 @@ public class Order {
 
     @Id
     private String orderId;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date createdDate;
     private String status;
     private String cusName;

@@ -21,6 +21,10 @@ public class GiftService {
         return giftRepository.findAll();
     }
 
+    public List<Gift> getActiveGifts() {
+        return giftRepository.findByActive(true);
+    }
+
     public Gift getGiftById(Long id) {
         return giftRepository.findById(id).orElse(null);
     }

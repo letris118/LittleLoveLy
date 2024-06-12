@@ -16,19 +16,19 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getActiveProducts() {
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllProducts() {
         try {
-            return ResponseEntity.ok(productService.getActiveProducts());
+            return ResponseEntity.ok(productService.getAllProducts());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllProducts() {
+    @GetMapping
+    public ResponseEntity<?> getActiveProducts() {
         try {
-            return ResponseEntity.ok(productService.getAllProducts());
+            return ResponseEntity.ok(productService.getActiveProducts());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -46,7 +46,7 @@ public class ProductController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addProduct(@ModelAttribute ProductDTO productDTO) {
         try {
-            return ResponseEntity.ok(productService.saveProduct(productDTO));
+            return ResponseEntity.ok(productService.addProduct(productDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

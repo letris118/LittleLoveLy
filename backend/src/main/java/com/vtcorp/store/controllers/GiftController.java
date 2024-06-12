@@ -22,9 +22,14 @@ public class GiftController {
         this.giftService = giftService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Gift> getAllGifts() {
         return giftService.getAllGifts();
+    }
+
+    @GetMapping
+    public List<Gift> getActiveGifts() {
+        return giftService.getActiveGifts();
     }
 
     @GetMapping("/{id}")
