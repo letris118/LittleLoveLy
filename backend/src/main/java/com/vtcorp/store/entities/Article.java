@@ -1,5 +1,6 @@
 package com.vtcorp.store.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,6 +19,7 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long articleId;
     private String title;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date uploadedDate;
     private String content;
     private boolean active;

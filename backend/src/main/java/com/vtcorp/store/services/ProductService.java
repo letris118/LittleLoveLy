@@ -55,7 +55,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product saveProduct(ProductDTO productDTO) {
+    public Product addProduct(ProductDTO productDTO) {
         Brand brand = brandRepository.findById(productDTO.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found"));
         List<Category> categories = categoryRepository.findAllById(productDTO.getCategoryIds());

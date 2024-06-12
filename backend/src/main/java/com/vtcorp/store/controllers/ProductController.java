@@ -46,7 +46,7 @@ public class ProductController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addProduct(@ModelAttribute ProductDTO productDTO) {
         try {
-            return ResponseEntity.ok(productService.saveProduct(productDTO));
+            return ResponseEntity.ok(productService.addProduct(productDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

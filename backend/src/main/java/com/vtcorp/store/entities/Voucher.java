@@ -1,5 +1,6 @@
 package com.vtcorp.store.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +27,7 @@ public class Voucher {
     private Double validMaxDiscount;
     private Double discountPrice;
     private Double validMinPrice;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date expiryDate;
     private boolean active;
 
