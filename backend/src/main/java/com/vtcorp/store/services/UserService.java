@@ -41,7 +41,6 @@ public class UserService {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     username, loginDTO.getPassword()));
             String token = tokenService.generateToken(authentication);
-            System.out.println("Role:[" + tokenService.decodeToken(token).getClaims().get("role") + "]");
 
             User user = userRepository.findByUsernameOrMail(username, username).orElse(null);
             UserDTO userDTO = userMapper.toDTO(user);
@@ -52,13 +51,12 @@ public class UserService {
         }
     }
 
-    public User saveCustomer(UserDTO userDTO) {
+    public User addUser(UserDTO userDTO) {
         if (userRepository.findById(userDTO.getUsername()).isPresent()) {
             throw new IllegalArgumentException("User already exists");
         }
         User user = userMapper.toEntity(userDTO);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setRole("customer");
         return userRepository.save(user);
     }
 

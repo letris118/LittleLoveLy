@@ -2,21 +2,22 @@ package com.vtcorp.store.controllers;
 
 import com.vtcorp.store.dtos.LoginDTO;
 import com.vtcorp.store.dtos.UserDTO;
+import com.vtcorp.store.entities.User;
+import com.vtcorp.store.services.EmailSenderService;
 import com.vtcorp.store.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserService userService;
+    private final EmailSenderService emailSenderService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, EmailSenderService emailSenderService) {
         this.userService = userService;
+        this.emailSenderService = emailSenderService;
     }
 
     @PostMapping("/login")
@@ -31,7 +32,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
         try {
-            return ResponseEntity.ok(userService.saveCustomer(userDTO));
+            userDTO.setRole("ROLE_CUSTOMER");
+            User user = userService.addUser(userDTO);
+            emailSenderService.sendEmail(user.getMail(), "Welcome to our store", "Welcome to our store, " + user.getName());
+            return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
