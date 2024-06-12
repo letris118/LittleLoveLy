@@ -14,11 +14,4 @@ public interface UserMapper {
 
     @Mapping(target = "password", ignore = true)
     User toEntity(UserDTO userDTO);
-
-    default UserDTO userDetailsToUserDTO(UserDetails userDetails) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(userDetails.getUsername());
-        userDTO.setRole(userDetails.getAuthorities().toString());
-        return userDTO;
-    }
 }

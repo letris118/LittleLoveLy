@@ -32,7 +32,7 @@ public class TokenService {
                 .issuedAt(now)
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject(authentication.getName())
-                .claim("role", role)
+                .claim("roles", role)
                 .build();
         // Encode the payload into a JWT string and return it
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
