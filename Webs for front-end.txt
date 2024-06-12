@@ -1,3 +1,0 @@
-Color: https://flatuicolors.com/
-Font: https://fonts.google.com/
-Icon: https://fontello.com/
