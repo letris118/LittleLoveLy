@@ -64,4 +64,16 @@ public class TokenService {
             throw new IllegalArgumentException("Token is not valid", e);
         }
     }
+
+    public String generateMailChangeToken(String username, String newEmail) {
+        Instant now = Instant.now();
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .subject(username)
+                .claim("newEmail", newEmail)
+                .issuedAt(now)
+                .expiresAt(now.plus(30, ChronoUnit.MINUTES))
+                .build();
+        return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
 }

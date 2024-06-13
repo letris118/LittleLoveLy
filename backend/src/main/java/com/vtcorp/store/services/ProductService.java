@@ -48,7 +48,9 @@ public class ProductService {
         return productRepository.findByActive(true);
     }
 
-    public List<Product> getAllProducts() { return productRepository.findAll(); }
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
 
     public Product getProductById(Long id) {
         return productRepository.getReferenceById(id);
@@ -140,7 +142,7 @@ public class ProductService {
         return productImageList;
     }
 
-    public void removeImages(List<ProductImage> images) {
+    private void removeImages(List<ProductImage> images) {
         for (ProductImage image : images) {
             Path imagePath = Paths.get(UPLOAD_DIR, image.getImagePath());
             try {
@@ -149,5 +151,15 @@ public class ProductService {
                 throw new RuntimeException("Failed to delete image", e);
             }
         }
+    }
+
+    public String deactivateProduct(long id) {
+        productRepository.setActivateProduct(false, id);
+        return "Product deactivated";
+    }
+
+    public String activateProduct(long id) {
+        productRepository.setActivateProduct(true, id);
+        return "Product activated";
     }
 }

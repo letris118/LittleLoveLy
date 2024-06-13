@@ -7,12 +7,14 @@ import com.vtcorp.store.dtos.LoginDTO;
 import com.vtcorp.store.entities.User;
 import com.vtcorp.store.mappers.UserMapper;
 import com.vtcorp.store.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,7 +60,7 @@ public class UserService {
     }
 
     public User addUser(UserDTO userDTO) {
-        if (userRepository.findById(userDTO.getUsername()).isPresent()) {
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
             throw new IllegalArgumentException("User already exists");
         }
         User user = userMapper.toEntity(userDTO);
@@ -75,9 +77,8 @@ public class UserService {
     }
 
     public String forgotPassword(ForgotPasswordDTO forgotPasswordDTO) {
-        User user = userRepository.findByMail(forgotPasswordDTO.getMail()).orElse(null);
-        if (user == null) {
-            throw new IllegalArgumentException("User not found");
+        if (!userRepository.existsByMail(forgotPasswordDTO.getMail())) {
+            throw new IllegalArgumentException("Mail not found");
         }
         String token = tokenService.generatePasswordResetToken(forgotPasswordDTO.getMail());
         String content = "<p>Click to recover password: </p>" +
@@ -101,5 +102,38 @@ public class UserService {
         userRepository.save(user);
         emailSenderService.sendEmail(mail, "Password Changed", "Your password has been changed successfully");
         return "Password changed successfully";
+    }
+
+    @Transactional
+    public User updateUser(UserDTO userDTO) {
+        User user = userRepository.findById(userDTO.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userMapper.updateEntity(userDTO, user);
+        return userRepository.save(user);
+    }
+
+    public String updateMail(String username, String newMail) {
+        if (!userRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("User not found");
+        }
+        if (userRepository.existsByMail(newMail)) {
+            throw new IllegalArgumentException("Mail already exists");
+        }
+        String token = tokenService.generateMailChangeToken(username, newMail);
+        String content = "<p>Click to confirm mail change: </p>" +
+                "<a href='http://localhost:3000/confirm-mail?token=" +
+                token + "'>Confirm mail change</a>";
+        emailSenderService.sendEmail(newMail, "Mail change", content);
+        return "Check your email to confirm mail change";
+    }
+
+    public String confirmMailChange(String token) {
+        Jwt jwt = tokenService.validateToken(token);
+        String username = jwt.getSubject();
+        String newEmail = (String) jwt.getClaims().get("newEmail");
+        User user = userRepository.findById(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setMail(newEmail);
+        userRepository.save(user);
+        return "Mail changed successfully";
     }
 }
