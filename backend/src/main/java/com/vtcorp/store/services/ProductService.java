@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 @Service
 public class ProductService {
 
@@ -51,11 +52,12 @@ public class ProductService {
     public List<Product> getAllProducts() { return productRepository.findAll(); }
 
     public Product getProductById(Long id) {
-        return productRepository.getReferenceById(id);
+        return productRepository.findById(id).orElse(null);
     }
 
     @Transactional
     public Product addProduct(ProductDTO productDTO) {
+
         Brand brand = brandRepository.findById(productDTO.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found"));
         List<Category> categories = categoryRepository.findAllById(productDTO.getCategoryIds());
@@ -64,9 +66,9 @@ public class ProductService {
         }
 
         Product product = productMapper.toEntity(productDTO);
+        List<ProductImage> images = handleImages(productDTO.getNewImageFiles(), product);
         product.setBrand(brand);
         product.setCategories(categories);
-        List<ProductImage> images = handleProductImages(productDTO.getNewImageFiles(), product);
         product.setProductImages(images);
         try {
             return productRepository.save(product);
@@ -85,12 +87,12 @@ public class ProductService {
         if (categories.size() != productDTO.getCategoryIds().size()) {
             throw new RuntimeException("One or more categories not found");
         }
-        List<ProductImage> newImages = handleProductImages(productDTO.getNewImageFiles(), product);
+        List<ProductImage> newImages = handleImages(productDTO.getNewImageFiles(), product);
         List<ProductImage> savedImages = product.getProductImages();
         List<ProductImage> imagesToDelete = null;
         if (savedImages != null && !savedImages.isEmpty()) {
             imagesToDelete = new ArrayList<>(savedImages);
-            List<Long> imageToKeepIds = productDTO.getImageProductIds();
+            List<Long> imageToKeepIds = productDTO.getImageIds();
             if (imageToKeepIds != null && !imageToKeepIds.isEmpty()) {
                 List<ProductImage> imagesToKeep = productImageRepository.findAllById(imageToKeepIds);
                 imagesToDelete.removeAll(imagesToKeep);
@@ -113,7 +115,7 @@ public class ProductService {
         return product;
     }
 
-    private List<ProductImage> handleProductImages(List<MultipartFile> imageFiles, Product product) {
+    private List<ProductImage> handleImages(List<MultipartFile> imageFiles, Product product) {
         List<ProductImage> productImageList = new ArrayList<>();
         if (imageFiles != null) {
             Path uploadPath = Paths.get(UPLOAD_DIR);
@@ -138,9 +140,10 @@ public class ProductService {
             }
         }
         return productImageList;
+
     }
 
-    public void removeImages(List<ProductImage> images) {
+    private void removeImages(List<ProductImage> images) {
         for (ProductImage image : images) {
             Path imagePath = Paths.get(UPLOAD_DIR, image.getImagePath());
             try {
@@ -150,4 +153,5 @@ public class ProductService {
             }
         }
     }
+
 }
