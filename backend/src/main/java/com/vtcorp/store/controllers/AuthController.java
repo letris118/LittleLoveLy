@@ -1,9 +1,9 @@
 package com.vtcorp.store.controllers;
 
+import com.vtcorp.store.dtos.ChangePasswordDTO;
+import com.vtcorp.store.dtos.ForgotPasswordDTO;
 import com.vtcorp.store.dtos.LoginDTO;
 import com.vtcorp.store.dtos.UserDTO;
-import com.vtcorp.store.entities.User;
-import com.vtcorp.store.services.EmailSenderService;
 import com.vtcorp.store.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserService userService;
-    private final EmailSenderService emailSenderService;
 
-    public AuthController(UserService userService, EmailSenderService emailSenderService) {
+    public AuthController(UserService userService) {
         this.userService = userService;
-        this.emailSenderService = emailSenderService;
     }
 
     @PostMapping("/login")
@@ -32,10 +30,25 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
         try {
-            userDTO.setRole("ROLE_CUSTOMER");
-            User user = userService.addUser(userDTO);
-            emailSenderService.sendEmail(user.getMail(), "Welcome to our store", "Welcome to our store, " + user.getName());
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(userService.register(userDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+        try {
+            return ResponseEntity.ok(userService.forgotPassword(forgotPasswordDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+        try {
+            return ResponseEntity.ok(userService.changePassword(changePasswordDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

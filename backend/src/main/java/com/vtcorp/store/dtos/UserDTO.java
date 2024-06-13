@@ -16,8 +16,5 @@ public class UserDTO {
     private String district;
     private String ward;
     private String street;
-    private Integer point;
     private String role;
-    private String token;
-
 }
