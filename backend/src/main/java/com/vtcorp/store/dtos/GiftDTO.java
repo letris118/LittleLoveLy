@@ -12,6 +12,6 @@ public class GiftDTO {
     private String name;
     private Integer point;
     private Integer stock;
-    private MultipartFile image;
+    private MultipartFile newImageFile;
     private boolean active = true;
 }

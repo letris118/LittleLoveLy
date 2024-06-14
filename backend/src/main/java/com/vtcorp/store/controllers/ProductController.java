@@ -71,7 +71,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Deactivate product by ID")
-    @PutMapping("/{id}")
+    @PutMapping("/deactivate/{id}")
     public ResponseEntity<?> deactivateProduct(@PathVariable long id) {
         try {
             return ResponseEntity.ok(productService.deactivateProduct(id));
