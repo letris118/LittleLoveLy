@@ -4,6 +4,7 @@ import com.vtcorp.store.dtos.GiftDTO;
 import com.vtcorp.store.entities.Gift;
 import com.vtcorp.store.entities.ProductImage;
 import com.vtcorp.store.mappers.GiftMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.vtcorp.store.repositories.GiftRepository;
@@ -43,11 +44,20 @@ public class GiftService {
         return giftRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public Gift addGift(GiftDTO giftDTO) {
         Gift gift = giftMapper.toEntity(giftDTO);
         String image = handleGiftImage(giftDTO.getNewImageFile());
         gift.setImagePath(image);
         return giftRepository.save(gift);
+    }
+
+    //Not complete yet
+    @Transactional
+    public Gift updateGift(GiftDTO giftDTO) {
+        Gift gift = giftRepository.findById(giftDTO.getGiftId())
+                .orElseThrow(() -> new RuntimeException("Gift not found"));
+        return null;
     }
 
     private String handleGiftImage(MultipartFile imageFile) {
@@ -71,4 +81,5 @@ public class GiftService {
         }
         return storedFileName;
     }
+
 }

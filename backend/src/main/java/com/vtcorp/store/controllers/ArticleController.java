@@ -3,6 +3,7 @@ package com.vtcorp.store.controllers;
 import com.vtcorp.store.dtos.ArticleDTO;
 import com.vtcorp.store.entities.Article;
 import com.vtcorp.store.services.ArticleService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
+    @Operation(summary = "Get all articles")
     @GetMapping("/all")
     public ResponseEntity<?> getAllArticles() {
         try {
@@ -26,6 +28,7 @@ public class ArticleController {
         }
     }
 
+    @Operation(summary = "Get active articles")
     @GetMapping
     public ResponseEntity<?> getActiveArticles() {
         try {
@@ -35,6 +38,7 @@ public class ArticleController {
         }
     }
 
+    @Operation(summary = "Get article by ID")
     @GetMapping("/{id}")
     ResponseEntity<Article> getArticleById(@PathVariable Long id) {
         Article article = articleService.getArticleById(id);
@@ -44,6 +48,7 @@ public class ArticleController {
         return ResponseEntity.ok(article);
     }
 
+    @Operation(summary = "Add article")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addArticle(@ModelAttribute ArticleDTO articleDTO) {
         try {
@@ -53,6 +58,7 @@ public class ArticleController {
         }
     }
 
+    @Operation(summary = "Update article by ID")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateArticle(@PathVariable long id, @ModelAttribute ArticleDTO articleDTO) {
         if (id != articleDTO.getArticleId()) {
