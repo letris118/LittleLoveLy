@@ -44,8 +44,7 @@ public class UserService {
         try {
             // generate token
             String username = loginDTO.getUsername();
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    username, loginDTO.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, loginDTO.getPassword()));
             return tokenService.generateLoginToken(authentication);
         } catch (UsernameNotFoundException e) {
             throw new UsernameNotFoundException("User not found");
@@ -109,7 +108,8 @@ public class UserService {
         User user = userRepository.findById(userDTO.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userMapper.updateEntity(userDTO, user);
-        return userRepository.save(user);
+        userRepository.save(user);
+        return user;
     }
 
     public String updateMail(String username, String newMail) {
@@ -136,4 +136,5 @@ public class UserService {
         userRepository.save(user);
         return "Mail changed successfully";
     }
+
 }

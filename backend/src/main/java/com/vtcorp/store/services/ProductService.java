@@ -53,11 +53,12 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.getReferenceById(id);
+        return productRepository.findById(id).orElse(null);
     }
 
     @Transactional
     public Product addProduct(ProductDTO productDTO) {
+
         Brand brand = brandRepository.findById(productDTO.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found"));
         List<Category> categories = categoryRepository.findAllById(productDTO.getCategoryIds());
@@ -92,7 +93,7 @@ public class ProductService {
         List<ProductImage> imagesToDelete = null;
         if (savedImages != null && !savedImages.isEmpty()) {
             imagesToDelete = new ArrayList<>(savedImages);
-            List<Long> imageToKeepIds = productDTO.getImageProductIds();
+            List<Long> imageToKeepIds = productDTO.getImageIds();
             if (imageToKeepIds != null && !imageToKeepIds.isEmpty()) {
                 List<ProductImage> imagesToKeep = productImageRepository.findAllById(imageToKeepIds);
                 imagesToDelete.removeAll(imagesToKeep);
@@ -162,4 +163,5 @@ public class ProductService {
         productRepository.setActivateProduct(true, id);
         return "Product activated";
     }
+
 }
