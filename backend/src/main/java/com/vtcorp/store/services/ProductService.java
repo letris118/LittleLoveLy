@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 @Service
 public class ProductService {
 
@@ -49,7 +48,9 @@ public class ProductService {
         return productRepository.findByActive(true);
     }
 
-    public List<Product> getAllProducts() { return productRepository.findAll(); }
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
 
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
@@ -66,9 +67,9 @@ public class ProductService {
         }
 
         Product product = productMapper.toEntity(productDTO);
-        List<ProductImage> images = handleImages(productDTO.getNewImageFiles(), product);
         product.setBrand(brand);
         product.setCategories(categories);
+        List<ProductImage> images = handleProductImages(productDTO.getNewImageFiles(), product);
         product.setProductImages(images);
         try {
             return productRepository.save(product);
@@ -87,7 +88,7 @@ public class ProductService {
         if (categories.size() != productDTO.getCategoryIds().size()) {
             throw new RuntimeException("One or more categories not found");
         }
-        List<ProductImage> newImages = handleImages(productDTO.getNewImageFiles(), product);
+        List<ProductImage> newImages = handleProductImages(productDTO.getNewImageFiles(), product);
         List<ProductImage> savedImages = product.getProductImages();
         List<ProductImage> imagesToDelete = null;
         if (savedImages != null && !savedImages.isEmpty()) {
@@ -115,7 +116,7 @@ public class ProductService {
         return product;
     }
 
-    private List<ProductImage> handleImages(List<MultipartFile> imageFiles, Product product) {
+    private List<ProductImage> handleProductImages(List<MultipartFile> imageFiles, Product product) {
         List<ProductImage> productImageList = new ArrayList<>();
         if (imageFiles != null) {
             Path uploadPath = Paths.get(UPLOAD_DIR);
@@ -140,7 +141,6 @@ public class ProductService {
             }
         }
         return productImageList;
-
     }
 
     private void removeImages(List<ProductImage> images) {
@@ -152,6 +152,16 @@ public class ProductService {
                 throw new RuntimeException("Failed to delete image", e);
             }
         }
+    }
+
+    public String deactivateProduct(long id) {
+        productRepository.setActivateProduct(false, id);
+        return "Product deactivated";
+    }
+
+    public String activateProduct(long id) {
+        productRepository.setActivateProduct(true, id);
+        return "Product activated";
     }
 
 }
