@@ -60,6 +60,7 @@ public class GiftService {
         return null;
     }
 
+
     private String handleGiftImage(MultipartFile imageFile) {
         String storedFileName = null;
         if (imageFile != null) {
