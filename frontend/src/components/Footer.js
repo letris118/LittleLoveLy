@@ -4,10 +4,10 @@ import "../assets/css/footer.css";
 export default function Footer() {
   return (
     <div>
-      <footer class="footer">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-8 footer-column">
+      <footer className="footer">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-8 footer-column">
               <h5>Về chúng tôi</h5>
               <p>
                 Chúng tôi cung cấp những sản phẩm tốt nhất cho mẹ và bé. Sứ mệnh
@@ -15,7 +15,7 @@ export default function Footer() {
                 và giá cả phải chăng cho gia đình bạn.
               </p>
             </div>
-            <div class="col-md-4 footer-column">
+            <div className="col-md-4 footer-column">
               <h5>Liên hệ</h5>
               <p>
                 <b>Email:</b> support@momandbabyshop.com
@@ -25,7 +25,7 @@ export default function Footer() {
               </p>
             </div>
           </div>
-          <div class="footer-bottom mt-3">&copy; 2024 Mom and Baby Shop.</div>
+          <div className="footer-bottom mt-3">&copy; 2024 Mom and Baby Shop.</div>
         </div>
       </footer>
     </div>
