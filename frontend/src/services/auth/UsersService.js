@@ -11,4 +11,8 @@ const products = () => {
   return instance.get("/products");
 };
 
-export { loginAPI, products };
+const brands = () => {
+  return instance.get("/brands");
+};
+
+export { loginAPI, products, brands };

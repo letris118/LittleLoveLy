@@ -1,0 +1,20 @@
+.brand-card-img,
+.brand-card-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.brand-card-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.slick-prev:before {
+  color: #ff469e !important;
+  /* padding-left: 30px !important; */
+  right: -30px !important;
+  z-index: 999 !important;
+  position: relative !important;
+}
