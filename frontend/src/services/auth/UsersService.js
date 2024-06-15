@@ -15,4 +15,12 @@ const brands = () => {
   return instance.get("/brands");
 };
 
-export { loginAPI, products, brands };
+const articles = () => {
+  return instance.get("/articles");
+};
+
+const users = () => {
+  return instance.get("/users");
+};
+
+export { loginAPI, products, brands, articles, users };

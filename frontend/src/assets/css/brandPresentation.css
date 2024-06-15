@@ -6,15 +6,48 @@
   width: 100%;
 }
 
-.brand-card-img img {
+.brand-card-img {
+  height: 200px;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  /* border: 1px solid black; */
+}
+
+.brand-card-img img {
+  width: 150px;
   height: 100%;
 }
 
-.slick-prev:before {
-  color: #ff469e !important;
-  /* padding-left: 30px !important; */
-  right: -30px !important;
+.slick-prev::before,
+.slick-next::before {
+  color: hotpink !important;
+  font-size: 30px !important;
+}
+
+.slick-prev {
+  left: 0px !important;
   z-index: 999 !important;
-  position: relative !important;
+  font-size: larger;
+}
+
+.slick-next {
+  right: 10px !important;
+  z-index: 999 !important;
+}
+
+.brand-btn {
+  /* background-color: aqua; */
+  width: 100px;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.brand-btn {
+  color: black;
+  text-align: center;
 }

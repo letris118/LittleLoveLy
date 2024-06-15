@@ -6,6 +6,7 @@ import Register from "../pages/Register";
 import HomePage from "../pages/HomePage";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
+import CusHomePage from "../pages/CusHomePage";
 
 export default function AppRoute() {
   return (
@@ -15,6 +16,7 @@ export default function AppRoute() {
       <Route path={routes.register} element={<Register />} />
       <Route path={routes.forgotPassword} element={<ForgotPassword />} />
       <Route path={routes.resetPassword} element={<ResetPassword />} />
+      <Route path={routes.customer} element={<CusHomePage />} />
     </Routes>
   );
 }
