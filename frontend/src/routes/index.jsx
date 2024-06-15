@@ -1,3 +1,5 @@
+import { articles } from "../services/auth/UsersService";
+
 export const routes = {
   homePage: "/",
   login: "/login",
@@ -6,4 +8,8 @@ export const routes = {
   resetPassword: "/resetPassword",
   products: "/products",
   brands: "/brands",
+  articles: "/articles",
+  admin: "/admin",
+  staff: "/staff",
+  customer: "/customer",
 };

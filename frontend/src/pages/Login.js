@@ -7,6 +7,7 @@ import { routes } from "../routes";
 import { loginAPI } from "../services/auth/UsersService";
 import "react-toastify/dist/ReactToastify.css"; // import first
 import { ToastContainer, toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
   const [email_or_username, setName] = useState("");
@@ -24,9 +25,17 @@ export default function Login() {
     try {
       setLoadingAPI(true);
       let res = await loginAPI(email_or_username, password);
-      if (res && res.token) {
-        localStorage.setItem("token", res.token);
-        navigate(routes.homePage);
+      const decodedToken = jwtDecode(res);
+      if (res) {
+        localStorage.setItem("token", res);
+        localStorage.setItem("userRole", decodedToken.roles);
+        if (decodedToken.roles === "admin") {
+          navigate(routes.admin);
+        } else if (decodedToken.roles === "staff") {
+          navigate(routes.staff);
+        } else if (decodedToken.roles === "customer") {
+          navigate(routes.customer);
+        }
       } else {
         if (res && res.status === 401) {
           toast.error(res.data.error);
@@ -42,8 +51,13 @@ export default function Login() {
     document.body.classList.add("js-fullheight");
     document.body.style.backgroundImage = `url(${backgroundImage})`;
     let token = localStorage.getItem("token");
-    if (token) {
-      navigate(routes.homePage);
+    let userRole = localStorage.getItem("userRole");
+    if (userRole === "customer" && token) {
+      navigate(routes.customer);
+    } else if (userRole === "admin" && token) {
+      navigate(routes.admin);
+    } else if (userRole === "staff" && token) {
+      navigate(routes.staff);
     }
     // Cleanup function to remove added class and background image
     return () => {

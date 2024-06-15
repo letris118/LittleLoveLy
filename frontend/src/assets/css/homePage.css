@@ -61,7 +61,7 @@ header {
 }
 
 .profile-icon {
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .profile-icon svg {
@@ -70,11 +70,20 @@ header {
   color: black;
 }
 
-.profile-name {
-  margin-top: 20px;
+.profile-name,
+.profile-point {
+  margin: 15px 0;
   overflow: hidden;
   text-align: center;
   color: black;
+}
+
+.profile-name p,
+.profile-point p {
+  background-color: rgba(235, 208, 231, 0.334);
+  margin: 0;
+  border-radius: 10px;
+  padding: 5px 10px;
 }
 
 .nav-bar {
@@ -150,11 +159,16 @@ header {
 .content-row-2,
 .content-row-3 {
   width: 100%;
-  height: fit-content;
+  border-radius: 10px;
   background-color: white;
 }
 
-.row-1-top {
+.content-row-3 {
+  padding-bottom: 20px;
+}
+
+.row-1-top,
+.row-3-top {
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -163,12 +177,10 @@ header {
   margin-bottom: 20px;
 }
 
-.row-1-top h4 {
+.row-1-top h4,
+.row-3-top h4 {
   font-size: 30px;
   font-family: "MuseoModerno";
   font-weight: 600;
   margin-left: 20px;
-}
-
-.row-1-bottom {
 }
