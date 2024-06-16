@@ -6,7 +6,8 @@ import Register from "../pages/Register";
 import HomePage from "../pages/HomePage";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
-import CusHomePage from "../pages/CusHomePage";
+import BrandDetail from "../pages/BrandDetail";
+import BrandList from "../pages/BrandList";
 
 export default function AppRoute() {
   return (
@@ -16,7 +17,8 @@ export default function AppRoute() {
       <Route path={routes.register} element={<Register />} />
       <Route path={routes.forgotPassword} element={<ForgotPassword />} />
       <Route path={routes.resetPassword} element={<ResetPassword />} />
-      <Route path={routes.customer} element={<CusHomePage />} />
+      <Route path={routes.brands} element={<BrandList />} />
+      <Route path={`${routes.brands}/:name`} element={<BrandDetail />} />
     </Routes>
   );
 }
