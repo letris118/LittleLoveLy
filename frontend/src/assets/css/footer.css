@@ -1,0 +1,21 @@
+.footer {
+  background-color: #f8f9fa;
+  color: #333;
+  padding: 40px 0 20px 0;
+}
+.footer .footer-column h5 {
+  color: black;
+  font-size: 25px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+}
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+.footer-column p b {
+  font-weight: 600;
+}

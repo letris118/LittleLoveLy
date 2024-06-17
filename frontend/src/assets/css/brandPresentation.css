@@ -1,0 +1,94 @@
+.brand-card-img,
+.brand-card-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.brand-card-img {
+  height: 200px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  /* border: 1px solid black; */
+}
+
+.brand-card-img img {
+  width: 150px;
+  height: 100%;
+}
+
+.slick-prev::before,
+.slick-next::before {
+  color: hotpink !important;
+  font-size: 30px !important;
+}
+
+.slick-prev {
+  left: 0px !important;
+  z-index: 999 !important;
+  font-size: larger;
+}
+
+.slick-next {
+  right: 10px !important;
+  z-index: 999 !important;
+}
+
+.brand-btn {
+  /* background-color: aqua; */
+  width: 100px;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  color: black;
+  text-align: center;
+}
+
+.row-list-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-card-list {
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
+  padding: 5px;
+  width: 250px;
+}
+
+.brand-card-list-img {
+  width: 100%;
+  height: 250px;
+  margin-bottom: 20px;
+}
+
+.brand-card-list-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-card-list-btn {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.brand-list-btn {
+  width: 70%;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  color: black;
+  text-align: center;
+}
+
+
