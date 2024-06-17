@@ -41,37 +41,18 @@ export default function ManageProduct() {
 
     return (
         <div>
-            <ToastContainer />
-            <header className="staff-header">
-        
-            <div className="staff-store-name">
-                <Link to={routes.homePage} style={{ color: 'white' }}>
-                    Little Lovely
-                </Link>
-            </div>
-            </header>
+          <ToastContainer />
+          <StaffHeader/>
     
-            <div className="manage-content">
-                <ManageSidebar
-                    handleLogout={handleLogout(navigate)}
-                />
-                <div className="staff-content-detail">   
-                    <div className="staff-profile">
+          <div className="manage-content">
+            <ManageSidebar
+              handleLogout={handleLogout(navigate)}
+            />
 
-                        <div className="staff-avatar">
-                            <img src="path/to/placeholder/avatar.png" alt="" />   
-                        </div>
+            <div className="staff-content-detail">   
+              VOUCHER
+            </div>   
 
-                        <div className="staff-info">
-                        </div>
-
-                        <div className="staff-update-info">
-                            <Link to="#">
-                                <button>Chỉnh Sửa Thông Tin</button>
-                            </Link>                          
-                        </div>
-                    </div>
-                </div>        
             </div>
         </div>
       );

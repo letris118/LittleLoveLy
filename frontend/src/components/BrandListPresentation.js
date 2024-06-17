@@ -9,12 +9,10 @@ export default function BrandListPresentation({ brands }) {
       {brands.map((brand) => (
         <div className="brand-card-list" id={brand.brandId}>
           <div className="brand-card-list-img">
-            <Link to={`${routes.brands}/${brand.name}`}>
-              <img
-                src={`${instance.defaults.baseURL}/images/brands/${brand.logo}`}
-                alt={brand.name}
-              />
-            </Link>
+            <img
+              src={`${instance.defaults.baseURL}/images/brands/${brand.logo}`}
+              alt={brand.name}
+            />
           </div>
           <div className="brand-card-list-btn">
             <Link

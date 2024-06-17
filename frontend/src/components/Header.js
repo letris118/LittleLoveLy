@@ -8,7 +8,7 @@ export default function Header() {
       <header>
         {/* logo + store name to return home page */}
         <div className="store-name">
-          <Link to={routes.HomePage} style={{ color: "#ff469e" }}>
+          <Link to={routes.homePage} style={{ color: "#ff469e" }}>
             Little Lovely
           </Link>
         </div>
@@ -22,6 +22,7 @@ export default function Header() {
             </Link>
           </div>
         </div>
+        
       </header>
     </div>
   );

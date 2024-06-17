@@ -16,7 +16,7 @@ import ManageSidebar from "../components/ManageSideBar";
 import { jwtDecode } from "jwt-decode";
 import "../assets/css/staff.css";
 
-export default function ManageProduct() {
+export default function ManageOrder() {
     const [productList, setProductList] = useState([]);
 
     const navigate = useNavigate();
@@ -40,39 +40,20 @@ export default function ManageProduct() {
     }, []);
 
     return (
-        <div>
-            <ToastContainer />
-            <header className="staff-header">
-        
-            <div className="staff-store-name">
-                <Link to={routes.homePage} style={{ color: 'white' }}>
-                    Little Lovely
-                </Link>
-            </div>
-            </header>
-    
-            <div className="manage-content">
-                <ManageSidebar
-                    handleLogout={handleLogout(navigate)}
-                />
-                <div className="staff-content-detail">   
-                    <div className="staff-profile">
+      <div>
+        <ToastContainer />
+        <StaffHeader/>
+  
+        <div className="manage-content">
+          <ManageSidebar
+            handleLogout={handleLogout(navigate)}
+          />    
 
-                        <div className="staff-avatar">
-                            <img src="path/to/placeholder/avatar.png" alt="" />   
-                        </div>
-
-                        <div className="staff-info">
-                        </div>
-
-                        <div className="staff-update-info">
-                            <Link to="#">
-                                <button>Chỉnh Sửa Thông Tin</button>
-                            </Link>                          
-                        </div>
-                    </div>
-                </div>        
-            </div>
+          <div className="staff-content-detail">   
+            ORDER
+          </div>   
+               
         </div>
-      );
-    }
+      </div>
+    );
+  }
