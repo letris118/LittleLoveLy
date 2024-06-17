@@ -19,5 +19,6 @@ public class ArticleDTO {
     private boolean active = true;
 
     List<Long> productIds;
-    List<MultipartFile> articleImages;
+    List<Long> imageIds;
+    List<MultipartFile> newImageFiles;
 }

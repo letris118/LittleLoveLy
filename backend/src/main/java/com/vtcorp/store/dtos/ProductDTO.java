@@ -15,13 +15,13 @@ public class ProductDTO {
     private Double listedPrice;
     private Double sellingPrice;
     private String description;
-    private String noSold = "0";
+    private Integer noSold = 0;
     private Integer stock;
     private boolean active = true;
 
     private long brandId;
     private List<Long> categoryIds;
-    private List<Long> imageProductIds;
+    private List<Long> imageIds;
 
     private List<MultipartFile> newImageFiles;
 }

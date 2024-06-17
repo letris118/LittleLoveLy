@@ -3,8 +3,8 @@ package com.vtcorp.store.controllers;
 import com.vtcorp.store.dtos.VoucherDTO;
 import com.vtcorp.store.entities.Voucher;
 import com.vtcorp.store.services.VoucherService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,16 +21,19 @@ public class VoucherController {
         this.voucherService = voucherService;
     }
 
+    @Operation(summary = "Get all vouchers")
     @GetMapping("/all")
     public List<Voucher> getAllVouchers() {
         return voucherService.getAllVouchers();
     }
 
+    @Operation(summary = "Get active vouchers")
     @GetMapping
     public List<Voucher> getActiveVouchers() {
         return voucherService.getActiveVouchers();
     }
 
+    @Operation(summary = "Get voucher by ID")
     @GetMapping("/{id}")
     public ResponseEntity<Voucher> getVoucherById(@PathVariable Long id) {
         Voucher voucher = voucherService.getVoucherById(id);
@@ -40,6 +43,7 @@ public class VoucherController {
         return ResponseEntity.ok(voucher);
     }
 
+    @Operation(summary = "Create voucher")
     @PostMapping
     public ResponseEntity<?> createVoucher(@ModelAttribute VoucherDTO voucherDTO) {
         try {
@@ -49,6 +53,7 @@ public class VoucherController {
         }
     }
 
+    @Operation(summary = "Update voucher by ID")
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateVoucher(@PathVariable long id, @ModelAttribute VoucherDTO voucherDTO) {
         if (id != voucherDTO.getVoucherId()) {
