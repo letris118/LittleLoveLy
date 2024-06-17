@@ -2,12 +2,11 @@ package com.vtcorp.store.services;
 
 import com.vtcorp.store.dtos.ProductRequestDTO;
 import com.vtcorp.store.dtos.ProductResponseDTO;
+import com.vtcorp.store.dtos.ReviewRequestDTO;
 import com.vtcorp.store.entities.*;
 import com.vtcorp.store.mappers.ProductMapper;
-import com.vtcorp.store.repositories.BrandRepository;
-import com.vtcorp.store.repositories.CategoryRepository;
-import com.vtcorp.store.repositories.ProductImageRepository;
-import com.vtcorp.store.repositories.ProductRepository;
+import com.vtcorp.store.mappers.ProductReviewMapper;
+import com.vtcorp.store.repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,20 +25,27 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/images/products";
+    private static final String UPLOAD_PRODUCT_IMG_DIR = "src/main/resources/static/images/products";
+    private static final String UPLOAD_REVIEW_IMG_DIR = "src/main/resources/static/images/reviews";
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
     private final ProductImageRepository productImageRepository;
+    private final UserRepository userRepository;
+    private final ProductReviewMapper productReviewMapper;
+    private final ProductReviewRepository productReviewRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper, BrandRepository brandRepository, CategoryRepository categoryRepository, ProductImageRepository productImageRepository) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, BrandRepository brandRepository, CategoryRepository categoryRepository, ProductImageRepository productImageRepository, UserRepository userRepository, ProductReviewMapper productReviewMapper, ProductReviewRepository productReviewRepository) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.brandRepository = brandRepository;
         this.categoryRepository = categoryRepository;
         this.productImageRepository = productImageRepository;
+        this.userRepository = userRepository;
+        this.productReviewMapper = productReviewMapper;
+        this.productReviewRepository = productReviewRepository;
     }
 
     public List<ProductResponseDTO> getActiveProducts() {
@@ -117,10 +123,20 @@ public class ProductService {
         return mapProductToProductResponseDTO(product);
     }
 
+    public String deactivateProduct(long id) {
+        productRepository.setActivateProduct(false, id);
+        return "Product deactivated";
+    }
+
+    public String activateProduct(long id) {
+        productRepository.setActivateProduct(true, id);
+        return "Product activated";
+    }
+
     private List<ProductImage> handleProductImages(List<MultipartFile> imageFiles, Product product) {
         List<ProductImage> productImageList = new ArrayList<>();
         if (imageFiles != null) {
-            Path uploadPath = Paths.get(UPLOAD_DIR);
+            Path uploadPath = Paths.get(UPLOAD_PRODUCT_IMG_DIR);
             try {
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
@@ -128,7 +144,7 @@ public class ProductService {
                 for (MultipartFile image : imageFiles) {
                     String storedFileName = (new Date()).getTime() + "_" + image.getOriginalFilename();
                     try (InputStream inputStream = image.getInputStream()) {
-                        Files.copy(inputStream, Paths.get(UPLOAD_DIR, storedFileName), StandardCopyOption.REPLACE_EXISTING);
+                        Files.copy(inputStream, Paths.get(UPLOAD_PRODUCT_IMG_DIR, storedFileName), StandardCopyOption.REPLACE_EXISTING);
                         productImageList.add(ProductImage.builder()
                                 .imagePath(storedFileName)
                                 .product(product)
@@ -146,23 +162,13 @@ public class ProductService {
 
     private void removeImages(List<ProductImage> images) {
         for (ProductImage image : images) {
-            Path imagePath = Paths.get(UPLOAD_DIR, image.getImagePath());
+            Path imagePath = Paths.get(UPLOAD_PRODUCT_IMG_DIR, image.getImagePath());
             try {
                 Files.deleteIfExists(imagePath);
             } catch (IOException e) {
                 throw new RuntimeException("Failed to delete image", e);
             }
         }
-    }
-
-    public String deactivateProduct(long id) {
-        productRepository.setActivateProduct(false, id);
-        return "Product deactivated";
-    }
-
-    public String activateProduct(long id) {
-        productRepository.setActivateProduct(true, id);
-        return "Product activated";
     }
 
     private double calculateAverageRating(List<ProductReview> productReviews) {
@@ -187,5 +193,43 @@ public class ProductService {
             productResponseDTOs.add(mapProductToProductResponseDTO(product));
         }
         return productResponseDTOs;
+    }
+
+    @Transactional
+    public ProductResponseDTO addReview(ReviewRequestDTO reviewRequestDTO) {
+        long productId = reviewRequestDTO.getProductId();
+        String username = reviewRequestDTO.getUsername();
+        ProductReview.ProductReviewId productReviewId = new ProductReview.ProductReviewId(productId, username);
+        if (productReviewRepository.existsByProductReviewId(productReviewId)) {
+            throw new RuntimeException("Review already exists");
+        }
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        ProductReview productReview = productReviewMapper.toEntity(reviewRequestDTO);
+        productReview.setProductReviewId(productReviewId);
+        productReview.setProduct(product);
+        productReview.setUser(user);
+        if (reviewRequestDTO.getImage() != null) {
+            Path uploadPath = Paths.get(UPLOAD_REVIEW_IMG_DIR);
+            try {
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                String storedFileName = (new Date()).getTime() + "_" + reviewRequestDTO.getImage().getOriginalFilename();
+                try (InputStream inputStream = reviewRequestDTO.getImage().getInputStream()) {
+                    Files.copy(inputStream, Paths.get(UPLOAD_REVIEW_IMG_DIR, storedFileName), StandardCopyOption.REPLACE_EXISTING);
+                    productReview.setImagePath(storedFileName);
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to save image", e);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to create upload directory", e);
+            }
+        }
+        product.getProductReviews().add(productReview);
+        return mapProductToProductResponseDTO(product);
     }
 }

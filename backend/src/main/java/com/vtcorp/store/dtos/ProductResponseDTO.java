@@ -34,6 +34,6 @@ public class ProductResponseDTO {
     @JsonIgnoreProperties("product")
     private List<ProductImage> productImages;
 
-    @JsonIgnoreProperties("product")
+    @JsonIgnoreProperties({"product", "user"})
     private List<ProductReview> productReviews;
 }
