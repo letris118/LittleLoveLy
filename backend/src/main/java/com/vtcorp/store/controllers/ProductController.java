@@ -1,6 +1,7 @@
 package com.vtcorp.store.controllers;
 
-import com.vtcorp.store.dtos.ProductDTO;
+import com.vtcorp.store.dtos.ProductRequestDTO;
+import com.vtcorp.store.dtos.ReviewRequestDTO;
 import com.vtcorp.store.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
@@ -49,9 +50,9 @@ public class ProductController {
 
     @Operation(summary = "Add product")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addProduct(@ModelAttribute ProductDTO productDTO) {
+    public ResponseEntity<?> addProduct(@ModelAttribute ProductRequestDTO productRequestDTO) {
         try {
-            return ResponseEntity.ok(productService.addProduct(productDTO));
+            return ResponseEntity.ok(productService.addProduct(productRequestDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -59,12 +60,12 @@ public class ProductController {
 
     @Operation(summary = "Update product by ID")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateProduct(@PathVariable long id, @ModelAttribute ProductDTO productDTO) {
-        if (id != productDTO.getProductId()) {
+    public ResponseEntity<?> updateProduct(@PathVariable long id, @ModelAttribute ProductRequestDTO productRequestDTO) {
+        if (id != productRequestDTO.getProductId()) {
             return ResponseEntity.badRequest().body("Product ID in the path variable does not match the one in the request body");
         }
         try {
-            return ResponseEntity.ok(productService.updateProduct(productDTO));
+            return ResponseEntity.ok(productService.updateProduct(productRequestDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -89,4 +90,18 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @Operation(summary = "Add review to product")
+    @PostMapping("/{productId}/reviews")
+    public ResponseEntity<?> addReview(@PathVariable long productId, @ModelAttribute ReviewRequestDTO reviewRequestDTO) {
+        if (productId != reviewRequestDTO.getProductId()) {
+            return ResponseEntity.badRequest().body("Product ID in the path variable does not match the one in the request body");
+        }
+        try {
+            return ResponseEntity.ok(productService.addReview(reviewRequestDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
