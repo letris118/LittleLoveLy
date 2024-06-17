@@ -65,7 +65,7 @@ export default function BrandList() {
         />
 
         <div className="content-detail">
-          <Breadcrumb value="Tất cả sản phẩm" />
+          <Breadcrumb value="Tất cả thương hiệu" />
           <div className="content-display ">
             <div className="content-row-1">
               <div className="row-1-top" style={{ width: "100%" }}>

@@ -131,7 +131,7 @@ export default function HomePage() {
               <div className="row-3-top ">
                 <h4>Sản phẩm</h4>
                 <Link
-                  to=""
+                  to={routes.products}
                   style={{ textDecoration: "none", color: "#ff469e" }}>
                   Xem tất cả <i className="fa-solid fa-arrow-right"></i>
                 </Link>
