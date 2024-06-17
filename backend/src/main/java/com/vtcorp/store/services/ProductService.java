@@ -1,6 +1,7 @@
 package com.vtcorp.store.services;
 
-import com.vtcorp.store.dtos.ProductDTO;
+import com.vtcorp.store.dtos.ProductRequestDTO;
+import com.vtcorp.store.dtos.ProductResponseDTO;
 import com.vtcorp.store.entities.Brand;
 import com.vtcorp.store.entities.Category;
 import com.vtcorp.store.entities.Product;
@@ -44,56 +45,59 @@ public class ProductService {
         this.productImageRepository = productImageRepository;
     }
 
-    public List<Product> getActiveProducts() {
-        return productRepository.findByActive(true);
+    public List<ProductResponseDTO> getActiveProducts() {
+        return productMapper.toDTOs(productRepository.findByActive(true));
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponseDTO> getAllProducts() {
+        return productMapper.toDTOs(productRepository.findAll());
     }
 
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductResponseDTO getProductById(Long id) {
+        return productMapper.toDTO(productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found")));
     }
 
     @Transactional
-    public Product addProduct(ProductDTO productDTO) {
+    public ProductResponseDTO addProduct(ProductRequestDTO productRequestDTO) {
 
-        Brand brand = brandRepository.findById(productDTO.getBrandId())
+        Brand brand = brandRepository.findById(productRequestDTO.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found"));
-        List<Category> categories = categoryRepository.findAllById(productDTO.getCategoryIds());
-        if (categories.size() != productDTO.getCategoryIds().size()) {
+        List<Category> categories = categoryRepository.findAllById(productRequestDTO.getCategoryIds());
+        if (categories.size() != productRequestDTO.getCategoryIds().size()) {
             throw new RuntimeException("One or more categories not found");
         }
 
-        Product product = productMapper.toEntity(productDTO);
+        Product product = productMapper.toEntity(productRequestDTO);
+        product.setNoSold(0);
+        product.setActive(true);
         product.setBrand(brand);
         product.setCategories(categories);
-        List<ProductImage> images = handleProductImages(productDTO.getNewImageFiles(), product);
+        List<ProductImage> images = handleProductImages(productRequestDTO.getNewImageFiles(), product);
         product.setProductImages(images);
         try {
-            return productRepository.save(product);
+            return productMapper.toDTO(productRepository.save(product));
         } catch (Exception e) {
             throw new RuntimeException("Failed to save product", e);
         }
     }
 
     @Transactional
-    public Product updateProduct(ProductDTO productDTO) {
-        Product product = productRepository.findById(productDTO.getProductId())
+    public ProductResponseDTO updateProduct(ProductRequestDTO productRequestDTO) {
+        Product product = productRepository.findById(productRequestDTO.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        Brand brand = brandRepository.findById(productDTO.getBrandId())
+        Brand brand = brandRepository.findById(productRequestDTO.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found"));
-        List<Category> categories = categoryRepository.findAllById(productDTO.getCategoryIds());
-        if (categories.size() != productDTO.getCategoryIds().size()) {
+        List<Category> categories = categoryRepository.findAllById(productRequestDTO.getCategoryIds());
+        if (categories.size() != productRequestDTO.getCategoryIds().size()) {
             throw new RuntimeException("One or more categories not found");
         }
-        List<ProductImage> newImages = handleProductImages(productDTO.getNewImageFiles(), product);
+        List<ProductImage> newImages = handleProductImages(productRequestDTO.getNewImageFiles(), product);
         List<ProductImage> savedImages = product.getProductImages();
         List<ProductImage> imagesToDelete = null;
         if (savedImages != null && !savedImages.isEmpty()) {
             imagesToDelete = new ArrayList<>(savedImages);
-            List<Long> imageToKeepIds = productDTO.getImageIds();
+            List<Long> imageToKeepIds = productRequestDTO.getImageIds();
             if (imageToKeepIds != null && !imageToKeepIds.isEmpty()) {
                 List<ProductImage> imagesToKeep = productImageRepository.findAllById(imageToKeepIds);
                 imagesToDelete.removeAll(imagesToKeep);
@@ -104,7 +108,7 @@ public class ProductService {
         // annotation @Transactional is used to roll back the transaction if an exception occurs
         // any changes made to managed entities will be automatically saved to the database
         // no need to call save() method
-        productMapper.updateEntity(productDTO, product);
+        productMapper.updateEntity(productRequestDTO, product);
         product.setBrand(brand);
         product.setCategories(categories);
         product.getProductImages().clear();
@@ -113,7 +117,7 @@ public class ProductService {
         if (imagesToDelete != null) {
             removeImages(imagesToDelete);
         }
-        return product;
+        return productMapper.toDTO(product);
     }
 
     private List<ProductImage> handleProductImages(List<MultipartFile> imageFiles, Product product) {
