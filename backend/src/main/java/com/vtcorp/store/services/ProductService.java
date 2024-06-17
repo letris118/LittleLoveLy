@@ -2,10 +2,7 @@ package com.vtcorp.store.services;
 
 import com.vtcorp.store.dtos.ProductRequestDTO;
 import com.vtcorp.store.dtos.ProductResponseDTO;
-import com.vtcorp.store.entities.Brand;
-import com.vtcorp.store.entities.Category;
-import com.vtcorp.store.entities.Product;
-import com.vtcorp.store.entities.ProductImage;
+import com.vtcorp.store.entities.*;
 import com.vtcorp.store.mappers.ProductMapper;
 import com.vtcorp.store.repositories.BrandRepository;
 import com.vtcorp.store.repositories.CategoryRepository;
@@ -46,15 +43,15 @@ public class ProductService {
     }
 
     public List<ProductResponseDTO> getActiveProducts() {
-        return productMapper.toDTOs(productRepository.findByActive(true));
+        return mapProductsToProductResponseDTOs(productRepository.findByActive(true));
     }
 
     public List<ProductResponseDTO> getAllProducts() {
-        return productMapper.toDTOs(productRepository.findAll());
+        return mapProductsToProductResponseDTOs(productRepository.findAll());
     }
 
     public ProductResponseDTO getProductById(Long id) {
-        return productMapper.toDTO(productRepository.findById(id)
+        return mapProductToProductResponseDTO(productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found")));
     }
 
@@ -117,7 +114,7 @@ public class ProductService {
         if (imagesToDelete != null) {
             removeImages(imagesToDelete);
         }
-        return productMapper.toDTO(product);
+        return mapProductToProductResponseDTO(product);
     }
 
     private List<ProductImage> handleProductImages(List<MultipartFile> imageFiles, Product product) {
@@ -168,4 +165,27 @@ public class ProductService {
         return "Product activated";
     }
 
+    private double calculateAverageRating(List<ProductReview> productReviews) {
+        if (productReviews == null || productReviews.isEmpty()) {
+            return 0;
+        }
+        return productReviews.stream()
+                .mapToInt(ProductReview::getStar)
+                .average()
+                .orElse(0);
+    }
+
+    private ProductResponseDTO mapProductToProductResponseDTO(Product product) {
+        ProductResponseDTO productResponseDTO = productMapper.toDTO(product);
+        productResponseDTO.setAverageRating(calculateAverageRating(product.getProductReviews()));
+        return productResponseDTO;
+    }
+
+    private List<ProductResponseDTO> mapProductsToProductResponseDTOs(List<Product> products) {
+        List<ProductResponseDTO> productResponseDTOs = new ArrayList<>();
+        for (Product product : products) {
+            productResponseDTOs.add(mapProductToProductResponseDTO(product));
+        }
+        return productResponseDTOs;
+    }
 }

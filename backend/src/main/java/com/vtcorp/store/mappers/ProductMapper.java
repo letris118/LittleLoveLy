@@ -18,6 +18,4 @@ public interface ProductMapper {
     void updateEntity(ProductRequestDTO productRequestDTO, @MappingTarget Product product);
 
     ProductResponseDTO toDTO(Product product);
-
-    List<ProductResponseDTO> toDTOs(List<Product> products);
 }
