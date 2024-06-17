@@ -2,17 +2,16 @@ import React from "react";
 import { routes } from "../routes";
 import { Link } from "react-router-dom";
 import "../assets/css/productPresentation.css";
-import instance from "../services/auth/customize-axios";
 
 export default function ProductPresentation({ products }) {
   return (
     <div className="product-container">
       {products.map((product) => (
-        <div className="product-card " key={product.productId}>
+        <div className="product-card col-2" key={product.productId}>
           <div className="product-card-img">
             {product.productImages.slice(0, 1).map((image) => (
               <img
-                src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
+                src={`http://localhost:8010/images/products/${image.imagePath}`}
                 alt={product.name}
               />
             ))}
