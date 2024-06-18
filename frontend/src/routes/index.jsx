@@ -15,5 +15,6 @@ export const routes = {
   manageOrder: "/manageOrder",
   manageArticle: "/manageArticle",
   staffProfile: "/staffProfile",
-  manageVoucher: "/ManageVoucher",
+  manageVoucher: "/manageVoucher",
+  manageAccount: "/manageAccount",
 };
