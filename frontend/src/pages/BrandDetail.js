@@ -5,6 +5,7 @@ import { brands, handleLogout, users } from "../services/auth/UsersService";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Footer from "../components/Footer";
 
 export default function BrandDetail() {
   const brandName = useParams();
@@ -54,7 +55,7 @@ export default function BrandDetail() {
     fetchBrand();
   }, []);
   return (
-    <div>
+    <>
       <Header />
       <div className="content">
         <Sidebar
@@ -66,6 +67,7 @@ export default function BrandDetail() {
           <div className="content-display "></div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }

@@ -19,7 +19,7 @@ export default function AppRoute() {
       <Route path={routes.forgotPassword} element={<ForgotPassword />} />
       <Route path={routes.resetPassword} element={<ResetPassword />} />
       <Route path={routes.brands} element={<BrandList />} />
-      <Route path={`${routes.brands}/:name`} element={<BrandDetail />} />
+      <Route path={`${routes.brands}/:n  ame`} element={<BrandDetail />} />
       <Route path={routes.products} element={<ProductList />} />
     </Routes>
   );
