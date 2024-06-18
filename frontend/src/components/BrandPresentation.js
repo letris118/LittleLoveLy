@@ -5,10 +5,9 @@ import "../assets/css/brandPresentation.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import instance from "../services/auth/customize-axios";
 
 export default function BrandPresentation({ brands }) {
-  const imgUrl =
-    "https://hoanghamobile.com/tin-tuc/wp-content/webp-express/webp-images/uploads/2023/07/anh-dep-thien-nhien-thump-1024x536.jpg.webp";
   let settings = {
     infinite: true,
     speed: 500,
@@ -46,9 +45,14 @@ export default function BrandPresentation({ brands }) {
       <Slider {...settings}>
         {brands.map((brand) => (
           <div className="brand-card" id={brand.brandId}>
-            <div className="brand-card-img">
-              <img src={imgUrl} alt={brand.name} />
-            </div>
+            <Link to={`${routes.brands}/${brand.name}`}>
+              <div className="brand-card-img">
+                <img
+                  src={`${instance.defaults.baseURL}/images/brands/${brand.logo}`}
+                  alt={brand.name}
+                />
+              </div>
+            </Link>
             <div className="brand-card-btn">
               <Link
                 to={`${routes.brands}/${brand.name}`}
