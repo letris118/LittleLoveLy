@@ -31,6 +31,9 @@ export default function ProductPresentation({ products }) {
           <div className="product-card-noSold">Đã bán {product.noSold}</div>
           <div className="product-card-price">
             {formatPrice(product.sellingPrice)}đ
+            <Link to={`${routes.products}/${product.name}`}>
+              <i class="fa-solid fa-cart-shopping"></i>
+            </Link>
           </div>
         </div>
       ))}

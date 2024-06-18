@@ -29,6 +29,7 @@ export default function Login() {
       if (res) {
         localStorage.setItem("token", res);
         localStorage.setItem("userRole", decodedToken.roles);
+        localStorage.setItem("username", decodedToken.name);
         if (decodedToken.roles === "ROLE_ADMIN") {
           navigate(routes.admin);
         } else if (decodedToken.roles === "ROLE_STAFF") {

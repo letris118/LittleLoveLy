@@ -49,13 +49,6 @@ export default function ForgotPassword() {
                   </button>
                 </div>
                 {/* back to login or register page */}
-                <div className="form-group">
-                  <div className="forgot-pwd text-center">
-                    <a href={routes.forgotPassword} style={{ color: "#fff" }}>
-                      Quên mật khẩu ?
-                    </a>
-                  </div>
-                </div>
               </form>
               <p className="w-100 text-center">
                 &mdash; Quay lại trang &mdash;
@@ -70,8 +63,8 @@ export default function ForgotPassword() {
                 </div>
                 <div className="form-group col-md-6">
                   <div className="forgot-pwd text-center">
-                    <a href={routes.forgotPassword} style={{ color: "#fff" }}>
-                      Đắng kí
+                    <a href={routes.register} style={{ color: "#fff" }}>
+                      Đăng kí
                     </a>
                   </div>
                 </div>

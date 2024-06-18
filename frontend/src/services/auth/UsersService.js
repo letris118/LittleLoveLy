@@ -29,6 +29,7 @@ const handleLogout = (navigate) => (e) => {
   e.preventDefault();
   localStorage.removeItem("token");
   localStorage.removeItem("userRole");
+  localStorage.removeItem("username");
   navigate(routes.homePage);
   toast.success("Đăng xuất thành công");
 };

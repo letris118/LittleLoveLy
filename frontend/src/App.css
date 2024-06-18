@@ -54,3 +54,16 @@ body::-webkit-scrollbar-thumb {
 .breadcrumb-item:last-child::after {
   content: "";
 }
+
+#dropdown-basic::after {
+  display: none;
+}
+
+#dropdown-basic {
+  background-color: black;
+}
+
+.dropdown {
+  float: right;
+  margin: auto 0;
+}

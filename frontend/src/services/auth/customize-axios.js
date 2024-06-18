@@ -12,7 +12,9 @@ instance.interceptors.response.use(
   function (error) {
     if (error.response) {
       console.error("Response error:", error.response);
-      toast.error(error.response.data.message || "Không tìm thấy người dùng");
+      toast.error(
+        error.response.data.message || "Tài khoản hoặc mật khẩu không đúng"
+      );
     } else if (error.request) {
       console.error("Request error:", error.request);
       toast.error("Không thể kết nối đến server");
