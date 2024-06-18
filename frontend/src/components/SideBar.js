@@ -143,6 +143,28 @@ const Sidebar = ({ role, customerInfo, handleLogout }) => {
             </Link>
         </div>       
         </>
+
+      ): role === "ROLE_ADMIN" ? (
+        <>
+        <div className="staff-nav-bar">
+            <Link to="#">
+                Tài khoản
+            </Link>
+
+            <Link to="#">
+                Quản lý người dùng
+            </Link>
+
+            <Link to="#">
+                Thống kê doanh thu
+            </Link>
+            
+            <Link onClick={handleLogout}>
+                Đăng xuất
+            </Link>
+        </div>       
+        </>
+        
       ) : (
         <>
           <div className="profile">

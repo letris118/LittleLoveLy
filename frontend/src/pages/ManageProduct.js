@@ -22,6 +22,15 @@ export default function ManageProduct() {
     const navigate = useNavigate();
 
     useEffect(() => {
+
+        const checkAuthentication = () => {
+          const userRole = localStorage.getItem("userRole");
+          if (!userRole || userRole !== "ROLE_STAFF") {
+              navigate('/login');
+          }
+        };
+        checkAuthentication();
+
         const fetchProducts = async () => {
           try {
             let response = await products();
@@ -43,7 +52,7 @@ export default function ManageProduct() {
       <div>
         <ToastContainer />
         <StaffHeader/>
-  
+
         <div className="manage-content">
           <ManageSidebar
             handleLogout={handleLogout(navigate)}

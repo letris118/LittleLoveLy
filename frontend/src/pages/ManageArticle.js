@@ -22,6 +22,15 @@ export default function ManageOrder() {
     const navigate = useNavigate();
 
     useEffect(() => {
+
+        const checkAuthentication = () => {
+          const userRole = localStorage.getItem("userRole");
+          if (!userRole || userRole !== "ROLE_STAFF") {
+              navigate('/login');
+          }
+        };
+        checkAuthentication();      
+
         const fetchProducts = async () => {
           try {
             let response = await products();
