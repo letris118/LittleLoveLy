@@ -5,7 +5,7 @@ import "../assets/css/loginAndRegister.css";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import { loginAPI } from "../services/auth/UsersService";
-import "react-toastify/dist/ReactToastify.css"; // import first
+import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 
@@ -29,12 +29,12 @@ export default function Login() {
       if (res) {
         localStorage.setItem("token", res);
         localStorage.setItem("userRole", decodedToken.roles);
-        if (decodedToken.roles === "admin") {
+        if (decodedToken.roles === "ROLE_ADMIN") {
           navigate(routes.admin);
-        } else if (decodedToken.roles === "staff") {
+        } else if (decodedToken.roles === "ROLE_STAFF") {
           navigate(routes.staff);
-        } else if (decodedToken.roles === "customer") {
-          navigate(routes.customer);
+        } else if (decodedToken.roles === "ROLE_CUSTOMER") {
+          navigate(routes.homePage);
         }
       } else {
         if (res && res.status === 401) {
@@ -52,11 +52,11 @@ export default function Login() {
     document.body.style.backgroundImage = `url(${backgroundImage})`;
     let token = localStorage.getItem("token");
     let userRole = localStorage.getItem("userRole");
-    if (userRole === "customer" && token) {
-      navigate(routes.customer);
-    } else if (userRole === "admin" && token) {
+    if (userRole === "ROLE_CUSTOMER" && token) {
+      navigate(routes.homePage);
+    } else if (userRole === "ROLE_ADMIN" && token) {
       navigate(routes.admin);
-    } else if (userRole === "staff" && token) {
+    } else if (userRole === "ROLE_STAFF" && token) {
       navigate(routes.staff);
     }
     // Cleanup function to remove added class and background image
