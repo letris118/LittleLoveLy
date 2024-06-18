@@ -5,7 +5,7 @@ import "../assets/css/loginAndRegister.css";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import { loginAPI } from "../services/auth/UsersService";
-import "react-toastify/dist/ReactToastify.css"; // import first
+import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 
