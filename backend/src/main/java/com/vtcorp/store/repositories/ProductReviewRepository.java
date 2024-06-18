@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductReviewRepository extends JpaRepository<ProductReview, ProductReview.ProductReviewId> {
+
+    boolean existsByProductReviewId(ProductReview.ProductReviewId productReviewId);
 }

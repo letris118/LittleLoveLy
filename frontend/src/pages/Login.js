@@ -29,12 +29,12 @@ export default function Login() {
       if (res) {
         localStorage.setItem("token", res);
         localStorage.setItem("userRole", decodedToken.roles);
-        if (decodedToken.roles === "admin") {
-          navigate(routes.admin);
-        } else if (decodedToken.roles === "staff") {
-          navigate(routes.staff);
-        } else if (decodedToken.roles === "customer") {
-          navigate(routes.customer);
+        if (decodedToken.roles === "ROLE_ADMIN") {
+          navigate(routes.homePage);
+        } else if (decodedToken.roles === "ROLE_STAFF") {
+          navigate(routes.homePage);
+        } else if (decodedToken.roles === "ROLE_CUSTOMER") {
+          navigate(routes.homePage);
         }
       } else {
         if (res && res.status === 401) {
@@ -52,12 +52,12 @@ export default function Login() {
     document.body.style.backgroundImage = `url(${backgroundImage})`;
     let token = localStorage.getItem("token");
     let userRole = localStorage.getItem("userRole");
-    if (userRole === "customer" && token) {
-      navigate(routes.customer);
-    } else if (userRole === "admin" && token) {
-      navigate(routes.admin);
-    } else if (userRole === "staff" && token) {
-      navigate(routes.staff);
+    if (userRole === "ROLE_CUSTOMER" && token) {
+      navigate(routes.homePage);
+    } else if (userRole === "ROLE_ADMIN" && token) {
+      navigate(routes.homePage);
+    } else if (userRole === "ROLE_STAFF" && token) {
+      navigate(routes.homePage);
     }
     // Cleanup function to remove added class and background image
     return () => {
