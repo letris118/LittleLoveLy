@@ -1,160 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    font-size: 100%;
-}
-
-header {
-    display: flex;
-    background-color: #2d3436;
-    padding: 20px;
-    color: #fff;
-}
-
-.store-name {
-    margin-left: 10px;
-}
-
-.store-name a {
-    font-family: "Courgette", cursive;
-    font-size: 27px;
-    text-decoration: none;
-}
-
-.search-bar {
-    font-size: 22px;
-    font-weight: bold;
-    margin-left: 350px;
-    display:flex;
-    width: 40%;
-}
-
-.search-bar input[type="text"] {
-    flex-grow: 1;
-    padding: 10px;
-    border-radius: 4px 0 0 4px;
-    border: none;
-    font-size: 15px;
-    font-family: "Montserrat", sans-serif;
-}
-
-.search-bar button {
-    padding: 10px 20px;
-    background-color: #dfe6e9;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    color: #2d3436;
-    font-size: 16px;
-    cursor: pointer;
-    margin-left: 5px;
-}
-
-.content {
-    display: flex;
-    flex: 1;
-}
-
-.side-bar {
-    width: 14%;
-    height: 88.7vh;
-    background-color: #dfe6e9;
-    padding: 20px;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    min-width: 200px;
-}
-
-.nav-bar {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.nav-bar a {
-     text-decoration: none;
-     color: #dfe6e9;
-     font-size: 13px;
-     padding: 15px 10px;
-     margin-bottom: 11px;
-     border-radius: 4px;
-     transition: background-color 0.3s, color 0.3s;
-     display: flex;
-     align-items: center;
-     flex-grow: 1;   
-     border-bottom: 1px solid #636e72;
-     font-family: "Montserrat", sans-serif;
-}
-
-.nav-bar a:hover {
-    background-color: #b2bec3;
-    color: #b2bec3;
-}
-
-
-/* ======================================== Brand + Product + Article ========================================== */
-.content-detail {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    flex-grow: 1;
-    margin: 15px 15px;
-}
-  
-.brand-bar, .product-bar, .article-bar {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    border-radius: 10px;
-    border: 2px solid  #dfe6e9;
-}
-
-.brand-bar{
-    height: 130px;
-}
-
-.product-bar{
-    height: 230px;
-}
-
-.article-bar{
-    height: 180px;
-}
-
-.brand-bar a, .product-bar a, .article-bar a {
-    text-decoration: none;
-    color: black;
-    border-radius: 10px;
-    margin-left: 10px;
-    margin-top: 10px;
-    font-family: "Montserrat", sans-serif;
-}
-
-.brand-bar a:hover, .product-bar a:hover, .article-bar a:hover {
-    text-decoration: underline;
-}
-
-.brand-list, .product-list, .article-list {
-    display: flex;
-    gap: 10px;
-}
-  
-img {
-    width: 100px; 
-    height: auto;
-    margin-left: 10px;
-    margin-top: 15px;
-    width: 50px;
-    height: 50px;
-}
-
-
-/*==================================================== Profile + Update ProfileProfile ============================================== */
-.profile {
+.staff-profile {
     flex-grow: 1;
     padding: 20px;
     display: flex;
@@ -163,7 +7,7 @@ img {
     align-items: center; 
 }
 
-.avatar {
+.staff-avatar {
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -175,13 +19,13 @@ img {
     margin-bottom: 20px;
 }
 
-.avatar img {
+.staff-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.info {
+.staff-info {
     width: 500px;
     height: 250px; 
     border: 2px solid #ddd;
@@ -190,14 +34,12 @@ img {
     background-color: #f9f9f9; 
 }
 
-.update-info,
-.update-info-btn {
-    text-align: center;
+.staff-update-info {
     margin-top: 20px;
+    display: flex;
 }
 
-.update-info button,
-.update-info-btn button {
+.staff-update-info button {
     padding: 10px 20px;
     background-color: #dfe6e9;
     color: black;
@@ -206,10 +48,124 @@ img {
     font-size: 16px;
     cursor: pointer;
     font-family: "Montserrat", sans-serif;
+    margin-right: 9px;
+    margin-left: 9px;
 }
 
-.update-info button:hover,
-.update-info-btn button:hover {
+.staff-update-info button:hover {
     background-color: #b2bec3;
+}
+
+header.staff-header {
+    display: flex;
+    background-color: #2d3436;
+    padding: 20px;
+}
+
+.staff-store-name {
+    margin-left: 40px;
+}
+
+.staff-store-name a {
+    font-family: "Courgette", cursive;
+    font-size: 27px;
+    text-decoration: none;
+    font-weight: 600;
+    width: 162px;
+}
+
+.staff-search-bar {
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 350px;
+    display: flex;
+    width: 40%;
+}
+
+.staff-search-bar input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 10px 0 0 10px;
+    border: 2px solid white;
+    font-size: 15px;
+    outline: none;
+    box-shadow: 0 0px 5px 0px #706f6faf;
+}
+
+.staff-search-icon,
+.staff-search-bar input {
+  height: 50px;
+}
+
+.staff-search-icon {
+    width: 70px;
+    background-color: white;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 0px 5px 0px #706f6faf;
+}
+
+.staff-search {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.staff-search-icon img {
+    width: 35%;
+    height: 50%;
+}
+
+
+
+.Manage-side-bar {
+    width: 17%;
+    height: 100%;
+    background-color: white;
+    font-size: 15px;
+    padding: 0 10px;
+    padding-bottom: 10px;
+    margin: 20px 20px;
+    box-shadow: 0 0 5px #6c6b6b8f;
+    border-radius: 20px;
+    min-width: 230px;
+    position: sticky;
+    top: 0;
+}
+
+.Manage-nav-bar {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.Manage-nav-bar a {
+     text-decoration: none;
+     color: #dfe6e9;
+     font-size: 15px;
+     padding: 15px 10px;
+     margin-top: 11px;
+     border-radius: 5px;
+     transition: background-color 0.3s, color 0.3s;
+     display: flex;
+     align-items: center;
+     border-bottom: 1px solid #636e72;
+
+}
+
+.Manage-nav-bar a:hover {
+    background-color: #dfe6e9
+}
+
+.manage-content {
+    display: flex;
+    background-color: white;
+}
+
+.staff-content-detail {
+    width: 80%;
+    background-color: white;
+    padding: 20px 20px 20px 0;
 }
 

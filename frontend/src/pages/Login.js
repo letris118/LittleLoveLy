@@ -5,7 +5,7 @@ import "../assets/css/loginAndRegister.css";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import { loginAPI } from "../services/auth/UsersService";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css"; // import first
 import { ToastContainer, toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 
@@ -30,9 +30,9 @@ export default function Login() {
         localStorage.setItem("token", res);
         localStorage.setItem("userRole", decodedToken.roles);
         if (decodedToken.roles === "ROLE_ADMIN") {
-          navigate(routes.admin);
+          navigate(routes.homePage);
         } else if (decodedToken.roles === "ROLE_STAFF") {
-          navigate(routes.staff);
+          navigate(routes.homePage);
         } else if (decodedToken.roles === "ROLE_CUSTOMER") {
           navigate(routes.homePage);
         }
@@ -55,9 +55,9 @@ export default function Login() {
     if (userRole === "ROLE_CUSTOMER" && token) {
       navigate(routes.homePage);
     } else if (userRole === "ROLE_ADMIN" && token) {
-      navigate(routes.admin);
+      navigate(routes.homePage);
     } else if (userRole === "ROLE_STAFF" && token) {
-      navigate(routes.staff);
+      navigate(routes.homePage);
     }
     // Cleanup function to remove added class and background image
     return () => {
