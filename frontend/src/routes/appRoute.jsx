@@ -8,6 +8,7 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import BrandDetail from "../pages/BrandDetail";
 import BrandList from "../pages/BrandList";
+
 import ManageProduct from "../pages/ManageProduct";
 import ManageOrder from "../pages/ManageOrder";
 import ManageArticle from "../pages/ManageArticle";

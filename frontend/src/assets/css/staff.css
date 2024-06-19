@@ -54,7 +54,7 @@
 
 .staff-update-info button:hover {
     background-color: #b2bec3;
-} 
+}
 
 header.staff-header {
     display: flex;
@@ -65,7 +65,7 @@ header.staff-header {
 .staff-store-name {
     margin-left: 40px;
 }
-  
+
 .staff-store-name a {
     font-family: "Courgette", cursive;
     font-size: 27px;
@@ -111,7 +111,7 @@ header.staff-header {
     justify-content: center;
     align-items: center;
 }
-  
+
 .staff-search-icon img {
     width: 35%;
     height: 50%;
@@ -151,7 +151,7 @@ header.staff-header {
      display: flex;
      align-items: center;
      border-bottom: 1px solid #636e72;
-     
+
 }
 
 .Manage-nav-bar a:hover {
@@ -168,4 +168,4 @@ header.staff-header {
     background-color: white;
     padding: 20px 20px 20px 0;
 }
-  
+

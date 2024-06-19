@@ -141,7 +141,7 @@ const Sidebar = ({ role, customerInfo, handleLogout }) => {
             <Link onClick={handleLogout}>
                 Đăng xuất
             </Link>
-        </div>       
+        </div>
         </>
 
       ): role === "ROLE_ADMIN" ? (
@@ -158,13 +158,13 @@ const Sidebar = ({ role, customerInfo, handleLogout }) => {
             <Link to="#">
                 Thống kê doanh thu
             </Link>
-            
+
             <Link onClick={handleLogout}>
                 Đăng xuất
             </Link>
-        </div>       
+        </div>
         </>
-        
+
       ) : (
         <>
           <div className="profile">
@@ -250,7 +250,7 @@ const Sidebar = ({ role, customerInfo, handleLogout }) => {
             </Link>
           </div>
         </>
-        
+
 
       )}
     </div>

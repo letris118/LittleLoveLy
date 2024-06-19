@@ -10,6 +10,7 @@ header {
 }
 
 .store-name {
+  min-width: 180px;
   margin-left: 40px;
 }
 
@@ -22,6 +23,8 @@ header {
 }
 
 .search-bar {
+  display: flex;
+  margin: 0 auto;
   font-size: 22px;
   font-weight: bold;
   margin-left: 350px;
@@ -37,11 +40,12 @@ header {
   font-size: 15px;
   outline: none;
   box-shadow: 0 0px 5px 0px #706f6faf;
+  min-width: 400px;
 }
 
 .content {
   display: flex;
-  /* width: 100%;  */
+  min-width: 1350px;
   background-color: rgb(255, 240, 252);
 }
 
@@ -55,7 +59,7 @@ header {
   margin: 20px 20px;
   box-shadow: 0 0 5px #6c6b6b8f;
   border-radius: 20px;
-  min-width: 230px;
+  min-width: 235px;
   position: sticky;
   top: 0;
 }
@@ -141,6 +145,10 @@ header {
 }
 
 .search-icon {
+  min-width: 70px;
+}
+
+.search-icon {
   width: 70px;
   background-color: #ff469e;
   border-radius: 0 10px 10px 0;
@@ -175,6 +183,7 @@ header {
 .content-row-1,
 .content-row-2,
 .content-row-3 {
+  min-width: 1000px;
   width: 100%;
   border-radius: 10px;
   background-color: white;
