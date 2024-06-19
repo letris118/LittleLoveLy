@@ -1,10 +1,12 @@
 package com.vtcorp.store.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,6 +27,8 @@ public class Product {
     private Integer noSold;
     private Integer stock;
     private boolean active;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date addedDate;
 
     @JsonIgnoreProperties({"products", "categories"})
     @ManyToOne
