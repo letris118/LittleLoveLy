@@ -1,11 +1,12 @@
 package com.vtcorp.store.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Data
@@ -14,32 +15,23 @@ import java.io.Serializable;
 @Table(name = "product_review")
 public class ProductReview {
 
-    @Embeddable
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class ProductReviewId implements Serializable {
-        @Column(name = "fk_product_id")
-        private long productId;
-        @Column(name = "fk_username")
-        private String username;
-    }
-
-    @EmbeddedId
-    private ProductReviewId productReviewId;
-
-    @ManyToOne
-    @MapsId("productId")
-    @JoinColumn(name = "fk_product_id")
-    private Product product;
-
-    @ManyToOne
-    @MapsId("username")
-    @JoinColumn(name = "fk_username")
-    private User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_id")
+    private long reviewId;
 
     private String feedback;
     private Integer star;
     private String imagePath;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date uploadedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_product_id")
+    private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_username")
+    private User user;
 
 }
