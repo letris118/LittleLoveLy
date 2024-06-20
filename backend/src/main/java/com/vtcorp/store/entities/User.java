@@ -1,9 +1,11 @@
 package com.vtcorp.store.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -26,6 +28,8 @@ public class User {
     private String street;
     private Integer point;
     private String role;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date registeredDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;

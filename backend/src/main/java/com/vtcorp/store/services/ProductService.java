@@ -34,10 +34,10 @@ public class ProductService {
     private final ProductImageRepository productImageRepository;
     private final UserRepository userRepository;
     private final ProductReviewMapper productReviewMapper;
-    private final ProductReviewRepository productReviewRepository;
+//    private final ProductReviewRepository productReviewRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper, BrandRepository brandRepository, CategoryRepository categoryRepository, ProductImageRepository productImageRepository, UserRepository userRepository, ProductReviewMapper productReviewMapper, ProductReviewRepository productReviewRepository) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, BrandRepository brandRepository, CategoryRepository categoryRepository, ProductImageRepository productImageRepository, UserRepository userRepository, ProductReviewMapper productReviewMapper/*, ProductReviewRepository productReviewRepository*/) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.brandRepository = brandRepository;
@@ -45,15 +45,15 @@ public class ProductService {
         this.productImageRepository = productImageRepository;
         this.userRepository = userRepository;
         this.productReviewMapper = productReviewMapper;
-        this.productReviewRepository = productReviewRepository;
-    }
-
-    public List<ProductResponseDTO> getActiveProducts() {
-        return mapProductsToProductResponseDTOs(productRepository.findByActive(true));
+//        this.productReviewRepository = productReviewRepository;
     }
 
     public List<ProductResponseDTO> getAllProducts() {
         return mapProductsToProductResponseDTOs(productRepository.findAll());
+    }
+
+    public List<ProductResponseDTO> getActiveProducts() {
+        return mapProductsToProductResponseDTOs(productRepository.findByActive(true));
     }
 
     public ProductResponseDTO getProductById(Long id) {
@@ -78,6 +78,7 @@ public class ProductService {
         product.setCategories(categories);
         List<ProductImage> images = handleProductImages(productRequestDTO.getNewImageFiles(), product);
         product.setProductImages(images);
+        product.setAddedDate(new Date());
         try {
             return productMapper.toResponseDTO(productRepository.save(product));
         } catch (Exception e) {

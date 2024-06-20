@@ -1,89 +1,87 @@
-import React from 'react';
-import '../assets/css/Staff.css'; 
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
-import {Link}from 'react-router-dom' 
-//import { useNavigate } from "react-router-dom";
-import { useEffect } from 'react';
+import StaffHeader from "../components/StaffHeader";
+import { ToastContainer, toast } from "react-toastify";
+import {
+  articles,
+  brands,
+  handleLogout,
+  products,
+  users,
+} from "../services/auth/UsersService";
+import BrandPresentation from "../components/BrandPresentation";
+import ProductPresentation from "../components/ProductPresentation";
+import ManageSidebar from "../components/ManageSideBar";
+import { jwtDecode } from "jwt-decode";
+import "../assets/css/staff.css";
 
-export default function StaffHomePage() {
-   
-        //const navigate = useNavigate();
+export default function ManageProduct() {
+    const [productList, setProductList] = useState([]);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+
+      const checkAuthentication = () => {
+        const userRole = localStorage.getItem("userRole");
+        if (!userRole || userRole !== "ROLE_STAFF") {
+            navigate('/login');
+        }
+      };
+      checkAuthentication();
+
+        const fetchProducts = async () => {
+          try {
+            let response = await products();
+            if (response) {
+              setProductList(response.slice(0, 20));
+            } else {
+              setProductList([]);
+            }
+          } catch (error) {
+            console.error("Error fetching products:", error);
+            toast.error("Không thể tải sản phẩm");
+            setProductList([]);
+          }
+        };
+        fetchProducts();
+    }, []);
+
+    return (
+        <div>
+            <ToastContainer />
+            <header className="staff-header">
         
-
-        useEffect(() => {
-            // Set document title
-            document.title = 'Tài Khoản';
+            <div className="staff-store-name">
+                <Link to={routes.homePage} style={{ color: 'white' }}>
+                    Little Lovely
+                </Link>
+            </div>
+            </header>
     
-            // Link Google Font
-            const fontLink1 = document.createElement('link');
-            fontLink1.href = 'https://fonts.googleapis.com/css2?family=Sevillana&display=swap';
-            fontLink1.rel = 'stylesheet';
-            document.head.appendChild(fontLink1);
+            <div className="manage-content">
+                <ManageSidebar
+                    handleLogout={handleLogout(navigate)}
+                />
+                <div className="staff-content-detail">   
+                    <div className="staff-profile">
 
-            const fontLink2 = document.createElement('link');
-            fontLink2.href = 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap';
-            fontLink2.rel = 'stylesheet';
-            document.head.appendChild(fontLink2);
-    
-            // Clean up function to remove the font link when the component unmounts
-            return () => {
-                document.head.removeChild(fontLink1);
-                document.head.removeChild(fontLink2);
-            };
-        }, []);
-
-        
-
-        return (
-            <div>                
-                <header>
-                    {/* logo + store name to return home page */}
-                    <div className="store-name">
-                        <Link to={routes.StaffHomePage} style={{ color: '#fff' }}>Little Lovely</Link>
-                    </div>           
-                </header>
-
-                {/* navigation bar + home page content*/}
-                <div className="content">
-
-                    {/* navigation bar*/}
-                    <div className="side-bar">
-                        <div className="nav-bar">
-                        <Link to={routes.StaffProfile} style={{ color: 'black' }}>Tài Khoản</Link>       
-                        <Link to={routes.StaffProfile} style={{ color: 'black' }}>Quản Lý Đơn Hàng</Link>
-                        <Link to={routes.StaffProfile} style={{ color: 'black' }}>Quản Lý Sản Phẩm</Link>
-                        <Link to={routes.StaffProfile} style={{ color: 'black' }}>Quản Lý Bài Viết</Link>
-                        <Link to={routes.StaffProfile} style={{ color: 'black' }}>Quản Lý Voucher</Link>
-                        <Link to={routes.StaffProfile} style={{ color: 'black' }}>Chăm Sóc Khách Hàng</Link>
-                        <Link to={routes.StaffProfile} style={{ color: 'black' }}>Đăng Xuất</Link>
-                        </div>                   
-                    </div>
-                    
-                    {/* ==================================================== Profile ==============================================/ */}
-                    <div className="profile">
-
-                        {/* avatar*/}
-                        <div className="avatar">
+                        <div className="staff-avatar">
                             <img src="path/to/placeholder/avatar.png" alt="" />   
                         </div>
 
-                        {/* infomation box*/}
-                        <div className="info">
-                                            
+                        <div className="staff-info">
                         </div>
 
-                        {/* button to update profile*/}
-                        <div className="update-info">
-                            <Link to={routes.StaffProfileUpdate}>
+                        <div className="staff-update-info">
+                            <Link to="#">
                                 <button>Chỉnh Sửa Thông Tin</button>
                             </Link>                          
                         </div>
-                    
                     </div>
-
-                </div>
-
+                </div>        
             </div>
-        );
+        </div>
+      );
     }
-

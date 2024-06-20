@@ -10,6 +10,11 @@ export const routes = {
   brands: "/brands",
   articles: "/articles",
   admin: "/admin",
-  staff: "/staff",
   customer: "/customer",
+  manageProduct: "/manageProduct",
+  manageOrder: "/manageOrder",
+  manageArticle: "/manageArticle",
+  staffProfile: "/staffProfile",
+  manageVoucher: "/manageVoucher",
+  manageAccount: "/manageAccount",
 };

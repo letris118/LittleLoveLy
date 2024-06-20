@@ -5,16 +5,16 @@ import com.vtcorp.store.entities.Brand;
 import com.vtcorp.store.entities.Category;
 import com.vtcorp.store.entities.ProductImage;
 import com.vtcorp.store.entities.ProductReview;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponseDTO {
+
     private long productId;
     private String name;
     private Double listedPrice;
@@ -24,6 +24,7 @@ public class ProductResponseDTO {
     private Integer stock;
     private boolean active;
     private double averageRating;
+    private Date addedDate;
 
     @JsonIgnoreProperties("products")
     private Brand brand;
