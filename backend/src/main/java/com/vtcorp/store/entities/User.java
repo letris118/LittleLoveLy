@@ -27,18 +27,15 @@ public class User {
     private Integer point;
     private String role;
 
-    @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
 
-    @JsonIgnoreProperties({"orders", "users"})
     @ManyToMany
     @JoinTable(name = "voucher_availability",
             joinColumns = @JoinColumn(name = "fk_username"),
             inverseJoinColumns = @JoinColumn(name = "fk_voucher_id"))
     private List<Voucher> vouchers;
 
-    @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductReview> productReviews;
 

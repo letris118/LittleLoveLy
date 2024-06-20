@@ -25,10 +25,10 @@ public class ProductResponseDTO {
     private boolean active;
     private double averageRating;
 
-    @JsonIgnoreProperties({"products", "categories"})
+    @JsonIgnoreProperties("products")
     private Brand brand;
 
-    @JsonIgnoreProperties({"products", "subCategories", "parentCategory", "brands"})
+    @JsonIgnoreProperties({"products", "subCategories", "parentCategory"})
     private List<Category> categories;
 
     @JsonIgnoreProperties("product")

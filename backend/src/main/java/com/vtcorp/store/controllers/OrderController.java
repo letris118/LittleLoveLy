@@ -1,6 +1,5 @@
 package com.vtcorp.store.controllers;
 
-import com.vtcorp.store.entities.Order;
 import com.vtcorp.store.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -23,16 +20,21 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<Order> getAllOrders() {
-        return orderService.getAllOrders();
+    public ResponseEntity<?> getAllOrders() {
+        try{
+            return ResponseEntity.ok(orderService.getAllOrders());
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+
+        }
     }
     
     @GetMapping("/{id}")
-    ResponseEntity<Order> getOrderById(@PathVariable String id) {
-        Order order = orderService.getOrderById(id);
-        if (order == null) {
+    public ResponseEntity<?> getOrderById(@PathVariable String id) {
+        try{
+            return ResponseEntity.ok(orderService.getOrderById(id));
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(order);
     }
 }

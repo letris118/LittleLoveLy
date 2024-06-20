@@ -1,6 +1,5 @@
 package com.vtcorp.store.controllers;
 
-import com.vtcorp.store.entities.Brand;
 import com.vtcorp.store.services.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/brands")
@@ -23,18 +21,21 @@ public class BrandController {
     }
 
     @GetMapping
-    private List<Brand> getAllBrands() {
-        return brandService.getAllBrands();
+    private ResponseEntity<?> getAllBrands() {
+        try {
+            return ResponseEntity.ok(brandService.getAllBrands());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Brand> getProductById(@PathVariable Long id) {
-        Brand brand = brandService.getBrandById(id);
-        if(brand == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> getProductById(@PathVariable Long id) {
+        try{
+            return ResponseEntity.ok(brandService.getBrandById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return ResponseEntity.ok(brand);
     }
-
 
 }

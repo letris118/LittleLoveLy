@@ -1,6 +1,7 @@
 package com.vtcorp.store.services;
 
-import com.vtcorp.store.entities.Order;
+import com.vtcorp.store.dtos.OrderResponseDTO;
+import com.vtcorp.store.mappers.OrderMapper;
 import com.vtcorp.store.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,17 +12,20 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
+        this.orderMapper = orderMapper;
     }
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderResponseDTO> getAllOrders() {
+        return orderMapper.toOrderResponseDTOs(orderRepository.findAll());
     }
 
-    public Order getOrderById(String id) {
-        return orderRepository.findById(id).orElse(null);
+    public OrderResponseDTO getOrderById(String id) {
+        return orderMapper.toOrderResponseDTO(orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found")));
     }
 }

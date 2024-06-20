@@ -79,7 +79,7 @@ public class ProductService {
         List<ProductImage> images = handleProductImages(productRequestDTO.getNewImageFiles(), product);
         product.setProductImages(images);
         try {
-            return productMapper.toDTO(productRepository.save(product));
+            return productMapper.toResponseDTO(productRepository.save(product));
         } catch (Exception e) {
             throw new RuntimeException("Failed to save product", e);
         }
@@ -182,7 +182,7 @@ public class ProductService {
     }
 
     private ProductResponseDTO mapProductToProductResponseDTO(Product product) {
-        ProductResponseDTO productResponseDTO = productMapper.toDTO(product);
+        ProductResponseDTO productResponseDTO = productMapper.toResponseDTO(product);
         productResponseDTO.setAverageRating(calculateAverageRating(product.getProductReviews()));
         return productResponseDTO;
     }
@@ -195,41 +195,41 @@ public class ProductService {
         return productResponseDTOs;
     }
 
-    @Transactional
-    public ProductResponseDTO addReview(ReviewRequestDTO reviewRequestDTO) {
-        long productId = reviewRequestDTO.getProductId();
-        String username = reviewRequestDTO.getUsername();
-        ProductReview.ProductReviewId productReviewId = new ProductReview.ProductReviewId(productId, username);
-        if (productReviewRepository.existsByProductReviewId(productReviewId)) {
-            throw new RuntimeException("Review already exists");
-        }
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        ProductReview productReview = productReviewMapper.toEntity(reviewRequestDTO);
-        productReview.setProductReviewId(productReviewId);
-        productReview.setProduct(product);
-        productReview.setUser(user);
-        if (reviewRequestDTO.getImage() != null) {
-            Path uploadPath = Paths.get(UPLOAD_REVIEW_IMG_DIR);
-            try {
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-                String storedFileName = (new Date()).getTime() + "_" + reviewRequestDTO.getImage().getOriginalFilename();
-                try (InputStream inputStream = reviewRequestDTO.getImage().getInputStream()) {
-                    Files.copy(inputStream, Paths.get(UPLOAD_REVIEW_IMG_DIR, storedFileName), StandardCopyOption.REPLACE_EXISTING);
-                    productReview.setImagePath(storedFileName);
-                } catch (IOException e) {
-                    throw new RuntimeException("Failed to save image", e);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to create upload directory", e);
-            }
-        }
-        product.getProductReviews().add(productReview);
-        return mapProductToProductResponseDTO(product);
-    }
+//    @Transactional
+//    public ProductResponseDTO addReview(ReviewRequestDTO reviewRequestDTO) {
+//        long productId = reviewRequestDTO.getProductId();
+//        String username = reviewRequestDTO.getUsername();
+//        ProductReview.ProductReviewId productReviewId = new ProductReview.ProductReviewId(productId, username);
+//        if (productReviewRepository.existsByProductReviewId(productReviewId)) {
+//            throw new RuntimeException("Review already exists");
+//        }
+//        Product product = productRepository.findById(productId)
+//                .orElseThrow(() -> new RuntimeException("Product not found"));
+//        User user = userRepository.findById(username)
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        ProductReview productReview = productReviewMapper.toEntity(reviewRequestDTO);
+//        productReview.setProductReviewId(productReviewId);
+//        productReview.setProduct(product);
+//        productReview.setUser(user);
+//        if (reviewRequestDTO.getImage() != null) {
+//            Path uploadPath = Paths.get(UPLOAD_REVIEW_IMG_DIR);
+//            try {
+//                if (!Files.exists(uploadPath)) {
+//                    Files.createDirectories(uploadPath);
+//                }
+//                String storedFileName = (new Date()).getTime() + "_" + reviewRequestDTO.getImage().getOriginalFilename();
+//                try (InputStream inputStream = reviewRequestDTO.getImage().getInputStream()) {
+//                    Files.copy(inputStream, Paths.get(UPLOAD_REVIEW_IMG_DIR, storedFileName), StandardCopyOption.REPLACE_EXISTING);
+//                    productReview.setImagePath(storedFileName);
+//                } catch (IOException e) {
+//                    throw new RuntimeException("Failed to save image", e);
+//                }
+//            } catch (Exception e) {
+//                throw new RuntimeException("Failed to create upload directory", e);
+//            }
+//        }
+//        product.getProductReviews().add(productReview);
+//        return mapProductToProductResponseDTO(product);
+//    }
 }
