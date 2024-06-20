@@ -40,7 +40,7 @@ public class ProductController {
 
     @Operation(summary = "Get product by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable long id) {
+    public ResponseEntity<?> getProductById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(productService.getProductById(id));
         } catch (Exception e) {
@@ -60,7 +60,7 @@ public class ProductController {
 
     @Operation(summary = "Update product by ID")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateProduct(@PathVariable long id, @ModelAttribute ProductRequestDTO productRequestDTO) {
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @ModelAttribute ProductRequestDTO productRequestDTO) {
         if (id != productRequestDTO.getProductId()) {
             return ResponseEntity.badRequest().body("Product ID in the path variable does not match the one in the request body");
         }
