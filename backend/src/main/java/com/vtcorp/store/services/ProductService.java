@@ -48,12 +48,12 @@ public class ProductService {
 //        this.productReviewRepository = productReviewRepository;
     }
 
-    public List<ProductResponseDTO> getActiveProducts() {
-        return mapProductsToProductResponseDTOs(productRepository.findByActive(true));
-    }
-
     public List<ProductResponseDTO> getAllProducts() {
         return mapProductsToProductResponseDTOs(productRepository.findAll());
+    }
+
+    public List<ProductResponseDTO> getActiveProducts() {
+        return mapProductsToProductResponseDTOs(productRepository.findByActive(true));
     }
 
     public ProductResponseDTO getProductById(Long id) {
@@ -78,6 +78,7 @@ public class ProductService {
         product.setCategories(categories);
         List<ProductImage> images = handleProductImages(productRequestDTO.getNewImageFiles(), product);
         product.setProductImages(images);
+        product.setAddedDate(new Date());
         try {
             return productMapper.toDTO(productRepository.save(product));
         } catch (Exception e) {

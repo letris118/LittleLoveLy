@@ -24,11 +24,5 @@ public class Brand {
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 
-    @JsonIgnoreProperties({"brands", "products", "subCategories", "parentCategory"})
-    @ManyToMany
-    @JoinTable(name = "brand_specializing",
-            joinColumns = @JoinColumn(name = "fk_brand_id"),
-            inverseJoinColumns = @JoinColumn(name = "fk_category_id"))
-    private List<Category> categories;
 
 }
