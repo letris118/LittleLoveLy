@@ -21,7 +21,7 @@ export default function ProductDetail() {
         <div className="content-detail">
           <Breadcrumb value={productName} customName="Tất cả sản phẩm" />
           <div className="content-display ">
-            <div className="content-row-1">
+            <div className="content-product-detail-row-1">
               <ProductDetailPresentation />
             </div>
           </div>

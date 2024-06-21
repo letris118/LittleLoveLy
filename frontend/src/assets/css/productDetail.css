@@ -3,16 +3,39 @@
   flex-direction: row;
   width: 100%;
   height: 100%;
+  background-color: white;
+  border-radius: 20px;
   .product-detail-left {
     width: 40%;
     height: 100%;
+    padding: 20px 40px 0 20px;
   }
   .product-detail-right {
     width: 60%;
     height: 100%;
-    background-color: aliceblue;
     color: rgb(59, 59, 59);
+    padding-top: 20px;
   }
+}
+
+.content-product-detail-row-1 {
+  min-width: 1000px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.product-detail-top-img {
+  border: 2px solid rgb(208, 208, 208);
+  border-radius: 10px;
+}
+
+.slick-initialized .slick-slide {
+  padding: 5px;
+}
+
+.product-detail-left .slick-prev:before,
+.slick-next:before {
+  display: none;
 }
 
 .product-detail-brand {
@@ -28,7 +51,7 @@
 .product-detail-name {
   font-weight: bold;
   color: black;
-  font-size: 17px;
+  font-size: 25px;
 }
 
 .product-detail-rate {
@@ -43,18 +66,23 @@
   gap: 50px;
   align-items: center;
   font-size: 15px;
+  margin: 10px 0;
 }
 
 .product-detail-price {
+  display: flex;
   font-size: 20px;
   font-weight: 550;
-  margin-left: 10px;
+  background-color: #efefef4e;
+  padding: 5px 0 5px 35px;
+  border-radius: 10px;
+  margin: 40px 30px 40px 0;
 }
 
 .product-detail-quantity {
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .product-detail-quantity button {
@@ -75,7 +103,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 30px;
 }
 
 .product-detail-button button {
@@ -89,7 +117,9 @@
 }
 
 .product-detail-add-to-cart button {
-  background-color: #ff9519;
+  background-color: rgb(255, 232, 243);
+  color: rgb(255, 70, 158);
+  border: 1px solid rgb(255, 70, 158);
 }
 .product-detail-buy-now button {
   background-color: rgb(255, 70, 158);
@@ -97,4 +127,22 @@
 
 .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 0 !important;
+}
+
+.product-detail-description h5 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-family: "MuseoModerno";
+}
+
+.product-detail-bottom {
+  margin-top: 20px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.product-detail-bottom-img img {
+  object-fit: contain;
 }
