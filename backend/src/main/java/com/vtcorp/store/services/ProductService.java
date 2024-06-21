@@ -80,7 +80,7 @@ public class ProductService {
         product.setProductImages(images);
         product.setAddedDate(new Date());
         try {
-            return productMapper.toDTO(productRepository.save(product));
+            return productMapper.toResponseDTO(productRepository.save(product));
         } catch (Exception e) {
             throw new RuntimeException("Failed to save product", e);
         }
@@ -183,7 +183,7 @@ public class ProductService {
     }
 
     private ProductResponseDTO mapProductToProductResponseDTO(Product product) {
-        ProductResponseDTO productResponseDTO = productMapper.toDTO(product);
+        ProductResponseDTO productResponseDTO = productMapper.toResponseDTO(product);
         productResponseDTO.setAverageRating(calculateAverageRating(product.getProductReviews()));
         return productResponseDTO;
     }

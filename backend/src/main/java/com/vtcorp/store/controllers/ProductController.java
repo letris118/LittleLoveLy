@@ -1,7 +1,6 @@
 package com.vtcorp.store.controllers;
 
 import com.vtcorp.store.dtos.ProductRequestDTO;
-import com.vtcorp.store.dtos.ReviewRequestDTO;
 import com.vtcorp.store.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
@@ -90,18 +89,5 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-//    @Operation(summary = "Add review to product")
-//    @PostMapping("/{productId}/reviews")
-//    public ResponseEntity<?> addReview(@PathVariable long productId, @ModelAttribute ReviewRequestDTO reviewRequestDTO) {
-//        if (productId != reviewRequestDTO.getProductId()) {
-//            return ResponseEntity.badRequest().body("Product ID in the path variable does not match the one in the request body");
-//        }
-//        try {
-//            return ResponseEntity.ok(productService.addReview(reviewRequestDTO));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
 
 }

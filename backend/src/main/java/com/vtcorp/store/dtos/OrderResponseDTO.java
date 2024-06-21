@@ -1,25 +1,23 @@
-package com.vtcorp.store.entities;
+package com.vtcorp.store.dtos;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.*;
+import com.vtcorp.store.entities.GiftIncluding;
+import com.vtcorp.store.entities.OrderDetail;
+import com.vtcorp.store.entities.User;
+import com.vtcorp.store.entities.Voucher;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
 import java.util.List;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "order")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Order {
+public class OrderResponseDTO {
 
-    @Id
     private String orderId;
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date createdDate;
+    private String createdDate;
     private String status;
     private String cusName;
     private String cusMail;
@@ -34,18 +32,15 @@ public class Order {
     private Integer totalPoint;
     private String trackingCode;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_username")
+    @JsonIgnoreProperties({"orders", "vouchers", "productReviews"})
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_voucher_id")
+    @JsonIgnoreProperties({"orders", "users"})
     private Voucher voucher;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"order","product.brand", "product.categories", "product.articles", "product.orderDetails", "product.productImages", "product.productReviews"})
     private List<OrderDetail> orderDetails;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"order", "gift.giftIncludings"})
     private List<GiftIncluding> giftIncludings;
-
 }

@@ -1,6 +1,7 @@
 package com.vtcorp.store.services;
 
-import com.vtcorp.store.dtos.ArticleDTO;
+import com.vtcorp.store.dtos.ArticleRequestDTO;
+import com.vtcorp.store.dtos.ArticleResponseDTO;
 import com.vtcorp.store.entities.Article;
 import com.vtcorp.store.entities.ArticleImage;
 import com.vtcorp.store.entities.Product;
@@ -42,70 +43,73 @@ public class ArticleService {
         this.articleImageRepository = articleImageRepository;
     }
 
-    public List<Article> getAllArticles() {
-        return articleRepository.findAll();
+    public List<ArticleResponseDTO> getAllArticles() {
+        return articleMapper.toResponseDTOs(articleRepository.findAll());
     }
 
-    public List<Article> getActiveArticles() {
-        return articleRepository.findByActive(true);
+    public List<ArticleResponseDTO> getActiveArticles() {
+        return articleMapper.toResponseDTOs(articleRepository.findByActive(true));
     }
 
-    public Article getArticleById(Long id) {
-        return articleRepository.findById(id).orElse(null);
+    public ArticleResponseDTO getArticleById(Long id) {
+        return articleMapper.toResponseDTO(articleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Article not found")));
     }
 
     @Transactional
-    public Article addArticle(ArticleDTO articleDTO) {
+    public ArticleResponseDTO addArticle(ArticleRequestDTO articleRequestDTO) {
 
-        List<Long> productIds = articleDTO.getProductIds();
+        List<Long> productIds = articleRequestDTO.getProductIds();
         List<Product> products = Collections.emptyList();
 
         if (productIds != null && !productIds.isEmpty()) {
-            products = productRepository.findAllById(articleDTO.getProductIds());
-            if (products.size() != articleDTO.getProductIds().size()) {
+            products = productRepository.findAllById(articleRequestDTO.getProductIds());
+            if (products.size() != articleRequestDTO.getProductIds().size()) {
                 throw new RuntimeException("One or more products not found");
             }
         }
 
-        Article article = articleMapper.toEntity(articleDTO);
-        List<ArticleImage> images = handleImages(articleDTO.getNewImageFiles(), article);
+        Article article = articleMapper.toEntity(articleRequestDTO);
+        List<ArticleImage> images = handleImages(articleRequestDTO.getNewImageFiles(), article);
+        article.setUploadedDate(new Date());
+        article.setActive(true);
         article.setProducts(products);
         article.setArticleImages(images);
         try {
-            return articleRepository.save(article);
+            return articleMapper.toResponseDTO(articleRepository.save(article));
         } catch (Exception e) {
             throw new RuntimeException("Failed to save article", e);
         }
     }
 
     @Transactional
-    public Article updateArticle(ArticleDTO articleDTO) {
-        Article article = articleRepository.findById(articleDTO.getArticleId())
+    public ArticleResponseDTO updateArticle(ArticleRequestDTO articleRequestDTO) {
+        Article article = articleRepository.findById(articleRequestDTO.getArticleId())
                 .orElseThrow(() -> new RuntimeException("Article not found"));
 
-        List<Long> productIds = articleDTO.getProductIds();
+        List<Long> productIds = articleRequestDTO.getProductIds();
         List<Product> products = Collections.emptyList();
 
         if (productIds != null && !productIds.isEmpty()) {
-            products = productRepository.findAllById(articleDTO.getProductIds());
-            if (products.size() != articleDTO.getProductIds().size()) {
+            products = productRepository.findAllById(articleRequestDTO.getProductIds());
+            if (products.size() != articleRequestDTO.getProductIds().size()) {
                 throw new RuntimeException("One or more products not found");
             }
         }
 
-        List<ArticleImage> newImages = handleImages(articleDTO.getNewImageFiles(), article);
+        List<ArticleImage> newImages = handleImages(articleRequestDTO.getNewImageFiles(), article);
         List<ArticleImage> savedImages = article.getArticleImages();
         List<ArticleImage> imagesToDelete = null;
         if (savedImages != null && !savedImages.isEmpty()) {
             imagesToDelete = new ArrayList<>(savedImages);
-            List<Long> imageToKeepIds = articleDTO.getImageIds();
+            List<Long> imageToKeepIds = articleRequestDTO.getImageIds();
             if (imageToKeepIds != null && !imageToKeepIds.isEmpty()) {
                 List<ArticleImage> imagesToKeep = articleImageRepository.findAllById(imageToKeepIds);
                 imagesToDelete.removeAll(imagesToKeep);
                 newImages.addAll(imagesToKeep);
             }
         }
-        articleMapper.updateEntity(articleDTO, article);
+        articleMapper.updateEntity(articleRequestDTO, article);
         article.setProducts(products);
         article.getArticleImages().clear();
         article.getArticleImages().addAll(newImages);
@@ -113,7 +117,7 @@ public class ArticleService {
         if (imagesToDelete != null) {
             removeImages(imagesToDelete);
         }
-        return article;
+        return articleMapper.toResponseDTO(article);
 
     }
 

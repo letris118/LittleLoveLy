@@ -1,7 +1,6 @@
 package com.vtcorp.store.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,11 +30,9 @@ public class Voucher {
     private Date expiryDate;
     private boolean active;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "voucher", cascade = CascadeType.ALL)
     private List<Order> orders;
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "vouchers")
     private List<User> users;
 

@@ -31,18 +31,15 @@ public class User {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date registeredDate;
 
-    @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
 
-    @JsonIgnoreProperties({"orders", "users"})
     @ManyToMany
     @JoinTable(name = "voucher_availability",
             joinColumns = @JoinColumn(name = "fk_username"),
             inverseJoinColumns = @JoinColumn(name = "fk_voucher_id"))
     private List<Voucher> vouchers;
 
-    @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductReview> productReviews;
 

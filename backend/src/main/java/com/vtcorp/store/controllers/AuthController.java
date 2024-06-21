@@ -3,7 +3,7 @@ package com.vtcorp.store.controllers;
 import com.vtcorp.store.dtos.ChangePasswordDTO;
 import com.vtcorp.store.dtos.ForgotPasswordDTO;
 import com.vtcorp.store.dtos.LoginDTO;
-import com.vtcorp.store.dtos.UserDTO;
+import com.vtcorp.store.dtos.UserRequestDTO;
 import com.vtcorp.store.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +31,9 @@ public class AuthController {
 
     @Operation(summary = "Register", description = "Required fields are mail, phone, name and password.")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> register(@RequestBody UserRequestDTO userRequestDTO) {
         try {
-            return ResponseEntity.ok(userService.register(userDTO));
+            return ResponseEntity.ok(userService.register(userRequestDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

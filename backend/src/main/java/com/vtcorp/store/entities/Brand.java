@@ -20,7 +20,6 @@ public class Brand {
     private String name;
     private String logo;
 
-    @JsonIgnoreProperties({"brand", "articles", "orderDetails", "productReviews"})
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 

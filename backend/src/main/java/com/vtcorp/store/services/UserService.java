@@ -1,9 +1,6 @@
 package com.vtcorp.store.services;
 
-import com.vtcorp.store.dtos.ChangePasswordDTO;
-import com.vtcorp.store.dtos.ForgotPasswordDTO;
-import com.vtcorp.store.dtos.UserDTO;
-import com.vtcorp.store.dtos.LoginDTO;
+import com.vtcorp.store.dtos.*;
 import com.vtcorp.store.entities.User;
 import com.vtcorp.store.mappers.UserMapper;
 import com.vtcorp.store.repositories.UserRepository;
@@ -51,28 +48,34 @@ public class UserService {
         }
     }
 
-    public String register(UserDTO userDTO) {
-        userDTO.setRole("ROLE_CUSTOMER");
-        addUser(userDTO);
-        emailSenderService.sendEmail(userDTO.getMail(), "Welcome to our store", "Welcome to our store, " + userDTO.getName());
-        return "User registered successfully";
-    }
-
-    public User addUser(UserDTO userDTO) {
-        if (userRepository.existsByUsername(userDTO.getUsername())) {
+    public String register(UserRequestDTO userRequestDTO) {
+        if (userRepository.existsByUsername(userRequestDTO.getUsername())) {
             throw new IllegalArgumentException("User already exists");
         }
-        User user = userMapper.toEntity(userDTO);
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        return userRepository.save(user);
+        User user = userMapper.toEntity(userRequestDTO);
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        user.setRole("ROLE_CUSTOMER");
+        user = userRepository.save(user);
+        emailSenderService.sendEmail(user.getMail(), "Welcome to our store", "Welcome to our store, " + user.getName());
+        return tokenService.generateAccessToken(user);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public UserResponseDTO addUser(UserRequestDTO userRequestDTO) {
+        if (userRepository.existsByUsername(userRequestDTO.getUsername())) {
+            throw new IllegalArgumentException("User already exists");
+        }
+        User user = userMapper.toEntity(userRequestDTO);
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        return userMapper.toResponseDTO(userRepository.save(user));
     }
 
-    public User getUserById(String id) {
-        return userRepository.findById(id).orElse(null);
+    public List<UserResponseDTO> getAllUsers() {
+        return userMapper.toResponseDTOs(userRepository.findAll());
+    }
+
+    public UserResponseDTO getUserById(String id) {
+        return userMapper.toResponseDTO(userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found")));
     }
 
     public String forgotPassword(ForgotPasswordDTO forgotPasswordDTO) {
@@ -104,12 +107,12 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(UserDTO userDTO) {
-        User user = userRepository.findById(userDTO.getUsername())
+    public UserResponseDTO updateUser(UserRequestDTO userRequestDTO) {
+        User user = userRepository.findById(userRequestDTO.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        userMapper.updateEntity(userDTO, user);
+        userMapper.updateEntity(userRequestDTO, user);
         userRepository.save(user);
-        return user;
+        return userMapper.toResponseDTO(user);
     }
 
     public String updateMail(String username, String newMail) {

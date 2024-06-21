@@ -30,12 +30,10 @@ public class Product {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date addedDate;
 
-    @JsonIgnoreProperties({"products", "categories"})
     @ManyToOne
     @JoinColumn(name = "fk_brand_id")
     private Brand brand;
 
-    @JsonIgnoreProperties({"products", "subCategories", "parentCategory", "brands"})
     @ManyToMany
     @JoinTable(name = "product_category",
             joinColumns = @JoinColumn(name = "fk_product_id"),
@@ -50,11 +48,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
 
-    @JsonIgnoreProperties({"product", "user"})
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductReview> productReviews;
 
-    @JsonIgnoreProperties("product")
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> productImages;
 
