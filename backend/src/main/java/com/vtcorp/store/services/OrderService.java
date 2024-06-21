@@ -50,7 +50,7 @@ public class OrderService {
         Order cart = orderRepository.findByUserAndStatus(user, "CART");
         if (cart == null) {
             cart = Order.builder()
-                    .orderId(CodeGenerator.generateRandomCode(14))
+                    .orderId(CodeGenerator.generateOrderID())
                     .user(user)
                     .status("CART")
                     .build();
@@ -73,7 +73,7 @@ public class OrderService {
         Order cart = orderRepository.findByUserAndStatus(user, "CART");
         if (cart == null) {
             cart = Order.builder()
-                    .orderId(CodeGenerator.generateRandomCode(14))
+                    .orderId(CodeGenerator.generateOrderID())
                     .user(user)
                     .status("CART")
                     .orderDetails(new ArrayList<>())
@@ -96,6 +96,33 @@ public class OrderService {
                 .price(product.getSellingPrice())
                 .build());
 
+        return orderMapper.toCartResponseDTO(orderRepository.save(cart));
+    }
+
+    @Transactional
+    public CartResponseDTO removeItemFromCart(String username, CartItemDTO cartItemDTO) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        productRepository.findById(cartItemDTO.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        Order cart = orderRepository.findByUserAndStatus(user, "CART");
+        if (cart == null) {
+            throw new RuntimeException("Cart not found");
+        }
+        if (cart.getOrderDetails().isEmpty()) {
+            throw new RuntimeException("Cart is empty");
+        }
+
+        for (OrderDetail item : cart.getOrderDetails()) {
+            if (item.getProduct().getProductId() == cartItemDTO.getProductId()) {
+                item.setQuantity(item.getQuantity() - cartItemDTO.getQuantity());
+                if (item.getQuantity() <= 0) {
+                    cart.getOrderDetails().remove(item);
+                }
+                break;
+            }
+        }
         return orderMapper.toCartResponseDTO(orderRepository.save(cart));
     }
 }
