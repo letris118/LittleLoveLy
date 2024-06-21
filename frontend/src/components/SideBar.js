@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
 
-const Sidebar = ({ role, customerInfo, handleLogout }) => {
+const Sidebar = ({ role, customerName, customerPoint }) => {
   return (
     <div className="side-bar">
       {role === "ROLE_CUSTOMER" ? (
@@ -24,14 +24,14 @@ const Sidebar = ({ role, customerInfo, handleLogout }) => {
               </svg>
             </div>
             <div className="profile-name">
-              <p>{customerInfo.name}</p>
+              <p>{customerName}</p>
             </div>
             <div className="profile-point">
               <p>
                 <i
                   class="fa-solid fa-coins"
                   style={{ color: "rgb(201, 201, 7)" }}></i>
-                &nbsp;{customerInfo.point || 0}
+                &nbsp;{customerPoint || 0}
               </p>
             </div>
           </div>

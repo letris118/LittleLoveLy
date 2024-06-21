@@ -34,4 +34,16 @@ const handleLogout = (navigate) => (e) => {
   toast.success("Đăng xuất thành công");
 };
 
-export { loginAPI, products, brands, articles, users, handleLogout };
+const formatPrice = (num) => {
+  return new Intl.NumberFormat("de-DE").format(num);
+};
+
+export {
+  loginAPI,
+  products,
+  brands,
+  articles,
+  users,
+  handleLogout,
+  formatPrice,
+};

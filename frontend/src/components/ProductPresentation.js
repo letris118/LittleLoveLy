@@ -3,12 +3,9 @@ import { routes } from "../routes";
 import { Link } from "react-router-dom";
 import "../assets/css/productPresentation.css";
 import instance from "../services/auth/customize-axios";
+import { formatPrice } from "../services/auth/UsersService";
 
 export default function ProductPresentation({ products }) {
-  const formatPrice = (num) => {
-    return new Intl.NumberFormat("de-DE").format(num);
-  };
-
   return (
     <div className="product-container">
       {products.map((product) => (

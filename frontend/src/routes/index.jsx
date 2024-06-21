@@ -12,4 +12,5 @@ export const routes = {
   admin: "/admin",
   staff: "/staff",
   customer: "/customer",
+  cart: "/cart",
 };

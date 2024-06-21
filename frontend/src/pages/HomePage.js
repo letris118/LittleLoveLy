@@ -4,25 +4,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import Footer from "../components/Footer";
 import { ToastContainer, toast } from "react-toastify";
-import {
-  articles,
-  brands,
-  handleLogout,
-  products,
-  users,
-} from "../services/auth/UsersService";
+import { articles, brands, products } from "../services/auth/UsersService";
 import BrandPresentation from "../components/BrandPresentation";
 import "../assets/css/homePage.css";
 import ProductPresentation from "../components/ProductPresentation";
 import Sidebar from "../components/SideBar";
-import { jwtDecode } from "jwt-decode";
 
 export default function HomePage() {
   const [productList, setProductList] = useState([]);
   const [brandList, setBrandList] = useState([]);
   const [articleList, setArticleList] = useState([]);
-  const [customerInfo, setCustomerInfo] = useState([]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,28 +62,30 @@ export default function HomePage() {
       }
     };
 
-    if (localStorage.getItem("token")) {
-      const fetchCustomerInfo = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          const decoded = jwtDecode(token);
-          let response = await users();
-          if (response) {
-            const userInfo = response.find(
-              (user) => user.username === decoded.sub
-            );
-            setCustomerInfo(userInfo);
-          } else {
-            setCustomerInfo([]);
-          }
-        } catch (error) {
-          console.error("Error fetching customer info:", error);
-          toast.error("Không thể tải thông tin khách hang");
-        }
-      };
+    // chỗ này để vô trang tài khoản
 
-      fetchCustomerInfo();
-    }
+    // if (localStorage.getItem("token")) {
+    //   const fetchCustomerInfo = async () => {
+    //     try {
+    //       const token = localStorage.getItem("token");
+    //       const decoded = jwtDecode(token);
+    //       let response = await users();
+    //       if (response) {
+    //         const userInfo = response.find(
+    //           (user) => user.username === decoded.sub
+    //         );
+    //         setCustomerInfo(userInfo);
+    //       } else {
+    //         setCustomerInfo([]);
+    //       }
+    //     } catch (error) {
+    //       console.error("Error fetching customer info:", error);
+    //       toast.error("Không thể tải thông tin khách hang");
+    //     }
+    //   };
+
+    //   fetchCustomerInfo();
+    // }
 
     fetchBrands();
     fetchProducts();
@@ -107,8 +100,8 @@ export default function HomePage() {
       <div className="content">
         <Sidebar
           role={localStorage.getItem("userRole")}
-          customerInfo={customerInfo}
-          handleLogout={handleLogout(navigate)}
+          customerName={localStorage.getItem("username")}
+          customerPoint={localStorage.getItem("point")}
         />
 
         <div className="content-detail">
