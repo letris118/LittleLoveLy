@@ -152,7 +152,11 @@ const Sidebar = ({ role, customerInfo, handleLogout }) => {
             </Link>
 
             <Link to="#">
-                Quản lý người dùng
+                Quản lý khách hàng
+            </Link>
+
+            <Link to="#">
+                Quản lý nhân viên
             </Link>
 
             <Link to="#">

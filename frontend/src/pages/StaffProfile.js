@@ -26,7 +26,7 @@ export default function ManageProduct() {
       const checkAuthentication = () => {
         const userRole = localStorage.getItem("userRole");
         if (!userRole || userRole !== "ROLE_STAFF") {
-            navigate('/login');
+            navigate('/');
         }
       };
       checkAuthentication();
@@ -76,8 +76,10 @@ export default function ManageProduct() {
 
                         <div className="staff-update-info">
                             <Link to="#">
-                                <button>Chỉnh Sửa Thông Tin</button>
-                            </Link>                          
+                                <button>Chỉnh sửa thông tin</button>
+                            </Link> 
+
+                                                    
                         </div>
                     </div>
                 </div>        
