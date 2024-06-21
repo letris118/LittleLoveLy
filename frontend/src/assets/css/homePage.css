@@ -114,28 +114,11 @@ header {
   border: 1px solid #9fa0a0b0;
 }
 
-.staff-nav-bar a {
-  text-decoration: none;
-  color: black;
-  font-size: 15px;
-  padding: 15px 10px;
-  margin-top: 10px;
-  border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s;
-  display: flex;
-  align-items: center;
-  border: 1px solid #9fa0a0b0;
-}
-
 .nav-bar a svg {
   margin: 10px;
 }
 
 .nav-bar a:hover {
-  background-color: #f0c3e477;
-}
-
-.staff-nav-bar a:hover {
   background-color: #f0c3e477;
 }
 
@@ -210,6 +193,176 @@ header {
 
 .row-1-top h4,
 .row-3-top h4 {
+  font-size: 30px;
+  font-family: "MuseoModerno";
+  font-weight: 600;
+  margin-left: 20px;
+}
+
+
+/* =================================Staff========================================= */
+
+header.manage-header {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #1e272e;
+  padding: 20px;
+  color: #ff469e;
+  width: 100%;
+  min-width: 1350px;
+}
+
+.manage-home-page {
+  height: 200vh;
+}
+
+.manage-store-name {
+  min-width: 180px;
+  margin-left: 40px;
+}
+
+.manage-store-name a {
+  font-family: "Courgette", cursive;
+  font-size: 27px;
+  text-decoration: none;
+  font-weight: 600;
+  width: 162px;
+}
+
+.manage-search-bar {
+  display: flex;
+  /* justify-content: space-between; */
+  /* margin: 0 auto; */
+  font-size: 22px;
+  font-weight: bold;
+  margin-left: 350px;
+  width: 80%;
+}
+
+.manage-search-bar input[type="text"] {
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 10px 0 0 10px;
+  border: 2px solid white;
+  font-size: 15px;
+  outline: none;
+  box-shadow: 0 0px 5px 0px #706f6faf;
+  min-width: 400px;
+}
+
+.manage-content {
+  display: flex;
+  min-width: 1350px;
+  background-color:#f5f6fa;
+}
+
+.manage-side-bar {
+  width: 17%;
+  height: 100%;
+  background-color: white;
+  font-size: 15px;
+  padding: 0 10px;
+  padding-bottom: 10px;
+  margin: 20px 20px;
+  box-shadow: 0 0 5px #6c6b6b8f;
+  border-radius: 20px;
+  min-width: 230px;
+  position: sticky;
+  top: 0;
+}
+
+.manage-nav-bar {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.manage-nav-bar a {
+  text-decoration: none;
+  color: #dfe6e9;
+  font-size: 15px;
+  padding: 15px 10px;
+  margin-top: 11px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #636e72;
+}
+
+
+.manage-nav-bar a:hover {
+  background-color:#f1f2f6;
+}
+
+.manage-search-icon,
+.manage-search-bar input {
+  height: 50px;
+}
+
+.manage-search-icon {
+  min-width: 70px;
+}
+
+.manage-search-icon {
+  width: 70px;
+  background-color: white;
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 0px 5px 0px #706f6faf;
+}
+
+.manage-search {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.manage-search-icon img {
+  width: 35%;
+  height: 50%;
+}
+
+.manage-content-detail {
+  width: 80%;
+  background-color: #f5f6fa;
+  padding: 20px 10px 20px 0;
+}
+
+.manage-content-display {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.manage-content-row-1,
+.manage-content-row-2,
+.manage-content-row-3 {
+  min-width: 1000px;
+  width: 100%;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.manage-content-row-3 {
+  padding-bottom: 20px;
+}
+
+.manage-row-1-top,
+.manage-row-3-top {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 10px 0 10px;
+  margin-bottom: 20px;
+}
+
+.manage-row-1-top h4,
+.manage-row-3-top h4 {
   font-size: 30px;
   font-family: "MuseoModerno";
   font-weight: 600;

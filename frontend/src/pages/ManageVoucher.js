@@ -12,11 +12,11 @@ import {
 } from "../services/auth/UsersService";
 import BrandPresentation from "../components/BrandPresentation";
 import ProductPresentation from "../components/ProductPresentation";
-import ManageSidebar from "../components/ManageSideBar";
+import StaffSideBar from "../components/StaffSideBar";
 import { jwtDecode } from "jwt-decode";
-import "../assets/css/staff.css";
+import "../assets/css/manage.css";
 
-export default function ManageProduct() {
+export default function ManageVoucher() {
     const [productList, setProductList] = useState([]);
 
     const navigate = useNavigate();
@@ -54,11 +54,11 @@ export default function ManageProduct() {
           <StaffHeader/>
     
           <div className="manage-content">
-            <ManageSidebar
-              handleLogout={handleLogout(navigate)}
+            <StaffSideBar
+              
             />
 
-            <div className="staff-content-detail">   
+            <div className="manage-content-detail">   
               VOUCHER
             </div>   
 
