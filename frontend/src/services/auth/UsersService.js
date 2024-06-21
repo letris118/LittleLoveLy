@@ -29,8 +29,21 @@ const handleLogout = (navigate) => (e) => {
   e.preventDefault();
   localStorage.removeItem("token");
   localStorage.removeItem("userRole");
+  localStorage.removeItem("username");
   navigate(routes.homePage);
   toast.success("Đăng xuất thành công");
 };
 
-export { loginAPI, products, brands, articles, users, handleLogout };
+const formatPrice = (num) => {
+  return new Intl.NumberFormat("de-DE").format(num);
+};
+
+export {
+  loginAPI,
+  products,
+  brands,
+  articles,
+  users,
+  handleLogout,
+  formatPrice,
+};

@@ -17,4 +17,5 @@ export const routes = {
   staffProfile: "/staffProfile",
   manageVoucher: "/manageVoucher",
   manageAccount: "/manageAccount",
+  cart: "/cart",
 };

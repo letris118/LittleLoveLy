@@ -3,12 +3,9 @@ import { routes } from "../routes";
 import { Link } from "react-router-dom";
 import "../assets/css/productPresentation.css";
 import instance from "../services/auth/customize-axios";
+import { formatPrice } from "../services/auth/UsersService";
 
 export default function ProductPresentation({ products }) {
-  const formatPrice = (num) => {
-    return new Intl.NumberFormat("de-DE").format(num);
-  };
-
   return (
     <div className="product-container">
       {products.map((product) => (
@@ -37,6 +34,9 @@ export default function ProductPresentation({ products }) {
           <div className="product-card-noSold">Đã bán {product.noSold}</div>
           <div className="product-card-price">
             {formatPrice(product.sellingPrice)}đ
+            <Link to={`${routes.products}/${product.name}`}>
+              <i class="fa-solid fa-cart-shopping"></i>
+            </Link>
           </div>
         </div>
       ))}

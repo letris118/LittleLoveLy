@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
 
-const Sidebar = ({ role, customerInfo, handleLogout }) => {
+const Sidebar = ({ role, customerName, customerPoint }) => {
   return (
     <div className="side-bar">
       {role === "ROLE_CUSTOMER" ? (
@@ -24,30 +24,18 @@ const Sidebar = ({ role, customerInfo, handleLogout }) => {
               </svg>
             </div>
             <div className="profile-name">
-              <p>{customerInfo.name}</p>
+              <p>{customerName}</p>
             </div>
             <div className="profile-point">
               <p>
                 <i
                   class="fa-solid fa-coins"
                   style={{ color: "rgb(201, 201, 7)" }}></i>
-                &nbsp;{customerInfo.point || 0}
+                &nbsp;{customerPoint || 0}
               </p>
             </div>
           </div>
           <div className="nav-bar">
-            <Link to="#">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-person-fill-gear"
-                viewBox="0 0 16 16">
-                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4m9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
-              </svg>
-              Tài khoản
-            </Link>
             <Link to="#">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -95,25 +83,6 @@ const Sidebar = ({ role, customerInfo, handleLogout }) => {
                 <path d="M16 2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h9.586a1 1 0 0 1 .707.293l2.853 2.853a.5.5 0 0 0 .854-.353zM3.5 3h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1 0-1m0 2.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1 0-1m0 2.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1" />
               </svg>
               Chăm sóc khách hàng
-            </Link>
-            <Link onClick={handleLogout}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-box-arrow-left"
-                viewBox="0 0 16 16">
-                <path
-                  fill-rule="evenodd"
-                  d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"
-                />
-                <path
-                  fill-rule="evenodd"
-                  d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"
-                />
-              </svg>
-              Đăng xuất
             </Link>
           </div>
         </>

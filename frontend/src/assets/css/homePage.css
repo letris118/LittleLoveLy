@@ -1,8 +1,13 @@
 header {
   display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   background-color: white;
   padding: 20px;
   color: #ff469e;
+  width: 100%;
+  min-width: 1350px;
 }
 
 .home-page {
@@ -24,12 +29,12 @@ header {
 
 .search-bar {
   display: flex;
-  margin: 0 auto;
+  /* justify-content: space-between; */
+  /* margin: 0 auto; */
   font-size: 22px;
   font-weight: bold;
   margin-left: 350px;
-  display: flex;
-  width: 40%;
+  width: 80%;
 }
 
 .search-bar input[type="text"] {
@@ -61,7 +66,7 @@ header {
   border-radius: 20px;
   min-width: 235px;
   position: sticky;
-  top: 0;
+  top: 110px;
 }
 
 .profile-icon {
@@ -171,7 +176,7 @@ header {
 .content-detail {
   width: 80%;
   background-color: rgb(255, 240, 252);
-  padding: 20px 20px 20px 0;
+  padding: 20px 10px 20px 0;
 }
 
 .content-display {

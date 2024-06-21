@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { handleLogout, products, users } from "../services/auth/UsersService";
-import { jwtDecode } from "jwt-decode";
+import { products } from "../services/auth/UsersService";
 import ProductPresentation from "../components/ProductPresentation";
 import Sidebar from "../components/SideBar";
 import Breadcrumb from "../components/Breadcrum";
 
 export default function ProductList() {
   const [productList, setProductList] = useState([]);
-  const [customerInfo, setCustomerInfo] = useState([]);
-  const navigate = useNavigate();
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -34,36 +29,14 @@ export default function ProductList() {
     };
     fetchProducts();
   }, []);
-  if (localStorage.getItem("token")) {
-    const fetchCustomerInfo = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const decoded = jwtDecode(token);
-        let response = await users();
-        if (response) {
-          const userInfo = response.find(
-            (user) => user.username === decoded.sub
-          );
-          setCustomerInfo(userInfo);
-        } else {
-          setCustomerInfo([]);
-        }
-      } catch (error) {
-        console.error("Error fetching customer info:", error);
-        toast.error("Không thể tải thông tin khách hang");
-      }
-    };
-
-    fetchCustomerInfo();
-  }
   return (
     <div>
       <Header />
       <div className="content">
         <Sidebar
           role={localStorage.getItem("userRole")}
-          customerInfo={customerInfo}
-          handleLogout={handleLogout(navigate)}
+          customerName={localStorage.getItem("username")}
+          customerPoint={localStorage.getItem("point")}
         />
 
         <div className="content-detail">

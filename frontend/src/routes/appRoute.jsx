@@ -14,6 +14,8 @@ import ManageOrder from "../pages/ManageOrder";
 import ManageArticle from "../pages/ManageArticle";
 import StaffProfile from "../pages/StaffProfile";
 import ManageVoucher from "../pages/ManageVoucher";
+import ProductList from "../pages/ProductList";
+import ProductDetail from "../pages/ProductDetail";
 
 export default function AppRoute() {
   return (
@@ -30,6 +32,8 @@ export default function AppRoute() {
       <Route path={routes.manageArticle} element={<ManageArticle />} />
       <Route path={routes.staffProfile} element={<StaffProfile />} />
       <Route path={routes.manageVoucher} element={<ManageVoucher />} />
+      <Route path={routes.products} element={<ProductList />} />
+      <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
     </Routes>
   );
 }

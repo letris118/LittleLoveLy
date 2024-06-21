@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
-import { brands, handleLogout, users } from "../services/auth/UsersService";
-import { jwtDecode } from "jwt-decode";
+import { brands } from "../services/auth/UsersService";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import Footer from "../components/Footer";
 
 export default function BrandDetail() {
   const brandName = useParams();
-  const [customerInfo, setCustomerInfo] = useState([]);
   const [brandInfo, setBrandInfo] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
@@ -28,30 +25,6 @@ export default function BrandDetail() {
         setBrandInfo([]);
       }
     };
-
-    if (localStorage.getItem("token")) {
-      const fetchCustomerInfo = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          const decoded = jwtDecode(token);
-          let response = await users();
-          if (response) {
-            const userInfo = response.find(
-              (user) => user.username === decoded.sub
-            );
-            setCustomerInfo(userInfo);
-          } else {
-            setCustomerInfo([]);
-          }
-        } catch (error) {
-          console.error("Error fetching customer info:", error);
-          toast.error("Không thể tải thông tin khách hang");
-        }
-      };
-
-      fetchCustomerInfo();
-    }
-
     fetchBrand();
   }, []);
   return (
@@ -60,11 +33,16 @@ export default function BrandDetail() {
       <div className="content">
         <Sidebar
           role={localStorage.getItem("userRole")}
-          customerInfo={customerInfo}
-          handleLogout={handleLogout(navigate)}
+          customerName={localStorage.getItem("username")}
+          customerPoint={localStorage.getItem("point")}
         />
         <div className="content-detail">
-          <div className="content-display "></div>
+          <div className="content-display ">
+            <div className="content-row-1">
+              <div className="row-1-left">Ảnh và logo</div>
+              <div className="row-1-right">Text</div>
+            </div>
+          </div>
         </div>
       </div>
       <Footer />

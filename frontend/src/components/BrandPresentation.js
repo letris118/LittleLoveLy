@@ -40,6 +40,7 @@ export default function BrandPresentation({ brands }) {
       },
     ],
   };
+
   return (
     <div className="slider-container">
       <Slider {...settings}>
