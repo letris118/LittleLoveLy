@@ -22,9 +22,7 @@ public class ArticleResponseDTO {
     private String content;
     private boolean active;
 
-    @JsonIgnoreProperties({"brand.products", "brand.categories",
-            "categories", "articles", "orderDetails", "productReviews",
-            "productImages.product"})
+    @JsonIgnoreProperties({"brand", "categories", "articles", "orderDetails", "productReviews", "productImages"})
     private List<Product> products;
 
     @JsonIgnoreProperties("article")
