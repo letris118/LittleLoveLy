@@ -38,7 +38,7 @@ public class OrderResponseDTO {
     @JsonIgnoreProperties({"orders", "users"})
     private Voucher voucher;
 
-    @JsonIgnoreProperties({"order","product.brand", "product.categories", "product.articles", "product.orderDetails", "product.productImages", "product.productReviews"})
+    @JsonIgnoreProperties({"order", "product"})
     private List<OrderDetail> orderDetails;
 
     @JsonIgnoreProperties({"order", "gift.giftIncludings"})
