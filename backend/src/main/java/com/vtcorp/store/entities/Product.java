@@ -23,6 +23,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(Views.Cart.class)
     private long productId;
+
+    @JsonView(Views.Cart.class)
     private String name;
     private Double listedPrice;
     private Double sellingPrice;

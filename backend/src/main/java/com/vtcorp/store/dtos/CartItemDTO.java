@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartItemDTO {
 
-    private long productId;
+    private long id;
+    private String itemType;
     private int quantity;
 
 }

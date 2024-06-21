@@ -23,7 +23,7 @@ public class CartController {
     @GetMapping
     @JsonView(Views.Cart.class)
     public ResponseEntity<?> getCart(Authentication authentication) {
-        try{
+        try {
             String username = authentication.getName();
             return ResponseEntity.ok(orderService.getCart(username));
         } catch (Exception e) {
@@ -31,11 +31,11 @@ public class CartController {
         }
     }
 
-    @Operation(summary = "Add item to cart")
+    @Operation(summary = "Add item to cart", description = "Item type: 'product' or 'gift'")
     @PutMapping("/add")
     @JsonView(Views.Cart.class)
     public ResponseEntity<?> addItemToCart(@RequestBody CartItemDTO cartItemDTO, Authentication authentication) {
-        try{
+        try {
             String username = authentication.getName();
             return ResponseEntity.ok(orderService.addItemToCart(username, cartItemDTO));
         } catch (Exception e) {
@@ -43,11 +43,11 @@ public class CartController {
         }
     }
 
-    @Operation(summary = "Remove item from cart")
+    @Operation(summary = "Remove item from cart", description = "Item type: 'product' or 'gift'")
     @PutMapping("/remove")
     @JsonView(Views.Cart.class)
     public ResponseEntity<?> removeItemFromCart(@RequestBody CartItemDTO cartItemDTO, Authentication authentication) {
-        try{
+        try {
             String username = authentication.getName();
             return ResponseEntity.ok(orderService.removeItemFromCart(username, cartItemDTO));
         } catch (Exception e) {
