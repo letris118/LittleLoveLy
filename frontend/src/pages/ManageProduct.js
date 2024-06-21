@@ -26,7 +26,7 @@ export default function ManageProduct() {
         const checkAuthentication = () => {
           const userRole = localStorage.getItem("userRole");
           if (!userRole || userRole !== "ROLE_STAFF") {
-              navigate('/login');
+              navigate('/');
           }
         };
         checkAuthentication();

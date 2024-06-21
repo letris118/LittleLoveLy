@@ -12,14 +12,20 @@ export default function ProductPresentation({ products }) {
   return (
     <div className="product-container">
       {products.map((product) => (
-        <div className="product-card " key={product.productId}>
+        <div className="product-card" key={product.productId}>
           <div className="product-card-img">
-            {product.productImages.slice(0, 1).map((image) => (
-              <img
-                src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
-                alt={product.name}
-              />
-            ))}
+          <Link
+              to={`${routes.products}/${product.name}`}
+              style={{ textDecoration: "none" }}>
+              {product.productImages.slice(0, 1).map((image) => (
+                <img
+                  src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
+                  alt={product.name}
+                />
+              ))}
+            </Link>
+
+
           </div>
           <div className="product-card-link">
             <Link
