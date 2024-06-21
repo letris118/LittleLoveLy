@@ -49,19 +49,24 @@ public class UserService {
     }
 
     public String register(UserRequestDTO userRequestDTO) {
-        userRequestDTO.setRole("ROLE_CUSTOMER");
-        User user = addUser(userRequestDTO);
-        emailSenderService.sendEmail(userRequestDTO.getMail(), "Welcome to our store", "Welcome to our store, " + userRequestDTO.getName());
-        return tokenService.generateAccessToken(user);
-    }
-
-    public User addUser(UserRequestDTO userRequestDTO) {
         if (userRepository.existsByUsername(userRequestDTO.getUsername())) {
             throw new IllegalArgumentException("User already exists");
         }
         User user = userMapper.toEntity(userRequestDTO);
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
-        return userRepository.save(user);
+        user.setRole("ROLE_CUSTOMER");
+        user = userRepository.save(user);
+        emailSenderService.sendEmail(user.getMail(), "Welcome to our store", "Welcome to our store, " + user.getName());
+        return tokenService.generateAccessToken(user);
+    }
+
+    public UserResponseDTO addUser(UserRequestDTO userRequestDTO) {
+        if (userRepository.existsByUsername(userRequestDTO.getUsername())) {
+            throw new IllegalArgumentException("User already exists");
+        }
+        User user = userMapper.toEntity(userRequestDTO);
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        return userMapper.toResponseDTO(userRepository.save(user));
     }
 
     public List<UserResponseDTO> getAllUsers() {
