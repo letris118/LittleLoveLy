@@ -7,6 +7,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -42,6 +44,46 @@ public class ProductController {
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(productService.getProductById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Get all products by categories")
+    @GetMapping("/all/category")
+    public ResponseEntity<?> getAllProductsByCategories(@RequestParam List<Long> categoryIds) {
+        try {
+            return ResponseEntity.ok(productService.getAllProductsByCategories(categoryIds));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Get active products by categories")
+    @GetMapping("/category")
+    public ResponseEntity<?> getActiveProductsByCategories(@RequestParam List<Long> categoryIds) {
+        try {
+            return ResponseEntity.ok(productService.getActiveProductsByCategories(categoryIds));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Get all products by search query")
+    @GetMapping("/all/search")
+    public ResponseEntity<?> getAllProductsBySearchQuery(@RequestParam String searchQuery) {
+        try {
+            return ResponseEntity.ok(productService.getAllProductsBySearchQuery(searchQuery));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Get active products by search query")
+    @GetMapping("/search")
+    public ResponseEntity<?> getActiveProductsBySearchQuery(@RequestParam String searchQuery) {
+        try {
+            return ResponseEntity.ok(productService.getActiveProductsBySearchQuery(searchQuery));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
