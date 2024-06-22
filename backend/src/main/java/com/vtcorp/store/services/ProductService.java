@@ -18,9 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ProductService {
@@ -134,6 +132,43 @@ public class ProductService {
         return "Product activated";
     }
 
+    public List<ProductResponseDTO> getAllProductsByCategories(List<Long> categoryIds) {
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+        if (categories.size() != categoryIds.size()) {
+            throw new RuntimeException("One or more categories not found");
+        }
+
+        List<Product> products = productRepository.findAllByCategories(categoryIds);
+
+        return mapProductsToProductResponseDTOs(products);
+
+    }
+
+    public List<ProductResponseDTO> getActiveProductsByCategories(List<Long> categoryIds) {
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+        if (categories.size() != categoryIds.size()) {
+            throw new RuntimeException("One or more categories not found");
+        }
+
+        List<Product> products = productRepository.findActiveByCategories(categoryIds);
+
+        return mapProductsToProductResponseDTOs(products);
+
+    }
+
+    public List<ProductResponseDTO> getAllProductsBySearchQuery(String searchQuery) {
+        List<Product> products = productRepository.findByNameContainingIgnoreCase(searchQuery);
+
+        return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
+    }
+
+    public List<ProductResponseDTO> getActiveProductsBySearchQuery(String searchQuery) {
+        List<Product> products = productRepository.findByNameContainingIgnoreCaseAndActive(searchQuery, true);
+
+        return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
+    }
+
+
     private List<ProductImage> handleProductImages(List<MultipartFile> imageFiles, Product product) {
         List<ProductImage> productImageList = new ArrayList<>();
         if (imageFiles != null) {
@@ -195,6 +230,7 @@ public class ProductService {
         }
         return productResponseDTOs;
     }
+
 
 //    @Transactional
 //    public ProductResponseDTO addReview(ReviewRequestDTO reviewRequestDTO) {
