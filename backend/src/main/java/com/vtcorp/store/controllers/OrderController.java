@@ -42,8 +42,7 @@ public class OrderController {
     @PostMapping("/calculate-total")
     public ResponseEntity<?> caculateTotal(@RequestBody OrderRequestDTO orderRequestDTO) {
         try{
-            //return ResponseEntity.ok(orderService.calculateTotal(orderRequestDTO));
-            return null;
+            return ResponseEntity.ok(orderService.calculateTotal(orderRequestDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

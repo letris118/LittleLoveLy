@@ -21,6 +21,4 @@ public class OrderRequestDTO {
 
     private List<CartItemDTO> orderDetails;
 
-    private List<Long> giftIds;
-
 }

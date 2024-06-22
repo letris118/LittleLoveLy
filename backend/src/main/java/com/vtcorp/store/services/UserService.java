@@ -55,6 +55,7 @@ public class UserService {
         User user = userMapper.toEntity(userRequestDTO);
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         user.setRole("ROLE_CUSTOMER");
+        user.setPoint(0);
         user = userRepository.save(user);
         emailSenderService.sendEmail(user.getMail(), "Welcome to our store", "Welcome to our store, " + user.getName());
         return tokenService.generateAccessToken(user);

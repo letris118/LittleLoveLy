@@ -1,9 +1,8 @@
 package com.vtcorp.store.services;
 
-import com.vtcorp.store.dtos.CartItemDTO;
-import com.vtcorp.store.dtos.CartResponseDTO;
-import com.vtcorp.store.dtos.OrderResponseDTO;
+import com.vtcorp.store.dtos.*;
 import com.vtcorp.store.entities.*;
+import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.mappers.OrderMapper;
 import com.vtcorp.store.repositories.GiftRepository;
 import com.vtcorp.store.repositories.OrderRepository;
@@ -78,7 +77,7 @@ public class OrderService {
         if (cartItemDTO.getItemType().equals("product")) {
             Product product = productRepository.findById(cartItemDTO.getId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
-            if (product.getStock() < cartItemDTO.getQuantity()) {
+            if (product.getStock() == null || product.getStock() < cartItemDTO.getQuantity()) {
                 throw new IllegalArgumentException("Insufficient stock for product");
             }
 
@@ -100,8 +99,11 @@ public class OrderService {
         } else if (cartItemDTO.getItemType().equals("gift")) {
             Gift gift = giftRepository.findById(cartItemDTO.getId())
                     .orElseThrow(() -> new RuntimeException("Gift not found"));
-            if (gift.getStock() < cartItemDTO.getQuantity()) {
+            if (gift.getStock() == null || gift.getStock() < cartItemDTO.getQuantity()) {
                 throw new IllegalArgumentException("Insufficient stock for gift");
+            }
+            if (gift.getPoint() == null || gift.getPoint() > user.getPoint()) {
+                throw new IllegalArgumentException("Insufficient point for gift");
             }
 
             for (GiftIncluding item : cart.getGiftIncludings()) {
@@ -169,5 +171,24 @@ public class OrderService {
         }
 
         return orderMapper.toCartResponseDTO(orderRepository.save(cart));
+    }
+
+    public OrderTotalDTO calculateTotal(OrderRequestDTO orderRequestDTO) {
+        double totalPrice = 0.0;
+        int totalPoints = 0;
+        for (CartItemDTO item : orderRequestDTO.getOrderDetails()) {
+            if (item.getItemType().equals("product")) {
+                Product product = productRepository.findById(item.getId())
+                        .orElseThrow(() -> new RuntimeException("Product not found"));
+                totalPrice += product.getSellingPrice() * item.getQuantity();
+            } else if (item.getItemType().equals("gift")) {
+                Gift gift = giftRepository.findById(item.getId())
+                        .orElseThrow(() -> new RuntimeException("Gift not found"));
+                totalPoints += gift.getPoint() * item.getQuantity();
+            } else {
+                throw new IllegalArgumentException("Item type not found");
+            }
+        }
+        return new OrderTotalDTO(totalPrice, totalPoints);
     }
 }
