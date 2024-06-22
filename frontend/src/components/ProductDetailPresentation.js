@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { formatPrice, products } from "../services/auth/UsersService";
 import { routes } from "../routes";
@@ -21,71 +21,87 @@ export default function ProductDetailPresentation() {
   const [nav2, setNav2] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        let response = await products();
-        const decodedProductName = decodeURIComponent(productName).replace(
-          /\n/g,
-          ""
-        );
-        const product = response.find(
-          (product) => product.name.replace(/\n/g, "") === decodedProductName
-        );
-        if (product) {
-          setProductInfo(product);
-          setSelectedImage(product.productImages[0].imageId);
-        } else {
-          setProductInfo(null);
-        }
-      } catch (error) {
-        console.error("Error fetching product:", error);
+  const fetchProduct = useCallback(async () => {
+    try {
+      let response = await products();
+      const decodedProductName = decodeURIComponent(productName).replace(
+        /\n/g,
+        ""
+      );
+      const product = response.find(
+        (product) => product.name.replace(/\n/g, "") === decodedProductName
+      );
+      if (product) {
+        setProductInfo(product);
+        setSelectedImage(product.productImages[0].imageId);
+      } else {
         setProductInfo(null);
       }
-    };
-    fetchProduct();
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      setProductInfo(null);
+    }
   }, [productName]);
 
-  const handleIncrease = () => {
-    setQuantity((prevQuantity) => {
-      if (prevQuantity < (productInfo?.stock ?? 0)) {
-        return prevQuantity + 1;
-      }
-      return prevQuantity;
-    });
-  };
+  useEffect(() => {
+    fetchProduct();
+  }, [fetchProduct]);
 
-  const handleDecrease = () => {
+  const handleIncrease = useCallback(() => {
+    setQuantity((prevQuantity) =>
+      prevQuantity < (productInfo?.stock ?? 0) ? prevQuantity + 1 : prevQuantity
+    );
+  }, [productInfo]);
+
+  const handleDecrease = useCallback(() => {
     setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
-  };
+  }, []);
 
-  const handleQuantityChange = (event) => {
-    const value = event.target.value;
-    if (
-      value === "" ||
-      (/^[0-9\b]+$/.test(value) && Number(value) <= (productInfo?.stock ?? 0))
-    ) {
-      setQuantity(Number(value));
-    }
-  };
+  const handleQuantityChange = useCallback(
+    (event) => {
+      const value = event.target.value;
+      if (
+        value === "" ||
+        (/^[0-9\b]+$/.test(value) && Number(value) <= (productInfo?.stock ?? 0))
+      ) {
+        setQuantity(Number(value));
+      }
+    },
+    [productInfo]
+  );
 
-  const handleAddToCart = () => {
-    if (quantity > 50) {
-      toast.error("Bạn đã mua số lượng vượt quá giới hạn cho phép !");
+  const handleAddToCart = useCallback(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingProductIndex = cartItems.findIndex(
+      (item) => item.productId === productInfo.productId // Use productId here
+    );
+
+    if (existingProductIndex > -1) {
+      cartItems[existingProductIndex].quantity += quantity;
     } else {
-      toast.success("Đã thêm sản phẩm.");
+      cartItems.push({ ...productInfo, quantity });
     }
-  };
 
-  const handleBuyNow = () => {
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+    toast.success("Đã thêm sản phẩm.", {
+      autoClose: 2000,
+    });
+  }, [quantity, productInfo]);
+
+  const handleBuyNow = useCallback(() => {
     if (quantity > 50) {
-      toast.error("Bạn đã mua số lượng vượt quá chương trình !");
+      toast.error("Bạn đã mua số lượng vượt quá chương trình !", {
+        autoClose: 2000,
+      });
     } else {
-      navigate("/order", { state: { productInfo, quantity } });
+      const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+      const updatedCartItems = [...cartItems, { ...productInfo, quantity }];
+      localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+      navigate(routes.cart);
     }
-  };
+  }, [quantity, productInfo, navigate]);
 
-  const getStockStatus = (stock) => {
+  const getStockStatus = useCallback((stock) => {
     if (stock === 0) {
       return "Hết hàng";
     } else if (stock < 10) {
@@ -93,31 +109,39 @@ export default function ProductDetailPresentation() {
     } else {
       return "Còn hàng";
     }
-  };
+  }, []);
 
-  const settingsImgTop = {
-    fade: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    waitForAnimate: false,
-    asNavFor: nav2,
-  };
+  const settingsImgTop = useMemo(
+    () => ({
+      fade: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      waitForAnimate: false,
+      asNavFor: nav2,
+    }),
+    [nav2]
+  );
 
-  const settingsImgBottom = {
-    focusOnSelect: true,
-    infinite: true,
-    slidesToShow: Math.min(productInfo?.productImages?.length || 0, 3),
-    slidesToScroll: 1,
-    speed: 500,
-    asNavFor: nav1,
-    beforeChange: (current, next) =>
-      setSelectedImage(productInfo.productImages[next].imageId),
-  };
+  const settingsImgBottom = useMemo(
+    () => ({
+      focusOnSelect: true,
+      infinite: true,
+      autoplay: true,
+      autoplaySpeed: 5000,
+      slidesToShow: Math.max(productInfo?.productImages?.length || 0, 4),
+      slidesToScroll: 1,
+      speed: 500,
+      asNavFor: nav1,
+      beforeChange: (current, next) =>
+        setSelectedImage(productInfo.productImages[next].imageId),
+    }),
+    [productInfo, nav1]
+  );
 
   return (
-    <div className="product-detail-container" id={productInfo}>
+    <div className="product-detail-container">
       <div className="product-detail-top">
         <div className="product-detail-left">
           {productInfo?.productImages?.length > 1 ? (
@@ -136,9 +160,6 @@ export default function ProductDetailPresentation() {
               <Slider
                 {...settingsImgBottom}
                 ref={(slider2) => setNav2(slider2)}
-                beforeChange={(current, next) =>
-                  setSelectedImage(productInfo.productImages[next].imageId)
-                }
                 style={{ margin: "10px" }}>
                 {productInfo.productImages.map((proImg) => (
                   <div
@@ -238,11 +259,7 @@ export default function ProductDetailPresentation() {
             </div>
             <div className="product-detail-price">
               {productInfo?.listedPrice === productInfo?.sellingPrice ? (
-                <div
-                  style={{
-                    color: "#FF469E",
-                    fontSize: "30px",
-                  }}>
+                <div style={{ color: "#FF469E", fontSize: "30px" }}>
                   {formatPrice(productInfo?.listedPrice) + "đ"}
                 </div>
               ) : (
@@ -258,11 +275,7 @@ export default function ProductDetailPresentation() {
                     }}>
                     {formatPrice(productInfo?.listedPrice) + "đ"}
                   </div>
-                  <div
-                    style={{
-                      color: "#FF469E",
-                      fontSize: "30px",
-                    }}>
+                  <div style={{ color: "#FF469E", fontSize: "30px" }}>
                     {formatPrice(productInfo?.sellingPrice) + "đ"}
                   </div>
                 </>
@@ -308,7 +321,7 @@ export default function ProductDetailPresentation() {
       <ToastContainer />
       <div className="product-detail-bottom">
         <div className="product-detail-description">
-          <h5>Chi Tiết Sản Phẩm</h5>
+          <h5>Hướng dẫn sử dụng</h5>
           {productInfo?.description}
         </div>
       </div>

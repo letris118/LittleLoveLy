@@ -17,7 +17,7 @@ export default function Login() {
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
-
+    localStorage.clear();
     if (!email_or_username || !password) {
       toast.error("Vui lòng điền đầy đủ thông tin");
       return;

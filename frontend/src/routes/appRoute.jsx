@@ -16,6 +16,7 @@ import StaffProfile from "../pages/StaffProfile";
 import ManageVoucher from "../pages/ManageVoucher";
 import ProductList from "../pages/ProductList";
 import ProductDetail from "../pages/ProductDetail";
+import Cart from "../pages/Cart";
 
 export default function AppRoute() {
   return (
@@ -34,6 +35,7 @@ export default function AppRoute() {
       <Route path={routes.manageVoucher} element={<ManageVoucher />} />
       <Route path={routes.products} element={<ProductList />} />
       <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
+      <Route path={routes.cart} element={<Cart />} />
     </Routes>
   );
 }
