@@ -61,4 +61,24 @@ public class OrderController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @Operation(summary = "Get list of districts by province id")
+    @GetMapping("districts/{provinceId}")
+    public ResponseEntity<?> getDistricts(@PathVariable int provinceId) {
+        try {
+            return ResponseEntity.ok(ghnService.getDistricts(provinceId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Get list of wards by district id")
+    @GetMapping("wards/{districtId}")
+    public ResponseEntity<?> getWards(@PathVariable int districtId) {
+        try {
+            return ResponseEntity.ok(ghnService.getWards(districtId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
