@@ -173,6 +173,7 @@ public class OrderService {
         return orderMapper.toCartResponseDTO(orderRepository.save(cart));
     }
 
+    // chua ap dung voucher
     public OrderTotalDTO calculateTotal(OrderRequestDTO orderRequestDTO) {
         double totalPrice = 0.0;
         int totalPoints = 0;
