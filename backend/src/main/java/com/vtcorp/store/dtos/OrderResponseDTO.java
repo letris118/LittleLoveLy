@@ -22,9 +22,9 @@ public class OrderResponseDTO {
     private String cusName;
     private String cusMail;
     private String cusPhone;
-    private String cusCity;
-    private String cusDistrict;
-    private String cusWard;
+    private Long cusCityCode;
+    private Long cusDistrictId;
+    private Long cusWardCode;
     private String cusStreet;
     private Integer totalQuantity;
     private Double totalPrice;
