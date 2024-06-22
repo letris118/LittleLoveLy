@@ -12,9 +12,9 @@ public class UserRequestDTO {
     private String name;
     private String mail;
     private String phone;
-    private String city;
-    private String district;
-    private String ward;
+    private Long cityCode;
+    private Long districtId;
+    private Long wardCode;
     private String street;
     private String role;
 }

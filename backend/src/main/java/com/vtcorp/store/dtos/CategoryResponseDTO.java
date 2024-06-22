@@ -13,12 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 public class CategoryResponseDTO {
 
-        private long categoryId;
-        private String name;
+    private long categoryId;
+    private String name;
 
-        @JsonIgnoreProperties({"subCategories", "parentCategory", "products", "brands"})
-        private List<Category> subCategories;
+    @JsonIgnoreProperties({"subCategories", "parentCategory", "products", "brands"})
+    private List<Category> subCategories;
 
-        @JsonIgnoreProperties({"subCategories", "parentCategory", "products", "brands"})
-        private Category parentCategory;
+    @JsonIgnoreProperties({"subCategories", "parentCategory", "products", "brands"})
+    private Category parentCategory;
 }
