@@ -2,7 +2,6 @@ package com.vtcorp.store.services;
 
 import com.vtcorp.store.dtos.*;
 import com.vtcorp.store.entities.*;
-import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.mappers.OrderMapper;
 import com.vtcorp.store.repositories.GiftRepository;
 import com.vtcorp.store.repositories.OrderRepository;
@@ -11,6 +10,7 @@ import com.vtcorp.store.repositories.UserRepository;
 import com.vtcorp.store.utils.CodeGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,14 +24,19 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final GiftRepository giftRepository;
+    private final GHNService ghnService;
+
+    @Value("${ghn.api.weight}")
+    private int weight;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.giftRepository = giftRepository;
+        this.ghnService = ghnService;
     }
 
     public List<OrderResponseDTO> getAllOrders() {
@@ -174,14 +179,15 @@ public class OrderService {
     }
 
     // chua ap dung voucher
-    public OrderTotalDTO calculateTotal(OrderRequestDTO orderRequestDTO) {
-        double totalPrice = 0.0;
+    public OrderEvaluationDTO evaluateOrder(OrderRequestDTO orderRequestDTO) {
+        double basePrice = 0.0;
         int totalPoints = 0;
+        Double shippingFee = null;
         for (CartItemDTO item : orderRequestDTO.getOrderDetails()) {
             if (item.getItemType().equals("product")) {
                 Product product = productRepository.findById(item.getId())
                         .orElseThrow(() -> new RuntimeException("Product not found"));
-                totalPrice += product.getSellingPrice() * item.getQuantity();
+                basePrice += product.getSellingPrice() * item.getQuantity();
             } else if (item.getItemType().equals("gift")) {
                 Gift gift = giftRepository.findById(item.getId())
                         .orElseThrow(() -> new RuntimeException("Gift not found"));
@@ -190,6 +196,13 @@ public class OrderService {
                 throw new IllegalArgumentException("Item type not found");
             }
         }
-        return new OrderTotalDTO(totalPrice, totalPoints);
+        Integer districtId = orderRequestDTO.getDistrictId();
+        Integer wardCode = orderRequestDTO.getWardCode();
+        if (districtId != null && wardCode != null) {
+            shippingFee = ghnService.calculateFee(districtId, wardCode, weight);
+        }
+        double totalPrice = basePrice + (shippingFee != null ? shippingFee : 0);
+        int additionalPoints = (int) (basePrice / 1000);
+        return new OrderEvaluationDTO(totalPrice, basePrice, shippingFee, totalPoints, additionalPoints);
     }
 }

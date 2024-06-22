@@ -43,10 +43,10 @@ public class OrderController {
     }
 
     @Operation(summary = "Calculate total price and point of order")
-    @PostMapping("/calculate-total")
-    public ResponseEntity<?> caculateTotal(@RequestBody OrderRequestDTO orderRequestDTO) {
+    @PostMapping("/evaluate")
+    public ResponseEntity<?> evaluateOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
         try {
-            return ResponseEntity.ok(orderService.calculateTotal(orderRequestDTO));
+            return ResponseEntity.ok(orderService.evaluateOrder(orderRequestDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -12,9 +12,9 @@ public class OrderRequestDTO {
     private String cusName;
     private String cusMail;
     private String cusPhone;
-    private String cusCity;
-    private String cusDistrict;
-    private String cusWard;
+    private Integer provinceId;
+    private Integer districtId;
+    private Integer wardCode;
     private String cusStreet;
 
     private String voucherId;

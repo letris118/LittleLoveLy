@@ -1,5 +1,6 @@
 package com.vtcorp.store.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.vtcorp.store.dtos.DistrictResponseDTO;
 import com.vtcorp.store.dtos.ProvinceResponseDTO;
 import com.vtcorp.store.dtos.WardResponseDTO;
@@ -24,8 +25,20 @@ public class GHNService {
     @Value("${ghn.api.url.production.ward}")
     private String getWardUrl;
 
+    @Value("${ghn.api.url.production.calculate-fee}")
+    private String calculateFeeUrl;
+
     @Value("${ghn.api.token.production}")
     private String apiProductionToken;
+
+    @Value("${ghn.api.service-id}")
+    private int serviceId;
+
+    @Value("${ghn.api.from-district-id}")
+    private int fromDistrictId;
+
+    @Value("${ghn.api.from-ward-code}")
+    private int fromWardCode;
 
     public ProvinceResponseDTO getProvinces() {
         RestTemplate restTemplate = new RestTemplate();
@@ -56,5 +69,22 @@ public class GHNService {
                 .queryParam("district_id", districtId);
         ResponseEntity<WardResponseDTO> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, WardResponseDTO.class);
         return response.getBody();
+    }
+
+    public Double calculateFee(int toDistrictId, int toWardCode, int weight) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Token", apiProductionToken);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(calculateFeeUrl)
+                .queryParam("service_id", serviceId)
+                .queryParam("from_district_id", fromDistrictId)
+                .queryParam("from_ward_code", fromWardCode)
+                .queryParam("weight", weight)
+                .queryParam("to_district_id", toDistrictId)
+                .queryParam("to_ward_code", toWardCode);
+        ResponseEntity<JsonNode> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, JsonNode.class);
+        JsonNode body = response.getBody();
+        return (body != null && body.has("data") && body.get("data").has("total")) ? body.get("data").get("total").asDouble() : null;
     }
 }
