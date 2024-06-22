@@ -45,9 +45,48 @@
   border: 1px solid black;
   border-radius: 20px;
   margin-bottom: 20px;
+  color: black;
+  text-align: center;
 }
 
-.brand-btn {
+.row-list-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-card-list {
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
+  padding: 5px;
+  width: 250px;
+}
+
+.brand-card-list-img {
+  width: 100%;
+  height: 250px;
+  margin-bottom: 20px;
+}
+
+.brand-card-list-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-card-list-btn {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.brand-list-btn {
+  width: 70%;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-bottom: 20px;
   color: black;
   text-align: center;
 }

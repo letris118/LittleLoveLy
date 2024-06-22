@@ -9,13 +9,13 @@ export const routes = {
   products: "/products",
   brands: "/brands",
   articles: "/articles",
-  admin: "/admin",
   customer: "/customer",
   manageProduct: "/manageProduct",
   manageOrder: "/manageOrder",
   manageArticle: "/manageArticle",
-  staffProfile: "/staffProfile",
   manageVoucher: "/manageVoucher",
   manageAccount: "/manageAccount",
   cart: "/cart",
+  staffHomePage: "/staff",
+
 };

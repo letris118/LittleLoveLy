@@ -1,5 +1,7 @@
 package com.vtcorp.store.entities;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.vtcorp.store.jsonview.Views;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +16,10 @@ public class Gift {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.Cart.class)
     private long giftId;
+
+    @JsonView(Views.Cart.class)
     private String name;
     private Integer point;
     private Integer stock;

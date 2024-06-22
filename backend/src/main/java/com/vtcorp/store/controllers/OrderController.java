@@ -1,12 +1,11 @@
 package com.vtcorp.store.controllers;
 
+import com.vtcorp.store.dtos.OrderRequestDTO;
 import com.vtcorp.store.services.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -19,22 +18,34 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @Operation(summary = "Get all orders")
     @GetMapping
     public ResponseEntity<?> getAllOrders() {
         try{
             return ResponseEntity.ok(orderService.getAllOrders());
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
 
         }
     }
-    
+
+    @Operation(summary = "Get order by id")
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrderById(@PathVariable String id) {
         try{
             return ResponseEntity.ok(orderService.getOrderById(id));
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/calculate-total")
+    public ResponseEntity<?> caculateTotal(@RequestBody OrderRequestDTO orderRequestDTO) {
+        try{
+            //return ResponseEntity.ok(orderService.calculateTotal(orderRequestDTO));
+            return null;
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
