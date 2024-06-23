@@ -13,6 +13,10 @@ const products = () => {
   return instance.get("/api/products");
 };
 
+const productsAll = () => {
+  return instance.get("/api/products/all");
+};
+
 const brands = () => {
   return instance.get("/api/brands");
 };
@@ -23,6 +27,18 @@ const articles = () => {
 
 const users = () => {
   return instance.get("/api/users");
+};
+
+const activeProducts = () => {
+  return instance.get('/api/products');
+};
+
+const deactivateProduct = (productId) => {
+  return instance.put(`/api/products/deactivate/${productId}`);
+};
+
+const activateProduct = (productId) => {
+  return instance.put(`/api/products/activate/${productId}`);
 };
 
 const handleLogout = (navigate) => (e) => {
@@ -41,9 +57,13 @@ const formatPrice = (num) => {
 export {
   loginAPI,
   products,
+  productsAll,
   brands,
   articles,
   users,
   handleLogout,
   formatPrice,
+  activeProducts,
+  deactivateProduct,
+  activateProduct
 };
