@@ -282,7 +282,7 @@ export default function ProductDetailPresentation() {
               )}
             </div>
             <div className="product-detail-quantity">
-              Số lượng
+              Số lượng &nbsp; &nbsp; &nbsp;
               <Box display="flex" alignItems="center" m={1} marginLeft={7}>
                 <button onClick={handleDecrease}>-</button>
                 <TextField

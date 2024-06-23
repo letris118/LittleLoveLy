@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
 import Footer from "../components/Footer";
 import "../assets/css/cart.css";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import { Table } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Table, styled } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { formatPrice } from "../services/auth/UsersService";
@@ -14,26 +14,31 @@ import instance from "../services/auth/customize-axios";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem("cart")) || [];
     setCartItems(storedCartItems);
   }, []);
 
-  const handleRemoveItem = (index) => {
-    const updatedCartItems = cartItems.filter((_, i) => i !== index);
-    setCartItems(updatedCartItems);
-    localStorage.setItem("cart", JSON.stringify(updatedCartItems));
-  };
+  const handleRemoveItem = useCallback((index) => {
+    setCartItems((prevItems) => {
+      const updatedCartItems = prevItems.filter((_, i) => i !== index);
+      localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+      return updatedCartItems;
+    });
+  }, []);
 
-  const handleQuantityChange = (index, value) => {
-    const updatedCartItems = [...cartItems];
-    if (value > 0 && value <= 50) {
-      updatedCartItems[index].quantity = value;
-    }
-    setCartItems(updatedCartItems);
-    localStorage.setItem("cart", JSON.stringify(updatedCartItems));
-  };
+  const handleQuantityChange = useCallback((index, value) => {
+    setCartItems((prevItems) => {
+      const updatedCartItems = [...prevItems];
+      if (value > 0 && value <= 50) {
+        updatedCartItems[index].quantity = value;
+        localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+      }
+      return updatedCartItems;
+    });
+  }, []);
 
   return (
     <div>
@@ -49,7 +54,7 @@ export default function Cart() {
             <div className="content-cart-col-left">
               <h4>Giỏ hàng</h4>
               <div className="content-cart-col-left-description">
-                <span style={{ marginRight: "15px" }}>Đơn giá </span>
+                <span>Đơn giá </span>
                 <span>Số lượng </span>
                 <span>Thành tiền </span>
               </div>
@@ -71,14 +76,42 @@ export default function Cart() {
                         />
                       </TableCell>
                       <TableCell sx={{ width: "50%" }}>{item.name}</TableCell>
-                      <TableCell
-                        sx={{
-                          width: "18%",
-                          textAlign: "center",
-                          fontWeight: "bold",
-                        }}>
-                        {formatPrice(item.sellingPrice)}đ
-                      </TableCell>
+                      {item.sellingPrice === item.listedPrice ? (
+                        <TableCell
+                          sx={{
+                            width: "18%",
+                          }}>
+                          <div
+                            style={{
+                              textAlign: "center",
+                              fontWeight: "bold",
+                            }}>
+                            {formatPrice(item.sellingPrice)}đ
+                          </div>
+                        </TableCell>
+                      ) : (
+                        <TableCell
+                          sx={{
+                            width: "18%",
+                          }}>
+                          <div
+                            style={{
+                              textAlign: "center",
+                              fontWeight: "bold",
+                            }}>
+                            {formatPrice(item.sellingPrice)}đ
+                          </div>
+                          <div
+                            style={{
+                              textAlign: "center",
+                              textDecoration: "line-through",
+                              fontSize: "10px",
+                            }}>
+                            {formatPrice(item.listedPrice)}đ
+                          </div>
+                        </TableCell>
+                      )}
+
                       <TableCell sx={{ width: "15%" }}>
                         <Box
                           className="product-detail-quantity"
@@ -130,7 +163,60 @@ export default function Cart() {
                 </Table>
               </div>
             </div>
-            <div className="content-cart-col-right">Chọn địa và nút</div>
+            <div className="content-cart-col-right">
+              <div className="content-cart-col-right-total-price">
+                <div style={{ fontSize: "15px" }}>Tính tạm: </div>
+                <div style={{ fontSize: "15px" }}>
+                  {formatPrice(
+                    cartItems.reduce(
+                      (total, item) => total + item.listedPrice * item.quantity,
+                      0
+                    )
+                  )}
+                  đ
+                </div>
+              </div>
+              <div
+                className="content-cart-col-right-reduce-price"
+                style={{
+                  borderBottom: "1px solid grey",
+                  paddingBottom: "10px",
+                }}>
+                <div style={{ fontSize: "15px" }}>Giảm giá sản phẩm : </div>
+                <div style={{ fontSize: "15px", color: "#FF469E" }}>
+                  -
+                  {formatPrice(
+                    cartItems.reduce(
+                      (total, item) =>
+                        total +
+                        (item.listedPrice - item.sellingPrice) * item.quantity,
+                      0
+                    )
+                  )}
+                  đ
+                </div>
+              </div>
+              <div className="content-cart-col-right-final-price">
+                <div style={{ fontSize: "15px" }}>
+                  <b>Tổng tiền:</b>{" "}
+                </div>
+                <div style={{ fontSize: "15px", color: "black" }}>
+                  {formatPrice(
+                    cartItems.reduce(
+                      (total, item) =>
+                        total + item.sellingPrice * item.quantity,
+                      0
+                    )
+                  )}
+                  đ
+                </div>
+              </div>
+              <div className="content-cart-col-right-button">
+                <Link to="/checkout">
+                  <button>Tiếp tục</button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
