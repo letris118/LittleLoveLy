@@ -13,9 +13,9 @@ public class UserResponseDTO {
         private String name;
         private String mail;
         private String phone;
-        private String city;
-        private String district;
-        private String ward;
+        private Long cityCode;
+        private Long districtId;
+        private Long wardCode;
         private String street;
         private Integer point;
         private String role;

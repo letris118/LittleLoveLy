@@ -52,21 +52,21 @@ public class OrderController {
         }
     }
 
-    @Operation(summary = "Get list of provinces")
-    @GetMapping("provinces")
-    public ResponseEntity<?> getProvinces() {
+    @Operation(summary = "Get list of provinces/cities")
+    @GetMapping("cities")
+    public ResponseEntity<?> getCities() {
         try {
-            return ResponseEntity.ok(ghnService.getProvinces());
+            return ResponseEntity.ok(ghnService.getCities());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @Operation(summary = "Get list of districts by province id")
-    @GetMapping("districts/{provinceId}")
-    public ResponseEntity<?> getDistricts(@PathVariable int provinceId) {
+    @Operation(summary = "Get list of districts by city id")
+    @GetMapping("districts/{cityId}")
+    public ResponseEntity<?> getDistricts(@PathVariable int cityId) {
         try {
-            return ResponseEntity.ok(ghnService.getDistricts(provinceId));
+            return ResponseEntity.ok(ghnService.getDistricts(cityId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

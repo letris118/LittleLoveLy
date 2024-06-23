@@ -2,7 +2,7 @@ package com.vtcorp.store.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vtcorp.store.dtos.DistrictResponseDTO;
-import com.vtcorp.store.dtos.ProvinceResponseDTO;
+import com.vtcorp.store.dtos.CityResponseDTO;
 import com.vtcorp.store.dtos.WardResponseDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -17,7 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class GHNService {
 
     @Value("${ghn.api.url.production.province}")
-    private String getProvinceUrl;
+    private String getCityUrl;
 
     @Value("${ghn.api.url.production.district}")
     private String getDistrictUrl;
@@ -40,22 +40,22 @@ public class GHNService {
     @Value("${ghn.api.from-ward-code}")
     private int fromWardCode;
 
-    public ProvinceResponseDTO getProvinces() {
+    public CityResponseDTO getCities() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Token", apiProductionToken);
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<ProvinceResponseDTO> response = restTemplate.exchange(getProvinceUrl, HttpMethod.GET, entity, ProvinceResponseDTO.class);
+        ResponseEntity<CityResponseDTO> response = restTemplate.exchange(getCityUrl, HttpMethod.GET, entity, CityResponseDTO.class);
         return response.getBody();
     }
 
-    public DistrictResponseDTO getDistricts(int provinceId) {
+    public DistrictResponseDTO getDistricts(int cityId) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Token", apiProductionToken);
         HttpEntity<String> entity = new HttpEntity<>(headers);
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getDistrictUrl)
-                .queryParam("province_id", provinceId);
+                .queryParam("province_id", cityId);
         ResponseEntity<DistrictResponseDTO> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, DistrictResponseDTO.class);
         return response.getBody();
     }
@@ -71,7 +71,7 @@ public class GHNService {
         return response.getBody();
     }
 
-    public Double calculateFee(int toDistrictId, int toWardCode, int weight) {
+    public Double calculateFee(long toDistrictId, long toWardCode, int weight) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Token", apiProductionToken);

@@ -196,8 +196,8 @@ public class OrderService {
                 throw new IllegalArgumentException("Item type not found");
             }
         }
-        Integer districtId = orderRequestDTO.getDistrictId();
-        Integer wardCode = orderRequestDTO.getWardCode();
+        Long districtId = orderRequestDTO.getCusDistrictId();
+        Long wardCode = orderRequestDTO.getCusWardCode();
         if (districtId != null && wardCode != null) {
             shippingFee = ghnService.calculateFee(districtId, wardCode, weight);
         }
