@@ -1,5 +1,6 @@
 package com.vtcorp.store.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.util.Date;
@@ -13,12 +14,15 @@ public class VoucherRequestDTO {
     private String title;
     private Integer limit;
 
-    private Integer type;
+    private String type;
     private String description;
-    private Double discountRate;
-    private Double validMaxDiscount;
-    private Double discountPrice;
-    private Double validMinPrice;
-    private Date expiryDate;
+    private Double discountPercentage;
+    private Double maxDiscountAmount;
+    private Double discountAmount;
+    private Double minOrderAmount;
+    private Double shipDiscountAmount;
+    private Date startDate;
+    private Date endDate;
+
 
 }
