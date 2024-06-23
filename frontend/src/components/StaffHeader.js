@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
-import { handleLogout } from "../services/auth/UsersService";
 import DropdownMenu from "./DropdownMenu";
 import Dropdown from "react-bootstrap/Dropdown";
 
