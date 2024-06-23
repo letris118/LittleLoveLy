@@ -9,6 +9,7 @@ import com.vtcorp.store.repositories.ProductRepository;
 import com.vtcorp.store.repositories.VoucherRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ public class VoucherService {
         voucherMapper.updateEntity(voucherRequestDTO, voucher);
         voucher.setAppliedCount(appliedCount);
         return mapVoucherToVoucherResponseDTO(voucher);
+
     }
 
     private VoucherResponseDTO mapVoucherToVoucherResponseDTO(Voucher voucher) {

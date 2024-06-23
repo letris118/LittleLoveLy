@@ -49,6 +49,27 @@ public class ProductController {
         }
     }
 
+    @Operation(summary = "Get all products by brand ID")
+    @GetMapping("/all/brand/{brandId}")
+    public ResponseEntity<?> getAllProductsByBrand(@PathVariable Long brandId) {
+        try {
+            return ResponseEntity.ok(productService.getAllProductsByBrand(brandId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Get active products by brand ID")
+    @GetMapping("/brand/{brandId}")
+    public ResponseEntity<?> getActiveProductsByBrand(@PathVariable Long brandId) {
+        try {
+            return ResponseEntity.ok(productService.getActiveProductsByBrand(brandId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
     @Operation(summary = "Get all products by categories")
     @GetMapping("/all/category")
     public ResponseEntity<?> getAllProductsByCategories(@RequestParam List<Long> categoryIds) {
@@ -84,6 +105,16 @@ public class ProductController {
     public ResponseEntity<?> getActiveProductsBySearchQuery(@RequestParam String searchQuery) {
         try {
             return ResponseEntity.ok(productService.getActiveProductsBySearchQuery(searchQuery));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Sort products by field and by ASC or DESC - Only for staff")
+    @GetMapping("/sort")
+    public ResponseEntity<?> getAllProductsSortByNameAsc(@RequestParam String field, @RequestParam boolean isAsc) {
+        try {
+            return ResponseEntity.ok(productService.getAllProductsByFieldAndAscOrDesc(field, isAsc));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

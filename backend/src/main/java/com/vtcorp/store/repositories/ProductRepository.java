@@ -1,5 +1,6 @@
 package com.vtcorp.store.repositories;
 
+import com.vtcorp.store.entities.Brand;
 import com.vtcorp.store.entities.Category;
 import com.vtcorp.store.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,5 +30,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByNameContainingIgnoreCaseAndActive(String searchQuery, boolean active);
 
+    List<Product> findByBrand(Brand brand);
 
+    List<Product> findByBrandAndActive(Brand brand, boolean active);
 }

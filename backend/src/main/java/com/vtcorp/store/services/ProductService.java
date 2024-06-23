@@ -9,6 +9,7 @@ import com.vtcorp.store.mappers.ProductReviewMapper;
 import com.vtcorp.store.repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,6 +58,58 @@ public class ProductService {
     public ProductResponseDTO getProductById(Long id) {
         return mapProductToProductResponseDTO(productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found")));
+    }
+
+    public List<ProductResponseDTO> getAllProductsByBrand(long brandId) {
+        Brand brand = brandRepository.findById(brandId).get();
+        List<Product> products = productRepository.findByBrand(brand);
+        return mapProductsToProductResponseDTOs(products);
+    }
+
+    public List<ProductResponseDTO> getActiveProductsByBrand(long brandId) {
+        Brand brand = brandRepository.findById(brandId).get();
+        List<Product> products = productRepository.findByBrandAndActive(brand, true);
+        return mapProductsToProductResponseDTOs(products);
+    }
+
+    public List<ProductResponseDTO> getAllProductsByCategories(List<Long> categoryIds) {
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+        if (categories.size() != categoryIds.size()) {
+            throw new RuntimeException("One or more categories not found");
+        }
+
+        List<Product> products = productRepository.findAllByCategories(categoryIds);
+
+        return mapProductsToProductResponseDTOs(products);
+
+    }
+
+    public List<ProductResponseDTO> getActiveProductsByCategories(List<Long> categoryIds) {
+        List<Category> categories = categoryRepository.findAllById(categoryIds);
+        if (categories.size() != categoryIds.size()) {
+            throw new RuntimeException("One or more categories not found");
+        }
+
+        List<Product> products = productRepository.findActiveByCategories(categoryIds);
+
+        return mapProductsToProductResponseDTOs(products);
+
+    }
+
+    public List<ProductResponseDTO> getAllProductsBySearchQuery(String searchQuery) {
+        List<Product> products = productRepository.findByNameContainingIgnoreCase(searchQuery);
+
+        return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
+    }
+
+    public List<ProductResponseDTO> getActiveProductsBySearchQuery(String searchQuery) {
+        List<Product> products = productRepository.findByNameContainingIgnoreCaseAndActive(searchQuery, true);
+
+        return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
+    }
+
+    public List<ProductResponseDTO> getAllProductsByFieldAndAscOrDesc(String field, boolean isAsc) {
+        return isAsc ? mapProductsToProductResponseDTOs(productRepository.findAll(Sort.by(field).ascending())) : mapProductsToProductResponseDTOs(productRepository.findAll(Sort.by(field).descending()));
     }
 
     @Transactional
@@ -130,42 +183,6 @@ public class ProductService {
     public String activateProduct(long id) {
         productRepository.setActivateProduct(true, id);
         return "Product activated";
-    }
-
-    public List<ProductResponseDTO> getAllProductsByCategories(List<Long> categoryIds) {
-        List<Category> categories = categoryRepository.findAllById(categoryIds);
-        if (categories.size() != categoryIds.size()) {
-            throw new RuntimeException("One or more categories not found");
-        }
-
-        List<Product> products = productRepository.findAllByCategories(categoryIds);
-
-        return mapProductsToProductResponseDTOs(products);
-
-    }
-
-    public List<ProductResponseDTO> getActiveProductsByCategories(List<Long> categoryIds) {
-        List<Category> categories = categoryRepository.findAllById(categoryIds);
-        if (categories.size() != categoryIds.size()) {
-            throw new RuntimeException("One or more categories not found");
-        }
-
-        List<Product> products = productRepository.findActiveByCategories(categoryIds);
-
-        return mapProductsToProductResponseDTOs(products);
-
-    }
-
-    public List<ProductResponseDTO> getAllProductsBySearchQuery(String searchQuery) {
-        List<Product> products = productRepository.findByNameContainingIgnoreCase(searchQuery);
-
-        return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
-    }
-
-    public List<ProductResponseDTO> getActiveProductsBySearchQuery(String searchQuery) {
-        List<Product> products = productRepository.findByNameContainingIgnoreCaseAndActive(searchQuery, true);
-
-        return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
     }
 
 
