@@ -26,10 +26,10 @@ public class ProductResponseDTO {
     private double averageRating;
     private Date addedDate;
 
-    @JsonIgnoreProperties({"products", "categories"})
+    @JsonIgnoreProperties("products")
     private Brand brand;
 
-    @JsonIgnoreProperties({"products", "subCategories", "parentCategory", "brands"})
+    @JsonIgnoreProperties({"products", "subCategories", "parentCategory"})
     private List<Category> categories;
 
     @JsonIgnoreProperties("product")

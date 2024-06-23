@@ -10,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "order")
@@ -24,9 +25,9 @@ public class Order {
     private String cusName;
     private String cusMail;
     private String cusPhone;
-    private String cusCity;
-    private String cusDistrict;
-    private String cusWard;
+    private Long cusCityCode;
+    private Long cusDistrictId;
+    private Long cusWardCode;
     private String cusStreet;
     private Integer totalQuantity;
     private Double totalPrice;
@@ -34,21 +35,17 @@ public class Order {
     private Integer totalPoint;
     private String trackingCode;
 
-    @JsonIgnoreProperties({"orders", "vouchers", "productReviews"})
     @ManyToOne
     @JoinColumn(name = "fk_username")
     private User user;
 
-    @JsonIgnoreProperties({"orders", "users"})
     @ManyToOne
     @JoinColumn(name = "fk_voucher_id")
     private Voucher voucher;
 
-    @JsonIgnoreProperties("order")
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails;
 
-    @JsonIgnoreProperties("order")
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GiftIncluding> giftIncludings;
 

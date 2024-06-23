@@ -7,7 +7,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
@@ -16,5 +15,5 @@ public interface ProductMapper {
     @Mapping(target = "productId", ignore = true)
     void updateEntity(ProductRequestDTO productRequestDTO, @MappingTarget Product product);
 
-    ProductResponseDTO toDTO(Product product);
+    ProductResponseDTO toResponseDTO(Product product);
 }

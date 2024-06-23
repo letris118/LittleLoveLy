@@ -1,14 +1,11 @@
 package com.vtcorp.store.controllers;
 
-import com.vtcorp.store.entities.Category;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.vtcorp.store.services.CategoryService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -21,17 +18,21 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<Category> getAllCategories() {
-        return categoryService.getAllCategories();
+    public ResponseEntity<?> getAllCategories() {
+        try{
+            return ResponseEntity.ok(categoryService.getAllCategories());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-        Category category = categoryService.getCategoryById(id);
-        if (category == null) {
-            return ResponseEntity.notFound().build();
+    ResponseEntity<?> getCategoryById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(categoryService.getCategoryById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return ResponseEntity.ok(category);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.vtcorp.store.controllers;
 
-import com.vtcorp.store.dtos.UserDTO;
+import com.vtcorp.store.dtos.UserRequestDTO;
 import com.vtcorp.store.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +40,14 @@ public class UserController {
 
     @Operation(summary = "Add a new user", description = "Role must be ROLE_ADMIN, ROLE_CUSTOMER or ROLE_STAFF")
     @PostMapping
-    public ResponseEntity<?> addUser(@RequestBody UserDTO userDTO) {
-        String role = userDTO.getRole();
+    public ResponseEntity<?> addUser(@RequestBody UserRequestDTO userRequestDTO) {
+        String role = userRequestDTO.getRole();
         if (role == null || (!role.equals("ROLE_ADMIN") && !role.equals("ROLE_CUSTOMER")
                 && !role.equals("ROLE_STAFF"))) {
             return ResponseEntity.badRequest().body("Invalid role");
         }
         try {
-            return ResponseEntity.ok(userService.addUser(userDTO));
+            return ResponseEntity.ok(userService.addUser(userRequestDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -55,12 +55,12 @@ public class UserController {
 
     @Operation(summary = "Update user by username", description = "Cannot update username, mail, password and role")
     @PutMapping("/{username}")
-    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody UserDTO userDTO) {
-        if (!username.equals(userDTO.getUsername())) {
+    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody UserRequestDTO userRequestDTO) {
+        if (!username.equals(userRequestDTO.getUsername())) {
             return ResponseEntity.badRequest().body("Username in URL and body must be the same");
         }
         try {
-            return ResponseEntity.ok(userService.updateUser(userDTO));
+            return ResponseEntity.ok(userService.updateUser(userRequestDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

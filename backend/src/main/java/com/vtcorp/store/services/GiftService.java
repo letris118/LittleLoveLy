@@ -1,8 +1,8 @@
 package com.vtcorp.store.services;
 
-import com.vtcorp.store.dtos.GiftDTO;
+import com.vtcorp.store.dtos.GiftRequestDTO;
+import com.vtcorp.store.dtos.GiftResponseDTO;
 import com.vtcorp.store.entities.Gift;
-import com.vtcorp.store.entities.ProductImage;
 import com.vtcorp.store.mappers.GiftMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,30 +32,32 @@ public class GiftService {
         this.giftMapper = giftMapper;
     }
 
-    public List<Gift> getAllGifts() {
-        return giftRepository.findAll();
+    public List<GiftResponseDTO> getAllGifts() {
+        return giftMapper.toResponseDTOs(giftRepository.findAll());
     }
 
-    public List<Gift> getActiveGifts() {
-        return giftRepository.findByActive(true);
+    public List<GiftResponseDTO> getActiveGifts() {
+        return giftMapper.toResponseDTOs(giftRepository.findByActive(true));
     }
 
-    public Gift getGiftById(Long id) {
-        return giftRepository.findById(id).orElse(null);
+    public GiftResponseDTO getGiftById(Long id) {
+        return giftMapper.toResponseDTO(giftRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Gift not found")));
     }
 
     @Transactional
-    public Gift addGift(GiftDTO giftDTO) {
-        Gift gift = giftMapper.toEntity(giftDTO);
-        String image = handleGiftImage(giftDTO.getNewImageFile());
+    public GiftResponseDTO addGift(GiftRequestDTO giftRequestDTO) {
+        Gift gift = giftMapper.toEntity(giftRequestDTO);
+        String image = handleGiftImage(giftRequestDTO.getNewImageFile());
+        gift.setActive(true);
         gift.setImagePath(image);
-        return giftRepository.save(gift);
+        return giftMapper.toResponseDTO(giftRepository.save(gift));
     }
 
     //Not complete yet
     @Transactional
-    public Gift updateGift(GiftDTO giftDTO) {
-        Gift gift = giftRepository.findById(giftDTO.getGiftId())
+    public Gift updateGift(GiftRequestDTO giftRequestDTO) {
+        Gift GiftResponseDTO = giftRepository.findById(giftRequestDTO.getGiftId())
                 .orElseThrow(() -> new RuntimeException("Gift not found"));
         return null;
     }
