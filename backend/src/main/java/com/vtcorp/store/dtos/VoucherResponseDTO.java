@@ -14,14 +14,17 @@ public class VoucherResponseDTO {
     private String title;
     private Integer limit;
     private Integer appliedCount;
-    private Integer type;
+    private String type;
     private String description;
-    private Double discountRate;
-    private Double validMaxDiscount;
-    private Double discountPrice;
-    private Double validMinPrice;
+    private Double discountPercentage;
+    private Double maxDiscountAmount;
+    private Double discountAmount;
+    private Double minOrderAmount;
+    private Double shipDiscountAmount;
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date expiryDate;
+    private Date startDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date endDate;
     private boolean active;
 
 }

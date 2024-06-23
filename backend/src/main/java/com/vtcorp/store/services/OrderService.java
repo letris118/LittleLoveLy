@@ -1,8 +1,6 @@
 package com.vtcorp.store.services;
 
-import com.vtcorp.store.dtos.CartItemDTO;
-import com.vtcorp.store.dtos.CartResponseDTO;
-import com.vtcorp.store.dtos.OrderResponseDTO;
+import com.vtcorp.store.dtos.*;
 import com.vtcorp.store.entities.*;
 import com.vtcorp.store.mappers.OrderMapper;
 import com.vtcorp.store.repositories.GiftRepository;
@@ -12,6 +10,7 @@ import com.vtcorp.store.repositories.UserRepository;
 import com.vtcorp.store.utils.CodeGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,14 +24,19 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final GiftRepository giftRepository;
+    private final GHNService ghnService;
+
+    @Value("${ghn.api.weight}")
+    private int weight;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.giftRepository = giftRepository;
+        this.ghnService = ghnService;
     }
 
     public List<OrderResponseDTO> getAllOrders() {
@@ -78,7 +82,7 @@ public class OrderService {
         if (cartItemDTO.getItemType().equals("product")) {
             Product product = productRepository.findById(cartItemDTO.getId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
-            if (product.getStock() < cartItemDTO.getQuantity()) {
+            if (product.getStock() == null || product.getStock() < cartItemDTO.getQuantity()) {
                 throw new IllegalArgumentException("Insufficient stock for product");
             }
 
@@ -100,8 +104,11 @@ public class OrderService {
         } else if (cartItemDTO.getItemType().equals("gift")) {
             Gift gift = giftRepository.findById(cartItemDTO.getId())
                     .orElseThrow(() -> new RuntimeException("Gift not found"));
-            if (gift.getStock() < cartItemDTO.getQuantity()) {
+            if (gift.getStock() == null || gift.getStock() < cartItemDTO.getQuantity()) {
                 throw new IllegalArgumentException("Insufficient stock for gift");
+            }
+            if (gift.getPoint() == null || gift.getPoint() > user.getPoint()) {
+                throw new IllegalArgumentException("Insufficient point for gift");
             }
 
             for (GiftIncluding item : cart.getGiftIncludings()) {
@@ -169,5 +176,33 @@ public class OrderService {
         }
 
         return orderMapper.toCartResponseDTO(orderRepository.save(cart));
+    }
+
+    // chua ap dung voucher
+    public OrderEvaluationDTO evaluateOrder(OrderRequestDTO orderRequestDTO) {
+        double basePrice = 0.0;
+        int totalPoints = 0;
+        Double shippingFee = null;
+        for (CartItemDTO item : orderRequestDTO.getOrderDetails()) {
+            if (item.getItemType().equals("product")) {
+                Product product = productRepository.findById(item.getId())
+                        .orElseThrow(() -> new RuntimeException("Product not found"));
+                basePrice += product.getSellingPrice() * item.getQuantity();
+            } else if (item.getItemType().equals("gift")) {
+                Gift gift = giftRepository.findById(item.getId())
+                        .orElseThrow(() -> new RuntimeException("Gift not found"));
+                totalPoints += gift.getPoint() * item.getQuantity();
+            } else {
+                throw new IllegalArgumentException("Item type not found");
+            }
+        }
+        Long districtId = orderRequestDTO.getCusDistrictId();
+        Long wardCode = orderRequestDTO.getCusWardCode();
+        if (districtId != null && wardCode != null) {
+            shippingFee = ghnService.calculateFee(districtId, wardCode, weight);
+        }
+        double totalPrice = basePrice + (shippingFee != null ? shippingFee : 0);
+        int additionalPoints = (int) (basePrice / 1000);
+        return new OrderEvaluationDTO(totalPrice, basePrice, shippingFee, totalPoints, additionalPoints);
     }
 }
