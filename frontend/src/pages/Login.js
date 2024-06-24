@@ -34,7 +34,7 @@ export default function Login() {
         if (decodedToken.roles === "ROLE_ADMIN") {
           navigate(routes.homePage);
         } else if (decodedToken.roles === "ROLE_STAFF") {
-          navigate(routes.staffHomePage);
+          navigate(routes.manageProduct);
         } else if (decodedToken.roles === "ROLE_CUSTOMER") {
           navigate(routes.homePage);
         }
@@ -59,7 +59,7 @@ export default function Login() {
     } else if (userRole === "ROLE_ADMIN" && token) {
       navigate(routes.homePage);
     } else if (userRole === "ROLE_STAFF" && token) {
-      navigate(routes.staffHomePage);
+      navigate(routes.manageProduct);
     }
     // Cleanup function to remove added class and background image
     return () => {

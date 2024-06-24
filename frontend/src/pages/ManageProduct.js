@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
-import "../assets/css/manageTable.css";
 import Switch from 'react-switch';
 import instance from "../services/auth/customize-axios";
 import {
@@ -72,9 +71,7 @@ export default function ManageProduct() {
         <StaffHeader/>
 
         <div className="manage-content">
-          <StaffSideBar
-            
-          />    
+          <StaffSideBar/>    
 
           <div className="manage-content-detail">   
             
@@ -83,8 +80,8 @@ export default function ManageProduct() {
                 <tr>
                   <th className="index-head" style={{ width: '5%' }}>STT</th>
                   <th className="name-head" style={{ width: '30%' }}>Tên sản phẩm</th>
-                  <th className="img-head" style={{ width: '20%' }}>Hình ảnh</th>   
-                  <th className="brand-head" style={{ width: '10%' }}>Brand</th>
+                  <th className="img-head" style={{ width: '15%' }}>Hình ảnh</th>   
+                  <th className="brand-head" style={{ width: '10%' }}>Thương hiệu</th>
                   <th className="stock-head" style={{ width: '8%' }}>Tồn kho</th>
                   <th className="active-head" style={{ width: '9%' }}>Trạng thái</th>
                   <th className="update-head" style={{ width: '9%' }}>Chỉnh sửa</th>
@@ -101,10 +98,19 @@ export default function ManageProduct() {
                         <img
                           src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
                           alt={product.name}
+                          style={{ width: '30%', height: '30%' }}
                         />
                       ))}
                     </td>
-                    <td className="brand-body">{product.brand.name}</td>
+
+                    <td className="brand-body">
+                      <img
+                        src={`${instance.defaults.baseURL}/images/brands/${product.brand.logo}`}
+                        alt={product.brand.name}
+                        style={{ width: '50%', height: '50%' }}
+                      />                      
+                    </td>
+
                     <td className="stock-body">{product.stock}</td>
                     <td className="active-body">
                       <Switch
@@ -114,6 +120,7 @@ export default function ManageProduct() {
                         onColor="#27ae60"
                       />
                     </td>
+                    
                     <td className="update-body">
                       <Link
                       to="#" style={{color: "#7f8c8d"}}>
@@ -123,16 +130,10 @@ export default function ManageProduct() {
 
                   </tr>
                 ))}
-                <tr>
-
-                </tr>
               </tbody>
-
-
-
             </table>
-
-          </div>   
+            
+          </div>    
                
         </div>
       </div>
