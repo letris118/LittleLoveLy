@@ -8,7 +8,6 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import BrandDetail from "../pages/BrandDetail";
 import BrandList from "../pages/BrandList";
-
 import ManageProduct from "../pages/ManageProduct";
 import ManageOrder from "../pages/ManageOrder";
 import ManageArticle from "../pages/ManageArticle";
@@ -17,6 +16,7 @@ import ProductList from "../pages/ProductList";
 import ProductDetail from "../pages/ProductDetail";
 import Cart from "../pages/Cart";
 import StaffHomePage from "../pages/StaffHomePage";
+import Checkout from "../pages/Checkout";
 
 export default function AppRoute() {
   return (
@@ -36,6 +36,7 @@ export default function AppRoute() {
       <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
       <Route path={routes.cart} element={<Cart />} />
       <Route path={routes.staffHomePage} element={<StaffHomePage />} />
+      <Route path={routes.checkout} element={<Checkout />} />
     </Routes>
   );
 }

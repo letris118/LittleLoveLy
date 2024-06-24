@@ -6,19 +6,22 @@ import "../assets/css/cart.css";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import { Table, styled } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useHistory } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { formatPrice } from "../services/auth/UsersService";
 import instance from "../services/auth/customize-axios";
+import { routes } from "../routes";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
-  const navigate = useNavigate();
+  const [hasCart, setHasCart] = useState(false);
 
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem("cart")) || [];
     setCartItems(storedCartItems);
+    const cart = localStorage.getItem("cart");
+    setHasCart(!!cart);
   }, []);
 
   const handleRemoveItem = useCallback((index) => {
@@ -182,7 +185,7 @@ export default function Cart() {
                   borderBottom: "1px solid grey",
                   paddingBottom: "10px",
                 }}>
-                <div style={{ fontSize: "15px" }}>Giảm giá sản phẩm : </div>
+                <div style={{ fontSize: "15px" }}>Giảm giá sản phẩm: </div>
                 <div style={{ fontSize: "15px", color: "#FF469E" }}>
                   -
                   {formatPrice(
@@ -212,9 +215,13 @@ export default function Cart() {
                 </div>
               </div>
               <div className="content-cart-col-right-button">
-                <Link to="/checkout">
-                  <button>Tiếp tục</button>
-                </Link>
+                {hasCart ? (
+                  <Link to={routes.checkout}>
+                    <button>Tiếp tục</button>
+                  </Link>
+                ) : (
+                  <button disabled>Tiếp tục</button>
+                )}
               </div>
             </div>
           </div>

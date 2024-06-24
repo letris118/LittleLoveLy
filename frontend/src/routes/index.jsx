@@ -17,5 +17,5 @@ export const routes = {
   manageAccount: "/manageAccount",
   cart: "/cart",
   staffHomePage: "/staff",
-
+  checkout: "/checkout",
 };
