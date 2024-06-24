@@ -43,7 +43,7 @@ export default function HomePage() {
       } catch (error) {
         console.error("Error fetching brands:", error);
         toast.error("Không thể tải được nhãn hàng");
-        setBrandList([]);
+        setArticleList([]);
       }
     };
 
