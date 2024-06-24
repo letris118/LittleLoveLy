@@ -4,6 +4,7 @@
   color: #333;
   padding: 40px 0 20px 0;
 }
+
 .footer .footer-column h5 {
   color: black;
   font-size: 25px;
@@ -19,4 +20,5 @@
 
 .footer-column p b {
   font-weight: 600;
+  color: rgba(255, 197, 226, 0.538);
 }

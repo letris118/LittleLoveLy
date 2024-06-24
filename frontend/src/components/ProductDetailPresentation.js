@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { formatPrice, products } from "../services/auth/UsersService";
+import { cart, formatPrice, products } from "../services/auth/UsersService";
 import { routes } from "../routes";
 import Rating from "@mui/material/Rating";
 import TextField from "@mui/material/TextField";
@@ -73,7 +73,7 @@ export default function ProductDetailPresentation() {
   const handleAddToCart = useCallback(() => {
     const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
     const existingProductIndex = cartItems.findIndex(
-      (item) => item.productId === productInfo.productId // Use productId here
+      (item) => item.productId === productInfo.productId
     );
 
     if (existingProductIndex > -1) {
@@ -81,7 +81,7 @@ export default function ProductDetailPresentation() {
     } else {
       cartItems.push({ ...productInfo, quantity });
     }
-
+    console.log(cart(productInfo.productId, quantity));
     localStorage.setItem("cart", JSON.stringify(cartItems));
     toast.success("Đã thêm sản phẩm.", {
       autoClose: 2000,

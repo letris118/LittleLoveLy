@@ -78,7 +78,13 @@ export default function Cart() {
                           style={{ width: "100%" }}
                         />
                       </TableCell>
-                      <TableCell sx={{ width: "50%" }}>{item.name}</TableCell>
+                      <TableCell sx={{ width: "50%" }}>
+                        <Link
+                          to={`/products/${item.name}`}
+                          style={{ color: "black", textDecoration: "none" }}>
+                          {item.name}
+                        </Link>
+                      </TableCell>
                       {item.sellingPrice === item.listedPrice ? (
                         <TableCell
                           sx={{
@@ -142,7 +148,7 @@ export default function Cart() {
                               handleQuantityChange(index, item.quantity + 1)
                             }
                             disabled={item.quantity === 50}>
-                            +
+                            {}+
                           </button>
                         </Box>
                       </TableCell>

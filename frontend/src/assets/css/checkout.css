@@ -3,6 +3,7 @@
   flex-direction: row;
   width: 100%;
   height: 100%;
+  margin-bottom: 30px;
 }
 
 .content-checkout-tbl-left,
@@ -26,7 +27,7 @@
 }
 
 .content-checkout-content {
-  padding: 10px 30px 0 20px;
+  padding: 10px 30px 20px 20px;
   background-color: white;
   border-radius: 20px;
 }
@@ -39,12 +40,79 @@
   margin-bottom: 30px;
 }
 #paymentMethod,
-#province,
-#district {
+#city,
+#district,
+#ward {
   width: 70%;
   height: 50px;
   border-radius: 10px;
   border: 2px solid #ff469e;
   padding-left: 10px;
   outline: none;
+}
+
+.content-checkout-product-list {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  padding: 0 7.5%;
+}
+
+.content-checkout-product-list-left {
+  width: 70%;
+  height: 200px;
+  border-radius: 20px;
+  padding: 10px 5px 5px 20px;
+  border: 2px solid #ff469e;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.content-checkout-product-item {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 50px;
+  margin-bottom: 10px;
+  color: black;
+}
+
+.content-checkout-product-list-left::-webkit-scrollbar {
+  width: 10px;
+}
+.content-checkout-product-list-left::-webkit-scrollbar-button {
+  background: transparent;
+}
+.content-checkout-product-list-left::-webkit-scrollbar-track-piece {
+  background: transparent;
+  border: 10px;
+}
+
+.content-checkout-product-list-left::-webkit-scrollbar-thumb {
+  background: #727171;
+  border-radius: 10px;
+}
+
+.content-checkout-product-list-right {
+  width: 29%;
+  height: 200px;
+  border-radius: 20px;
+  padding: 10px 0px 5px 0px;
+  border: 2px solid #ff469e;
+  color: black;
+
+  margin-left: 20px;
+}
+
+.content-checkout-product-list-right-total {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 30px;
+  margin-bottom: 20px;
+}
+
+.content-checkout-product-list-right-btn {
+  padding: 0 30px;
 }
