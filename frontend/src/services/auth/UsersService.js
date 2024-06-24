@@ -20,6 +20,10 @@ const products = () => {
   return instance.get("/api/products");
 };
 
+const productsAll = () => {
+  return instance.get("/api/products/all");
+};
+
 const brands = () => {
   if (localStorage.getItem("token")) {
     return instance.get("/api/brands", {
@@ -40,6 +44,10 @@ const articles = () => {
     });
   }
   return instance.get("/api/articles");
+};
+
+const articlesAll = () => {
+  return instance.get("/api/articles/all");
 };
 
 const users = () => {
@@ -68,6 +76,17 @@ const handleAddToCart = (id, quantity) => {
     });
   }
 };
+const activeProducts = () => {
+  return instance.get("/api/products");
+};
+
+const deactivateProduct = (productId) => {
+  return instance.put(`/api/products/deactivate/${productId}`);
+};
+
+const activateProduct = (productId) => {
+  return instance.put(`/api/products/activate/${productId}`);
+};
 
 const handleLogout = (navigate) => (e) => {
   e.preventDefault();
@@ -83,10 +102,14 @@ const formatPrice = (num) => {
 export {
   loginAPI,
   products,
+  productsAll,
   brands,
   articles,
+  articlesAll,
   users,
   handleLogout,
   formatPrice,
-  cart,
+  activeProducts,
+  deactivateProduct,
+  activateProduct,
 };
