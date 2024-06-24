@@ -25,6 +25,10 @@ const articles = () => {
   return instance.get("/api/articles");
 };
 
+const articlesAll = () => {
+  return instance.get("/api/articles/all");
+};
+
 const users = () => {
   return instance.get("/api/users");
 };
@@ -60,6 +64,7 @@ export {
   productsAll,
   brands,
   articles,
+  articlesAll,
   users,
   handleLogout,
   formatPrice,
