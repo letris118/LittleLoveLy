@@ -1,6 +1,8 @@
 package com.vtcorp.store.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.vtcorp.store.jsonview.Views;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,11 +18,16 @@ public class Voucher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.Order.class)
     private long voucherId;
+
+    @JsonView(Views.Order.class)
     private String title;
     private Integer limit;
     private Integer appliedCount;
     private Integer type;
+
+    @JsonView(Views.Order.class)
     private String description;
     private Double discountRate;
     private Double validMaxDiscount;

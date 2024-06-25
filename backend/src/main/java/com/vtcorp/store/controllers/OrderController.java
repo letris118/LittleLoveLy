@@ -1,11 +1,16 @@
 package com.vtcorp.store.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.vtcorp.store.config.VNPayConfig;
 import com.vtcorp.store.dtos.OrderRequestDTO;
+import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.services.GHNService;
 import com.vtcorp.store.services.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -64,7 +69,7 @@ public class OrderController {
 
     @Operation(summary = "Get list of districts by city id")
     @GetMapping("districts/{cityId}")
-    public ResponseEntity<?> getDistricts(@PathVariable int cityId) {
+    public ResponseEntity<?> getDistricts(@PathVariable long cityId) {
         try {
             return ResponseEntity.ok(ghnService.getDistricts(cityId));
         } catch (Exception e) {
@@ -74,9 +79,22 @@ public class OrderController {
 
     @Operation(summary = "Get list of wards by district id")
     @GetMapping("wards/{districtId}")
-    public ResponseEntity<?> getWards(@PathVariable int districtId) {
+    public ResponseEntity<?> getWards(@PathVariable long districtId) {
         try {
             return ResponseEntity.ok(ghnService.getWards(districtId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Create new order", description = "Payment method: COD, VNPay")
+    @PostMapping
+    @JsonView(Views.Order.class)
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequestDTO orderRequestDTO, Authentication authentication, HttpServletRequest request) {
+        try {
+            String username = (authentication == null) ? null : authentication.getName();
+            String ipAddress = VNPayConfig.getIpAddress(request);
+            return ResponseEntity.ok(orderService.createOrder(orderRequestDTO, username, ipAddress));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

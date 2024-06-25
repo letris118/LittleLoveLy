@@ -17,8 +17,10 @@ public class OrderRequestDTO {
     private Long cusWardCode;
     private String cusStreet;
 
-    private String voucherId;
+    private String paymentMethod;
 
-    private List<CartItemDTO> orderDetails;
+    private long voucherId;
+
+    private List<CartItemDTO> cartItems;
 
 }
