@@ -3,6 +3,7 @@ package com.vtcorp.store.controllers;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.vtcorp.store.config.VNPayConfig;
 import com.vtcorp.store.dtos.OrderRequestDTO;
+import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.services.GHNService;
 import com.vtcorp.store.services.OrderService;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -132,4 +134,16 @@ public class OrderController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @Operation(summary = "Staff confirm order and create shipping order")
+    @PutMapping("/confirm/{id}")
+    @PreAuthorize("hasAuthority('" + Role.ROLE_STAFF + "')")
+    public ResponseEntity<?> confirmOrder(@PathVariable String id) {
+        try {
+            return ResponseEntity.ok(orderService.confirmOrder(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
