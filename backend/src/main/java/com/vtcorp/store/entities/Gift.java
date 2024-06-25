@@ -16,10 +16,10 @@ public class Gift {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class})
     private long giftId;
 
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class})
     private String name;
     private Integer point;
     private Integer stock;

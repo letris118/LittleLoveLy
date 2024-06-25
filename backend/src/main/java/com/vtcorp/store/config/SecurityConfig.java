@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.vtcorp.store.enums.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -63,7 +64,7 @@ public class SecurityConfig {
                 .securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/api/cart/**").hasAuthority("ROLE_CUSTOMER")
+                        .requestMatchers("/api/cart/**").hasAuthority(Role.ROLE_CUSTOMER.toString())
                         .requestMatchers("/api/auth/**").anonymous()
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())

@@ -40,13 +40,13 @@ public class GiftIncluding {
     @ManyToOne
     @MapsId("giftId")
     @JoinColumn(name = "fk_gift_id")
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class})
     private Gift gift;
 
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class})
     private Integer quantity;
 
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class})
     private Integer point;
 
 }
