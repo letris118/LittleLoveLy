@@ -2,6 +2,8 @@ package com.vtcorp.store.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.vtcorp.store.jsonview.Views;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +19,7 @@ import java.util.List;
 public class User {
 
     @Id
+    @JsonView(Views.Order.class)
     private String username;
     private String password;
     private String name;

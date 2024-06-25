@@ -38,12 +38,12 @@ public class OrderDetail {
     @ManyToOne
     @MapsId("productId")
     @JoinColumn(name = "fk_product_id")
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class})
     private Product product;
 
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class})
     private Integer quantity;
 
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class})
     private Double price;
 }
