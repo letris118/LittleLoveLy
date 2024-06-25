@@ -257,8 +257,9 @@ public class OrderService {
 
         orderMapper.updateEntity(orderRequestDTO, order);
         orderMapper.updateEntity(evaluateOrder, order);
-        order.setCreatedDate(new Date());
-        if (voucher != null && voucher.isActive() && voucher.getExpiryDate().after(new Date())) {
+        Date now = new Date();
+        order.setCreatedDate(now);
+        if (voucher != null && voucher.isActive() && voucher.getStartDate().before(now) && voucher.getEndDate().after(now)) {
             order.setVoucher(voucher);
         }
         if (order.getUser() == null && user != null) {
