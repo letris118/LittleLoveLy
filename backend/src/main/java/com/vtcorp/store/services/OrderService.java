@@ -50,7 +50,7 @@ public class OrderService {
     }
 
     public OrderResponseDTO getOrderById(String id) {
-        return orderMapper.toOrderResponseDTO(orderRepository.findById(id)
+        return mapOrderToResponse(orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found")));
     }
 
@@ -201,7 +201,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, String username, String ipAddress) {
+    public Object createOrder(OrderRequestDTO orderRequestDTO, String username, String ipAddress) {
         List<CartItemDTO> cartItems = orderRequestDTO.getCartItems();
         OrderEvaluationDTO evaluateOrder = evaluateOrder(orderRequestDTO);
         if (cartItems == null || cartItems.isEmpty() || evaluateOrder.getTotalQuantity() == 0) {
@@ -273,12 +273,12 @@ public class OrderService {
 
         if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.VN_PAY.toString())) {
             order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING.toString());
+            orderRepository.save(order);
             double finalPrice = evaluateOrder.getPostDiscountPrice();
-            PaymentResponseDTO paymentResponseDTO = paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress);
-            return mapOrderToResponse(orderRepository.save(order), paymentResponseDTO);
+            return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress);
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD.toString())) {
             order.setStatus(CODPaymentStatus.COD_PENDING_CONFIRMATION.toString());
-            return mapOrderToResponse(orderRepository.save(order), null);
+            return mapOrderToResponse(orderRepository.save(order));
         } else {
             throw new IllegalArgumentException("Invalid payment method");
         }
@@ -298,9 +298,8 @@ public class OrderService {
         return "http://localhost:3000/payment-result?orderId=" + orderId;
     }
 
-    private OrderResponseDTO mapOrderToResponse(Order order, PaymentResponseDTO paymentResponseDTO) {
+    private OrderResponseDTO mapOrderToResponse(Order order) {
         OrderResponseDTO orderResponseDTO = orderMapper.toOrderResponseDTO(order);
-        orderResponseDTO.setPaymentResponse(paymentResponseDTO);
         orderResponseDTO.setCusCity(ghnService.getCityName(order.getCusCityCode()));
         orderResponseDTO.setCusDistrict(ghnService.getDistrictName(order.getCusCityCode(), order.getCusDistrictId()));
         orderResponseDTO.setCusWard(ghnService.getWardName(order.getCusDistrictId(), order.getCusWardCode()));

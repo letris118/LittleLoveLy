@@ -23,7 +23,7 @@ public class PaymentService {
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_IpAddr", ipAddress);
         vnp_Params.put("vnp_TxnRef", orderId);
-        vnp_Params.put("vnp_OrderInfo", "ThanhToanDonHang:" + orderId);
+        vnp_Params.put("vnp_OrderInfo", "ThanhToanDonHang_" + orderId);
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);

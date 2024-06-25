@@ -33,6 +33,7 @@ public class OrderController {
 
     @Operation(summary = "Get all orders")
     @GetMapping
+    @JsonView(Views.Order.class)
     public ResponseEntity<?> getAllOrders() {
         try {
             return ResponseEntity.ok(orderService.getAllOrders());
@@ -44,6 +45,7 @@ public class OrderController {
 
     @Operation(summary = "Get order by id")
     @GetMapping("/{id}")
+    @JsonView(Views.Order.class)
     public ResponseEntity<?> getOrderById(@PathVariable String id) {
         try {
             return ResponseEntity.ok(orderService.getOrderById(id));
@@ -107,7 +109,7 @@ public class OrderController {
 
     @Operation(summary = "VNPay callback")
     @GetMapping("/vn-pay-callback")
-    public void handleVNPayCallback(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> handleVNPayCallback(HttpServletRequest request, HttpServletResponse response) {
         try {
             Map<String, String> fields = new HashMap<>();
             for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements(); ) {
@@ -125,8 +127,9 @@ public class OrderController {
                 throw new Exception("Checksum mismatch");
             }
             response.sendRedirect(orderService.handleVNPayCallback(fields));
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
-            throw new RuntimeException("Error handling VNPay callback", e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
