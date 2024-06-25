@@ -8,10 +8,15 @@ import com.vtcorp.store.services.GHNService;
 import com.vtcorp.store.services.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -97,6 +102,31 @@ public class OrderController {
             return ResponseEntity.ok(orderService.createOrder(orderRequestDTO, username, ipAddress));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "VNPay callback")
+    @GetMapping("/vn-pay-callback")
+    public void handleVNPayCallback(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Map<String, String> fields = new HashMap<>();
+            for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements(); ) {
+                String fieldName = params.nextElement();
+                String fieldValue = request.getParameter(fieldName);
+                if (fieldValue != null && !fieldValue.isEmpty()) {
+                    fields.put(fieldName, fieldValue);
+                }
+            }
+            String vnp_SecureHash = request.getParameter("vnp_SecureHash");
+            fields.remove("vnp_SecureHashType");
+            fields.remove("vnp_SecureHash");
+            String signValue = VNPayConfig.hashAllFields(fields);
+            if (!signValue.equals(vnp_SecureHash)) {
+                throw new Exception("Checksum mismatch");
+            }
+            response.sendRedirect(orderService.handleVNPayCallback(fields));
+        } catch (Exception e) {
+            throw new RuntimeException("Error handling VNPay callback", e);
         }
     }
 }

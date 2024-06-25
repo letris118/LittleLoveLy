@@ -12,9 +12,8 @@ import java.util.*;
 @Service
 public class PaymentService {
 
-    public PaymentResponseDTO createPayment(double price, String ipAddress) {
+    public PaymentResponseDTO createPayment(String orderId, double price, String ipAddress) {
         long amount = Math.round(price * 100.0);
-        String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", VNPayConfig.vnp_Version);
@@ -23,8 +22,8 @@ public class PaymentService {
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_IpAddr", ipAddress);
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
+        vnp_Params.put("vnp_TxnRef", orderId);
+        vnp_Params.put("vnp_OrderInfo", "ThanhToanDonHang:" + orderId);
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);

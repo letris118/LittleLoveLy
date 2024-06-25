@@ -4,10 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class VNPayConfig {
@@ -16,44 +13,10 @@ public class VNPayConfig {
     public static String vnp_Command = "pay";
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay_jsp/vnpay_return.jsp";
+    public static String vnp_ReturnUrl = "http://localhost:8010/api/orders/vn-pay-callback";
     public static String vnp_TmnCode = "EJ76PM1I";
     public static String secretKey = "1WU13ITBPWCEQHEDNSY47GZ7MNZLFVAN";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
-
-//    public static String md5(String message) {
-//        String digest = null;
-//        try {
-//            MessageDigest md = MessageDigest.getInstance("MD5");
-//            byte[] hash = md.digest(message.getBytes("UTF-8"));
-//            StringBuilder sb = new StringBuilder(2 * hash.length);
-//            for (byte b : hash) {
-//                sb.append(String.format("%02x", b & 0xff));
-//            }
-//            digest = sb.toString();
-//        } catch (UnsupportedEncodingException ex) {
-//            digest = "";
-//        } catch (NoSuchAlgorithmException ex) {
-//            digest = "";
-//        }
-//        return digest;
-//    }
-
-    public static String Sha256(String message) {
-        String digest = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(message.getBytes("UTF-8"));
-            StringBuilder sb = new StringBuilder(2 * hash.length);
-            for (byte b : hash) {
-                sb.append(String.format("%02x", b & 0xff));
-            }
-            digest = sb.toString();
-        } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
-            digest = "";
-        }
-        return digest;
-    }
 
     //Util for VNPAY
     public static String hashAllFields(Map fields) {
@@ -110,15 +73,5 @@ public class VNPayConfig {
             ipAdress = "Invalid IP:" + e.getMessage();
         }
         return ipAdress;
-    }
-
-    public static String getRandomNumber(int len) {
-        Random rnd = new Random();
-        String chars = "0123456789";
-        StringBuilder sb = new StringBuilder(len);
-        for (int i = 0; i < len; i++) {
-            sb.append(chars.charAt(rnd.nextInt(chars.length())));
-        }
-        return sb.toString();
     }
 }

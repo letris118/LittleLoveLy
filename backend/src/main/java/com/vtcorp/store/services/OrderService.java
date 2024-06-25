@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderService {
@@ -273,7 +274,7 @@ public class OrderService {
         if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.VN_PAY.toString())) {
             order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING.toString());
             double finalPrice = evaluateOrder.getPostDiscountPrice();
-            PaymentResponseDTO paymentResponseDTO = paymentService.createPayment(finalPrice, ipAddress);
+            PaymentResponseDTO paymentResponseDTO = paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress);
             return mapOrderToResponse(orderRepository.save(order), paymentResponseDTO);
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD.toString())) {
             order.setStatus(CODPaymentStatus.COD_PENDING_CONFIRMATION.toString());
@@ -281,6 +282,20 @@ public class OrderService {
         } else {
             throw new IllegalArgumentException("Invalid payment method");
         }
+    }
+
+    public String handleVNPayCallback(Map<String, String> fields) {
+        String vnpResponseCode = fields.get("vnp_ResponseCode");
+        String orderId = fields.get("vnp_TxnRef");
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        if ("00".equals(vnpResponseCode)) {
+            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_SUCCESS.toString());
+        } else {
+            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_FAILED.toString());
+        }
+        orderRepository.save(order);
+        return "http://localhost:3000/payment-result?orderId=" + orderId;
     }
 
     private OrderResponseDTO mapOrderToResponse(Order order, PaymentResponseDTO paymentResponseDTO) {
