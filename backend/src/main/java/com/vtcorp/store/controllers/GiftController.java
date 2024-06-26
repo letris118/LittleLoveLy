@@ -75,4 +75,24 @@ public class GiftController {
         }
     }
 
+    @Operation(summary = "Deactivate gift by ID")
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateGift(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(giftService.deactivateProduct(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Activate gift by ID")
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<?> activateGift(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(giftService.activateProduct(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

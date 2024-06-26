@@ -121,6 +121,16 @@ public class ArticleService {
 
     }
 
+    public String deactivateArticle(long id) {
+        articleRepository.setActivateArticle(false, id);
+        return "Article deactivated";
+    }
+
+    public String activateArticle(long id) {
+        articleRepository.setActivateArticle(true, id);
+        return "Article activated";
+    }
+
     private List<ArticleImage> handleImages(List<MultipartFile> imageFiles, Article article) {
         List<ArticleImage> articleImageList = new ArrayList<>();
         if (imageFiles != null) {

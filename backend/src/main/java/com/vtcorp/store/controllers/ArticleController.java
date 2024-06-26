@@ -70,4 +70,24 @@ public class ArticleController {
         }
     }
 
+    @Operation(summary = "Deactivate article by ID")
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateArticle(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(articleService.deactivateArticle(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Activate article by ID")
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<?> activateArticle(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(articleService.activateArticle(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
