@@ -19,7 +19,6 @@ public class Order {
 
     @Id
     private String orderId;
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date createdDate;
     private String status;
     private String cusName;
