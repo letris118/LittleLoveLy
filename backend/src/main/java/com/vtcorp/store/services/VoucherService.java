@@ -66,6 +66,16 @@ public class VoucherService {
 
     }
 
+    public String deactivateVoucher(long id) {
+        voucherRepository.setActivateVoucher(false, id);
+        return "Article deactivated";
+    }
+
+    public String activateVoucher(long id) {
+        voucherRepository.setActivateVoucher(true, id);
+        return "Article activated";
+    }
+
     private VoucherResponseDTO mapVoucherToVoucherResponseDTO(Voucher voucher) {
         VoucherResponseDTO voucherResponseDTO = voucherMapper.toDTO(voucher);
         return voucherResponseDTO;

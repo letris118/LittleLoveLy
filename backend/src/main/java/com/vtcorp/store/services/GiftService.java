@@ -62,6 +62,16 @@ public class GiftService {
         return null;
     }
 
+    public String deactivateProduct(long id) {
+        giftRepository.setActivateGift(false, id);
+        return "Gift deactivated";
+    }
+
+    public String activateProduct(long id) {
+        giftRepository.setActivateGift(true, id);
+        return "Gift activated";
+    }
+
     private String handleGiftImage(MultipartFile imageFile) {
         String storedFileName = null;
         if (imageFile != null) {

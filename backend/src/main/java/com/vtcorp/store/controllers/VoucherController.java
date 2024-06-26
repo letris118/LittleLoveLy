@@ -71,4 +71,25 @@ public class VoucherController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @Operation(summary = "Deactivate voucher by ID")
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateVoucher(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(voucherService.deactivateVoucher(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Activate voucher by ID")
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<?> activateVoucher(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(voucherService.activateVoucher(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
