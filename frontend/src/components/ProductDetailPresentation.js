@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
-  addToCart,
-  cart,
+  updateCart,
   formatPrice,
   products,
 } from "../services/auth/UsersService";
@@ -77,7 +76,7 @@ export default function ProductDetailPresentation() {
 
   const handleAddToCart = useCallback(() => {
     const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-    const existingProductIndex = cartItems.findIndex(
+    let existingProductIndex = cartItems.findIndex(
       (item) => item.productId === productInfo.productId
     );
 
@@ -86,8 +85,16 @@ export default function ProductDetailPresentation() {
     } else {
       cartItems.push({ ...productInfo, quantity });
     }
+    existingProductIndex = cartItems.findIndex(
+      (item) => item.productId === productInfo.productId
+    );
+
     if (localStorage.getItem("userRole") === "ROLE_CUSTOMER") {
-      addToCart(productInfo.productId, "product", quantity).catch((error) => {
+      updateCart(
+        productInfo.productId,
+        "product",
+        cartItems[existingProductIndex].quantity
+      ).catch((error) => {
         toast.error(error.response.data.message, {
           autoClose: 2000,
         });

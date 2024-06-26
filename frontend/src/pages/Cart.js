@@ -9,7 +9,11 @@ import { Table, styled } from "@mui/material";
 import { Link, useNavigate, useHistory } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { formatPrice } from "../services/auth/UsersService";
+import {
+  formatPrice,
+  removeItemCard,
+  updateCart,
+} from "../services/auth/UsersService";
 import instance from "../services/auth/customize-axios";
 import { routes } from "../routes";
 
@@ -26,6 +30,11 @@ export default function Cart() {
 
   const handleRemoveItem = useCallback((index) => {
     setCartItems((prevItems) => {
+      const itemToRemove = prevItems[index];
+      const { productId, quantity } = itemToRemove;
+      if (localStorage.getItem("userRole") === "ROLE_CUSTOMER") {
+        removeItemCard(productId, "product", quantity);
+      }
       const updatedCartItems = prevItems.filter((_, i) => i !== index);
       localStorage.setItem("cart", JSON.stringify(updatedCartItems));
       return updatedCartItems;
@@ -38,6 +47,9 @@ export default function Cart() {
       if (value > 0 && value <= 50) {
         updatedCartItems[index].quantity = value;
         localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+        if (localStorage.getItem("userRole") === "ROLE_CUSTOMER") {
+          updateCart(updatedCartItems[index].productId, "product", value);
+        }
       }
       return updatedCartItems;
     });

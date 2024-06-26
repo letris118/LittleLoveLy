@@ -5,12 +5,11 @@ import Footer from "../components/Footer";
 import "../assets/css/checkout.css";
 import { formatPrice } from "../services/auth/UsersService";
 import { Link } from "react-router-dom";
-import instance from "../services/auth/customize-axios";
 
 export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState("");
   const [cartItems, setCartItems] = useState([]);
-  const [cities, setProvinces] = useState([]);
+  const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");

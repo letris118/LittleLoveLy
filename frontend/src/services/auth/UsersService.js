@@ -61,15 +61,6 @@ const users = () => {
   return instance.get("/api/users");
 };
 
-const addToCart = (id, itemType, quantity) => {
-  const token = localStorage.getItem("token");
-  return instance.put(
-    `/api/cart/add`,
-    { id, itemType, quantity },
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-};
-
 const activeProducts = () => {
   return instance.get("/api/products");
 };
@@ -93,6 +84,31 @@ const formatPrice = (num) => {
   return new Intl.NumberFormat("de-DE").format(num);
 };
 
+const updateCart = (id, itemType, quantity) => {
+  const token = localStorage.getItem("token");
+  return instance.put(
+    `/api/cart/update-item`,
+    { id, itemType, quantity },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+};
+
+const removeItemCard = (id, itemType, quantity) => {
+  const token = localStorage.getItem("token");
+  return instance.put(
+    `/api/cart/remove-item`,
+    { id, itemType, quantity },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+};
+
+const getCart = () => {
+  const token = localStorage.getItem("token");
+  return instance.get(`/api/cart`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
 export {
   loginAPI,
   products,
@@ -106,5 +122,7 @@ export {
   activeProducts,
   deactivateProduct,
   activateProduct,
-  addToCart,
+  updateCart,
+  removeItemCard,
+  getCart,
 };
