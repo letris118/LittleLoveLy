@@ -61,21 +61,15 @@ const users = () => {
   return instance.get("/api/users");
 };
 
-const handleAddToCart = (id, quantity) => {
-  if (localStorage.getItem("token")) {
-    return instance.put("/api/cart/add", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: {
-        id: id,
-        itemType: "product",
-        quantity: quantity,
-      },
-    });
-  }
+const addToCart = (id, itemType, quantity) => {
+  const token = localStorage.getItem("token");
+  return instance.put(
+    `/api/cart/add`,
+    { id, itemType, quantity },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
 };
+
 const activeProducts = () => {
   return instance.get("/api/products");
 };
@@ -112,4 +106,5 @@ export {
   activeProducts,
   deactivateProduct,
   activateProduct,
+  addToCart,
 };

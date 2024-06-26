@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { cart, formatPrice, products } from "../services/auth/UsersService";
+import {
+  addToCart,
+  cart,
+  formatPrice,
+  products,
+} from "../services/auth/UsersService";
 import { routes } from "../routes";
 import Rating from "@mui/material/Rating";
 import TextField from "@mui/material/TextField";
@@ -81,7 +86,13 @@ export default function ProductDetailPresentation() {
     } else {
       cartItems.push({ ...productInfo, quantity });
     }
-    console.log(cart(productInfo.productId, quantity));
+    if (localStorage.getItem("userRole") === "ROLE_CUSTOMER") {
+      addToCart(productInfo.productId, "product", quantity).catch((error) => {
+        toast.error(error.response.data.message, {
+          autoClose: 2000,
+        });
+      });
+    }
     localStorage.setItem("cart", JSON.stringify(cartItems));
     toast.success("Đã thêm sản phẩm.", {
       autoClose: 2000,

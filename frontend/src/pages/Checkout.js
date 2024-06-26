@@ -21,36 +21,6 @@ export default function Checkout() {
     setCartItems(storedCartItems);
   }, []);
 
-  useEffect(() => {
-    // Fetch and populate cities
-    fetch("http://localhost:8010/api/orders/cities")
-      .then((response) => response.json())
-      .then((data) => setProvinces(data.data));
-  }, []);
-
-  useEffect(() => {
-    if (selectedProvince) {
-      fetch(
-        `${instance.defaults.baseURL}/api/orders/districts/${selectedProvince}`
-      )
-        .then((response) => response.json())
-        .then((data) => setDistricts(data.data));
-      setWards([]);
-    } else {
-      setDistricts([]);
-    }
-  }, [selectedProvince]);
-
-  useEffect(() => {
-    if (selectedDistrict) {
-      fetch(`${instance.defaults.baseURL}/api/orders/wards/${selectedDistrict}`)
-        .then((response) => response.json())
-        .then((data) => setWards(data.data));
-    } else {
-      setWards([]);
-    }
-  }, [selectedDistrict]);
-
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
   };
