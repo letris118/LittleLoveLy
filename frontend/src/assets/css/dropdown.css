@@ -68,7 +68,7 @@
 
 /* =================================Staff========================================= */
 
-.staff-dropdown-menu {
+.manage-dropdown-menu {
   position: absolute;
   top: 100%;
   right: 0;
@@ -81,7 +81,7 @@
   width: 200px;
 }
 
-.staff-dropdown-menu::before {
+.manage-dropdown-menu::before {
   content: "";
   position: absolute;
   top: -10px;
@@ -91,47 +91,50 @@
   border-color: transparent transparent white transparent;
 }
 
-.staff-dropdown-item {
+.manage-dropdown-item {
   padding: 10px 20px;
   font-size: 16px;
   color: #333;
 }
 
-.staff-dropdown-item:hover {
+.manage-dropdown-item:hover {
   background-color: white;
   cursor: pointer;
 }
 
-.staff-dropdown-item:active {
+.manage-dropdown-item:active {
   background-color: white;
   cursor: pointer;
   color: black;
 }
 
-.staff-dropdown-menu-enter {
+.manage-dropdown-menu-enter {
   opacity: 0;
   transform: translateY(-10px);
 }
 
-.staff-dropdown-menu-enter-active {
+.manage-dropdown-menu-enter-active {
   opacity: 1;
   transform: translateY(0);
   transition: opacity 300ms, transform 300ms;
 }
 
-.staff-dropdown-menu-exit {
+.manage-dropdown-menu-exit {
   opacity: 1;
   transform: translateY(0);
 }
 
-.staff-dropdown-menu-exit-active {
+.manage-dropdown-menu-exit-active {
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 300ms, transform 300ms;
 }
 
-.staff-dropdown-basic {
+.manage-dropdown-basic {
   background-color: black !important;
   border: none !important;
 }
 
+#manage-dropdown-basic {
+  background-color: #ffffff;
+}

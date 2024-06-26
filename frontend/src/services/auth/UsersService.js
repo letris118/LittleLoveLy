@@ -17,6 +17,14 @@ const productsAll = () => {
   return instance.get("/api/products/all");
 };
 
+const giftsAll = () => {
+  return instance.get("/api/gifts/all");
+};
+
+const vouchersAll = () => {
+  return instance.get("/api/vouchers/all");
+};
+
 const brands = () => {
   return instance.get("/api/brands");
 };
@@ -45,6 +53,8 @@ const activateProduct = (productId) => {
   return instance.put(`/api/products/activate/${productId}`);
 };
 
+
+
 const handleLogout = (navigate) => (e) => {
   e.preventDefault();
   localStorage.removeItem("token");
@@ -63,8 +73,10 @@ export {
   products,
   productsAll,
   brands,
+  vouchersAll,
   articles,
   articlesAll,
+  giftsAll,
   users,
   handleLogout,
   formatPrice,

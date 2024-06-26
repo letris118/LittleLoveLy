@@ -11,7 +11,6 @@ import {
   activateProduct
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
-import { jwtDecode } from "jwt-decode";
 import "../assets/css/manage.css";
 
 export default function ManageProduct() {
@@ -67,14 +66,13 @@ export default function ManageProduct() {
 
     return (
       <div>
-        <ToastContainer />
         <StaffHeader/>
 
         <div className="manage-content">
           <StaffSideBar/>    
 
           <div className="manage-content-detail">   
-            
+
             <table className="manage-table">
               <thead>
                 <tr>
@@ -123,7 +121,7 @@ export default function ManageProduct() {
                     
                     <td className="update-body">
                       <Link
-                      to="#" style={{color: "#7f8c8d"}}>
+                      to={routes.updateProduct} style={{color: "#7f8c8d"}}>
                       Chi tiết 
                       </Link>
                     </td>

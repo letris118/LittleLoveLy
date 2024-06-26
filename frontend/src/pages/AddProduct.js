@@ -13,7 +13,7 @@ import {
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
 
-export default function ManageOrder() {
+export default function AddProduct() {
     const [productList, setProductList] = useState([]);
 
     const navigate = useNavigate();
@@ -55,7 +55,7 @@ export default function ManageOrder() {
           />    
 
           <div className="manage-content-detail">   
-            ORDER
+            add đi
           </div>   
                
         </div>

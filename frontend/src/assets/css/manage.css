@@ -16,16 +16,15 @@
     background-color: white;
 }
   
-thead {
+.manage-table thead {
     background-color: #f2f2f2;
     color:#2d3436;
 }
   
-th, td {
+.manage-table th, 
+.manage-table td {
     padding: 8px 12px;
     border: 1px solid #ddd;
-    text-align: left;
-    /* background-color: white; */
 }
 
 .active-head,
@@ -43,7 +42,17 @@ th, td {
 .img-body,
 .date-head,
 .date-body,
-.content-head{
+.content-head,
+.limit-head,
+.limit-body,
+.type-head,
+.type-body,
+.description-head,
+.startDate-head,
+.startDate-body,
+.endDate-head,
+.endDate-body,
+.point-body{
     text-align: center; 
     vertical-align: middle;
 }
@@ -71,3 +80,4 @@ th, td {
 .staff-back-to-top:hover {
     background-color:#1e272e;;
 }
+

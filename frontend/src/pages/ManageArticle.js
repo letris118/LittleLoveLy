@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { routes } from "../routes";
+// import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
-import Switch from 'react-switch';
 import instance from "../services/auth/customize-axios";
 import {
   articles,
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
-import { jwtDecode } from "jwt-decode";
 import "../assets/css/manage.css";
 
 export default function ManageArticle() {
@@ -47,7 +45,6 @@ export default function ManageArticle() {
 
     return (
         <div>
-          <ToastContainer />
           <StaffHeader/>
     
           <div className="manage-content">
@@ -77,7 +74,7 @@ export default function ManageArticle() {
                       {article.articleImages.slice(0, 1).map((image) => (
                         <img
                           src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
-                          alt={article.title}
+                           
                           style={{ width: '50%', height: '50%' }}
                         />
                       ))}

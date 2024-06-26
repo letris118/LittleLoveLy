@@ -16,6 +16,11 @@ import ManageVoucher from "../pages/ManageVoucher";
 import ProductList from "../pages/ProductList";
 import ProductDetail from "../pages/ProductDetail";
 import StaffHomePage from "../pages/StaffHomePage";
+import StaffChat from "../pages/StaffChat";
+import ManageGift from "../pages/ManageGift";
+import StaffBrandList from "../pages/StaffBrandList";
+import UpdateProduct from "../pages/UpdateProduct";
+import AddProduct from "../pages/AddProduct";
 
 export default function AppRoute() {
   return (
@@ -34,6 +39,11 @@ export default function AppRoute() {
       <Route path={routes.products} element={<ProductList />} />
       <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
       <Route path={routes.staffHomePage} element={<StaffHomePage />} />
+      <Route path={routes.staffChat} element={<StaffChat />} />
+      <Route path={routes.manageGift} element={<ManageGift />} />
+      <Route path={routes.staffBrandList} element={<StaffBrandList />} />
+      <Route path={routes.updateProduct} element={<UpdateProduct />} />
+      <Route path={routes.addProduct} element={<AddProduct />} />
     </Routes>
   );
 }

@@ -17,5 +17,9 @@ export const routes = {
   manageAccount: "/manageAccount",
   cart: "/cart",
   staffHomePage: "/staff",
-
+  staffChat: "/chatWithCustomer",
+  manageGift: "/manageGift",
+  staffBrandList: "/brand-list",
+  updateProduct: "/updateProduct",
+  addProduct: "/addProduct",
 };

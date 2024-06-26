@@ -90,3 +90,94 @@
   color: black;
   text-align: center;
 }
+
+/* ================================staff================================== */
+
+.manage-brand-card-img,
+.manage-brand-card-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.manage-brand-card-img {
+  height: 200px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  /* border: 1px solid black; */
+}
+
+.manage-brand-card-img img {
+  width: 150px;
+  height: 100%;
+}
+
+
+.manage-slick-prev {
+  left: 0px !important;
+  z-index: 999 !important;
+  font-size: larger;
+}
+
+.manage-slick-next {
+  right: 10px !important;
+  z-index: 999 !important;
+}
+
+.manage-brand-btn {
+  /* background-color: aqua; */
+  width: 100px;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  color: black;
+  text-align: center;
+}
+
+.manage-row-list-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.manage-brand-card-list {
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
+  padding: 5px;
+  width: 250px;
+}
+
+.manage-brand-card-list-img {
+  width: 100%;
+  height: 250px;
+  margin-bottom: 20px;
+}
+
+.manage-brand-card-list-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.manage-brand-card-list-btn {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.manage-brand-list-btn {
+  width: 70%;
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  color: black;
+  text-align: center;
+}
+

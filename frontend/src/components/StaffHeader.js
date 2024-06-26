@@ -15,7 +15,7 @@ export default function Header() {
           </Link>
         </div>
 
-          {window.location.pathname === routes.staffHomePage && (
+          {(window.location.pathname === routes.staffHomePage || window.location.pathname === routes.staffBrandList) &&(
             <div className="manage-search-bar">
                 <input type="text" placeholder="Tìm kiếm sản phẩm..." />
                 <div className="manage-search-icon">
@@ -62,6 +62,28 @@ export default function Header() {
           {window.location.pathname === routes.manageVoucher && (
             <div className="manage-search-bar">
                 <input type="text" placeholder="Tên voucher..." />
+                <div className="manage-search-icon">
+                  <Link className="manage-search">
+                    <img src="../assets/images/search_icon.png" alt="search logo" />
+                  </Link>
+                </div>
+            </div>
+          )}
+
+          {window.location.pathname === routes.manageGift && (
+            <div className="manage-search-bar">
+                <input type="text" placeholder="Tìm quà tặng..." />
+                <div className="manage-search-icon">
+                  <Link className="manage-search">
+                    <img src="../assets/images/search_icon.png" alt="search logo" />
+                  </Link>
+                </div>
+            </div>
+          )}
+
+          {window.location.pathname === routes.staffChat && (
+            <div className="manage-search-bar">
+                <input type="text" placeholder="Tìm tin nhắn..." />
                 <div className="manage-search-icon">
                   <Link className="manage-search">
                     <img src="../assets/images/search_icon.png" alt="search logo" />
