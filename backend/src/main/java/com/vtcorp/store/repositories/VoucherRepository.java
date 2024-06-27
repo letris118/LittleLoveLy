@@ -16,7 +16,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Voucher v SET v.active = ?1 WHERE v.articleId = ?2")
+    @Query("UPDATE Voucher v SET v.active = ?1 WHERE v.voucherId = ?2")
     void setActivateVoucher(boolean active, long id);
 
 }
