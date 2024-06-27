@@ -58,6 +58,10 @@ export default function Login() {
     document.body.classList.add("img");
     document.body.classList.add("js-fullheight");
     document.body.style.backgroundImage = `url(${backgroundImage})`;
+    if (localStorage.getItem("sessionExpired")) {
+      localStorage.removeItem("sessionExpired");
+      toast.error("Phiên đăng nhập đã hết hạn");
+    }
     let token = localStorage.getItem("token");
     let userRole = localStorage.getItem("userRole");
     if (userRole === "ROLE_CUSTOMER" && token) {

@@ -10,13 +10,6 @@ const loginAPI = (username, password) => {
 };
 
 const products = () => {
-  if (localStorage.getItem("token")) {
-    return instance.get("/api/products", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-  }
   return instance.get("/api/products");
 };
 
@@ -25,24 +18,10 @@ const productsAll = () => {
 };
 
 const brands = () => {
-  if (localStorage.getItem("token")) {
-    return instance.get("/api/brands", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-  }
   return instance.get("/api/brands");
 };
 
 const articles = () => {
-  if (localStorage.getItem("token")) {
-    return instance.get("/api/articles", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-  }
   return instance.get("/api/articles");
 };
 
@@ -51,13 +30,6 @@ const articlesAll = () => {
 };
 
 const users = () => {
-  if (localStorage.getItem("token")) {
-    return instance.get("/api/users", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-  }
   return instance.get("/api/users");
 };
 
@@ -85,28 +57,15 @@ const formatPrice = (num) => {
 };
 
 const updateCart = (id, itemType, quantity) => {
-  const token = localStorage.getItem("token");
-  return instance.put(
-    `/api/cart/update-item`,
-    { id, itemType, quantity },
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
+  return instance.put(`/api/cart/update-item`, { id, itemType, quantity });
 };
 
 const removeItemCard = (id, itemType, quantity) => {
-  const token = localStorage.getItem("token");
-  return instance.put(
-    `/api/cart/remove-item`,
-    { id, itemType, quantity },
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
+  return instance.put(`/api/cart/remove-item`, { id, itemType, quantity });
 };
 
 const getCart = () => {
-  const token = localStorage.getItem("token");
-  return instance.get(`/api/cart`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  return instance.get(`/api/cart`);
 };
 
 export {

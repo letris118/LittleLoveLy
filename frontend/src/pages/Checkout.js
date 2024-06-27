@@ -18,8 +18,42 @@ export default function Checkout() {
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem("cart")) || [];
     setCartItems(storedCartItems);
-  }, []);
 
+    fetch("http://localhost:8010/api/orders/cities")
+      .then((response) => response.json())
+      .then((data) => setCities(data.data));
+
+    const fetchDistricts = (province) => {
+      if (province) {
+        fetch(`http://localhost:8010/api/orders/districts/${province}`)
+          .then((response) => response.json())
+          .then((data) => setDistricts(data.data));
+        setWards([]);
+      } else {
+        setDistricts([]);
+      }
+    };
+
+    const fetchWards = (district) => {
+      if (district) {
+        fetch(`http://localhost:8010/api/orders/wards/${district}`)
+          .then((response) => response.json())
+          .then((data) => setWards(data.data));
+      } else {
+        setWards([]);
+      }
+    };
+    if (selectedProvince) {
+      fetchDistricts(selectedProvince);
+    } else {
+      setDistricts([]);
+    }
+    if (selectedDistrict) {
+      fetchWards(selectedDistrict);
+    } else {
+      setWards([]);
+    }
+  }, [selectedProvince, selectedDistrict]);
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
   };
@@ -162,35 +196,73 @@ export default function Checkout() {
                   </div>
                   <div className="content-checkout-product-list-right">
                     <div className="content-checkout-product-list-right-total">
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          height: "50px",
-                          width: "100%",
-                        }}>
-                        <b>Phí giao hàng:</b>
-                        <span>25000đ</span>
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          height: "50px",
-                          width: "100%",
-                          borderBottom: "1px solid #7c7c7caa",
-                        }}>
-                        <b>Tổng tiền:</b>
-                        <span>25000đ</span>
-                      </div>
+                      {cartItems.map((item) => (
+                        <>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              height: "50px",
+                              width: "100%",
+                            }}>
+                            <b>Phí giao hàng:</b>
+                            <span>
+                              {formatPrice(item.sellingPrice * item.quantity)}đ
+                            </span>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              height: "50px",
+                              width: "100%",
+                            }}>
+                            <b>Giảm giá vận chuyển:</b>
+                            <span>-{formatPrice(2000)}đ</span>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              height: "50px",
+                              width: "100%",
+                              borderBottom: "1px solid #7c7c7caa",
+                            }}>
+                            <b>Tổng tiền:</b>
+                            <span>
+                              {formatPrice(
+                                item.sellingPrice * item.quantity - 2000
+                              )}
+                              đ
+                            </span>
+                          </div>
+                        </>
+                      ))}
                     </div>
                     <div className="content-checkout-product-list-right-btn">
                       <Link>
                         <button
                           style={{
-                            width: "100%",
+                            width: "48%",
+                            height: "50px",
+                            color: "#ff469e",
+                            border: "3px solid #ff469e",
+                            backgroundColor: "rgb(255, 232, 243)",
+                            borderRadius: "10px",
+                            fontSize: "17px",
+                            fontWeight: "550",
+                            marginRight: "12px",
+                          }}>
+                          Voucher
+                        </button>
+                      </Link>
+                      <Link>
+                        <button
+                          style={{
+                            width: "48%",
                             height: "50px",
                             color: "white",
                             border: "none",
@@ -198,6 +270,7 @@ export default function Checkout() {
                             borderRadius: "10px",
                             fontSize: "17px",
                             fontWeight: "550",
+                            float: "right",
                           }}>
                           Mua ngay
                         </button>
