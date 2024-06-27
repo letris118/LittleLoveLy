@@ -1,0 +1,84 @@
+.content-cart-display {
+  display: flex;
+  flex-direction: row;
+}
+
+.content-cart-col-left {
+  background-color: white;
+  min-height: 100vh;
+  border-radius: 20px;
+  margin-right: 10px;
+  padding: 10px 5px 0 5px;
+  width: 70%;
+}
+
+.content-cart-col-right {
+  width: 30%;
+  background-color: white;
+  border-radius: 20px;
+  height: fit-content;
+  padding: 10px 15px 0 15px;
+}
+
+.content-cart-col-left h4 {
+  font-size: 25px;
+  font-weight: 700;
+  font-family: "MuseoModerno";
+  margin-left: 10px;
+}
+.content-cart-col-left-description {
+  display: flex;
+  justify-content: end;
+  gap: 55px;
+  font-size: 15px;
+  padding-right: 7.5%;
+  width: 100%;
+  padding-bottom: 10px;
+  color: rgb(119, 118, 118);
+  border-bottom: 1px solid rgb(146, 146, 146);
+  font-weight: 600;
+}
+.css-139i08c {
+  margin: 0 !important;
+}
+.css-y63ouz-MuiTableCell-root,
+.css-8i81n2-MuiTableCell-root {
+  padding: 0 !important;
+}
+.css-1s314sn-MuiTableCell-root,
+.css-1kub2vx-MuiTableCell-root {
+  width: unset !important;
+}
+
+.css-cjb9b7-MuiTableCell-root,
+.css-8i81n2-MuiTableCell-root {
+  padding: 5px !important;
+}
+.content-cart-col-left-tbl {
+  color: black;
+}
+
+.css-1oh43uy-MuiTableCell-root {
+  min-width: 120px !important;
+}
+
+.content-cart-col-right-total-price,
+.content-cart-col-right-reduce-price,
+.content-cart-col-right-final-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.content-cart-col-right-button button {
+  width: 100%;
+  height: 44px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 17px;
+  font-weight: 550;
+  margin: 10px 0 15px 0;
+  background-color: #ff469e;
+}

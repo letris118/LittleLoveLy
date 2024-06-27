@@ -42,7 +42,7 @@ const users = () => {
 };
 
 const activeProducts = () => {
-  return instance.get('/api/products');
+  return instance.get("/api/products");
 };
 
 const deactivateProduct = (productId) => {
@@ -57,15 +57,25 @@ const activateProduct = (productId) => {
 
 const handleLogout = (navigate) => (e) => {
   e.preventDefault();
-  localStorage.removeItem("token");
-  localStorage.removeItem("userRole");
-  localStorage.removeItem("username");
+  localStorage.clear();
   navigate(routes.homePage);
   toast.success("Đăng xuất thành công");
 };
 
 const formatPrice = (num) => {
   return new Intl.NumberFormat("de-DE").format(num);
+};
+
+const updateCart = (id, itemType, quantity) => {
+  return instance.put(`/api/cart/update-item`, { id, itemType, quantity });
+};
+
+const removeItemCard = (id, itemType, quantity) => {
+  return instance.put(`/api/cart/remove-item`, { id, itemType, quantity });
+};
+
+const getCart = () => {
+  return instance.get(`/api/cart`);
 };
 
 export {
@@ -82,5 +92,8 @@ export {
   formatPrice,
   activeProducts,
   deactivateProduct,
-  activateProduct
+  activateProduct,
+  updateCart,
+  removeItemCard,
+  getCart,
 };

@@ -22,4 +22,5 @@ export const routes = {
   staffBrandList: "/brand-list",
   updateProduct: "/updateProduct",
   addProduct: "/addProduct",
+  checkout: "/checkout",
 };

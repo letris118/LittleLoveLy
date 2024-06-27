@@ -25,7 +25,9 @@ export default function Footer() {
               </p>
             </div>
           </div>
-          <div className="footer-bottom mt-3">&copy; 2024 Mom and Baby Shop.</div>
+          <div className="footer-bottom mt-3">
+            &copy; 2024 Mom and Baby Shop.
+          </div>
         </div>
       </footer>
     </div>

@@ -29,3 +29,4 @@ public class BrandService {
                 .orElseThrow(() -> new RuntimeException("Brand not found")));
     }
 }
+
