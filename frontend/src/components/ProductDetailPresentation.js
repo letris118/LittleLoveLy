@@ -31,7 +31,7 @@ export default function ProductDetailPresentation() {
       const decodedProductName = decodeURIComponent(productName).replace(
         /\n/g,
         ""
-      );
+      ); 
       const product = response.find(
         (product) => product.name.replace(/\n/g, "") === decodedProductName
       );

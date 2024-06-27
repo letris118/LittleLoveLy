@@ -17,11 +17,10 @@ export default function StaffHomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
       if (!userRole || userRole !== "ROLE_STAFF") {
-          navigate('/');
+        navigate("/");
       }
     };
     checkAuthentication();
