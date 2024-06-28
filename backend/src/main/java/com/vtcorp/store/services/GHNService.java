@@ -46,8 +46,8 @@ public class GHNService {
     @Value("${ghn.api.shop-id.staging}")
     private String shopId;
 
-    @Value("${ghn.api.service-id}")
-    private int serviceId;
+    @Value("${ghn.api.service-type-id}")
+    private int serviceTypeId;
 
     @Value("${ghn.api.from-province-name}")
     private String fromProvinceName;
@@ -104,7 +104,7 @@ public class GHNService {
         headers.set("Token", apiStagingToken);
         HttpEntity<String> entity = new HttpEntity<>(headers);
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(calculateFeeUrl)
-                .queryParam("service_id", serviceId)
+                .queryParam("service_type_id", serviceTypeId)
                 .queryParam("from_district_id", fromDistrictId)
                 .queryParam("from_ward_code", fromWardCode)
                 .queryParam("weight", weight)
@@ -155,7 +155,7 @@ public class GHNService {
 
         Map<String, Object> params = new HashMap<>();
         params.put("shop_id", shopId);
-        params.put("service_id", serviceId);
+        params.put("service_type_id", serviceTypeId);
         params.put("payment_type_id", paymentTypeId);
         params.put("required_note", "CHOXEMHANGKHONGTHU");
         params.put("to_name", order.getCusName());
