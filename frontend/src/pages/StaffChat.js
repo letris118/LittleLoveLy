@@ -39,6 +39,7 @@ export default function StaffChat() {
 
             <div className="staff-chat">  
 
+
                 <div className="staff-chatbox">
                     {/* chat data */}
                 </div> 

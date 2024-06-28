@@ -9,25 +9,89 @@ const loginAPI = (username, password) => {
   });
 };
 
+const users = () => {
+  return instance.get("/api/users");
+};
+
+
+
+
+
+//get active products 
 const products = () => {
   return instance.get("/api/products");
 };
 
+//get all
 const productsAll = () => {
   return instance.get("/api/products/all");
 };
+
+//set deactive
+const deactivateProduct = (productId) => {
+  return instance.put(`/api/products/deactivate/${productId}`);
+};
+
+//set active
+const activateProduct = (productId) => {
+  return instance.put(`/api/products/activate/${productId}`);
+};
+
+//get by id
+const getProductById = (productId) => {
+  return instance.get(`/api/products/${productId}`);
+};
+
+//update
+const updateProduct = (productId, productData) => {
+  return instance.put(`/api/products/${productId}`, productData, {
+    headers:{
+      'Content-Type': 'multipart/form-data',
+    }
+  });
+};
+
+
 
 const giftsAll = () => {
   return instance.get("/api/gifts/all");
 };
 
+const deactivateGift = (giftId) => {
+  return instance.put(`/api/gifts/deactivate/${giftId}`);
+};
+
+const activateGift = (giftId) => {
+  return instance.put(`/api/gifts/activate/${giftId}`);
+};
+
+
+
 const vouchersAll = () => {
   return instance.get("/api/vouchers/all");
 };
 
+const deactivateVoucher = (voucherId) => {
+  return instance.put(`/api/vouchers/deactivate/${voucherId}`);
+};
+
+const activateVoucher = (pvoucherId) => {
+  return instance.put(`/api/vouchers/activate/${pvoucherId}`);
+};
+
+
+//all brand
 const brands = () => {
   return instance.get("/api/brands");
 };
+
+//all cate
+const categories = () => {
+  return instance.get("/api/categories");
+};
+
+
+
 
 const articles = () => {
   return instance.get("/api/articles");
@@ -37,21 +101,20 @@ const articlesAll = () => {
   return instance.get("/api/articles/all");
 };
 
-const users = () => {
-  return instance.get("/api/users");
+const deactivateArticle = (articleId) => {
+  return instance.put(`/api/articles/deactivate/${articleId}`);
 };
 
+
+const activateArticle = (articleId) => {
+  return instance.put(`/api/articles/activate/${articleId}`);
+};
 const activeProducts = () => {
   return instance.get("/api/products");
 };
 
-const deactivateProduct = (productId) => {
-  return instance.put(`/api/products/deactivate/${productId}`);
-};
 
-const activateProduct = (productId) => {
-  return instance.put(`/api/products/activate/${productId}`);
-};
+
 
 
 
@@ -61,6 +124,7 @@ const handleLogout = (navigate) => (e) => {
   navigate(routes.homePage);
   toast.success("Đăng xuất thành công");
 };
+
 
 const formatPrice = (num) => {
   return new Intl.NumberFormat("de-DE").format(num);
@@ -80,19 +144,36 @@ const getCart = () => {
 
 export {
   loginAPI,
-  products,
-  productsAll,
-  brands,
-  vouchersAll,
-  articles,
-  articlesAll,
-  giftsAll,
   users,
   handleLogout,
-  formatPrice,
-  activeProducts,
+
+  products,
+  productsAll,
   deactivateProduct,
   activateProduct,
+  getProductById,
+  updateProduct,
+  activeProducts,
+
+  brands,
+  categories,
+
+  vouchersAll,
+  deactivateVoucher,
+  activateVoucher,
+
+  articles,
+  articlesAll,
+  deactivateArticle,
+  activateArticle,
+
+  giftsAll,
+  deactivateGift,
+  activateGift,
+
+  formatPrice,
+  
+
   updateCart,
   removeItemCard,
   getCart,

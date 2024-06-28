@@ -10,7 +10,7 @@ export default function StaffDropdownMenu() {
   const navigate = useNavigate();
 
   return (
-    <Dropdown
+    <Dropdown className="staff-dropdown"
       onToggle={() => setShowMenu((prevShowMenu) => !prevShowMenu)}
       show={showMenu}>
       <Dropdown.Toggle id="staff-dropdown-basic">
