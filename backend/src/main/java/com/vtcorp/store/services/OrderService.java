@@ -1,5 +1,6 @@
 package com.vtcorp.store.services;
 
+import com.vtcorp.store.constants.VoucherType;
 import com.vtcorp.store.dtos.*;
 import com.vtcorp.store.entities.*;
 import com.vtcorp.store.constants.CODPaymentStatus;
@@ -164,7 +165,6 @@ public class OrderService {
         return orderMapper.toCartResponseDTO(orderRepository.save(cart));
     }
 
-    // chua ap dung voucher
     public OrderEvaluationDTO evaluateOrder(OrderRequestDTO orderRequestDTO) {
         double basePrice = 0.0;
         int totalPoints = 0;
@@ -189,12 +189,32 @@ public class OrderService {
         if (districtId != null && wardCode != null) {
             shippingFee = ghnService.calculateFee(districtId, wardCode);
         }
-        double totalPrice = basePrice + (shippingFee != null ? shippingFee : 0);
-        double discount = 0.0;
-        // need to check again
-        double postDiscountPrice = totalPrice - discount - (shippingFee != null ? shippingFee : 0);
+        double finalBasePrice = basePrice;
+        Double finalShippingFee = shippingFee;
+        Long voucherId = orderRequestDTO.getVoucherId();
+        if (voucherId != null) {
+            Voucher voucher = voucherRepository.findById(voucherId)
+                    .orElseThrow(() -> new RuntimeException("Voucher not found"));
+            if (voucher.isActive() && voucher.getStartDate().before(new Date()) && voucher.getEndDate().after(new Date()) && voucher.getMinOrderAmount() <= basePrice){
+                if(voucher.getType().equals(VoucherType.FLAT)) {
+                    finalBasePrice = basePrice - voucher.getDiscountAmount();
+                } else if(voucher.getType().equals(VoucherType.PERCENTAGE)) {
+                    double discount = basePrice * voucher.getDiscountPercentage();
+                    if(discount > voucher.getMaxDiscountAmount()) {
+                        discount = voucher.getMaxDiscountAmount();
+                    }
+                    finalBasePrice = basePrice - discount;
+                } else if(voucher.getType().equals(VoucherType.FREE_SHIPPING) && shippingFee != null){
+                    finalShippingFee = 0.0;
+                } else if(voucher.getType().equals(VoucherType.DISCOUNT_SHIPPING) && shippingFee != null) {
+                    finalShippingFee = shippingFee - voucher.getShipDiscountAmount();
+                    finalShippingFee = (finalShippingFee < 0) ? 0 : finalShippingFee;
+                }
+            }
+        }
+        double postDiscountPrice = finalBasePrice + ((finalShippingFee == null) ? 0 : finalShippingFee);
         int bonusPoint = (int) (basePrice / 1000);
-        return new OrderEvaluationDTO(basePrice, shippingFee, bonusPoint, totalProductQuantity, totalPrice, postDiscountPrice, totalPoints);
+        return new OrderEvaluationDTO(totalProductQuantity, totalPoints, basePrice, finalBasePrice, shippingFee, finalShippingFee, postDiscountPrice, bonusPoint);
     }
 
     @Transactional

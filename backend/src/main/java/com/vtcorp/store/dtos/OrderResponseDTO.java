@@ -54,7 +54,10 @@ public class OrderResponseDTO {
     private Integer totalQuantity;
 
     @JsonView(Views.Order.class)
-    private Double totalPrice;
+    private Double basePrice;
+
+    @JsonView(Views.Order.class)
+    private Double shippingFee;
 
     @JsonView(Views.Order.class)
     private Double postDiscountPrice;

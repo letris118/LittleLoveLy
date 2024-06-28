@@ -7,12 +7,13 @@ import lombok.*;
 @NoArgsConstructor
 public class OrderEvaluationDTO {
 
-    private double basePrice;
-    private Double shippingFee;
-    private int bonusPoint;
-
     private Integer totalQuantity;
-    private Double totalPrice;
-    private Double postDiscountPrice;
     private Integer totalPoint;
+    private Double basePrice;
+    private Double finalBasePrice;
+    private Double shippingFee;
+    private Double finalShippingFee;
+    private Double postDiscountPrice;
+
+    private int bonusPoint;
 }
