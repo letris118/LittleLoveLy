@@ -13,16 +13,16 @@ export default function StaffDropdownMenu() {
     <Dropdown className="staff-dropdown"
       onToggle={() => setShowMenu((prevShowMenu) => !prevShowMenu)}
       show={showMenu}>
-      <Dropdown.Toggle id="dropdown-basic">
+      <Dropdown.Toggle id="staff-dropdown-basic">
         <i className="fa-solid fa-user"></i>
       </Dropdown.Toggle>
 
       <CSSTransition
         in={showMenu}
         timeout={300}
-        classNames="dropdown-menu"
+        classNames="staff-dropdown-menu"
         unmountOnExit>
-        <Dropdown.Menu className="dropdown-menu">
+        <Dropdown.Menu className="staff-dropdown-menu">
           <Link
             to={{}}
             style={{
