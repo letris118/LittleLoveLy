@@ -33,10 +33,10 @@ public class ProductService {
     private final ProductImageRepository productImageRepository;
     private final UserRepository userRepository;
     private final ProductReviewMapper productReviewMapper;
-//    private final ProductReviewRepository productReviewRepository;
+    private final ProductReviewRepository productReviewRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper, BrandRepository brandRepository, CategoryRepository categoryRepository, ProductImageRepository productImageRepository, UserRepository userRepository, ProductReviewMapper productReviewMapper/*, ProductReviewRepository productReviewRepository*/) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, BrandRepository brandRepository, CategoryRepository categoryRepository, ProductImageRepository productImageRepository, UserRepository userRepository, ProductReviewMapper productReviewMapper, ProductReviewRepository productReviewRepository) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.brandRepository = brandRepository;
@@ -44,7 +44,7 @@ public class ProductService {
         this.productImageRepository = productImageRepository;
         this.userRepository = userRepository;
         this.productReviewMapper = productReviewMapper;
-//        this.productReviewRepository = productReviewRepository;
+        this.productReviewRepository = productReviewRepository;
     }
 
     public List<ProductResponseDTO> getAllProducts() {
@@ -138,6 +138,47 @@ public class ProductService {
     }
 
     @Transactional
+    public ProductResponseDTO addReview(ReviewRequestDTO reviewRequestDTO) {
+        long productId = reviewRequestDTO.getProductId();
+        String username = reviewRequestDTO.getUsername();
+
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        ProductReview productReview = productReviewMapper.toEntity(reviewRequestDTO);
+
+        productReview.setProduct(product);
+        productReview.setUser(user);
+        productReview.setUploadedDate(new Date());
+
+        if (reviewRequestDTO.getImage() != null) {
+            Path uploadPath = Paths.get(UPLOAD_REVIEW_IMG_DIR);
+            try {
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                String storedFileName = System.currentTimeMillis() + "_" + reviewRequestDTO.getImage().getOriginalFilename();
+                try (InputStream inputStream = reviewRequestDTO.getImage().getInputStream()) {
+                    Files.copy(inputStream, Paths.get(UPLOAD_REVIEW_IMG_DIR, storedFileName), StandardCopyOption.REPLACE_EXISTING);
+                    productReview.setImagePath(storedFileName);
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to save image", e);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to create upload directory", e);
+            }
+        }
+
+        productReviewRepository.save(productReview);
+        product.getProductReviews().add(productReview);
+        user.getProductReviews().add(productReview);
+        return mapProductToProductResponseDTO(product);
+
+    }
+
+    @Transactional
     public ProductResponseDTO updateProduct(ProductRequestDTO productRequestDTO) {
         Product product = productRepository.findById(productRequestDTO.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -228,10 +269,12 @@ public class ProductService {
         if (productReviews == null || productReviews.isEmpty()) {
             return 0;
         }
-        return productReviews.stream()
-                .mapToInt(ProductReview::getStar)
-                .average()
-                .orElse(0);
+        int totalStars = 0;
+        for (ProductReview review : productReviews) {
+            totalStars += review.getStar();
+        }
+        double average = (double) totalStars / productReviews.size();
+        return Math.round(average * 10.0) / 10.0;
     }
 
     private ProductResponseDTO mapProductToProductResponseDTO(Product product) {
@@ -249,41 +292,4 @@ public class ProductService {
     }
 
 
-//    @Transactional
-//    public ProductResponseDTO addReview(ReviewRequestDTO reviewRequestDTO) {
-//        long productId = reviewRequestDTO.getProductId();
-//        String username = reviewRequestDTO.getUsername();
-//        ProductReview.ProductReviewId productReviewId = new ProductReview.ProductReviewId(productId, username);
-//        if (productReviewRepository.existsByProductReviewId(productReviewId)) {
-//            throw new RuntimeException("Review already exists");
-//        }
-//        Product product = productRepository.findById(productId)
-//                .orElseThrow(() -> new RuntimeException("Product not found"));
-//        User user = userRepository.findById(username)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        ProductReview productReview = productReviewMapper.toEntity(reviewRequestDTO);
-//        productReview.setProductReviewId(productReviewId);
-//        productReview.setProduct(product);
-//        productReview.setUser(user);
-//        if (reviewRequestDTO.getImage() != null) {
-//            Path uploadPath = Paths.get(UPLOAD_REVIEW_IMG_DIR);
-//            try {
-//                if (!Files.exists(uploadPath)) {
-//                    Files.createDirectories(uploadPath);
-//                }
-//                String storedFileName = (new Date()).getTime() + "_" + reviewRequestDTO.getImage().getOriginalFilename();
-//                try (InputStream inputStream = reviewRequestDTO.getImage().getInputStream()) {
-//                    Files.copy(inputStream, Paths.get(UPLOAD_REVIEW_IMG_DIR, storedFileName), StandardCopyOption.REPLACE_EXISTING);
-//                    productReview.setImagePath(storedFileName);
-//                } catch (IOException e) {
-//                    throw new RuntimeException("Failed to save image", e);
-//                }
-//            } catch (Exception e) {
-//                throw new RuntimeException("Failed to create upload directory", e);
-//            }
-//        }
-//        product.getProductReviews().add(productReview);
-//        return mapProductToProductResponseDTO(product);
-//    }
 }

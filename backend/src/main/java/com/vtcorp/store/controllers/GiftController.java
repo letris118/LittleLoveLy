@@ -62,7 +62,7 @@ public class GiftController {
     }
 
     @Operation(summary = "Update gift by ID")
-    @PutMapping
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<?> updateGift(@PathVariable long id, @ModelAttribute GiftRequestDTO giftRequestDTO) {
         if (id != giftRequestDTO.getGiftId()) {
             return ResponseEntity.badRequest().body("Gift ID in the path variable does not match the one in the request body");
