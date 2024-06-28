@@ -1,11 +1,10 @@
 .manage-content {
     display: flex;
+    min-width: 1350px;
     background-color: #f5f6fa;
 }
 
 .manage-content-detail {
-    width: 80%;
-    height: 100%;
     background-color:#f5f6fa;
     padding: 20px 20px 20px 0;
 }
@@ -52,9 +51,20 @@
 .startDate-body,
 .endDate-head,
 .endDate-body,
-.point-body{
+.point-body,
+.sellingPrice-head,
+.sellingPrice-body{
     text-align: center; 
     vertical-align: middle;
+}
+
+.update-link {
+    color: #7f8c8d;
+    transition: color 0.3s; 
+}
+
+.update-link:hover {
+    color: #1f272f; 
 }
 
 .staff-back-to-top {
@@ -81,3 +91,140 @@
     background-color:#1e272e;;
 }
 
+.search-add-table{
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-product-link {
+    margin-bottom: 20px;
+    display: inline-block;
+    width: 200px;
+    height: 50px;
+    padding: 10px;
+    text-align: center;
+    border: 2px solid #5a95c6;
+    font-weight: 600;
+    color: #2d3436;
+    text-decoration: none;
+    background-color: #a7c9e5;
+    border-radius: 10px;
+    
+}
+  
+.add-product-link:hover {
+    background-color: #86bae4;;
+    border: 1px solid #5a95c6; 
+}
+
+.table-search-bar {
+    display: flex;
+    font-size: 22px;
+    font-weight: bold;
+}
+  
+.table-search-bar input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 10px 0 0 10px;
+    border: 2px solid white;
+    font-size: 15px;
+    outline: none;
+    box-shadow: 0 0px 5px 0px #706f6faf;
+    width: 500px;
+}
+
+.table-search-icon,
+.table-search-bar input {
+  height: 50px;
+}
+
+.table-search-icon {
+  width: 70px;
+  background-color: white;
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 0px 5px 0px #706f6faf;
+  border: none;
+}
+
+.table-search-icon img {
+    width: 35%;
+    height: 50%;
+}
+
+.table-search-icon:hover{
+    background-color: #ccc;
+}
+
+
+.update-content-detail{
+    flex-grow: 1;
+    padding: 20px 20px 20px 20px;
+    border: 1px solid #b3b1b3;
+    border-radius: 10px;
+    margin: 20px 10px 20px 10px;
+}
+
+.manage-form-group,
+.manage-form-group img {
+    margin: 0 10px 30px 10px;
+    color: #3c3e3e ;
+}
+
+.manage-label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.manage-form-control {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+.save-manage-link,
+.cancel-manage-link {
+    margin-bottom: 20px;
+    margin-top: 30px;
+    display: inline-block;
+    padding: 10px;
+    text-align: center;
+    border: 2px solid #656464;
+    font-weight: 600;
+    color: #2d3436;
+    text-decoration: none;
+    margin-left: 10px;
+    border-radius: 10px;
+}
+
+.cancel-manage-link{
+    width: 100px;
+    height: 50px;
+    margin-left: 30px;
+}
+  
+.save-manage-link{
+    width: 200px;
+    height: 50px;
+    background-color: #a7c9e5;
+    border: 2px solid #5a95c6;
+}
+
+.save-manage-link:hover{
+    background-color: #86bae4;;
+    border: 1px solid #5a95c6; 
+}
+
+
+.cancel-manage-link:hover {
+    background-color: #ddd;
+    border: 1px solid #ccc; 
+}
+
+.manage-form-btn{
+    display: flex;
+}

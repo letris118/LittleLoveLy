@@ -42,7 +42,7 @@ export default function AppRoute() {
       <Route path={routes.staffChat} element={<StaffChat />} />
       <Route path={routes.manageGift} element={<ManageGift />} />
       <Route path={routes.staffBrandList} element={<StaffBrandList />} />
-      <Route path={routes.updateProduct} element={<UpdateProduct />} />
+      <Route path={`${routes.updateProduct}/:name`} element={<UpdateProduct />} />
       <Route path={routes.addProduct} element={<AddProduct />} />
     </Routes>
   );

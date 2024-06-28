@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import { routes } from "../routes";
+import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
+import Switch from 'react-switch';
 import instance from "../services/auth/customize-axios";
 import {
-  vouchersAll
+  vouchersAll,
+  deactivateVoucher,
+  activateVoucher,
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
@@ -42,6 +45,20 @@ export default function ManageVoucher() {
         fetchVouchers();
     }, []);
 
+    const handleToggle = async (voucherId, currentStatus) => {
+      if (currentStatus) {
+        await deactivateVoucher(voucherId);
+      } else {
+        await activateVoucher(voucherId);
+      }
+
+      setVoucherList(prevState =>
+        prevState.map(voucher =>
+          voucher.voucherId === voucherId ? { ...voucher, active: !voucher.active } : voucher
+        )
+      );
+  };
+
     return (
         <div>
           <StaffHeader/>
@@ -49,7 +66,26 @@ export default function ManageVoucher() {
           <div className="manage-content">
             <StaffSideBar/>
 
-            <div className="manage-content-detail">   
+            <div className="manage-content-detail">  
+
+              <div className="search-add-table">
+              <div className="table-search-bar">
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm voucher..."
+                />
+                <button className="table-search-icon">
+                  <img src="../assets/images/search_icon.png" alt="search logo" />
+                </button>
+              </div>
+
+              <div className="add-product-btn">
+                <Link to={routes.addProduct} className="add-product-link">
+                  Thêm voucher mới
+                </Link>
+              </div>
+            </div>
+ 
 
               <table className="manage-table">
                 <thead>
@@ -76,7 +112,14 @@ export default function ManageVoucher() {
                     <td className="description-body">{voucher.description}</td>
                     <td className="startDate-body">{voucher.startDate}</td>
                     <td className="endDate-body">{voucher.endDate}</td>
-                    <td className="active-body">{voucher.active}</td>
+                    <td className="active-body">
+                      <Switch
+                        onChange={() => handleToggle(voucher.voucherId, voucher.active)}
+                        checked={voucher.active}
+                        offColor="#ff0000"
+                        onColor="#27ae60"
+                      />
+                    </td>
                     <td className="update-body">
                       <Link
                       to="#" style={{color: "#7f8c8d"}}>

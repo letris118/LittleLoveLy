@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import { routes } from "../routes";
+import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
 import instance from "../services/auth/customize-axios";
+import Switch from 'react-switch';
 import {
   giftsAll,
-  articles,
-  brands,
-  handleLogout,
-  products,
-  users,
+  deactivateGift,
+  activateGift,
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
@@ -47,6 +45,20 @@ export default function ManageGift() {
         fetchGifts();
     }, []);
 
+    const handleToggle = async (giftId, currentStatus) => {
+        if (currentStatus) {
+          await deactivateGift(giftId);
+        } else {
+          await activateGift(giftId);
+        }
+        setGiftList(prevState =>
+          prevState.map(gift =>
+            gift.giftId === giftId ? { ...gift, active: !gift.active } : gift
+          )
+        );
+        
+    };
+
     return (
       <div>
         <StaffHeader/>
@@ -56,7 +68,26 @@ export default function ManageGift() {
             
           />    
 
-          <div className="manage-content-detail">   
+          <div className="manage-content-detail"> 
+
+            <div className="search-add-table">
+              <div className="table-search-bar">
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm quà tặng..."
+                />
+                <button className="table-search-icon">
+                  <img src="../assets/images/search_icon.png" alt="search logo" />
+                </button>
+              </div>
+
+              <div className="add-product-btn">
+                <Link to={routes.addProduct} className="add-product-link">
+                  Thêm quà tặng mới
+                </Link>
+              </div>
+            </div>
+
           <table className="manage-table">
               <thead className="manage-table-head">
                 <tr>
@@ -84,7 +115,14 @@ export default function ManageGift() {
                     </td>
                     <td className="point-body">{gift.point}</td>
                     <td className="stock-body">{gift.stock}</td>
-                    <td className="active-body"> </td>
+                    <td className="active-body"> 
+                      <Switch
+                        onChange={() => handleToggle(gift.giftId, gift.active)}
+                        checked={gift.active}
+                        offColor="#ff0000"
+                        onColor="#27ae60"
+                      />
+                    </td>
                     <td className="update-body">
                       <Link
                       to="#" style={{color: "#7f8c8d"}}>
