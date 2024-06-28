@@ -1,6 +1,5 @@
 package com.vtcorp.store.services;
 
-import com.vtcorp.store.entities.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
@@ -35,7 +34,7 @@ public class TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .expiresAt(now.plus(2, ChronoUnit.HOURS))
                 .subject(authentication.getName())
                 .claim("roles", role)
                 .claim("name", name)
@@ -45,21 +44,21 @@ public class TokenService {
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    public String generateAccessToken(User user) {
-        Instant now = Instant.now();
-        String name = Optional.ofNullable(user.getName()).orElse("");
-        Integer point = Optional.ofNullable(user.getPoint()).orElse(0);
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
-                .subject(user.getUsername())
-                .claim("roles", user.getRole())
-                .claim("name", name)
-                .claim("point", point)
-                .build();
-        return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-    }
+//    public String generateAccessToken(User user) {
+//        Instant now = Instant.now();
+//        String name = Optional.ofNullable(user.getName()).orElse("");
+//        Integer point = Optional.ofNullable(user.getPoint()).orElse(0);
+//        JwtClaimsSet claims = JwtClaimsSet.builder()
+//                .issuer("self")
+//                .issuedAt(now)
+//                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+//                .subject(user.getUsername())
+//                .claim("roles", user.getRole())
+//                .claim("name", name)
+//                .claim("point", point)
+//                .build();
+//        return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+//    }
 
     public String generatePasswordResetToken(String userEmail) {
         Instant now = Instant.now();

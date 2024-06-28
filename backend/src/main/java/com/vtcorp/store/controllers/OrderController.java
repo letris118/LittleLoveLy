@@ -7,6 +7,7 @@ import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.services.GHNService;
 import com.vtcorp.store.services.OrderService;
+import com.vtcorp.store.services.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,11 +27,13 @@ public class OrderController {
 
     private final OrderService orderService;
     private final GHNService ghnService;
+    private final PaymentService paymentService;
 
     @Autowired
-    public OrderController(OrderService orderService, GHNService ghnService) {
+    public OrderController(OrderService orderService, GHNService ghnService, PaymentService paymentService) {
         this.orderService = orderService;
         this.ghnService = ghnService;
+        this.paymentService = paymentService;
     }
 
     @Operation(summary = "Get all orders")

@@ -272,7 +272,7 @@ public class OrderService {
             order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING);
             orderRepository.save(order);
             double finalPrice = evaluateOrder.getPostDiscountPrice();
-            return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress);
+            return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress, order.getCreatedDate());
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD)) {
             order.setStatus(CODPaymentStatus.COD_PENDING_CONFIRMATION);
             return mapOrderToResponse(orderRepository.save(order));
