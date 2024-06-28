@@ -21,8 +21,14 @@ public class Gift {
 
     @JsonView({Views.Cart.class, Views.Order.class})
     private String name;
+
+    @JsonView(Views.Cart.class)
     private Integer point;
+
+    @JsonView(Views.Cart.class)
     private Integer stock;
+
+    @JsonView(Views.Cart.class)
     private String imagePath;
     private boolean active;
 

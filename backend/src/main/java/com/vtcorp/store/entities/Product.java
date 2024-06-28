@@ -26,10 +26,17 @@ public class Product {
 
     @JsonView({Views.Cart.class, Views.Order.class})
     private String name;
+
+    @JsonView(Views.Cart.class)
     private Double listedPrice;
+
+    @JsonView(Views.Cart.class)
     private Double sellingPrice;
+
     private String description;
     private Integer noSold;
+
+    @JsonView(Views.Cart.class)
     private Integer stock;
     private boolean active;
     @JsonFormat(pattern = "dd-MM-yyyy")
@@ -57,6 +64,7 @@ public class Product {
     private List<ProductReview> productReviews;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonView(Views.Cart.class)
     private List<ProductImage> productImages;
 
 }

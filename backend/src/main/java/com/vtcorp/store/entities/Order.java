@@ -29,7 +29,10 @@ public class Order {
     private Long cusWardCode;
     private String cusStreet;
     private Integer totalQuantity;
-    private Double totalPrice;
+    private Double basePrice;
+    private Double finalBasePrice;
+    private Double shippingFee;
+    private Double finalShippingFee;
     private Double postDiscountPrice;
     private Integer totalPoint;
     private String trackingCode;
