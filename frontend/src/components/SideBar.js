@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
+import { handleLogout } from "../services/auth/UsersService";
+
 const Sidebar = ({ role, customerName, customerPoint }) => {
   return (
     <div className="side-bar">
@@ -35,7 +37,7 @@ const Sidebar = ({ role, customerName, customerPoint }) => {
             </div>
           </div>
           <div className="nav-bar">
-            <Link to="#">
+            <Link to={routes.cart}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -85,6 +87,32 @@ const Sidebar = ({ role, customerName, customerPoint }) => {
             </Link>
           </div>
         </>
+      ) : role === "ROLE_STAFF" ? (
+        <>
+          <div className="staff-nav-bar">
+            <Link to={routes.staffProfile}>Tài khoản</Link>
+            <Link to={routes.manageOrder}>Quản lý đơn hàng</Link>
+            <Link to={routes.manageProduct}>Quản lý sản phẩm</Link>
+            <Link to={routes.manageArticle}>Quản lý bài viết</Link>
+            <Link to={routes.manageVoucher}>Quản lý voucher</Link>
+            <Link to="#">Chăm sóc khách hàng</Link>
+            <Link onClick={handleLogout}>Đăng xuất</Link>
+          </div>
+        </>
+      ) : role === "ROLE_ADMIN" ? (
+        <>
+          <div className="staff-nav-bar">
+            <Link to="#">Tài khoản</Link>
+
+            <Link to="#">Quản lý khách hàng</Link>
+
+            <Link to="#">Quản lý nhân viên</Link>
+
+            <Link to="#">Thống kê doanh thu</Link>
+
+            <Link onClick={handleLogout}>Đăng xuất</Link>
+          </div>
+        </>
       ) : (
         <>
           <div className="profile">
@@ -108,7 +136,7 @@ const Sidebar = ({ role, customerName, customerPoint }) => {
             </div>
           </div>
           <div className="nav-bar">
-            <Link to="#">
+            <Link to={routes.cart}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -170,8 +198,6 @@ const Sidebar = ({ role, customerName, customerPoint }) => {
             </Link>
           </div>
         </>
-
-
       )}
     </div>
   );

@@ -4,7 +4,7 @@ import backgroundImage from "../assets/images/backgroundDemo.jpg";
 import "../assets/css/loginAndRegister.css";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
-import { loginAPI } from "../services/auth/UsersService";
+import { getCart, loginAPI } from "../services/auth/UsersService";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
@@ -17,7 +17,6 @@ export default function Login() {
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
-
     if (!email_or_username || !password) {
       toast.error("Vui lòng điền đầy đủ thông tin");
       return;
@@ -27,6 +26,7 @@ export default function Login() {
       let res = await loginAPI(email_or_username, password);
       const decodedToken = jwtDecode(res);
       if (res) {
+        localStorage.clear();
         localStorage.setItem("token", res);
         localStorage.setItem("userRole", decodedToken.roles);
         localStorage.setItem("username", decodedToken.name);
@@ -36,6 +36,8 @@ export default function Login() {
         } else if (decodedToken.roles === "ROLE_STAFF") {
           navigate(routes.manageProduct);
         } else if (decodedToken.roles === "ROLE_CUSTOMER") {
+          // const resCart = getCart();
+          // localStorage.setItem("cart", JSON.stringify(resCart));
           navigate(routes.homePage);
         }
       } else {
@@ -47,11 +49,19 @@ export default function Login() {
     setLoadingAPI(false);
   };
 
+  // const fetchCart = async () => {
+  //   let res = await getCart();
+  //   localStorage.setItem("cart", res);
+  // };
+
   useEffect(() => {
-    // Set class and background image for the body
     document.body.classList.add("img");
     document.body.classList.add("js-fullheight");
     document.body.style.backgroundImage = `url(${backgroundImage})`;
+    if (localStorage.getItem("sessionExpired")) {
+      localStorage.removeItem("sessionExpired");
+      toast.error("Phiên đăng nhập đã hết hạn");
+    }
     let token = localStorage.getItem("token");
     let userRole = localStorage.getItem("userRole");
     if (userRole === "ROLE_CUSTOMER" && token) {
@@ -61,7 +71,6 @@ export default function Login() {
     } else if (userRole === "ROLE_STAFF" && token) {
       navigate(routes.manageProduct);
     }
-    // Cleanup function to remove added class and background image
     return () => {
       document.body.classList.remove("img");
       document.body.classList.remove("js-fullheight");

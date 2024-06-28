@@ -11,22 +11,25 @@ export default function ProductPresentation({ products }) {
       {products.map((product) => (
         <div className="product-card" key={product.productId}>
           <div className="product-card-img">
-          <Link
-              to={`${routes.products}/${product.name}`}
+            <Link
+              to={`${routes.products}/${encodeURIComponent(
+                product.name.replace(/\n/g, "")
+              )}`}
               style={{ textDecoration: "none" }}>
               {product.productImages.slice(0, 1).map((image) => (
                 <img
                   src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
                   alt={product.name}
+                  key={image.imageId}
                 />
               ))}
             </Link>
-
-
           </div>
           <div className="product-card-link">
             <Link
-              to={`${routes.products}/${product.name}`}
+              to={`${routes.products}/${encodeURIComponent(
+                product.name.replace(/\n/g, "")
+              )}`}
               style={{ textDecoration: "none" }}>
               {product.name}
             </Link>
@@ -34,8 +37,11 @@ export default function ProductPresentation({ products }) {
           <div className="product-card-noSold">Đã bán {product.noSold}</div>
           <div className="product-card-price">
             {formatPrice(product.sellingPrice)}đ
-            <Link to={`${routes.products}/${product.name}`}>
-              <i class="fa-solid fa-cart-shopping"></i>
+            <Link
+              to={`${routes.products}/${encodeURIComponent(
+                product.name.replace(/\n/g, "")
+              )}`}>
+              <i className="fa-solid fa-cart-shopping"></i>
             </Link>
           </div>
         </div>

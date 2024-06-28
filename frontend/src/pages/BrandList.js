@@ -5,6 +5,7 @@ import BrandListPresentation from "../components/BrandListPresentation";
 import Breadcrumb from "../components/Breadcrum";
 import Footer from "../components/Footer";
 import Sidebar from "../components/SideBar";
+import "../assets/css/brandPresentation.css";
 
 export default function BrandList() {
   const [brandList, setBrandList] = useState([]);

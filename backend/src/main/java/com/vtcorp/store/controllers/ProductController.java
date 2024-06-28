@@ -1,6 +1,7 @@
 package com.vtcorp.store.controllers;
 
 import com.vtcorp.store.dtos.ProductRequestDTO;
+import com.vtcorp.store.dtos.ReviewRequestDTO;
 import com.vtcorp.store.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
@@ -125,6 +126,16 @@ public class ProductController {
     public ResponseEntity<?> addProduct(@ModelAttribute ProductRequestDTO productRequestDTO) {
         try {
             return ResponseEntity.ok(productService.addProduct(productRequestDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "A user adds a review to the product page")
+    @PostMapping(value = "/review", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addReview(@ModelAttribute ReviewRequestDTO reviewRequestDTO) {
+        try {
+            return ResponseEntity.ok(productService.addReview(reviewRequestDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

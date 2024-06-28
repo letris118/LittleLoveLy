@@ -13,14 +13,7 @@ const users = () => {
   return instance.get("/api/users");
 };
 
-const handleLogout = (navigate) => (e) => {
-  e.preventDefault();
-  localStorage.removeItem("token"); 
-  localStorage.removeItem("userRole");
-  localStorage.removeItem("username");
-  navigate(routes.homePage);
-  toast.success("Đăng xuất thành công");
-};
+
 
 
 
@@ -112,14 +105,41 @@ const deactivateArticle = (articleId) => {
   return instance.put(`/api/articles/deactivate/${articleId}`);
 };
 
+
 const activateArticle = (articleId) => {
   return instance.put(`/api/articles/activate/${articleId}`);
+};
+const activeProducts = () => {
+  return instance.get("/api/products");
 };
 
 
 
+
+
+
+const handleLogout = (navigate) => (e) => {
+  e.preventDefault();
+  localStorage.clear();
+  navigate(routes.homePage);
+  toast.success("Đăng xuất thành công");
+};
+
+
 const formatPrice = (num) => {
   return new Intl.NumberFormat("de-DE").format(num);
+};
+
+const updateCart = (id, itemType, quantity) => {
+  return instance.put(`/api/cart/update-item`, { id, itemType, quantity });
+};
+
+const removeItemCard = (id, itemType, quantity) => {
+  return instance.put(`/api/cart/remove-item`, { id, itemType, quantity });
+};
+
+const getCart = () => {
+  return instance.get(`/api/cart`);
 };
 
 export {
@@ -133,6 +153,7 @@ export {
   activateProduct,
   getProductById,
   updateProduct,
+  activeProducts,
 
   brands,
   categories,
@@ -150,6 +171,10 @@ export {
   deactivateGift,
   activateGift,
 
-  formatPrice
+  formatPrice,
   
+
+  updateCart,
+  removeItemCard,
+  getCart,
 };

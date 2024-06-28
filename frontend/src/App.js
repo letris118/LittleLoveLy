@@ -1,5 +1,6 @@
 import "./App.css";
 import AppRoute from "./routes/appRoute";
+import { CartProvider } from "./services/auth/UsersService";
 
 function App() {
   return (
