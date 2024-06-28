@@ -76,7 +76,4 @@ public class OrderResponseDTO {
 
     @JsonView(Views.Order.class)
     private List<GiftIncluding> giftIncludings;
-
-    @JsonView(Views.Order.class)
-    private PaymentResponseDTO paymentResponse;
 }

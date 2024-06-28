@@ -3,15 +3,23 @@ package com.vtcorp.store.controllers;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.vtcorp.store.config.VNPayConfig;
 import com.vtcorp.store.dtos.OrderRequestDTO;
+import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.services.GHNService;
 import com.vtcorp.store.services.OrderService;
+import com.vtcorp.store.services.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -19,15 +27,18 @@ public class OrderController {
 
     private final OrderService orderService;
     private final GHNService ghnService;
+    private final PaymentService paymentService;
 
     @Autowired
-    public OrderController(OrderService orderService, GHNService ghnService) {
+    public OrderController(OrderService orderService, GHNService ghnService, PaymentService paymentService) {
         this.orderService = orderService;
         this.ghnService = ghnService;
+        this.paymentService = paymentService;
     }
 
     @Operation(summary = "Get all orders")
     @GetMapping
+    @JsonView(Views.Order.class)
     public ResponseEntity<?> getAllOrders() {
         try {
             return ResponseEntity.ok(orderService.getAllOrders());
@@ -39,6 +50,7 @@ public class OrderController {
 
     @Operation(summary = "Get order by id")
     @GetMapping("/{id}")
+    @JsonView(Views.Order.class)
     public ResponseEntity<?> getOrderById(@PathVariable String id) {
         try {
             return ResponseEntity.ok(orderService.getOrderById(id));
@@ -99,4 +111,42 @@ public class OrderController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @Operation(summary = "VNPay callback")
+    @GetMapping("/vn-pay-callback")
+    public ResponseEntity<?> handleVNPayCallback(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Map<String, String> fields = new HashMap<>();
+            for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements(); ) {
+                String fieldName = params.nextElement();
+                String fieldValue = request.getParameter(fieldName);
+                if (fieldValue != null && !fieldValue.isEmpty()) {
+                    fields.put(fieldName, fieldValue);
+                }
+            }
+            String vnp_SecureHash = request.getParameter("vnp_SecureHash");
+            fields.remove("vnp_SecureHashType");
+            fields.remove("vnp_SecureHash");
+            String signValue = VNPayConfig.hashAllFields(fields);
+            if (!signValue.equals(vnp_SecureHash)) {
+                throw new Exception("Checksum mismatch");
+            }
+            response.sendRedirect(orderService.handleVNPayCallback(fields));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Staff confirm order and create shipping order")
+    @PutMapping("/confirm/{id}")
+    @PreAuthorize("hasAuthority('" + Role.ROLE_STAFF + "')")
+    public ResponseEntity<?> confirmOrder(@PathVariable String id) {
+        try {
+            return ResponseEntity.ok(orderService.confirmOrder(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
