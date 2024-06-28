@@ -195,18 +195,18 @@ public class OrderService {
         if (voucherId != null) {
             Voucher voucher = voucherRepository.findById(voucherId)
                     .orElseThrow(() -> new RuntimeException("Voucher not found"));
-            if (voucher.isActive() && voucher.getStartDate().before(new Date()) && voucher.getEndDate().after(new Date()) && voucher.getMinOrderAmount() <= basePrice){
-                if(voucher.getType().equals(VoucherType.FLAT)) {
+            if (voucher.isActive() && voucher.getStartDate().before(new Date()) && voucher.getEndDate().after(new Date()) && voucher.getMinOrderAmount() <= basePrice) {
+                if (voucher.getType().equals(VoucherType.FLAT)) {
                     finalBasePrice = basePrice - voucher.getDiscountAmount();
-                } else if(voucher.getType().equals(VoucherType.PERCENTAGE)) {
+                } else if (voucher.getType().equals(VoucherType.PERCENTAGE)) {
                     double discount = basePrice * voucher.getDiscountPercentage();
-                    if(discount > voucher.getMaxDiscountAmount()) {
+                    if (discount > voucher.getMaxDiscountAmount()) {
                         discount = voucher.getMaxDiscountAmount();
                     }
                     finalBasePrice = basePrice - discount;
-                } else if(voucher.getType().equals(VoucherType.FREE_SHIPPING) && shippingFee != null){
+                } else if (voucher.getType().equals(VoucherType.FREE_SHIPPING) && shippingFee != null) {
                     finalShippingFee = 0.0;
-                } else if(voucher.getType().equals(VoucherType.DISCOUNT_SHIPPING) && shippingFee != null) {
+                } else if (voucher.getType().equals(VoucherType.DISCOUNT_SHIPPING) && shippingFee != null) {
                     finalShippingFee = shippingFee - voucher.getShipDiscountAmount();
                     finalShippingFee = (finalShippingFee < 0) ? 0 : finalShippingFee;
                 }
@@ -312,7 +312,7 @@ public class OrderService {
             order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_FAILED);
         }
         orderRepository.save(order);
-        return "http://localhost:3000/payment-result?orderId=" + orderId;
+        return "http://localhost:3000/";
     }
 
     private OrderResponseDTO mapOrderToResponse(Order order) {
@@ -386,15 +386,16 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         if (order.getStatus().equals(CODPaymentStatus.COD_PENDING_CONFIRMATION)) {
             order.setStatus(CODPaymentStatus.COD_ORDER_CONFIRMED);
-            // wait voucher
-            boolean isShipPaid = false;
-            //-------------------
-            // fix database
-            // need to store codAmount
-            // check function evaluate again
-            int codAmount = (int) order.getPostDiscountPrice().doubleValue();
-            //-----------------
-            ShippingResponseDTO response = ghnService.createShipping(order, codAmount, isShipPaid);
+            // neu km ship -> shop tra ship -> phan ship con lai + vao cod
+            // neu km base -> cus tra ship -> cod chi co base
+            boolean isShopPayShip = true;
+            double cod = order.getPostDiscountPrice();
+            Voucher voucher = order.getVoucher();
+            if (voucher != null && (voucher.getType().equals(VoucherType.FLAT) || voucher.getType().equals(VoucherType.PERCENTAGE))) {
+                cod = order.getFinalBasePrice();
+                isShopPayShip = false;
+            }
+            ShippingResponseDTO response = ghnService.createShipping(order, (int) cod, isShopPayShip);
             if (response.getCode() != 200) {
                 throw new RuntimeException("Cannot create shipping order");
             }

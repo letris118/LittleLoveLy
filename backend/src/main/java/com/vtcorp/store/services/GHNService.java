@@ -142,9 +142,9 @@ public class GHNService {
         throw new IllegalArgumentException("Invalid wardCode of districtId");
     }
 
-    public ShippingResponseDTO createShipping(Order order, int codAmount, boolean isShipPaid) {
+    public ShippingResponseDTO createShipping(Order order, int codAmount, boolean isShopPayShip) {
         // Choose who pay shipping fee (1: Shop/Seller; 2: Buyer/Consignee)
-        int paymentTypeId = isShipPaid ? 1 : 2;
+        int paymentTypeId = isShopPayShip ? 1 : 2;
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
