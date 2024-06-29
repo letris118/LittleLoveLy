@@ -177,12 +177,13 @@ header {
   background-color: white;
 }
 
+
+
 .content-row-3 {
   padding-bottom: 20px;
 }
 
-.row-1-top,
-.row-3-top {
+.row-top {
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -191,14 +192,12 @@ header {
   margin-bottom: 20px;
 }
 
-.row-1-top h4,
-.row-3-top h4 {
+.row-top h4 {
   font-size: 30px;
   font-family: "MuseoModerno";
   font-weight: 600;
   margin-left: 20px;
 }
-
 
 /* =================================Staff========================================= */
 
@@ -255,7 +254,7 @@ header.manage-header {
 .manage-content {
   display: flex;
   min-width: 1350px;
-  background-color:#f5f6fa;
+  background-color: #f5f6fa;
 }
 
 .manage-side-bar {
@@ -292,9 +291,8 @@ header.manage-header {
   border-bottom: 1px solid #636e72;
 }
 
-
 .manage-nav-bar a:hover {
-  background-color:#f1f2f6;
+  background-color: #f1f2f6;
 }
 
 .manage-search-icon,

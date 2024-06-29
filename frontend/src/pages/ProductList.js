@@ -4,6 +4,7 @@ import { products } from "../services/auth/UsersService";
 import ProductPresentation from "../components/ProductPresentation";
 import Sidebar from "../components/SideBar";
 import Breadcrumb from "../components/Breadcrum";
+import Footer from "../components/Footer";
 
 export default function ProductList() {
   const [productList, setProductList] = useState([]);
@@ -43,7 +44,7 @@ export default function ProductList() {
           <Breadcrumb value="Tất cả sản phẩm" />
           <div className="content-display ">
             <div className="content-row-3">
-              <div className="row-3-top ">
+              <div className="row-top ">
                 <h4>Tất cả sản phẩm</h4>
               </div>
               <div className="row-3-bottom">
@@ -53,6 +54,7 @@ export default function ProductList() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

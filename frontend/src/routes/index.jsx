@@ -1,5 +1,3 @@
-import { articles } from "../services/auth/UsersService";
-
 export const routes = {
   homePage: "/",
   login: "/login",

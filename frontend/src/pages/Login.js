@@ -37,8 +37,18 @@ export default function Login() {
         } else if (decodedToken.roles === "ROLE_STAFF") {
           navigate(routes.manageProduct);
         } else if (decodedToken.roles === "ROLE_CUSTOMER") {
-          // const resCart = getCart();
-          // localStorage.setItem("cart", JSON.stringify(resCart));
+          const resCart = await getCart();
+          const cart = JSON.parse(localStorage.getItem("cart")) || [];
+          resCart.orderDetails.map((item) =>
+            cart.push({ ...item.product, quantity: item.quantity })
+          );
+          localStorage.setItem("cart", JSON.stringify(cart));
+
+          const gifts = JSON.parse(localStorage.getItem("gifts")) || [];
+          resCart.giftIncludings.map((item) =>
+            gifts.push({ ...item.gift, quantity: item.quantity })
+          );
+          localStorage.setItem("gifts", JSON.stringify(gifts));
           navigate(routes.homePage);
         }
       } else {

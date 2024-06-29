@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "../assets/css/productPresentation.css";
 import instance from "../services/auth/customize-axios";
 import { formatPrice } from "../services/auth/UsersService";
+import Rating from "@mui/material/Rating";
 
 export default function ProductPresentation({ products }) {
   return (
@@ -34,7 +35,17 @@ export default function ProductPresentation({ products }) {
               {product.name}
             </Link>
           </div>
-          <div className="product-card-noSold">Đã bán {product.noSold}</div>
+          <div style={{ display: "flex" }}>
+            <div className="product-card-rating">
+              <Rating
+                value={product.averageRating}
+                precision={0.1}
+                size="small"
+                readOnly
+              />
+            </div>
+            <div className="product-card-noSold">({product.noSold})</div>
+          </div>
           <div className="product-card-price">
             {formatPrice(product.sellingPrice)}đ
             <Link

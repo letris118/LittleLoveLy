@@ -31,7 +31,7 @@ export default function ProductDetailPresentation() {
       const decodedProductName = decodeURIComponent(productName).replace(
         /\n/g,
         ""
-      ); 
+      );
       const product = response.find(
         (product) => product.name.replace(/\n/g, "") === decodedProductName
       );
@@ -113,8 +113,31 @@ export default function ProductDetailPresentation() {
       });
     } else {
       const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-      const updatedCartItems = [...cartItems, { ...productInfo, quantity }];
-      localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+      let existingProductIndex = cartItems.findIndex(
+        (item) => item.productId === productInfo.productId
+      );
+
+      if (existingProductIndex > -1) {
+        cartItems[existingProductIndex].quantity += quantity;
+      } else {
+        cartItems.push({ ...productInfo, quantity });
+      }
+      existingProductIndex = cartItems.findIndex(
+        (item) => item.productId === productInfo.productId
+      );
+
+      if (localStorage.getItem("userRole") === "ROLE_CUSTOMER") {
+        updateCart(
+          productInfo.productId,
+          "product",
+          cartItems[existingProductIndex].quantity
+        ).catch((error) => {
+          toast.error(error.response.data.message, {
+            autoClose: 2000,
+          });
+        });
+      }
+      localStorage.setItem("cart", JSON.stringify(cartItems));
       navigate(routes.cart);
     }
   }, [quantity, productInfo, navigate]);
@@ -339,7 +362,7 @@ export default function ProductDetailPresentation() {
       <ToastContainer />
       <div className="product-detail-bottom">
         <div className="product-detail-description">
-          <h5>Hướng dẫn sử dụng</h5>
+          <h5>Chi Tiết Sản Phẩm</h5>
           {productInfo?.description}
         </div>
       </div>

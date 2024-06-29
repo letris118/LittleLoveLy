@@ -41,7 +41,7 @@ export default function BrandList() {
           <Breadcrumb value="Tất cả thương hiệu" />
           <div className="content-display ">
             <div className="content-row-1">
-              <div className="row-1-top" style={{ width: "100%" }}>
+              <div className="row-top" style={{ width: "100%" }}>
                 <h4>Tất cả thương hiệu</h4>
               </div>
               <div className="row-list-bottom">
