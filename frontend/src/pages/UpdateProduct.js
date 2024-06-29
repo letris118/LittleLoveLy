@@ -84,9 +84,9 @@ export default function UpdateProduct() {
 
   return (
     <div>
-      <StaffHeader />
+      <StaffHeader/>
       <div className="manage-content">
-        <StaffSideBar />
+        <StaffSideBar/>
 
         <div className="update-content-detail">
           {productInfo ? (

@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import instance from "./customize-axios";
 import { routes } from "../../routes";
-
+import axios from "axios";
 const loginAPI = (username, password) => {
   return instance.post("/api/auth/login", {
     username,
@@ -42,10 +42,22 @@ const getProductById = (productId) => {
   return instance.get(`/api/products/${productId}`);
 };
 
+//add
+const addProduct = async (productRequestDTO) => {
+  try {
+    const response = await instance.post('/api/products', productRequestDTO, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return response; 
+  } catch (error) {
+    throw new Error(`Error adding product: ${error.message}`);
+  }
+};
+
 //update
 const updateProduct = (productId, productData) => {
   return instance.put(`/api/products/${productId}`, productData, {
-    headers:{
+    headers: {
       'Content-Type': 'multipart/form-data',
     }
   });
@@ -75,8 +87,8 @@ const deactivateVoucher = (voucherId) => {
   return instance.put(`/api/vouchers/deactivate/${voucherId}`);
 };
 
-const activateVoucher = (pvoucherId) => {
-  return instance.put(`/api/vouchers/activate/${pvoucherId}`);
+const activateVoucher = (voucherId) => {
+  return instance.put(`/api/vouchers/activate/${voucherId}`);
 };
 
 
@@ -152,6 +164,7 @@ export {
   deactivateProduct,
   activateProduct,
   getProductById,
+  addProduct,
   updateProduct,
   activeProducts,
 
@@ -172,7 +185,7 @@ export {
   activateGift,
 
   formatPrice,
-  
+
 
   updateCart,
   removeItemCard,
