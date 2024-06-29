@@ -58,7 +58,7 @@ public class UserService {
         user.setPoint(0);
         user = userRepository.save(user);
         emailSenderService.sendEmail(user.getMail(), "Welcome to our store", "Welcome to our store, " + user.getName());
-        return tokenService.generateAccessToken(user);
+        return "User registered successfully";
     }
 
     public UserResponseDTO addUser(UserRequestDTO userRequestDTO) {

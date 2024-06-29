@@ -1,21 +1,22 @@
 package com.vtcorp.store.services;
 
+import com.vtcorp.store.constants.VoucherType;
 import com.vtcorp.store.dtos.*;
 import com.vtcorp.store.entities.*;
-import com.vtcorp.store.enums.CODPaymentStatus;
-import com.vtcorp.store.enums.OnlinePaymentStatus;
-import com.vtcorp.store.enums.PaymentMethod;
+import com.vtcorp.store.constants.CODPaymentStatus;
+import com.vtcorp.store.constants.OnlinePaymentStatus;
+import com.vtcorp.store.constants.PaymentMethod;
 import com.vtcorp.store.mappers.OrderMapper;
 import com.vtcorp.store.repositories.*;
 import com.vtcorp.store.utils.CodeGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderService {
@@ -28,12 +29,10 @@ public class OrderService {
     private final GHNService ghnService;
     private final PaymentService paymentService;
     private final VoucherRepository voucherRepository;
-
-    @Value("${ghn.api.weight}")
-    private int weight;
+    private final EmailSenderService emailSenderService;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService, PaymentService paymentService, VoucherRepository voucherRepository) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService, PaymentService paymentService, VoucherRepository voucherRepository, EmailSenderService emailSenderService) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.userRepository = userRepository;
@@ -42,6 +41,7 @@ public class OrderService {
         this.ghnService = ghnService;
         this.paymentService = paymentService;
         this.voucherRepository = voucherRepository;
+        this.emailSenderService = emailSenderService;
     }
 
     public List<OrderResponseDTO> getAllOrders() {
@@ -49,7 +49,7 @@ public class OrderService {
     }
 
     public OrderResponseDTO getOrderById(String id) {
-        return orderMapper.toOrderResponseDTO(orderRepository.findById(id)
+        return mapOrderToResponse(orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found")));
     }
 
@@ -167,7 +167,6 @@ public class OrderService {
         return orderMapper.toCartResponseDTO(orderRepository.save(cart));
     }
 
-    // chua ap dung voucher
     public OrderEvaluationDTO evaluateOrder(OrderRequestDTO orderRequestDTO) {
         double basePrice = 0.0;
         int totalPoints = 0;
@@ -190,17 +189,38 @@ public class OrderService {
         Long districtId = orderRequestDTO.getCusDistrictId();
         Long wardCode = orderRequestDTO.getCusWardCode();
         if (districtId != null && wardCode != null) {
-            shippingFee = ghnService.calculateFee(districtId, wardCode, weight);
+            shippingFee = ghnService.calculateFee(districtId, wardCode);
         }
-        double totalPrice = basePrice + (shippingFee != null ? shippingFee : 0);
-        double discount = 0.0;
-        double postDiscountPrice = totalPrice - discount;
+        double finalBasePrice = basePrice;
+        Double finalShippingFee = shippingFee;
+        Long voucherId = orderRequestDTO.getVoucherId();
+        if (voucherId != null) {
+            Voucher voucher = voucherRepository.findById(voucherId)
+                    .orElseThrow(() -> new RuntimeException("Voucher not found"));
+            if (voucher.isActive() && voucher.getStartDate().before(new Date()) && voucher.getEndDate().after(new Date()) && voucher.getMinOrderAmount() <= basePrice) {
+                if (voucher.getType().equals(VoucherType.FLAT)) {
+                    finalBasePrice = basePrice - voucher.getDiscountAmount();
+                } else if (voucher.getType().equals(VoucherType.PERCENTAGE)) {
+                    double discount = basePrice * voucher.getDiscountPercentage();
+                    if (discount > voucher.getMaxDiscountAmount()) {
+                        discount = voucher.getMaxDiscountAmount();
+                    }
+                    finalBasePrice = basePrice - discount;
+                } else if (voucher.getType().equals(VoucherType.FREE_SHIPPING) && shippingFee != null) {
+                    finalShippingFee = 0.0;
+                } else if (voucher.getType().equals(VoucherType.DISCOUNT_SHIPPING) && shippingFee != null) {
+                    finalShippingFee = shippingFee - voucher.getShipDiscountAmount();
+                    finalShippingFee = (finalShippingFee < 0) ? 0 : finalShippingFee;
+                }
+            }
+        }
+        double postDiscountPrice = finalBasePrice + ((finalShippingFee == null) ? 0 : finalShippingFee);
         int bonusPoint = (int) (basePrice / 1000);
-        return new OrderEvaluationDTO(basePrice, shippingFee, bonusPoint, totalProductQuantity, totalPrice, postDiscountPrice, totalPoints);
+        return new OrderEvaluationDTO(totalProductQuantity, totalPoints, basePrice, finalBasePrice, shippingFee, finalShippingFee, postDiscountPrice, bonusPoint);
     }
 
     @Transactional
-    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, String username, String ipAddress) {
+    public Object createOrder(OrderRequestDTO orderRequestDTO, String username, String ipAddress) {
         List<CartItemDTO> cartItems = orderRequestDTO.getCartItems();
         OrderEvaluationDTO evaluateOrder = evaluateOrder(orderRequestDTO);
         if (cartItems == null || cartItems.isEmpty() || evaluateOrder.getTotalQuantity() == 0) {
@@ -217,7 +237,8 @@ public class OrderService {
             order.setOrderDetails(new ArrayList<>());
             order.setGiftIncludings(new ArrayList<>());
         }
-        Voucher voucher = voucherRepository.findById(orderRequestDTO.getVoucherId()).orElse(null);
+        Long voucherId = orderRequestDTO.getVoucherId();
+        Voucher voucher = (voucherId == null) ? null : voucherRepository.findById(voucherId).orElse(null);
         List<OrderDetail> orderDetails = new ArrayList<>();
         List<GiftIncluding> giftIncludings = new ArrayList<>();
         for (CartItemDTO item : cartItems) {
@@ -270,22 +291,38 @@ public class OrderService {
         order.getGiftIncludings().clear();
         order.getGiftIncludings().addAll(giftIncludings);
 
-        if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.VN_PAY.toString())) {
-            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING.toString());
+        if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.VN_PAY)) {
+            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING);
+            order = orderRepository.save(order);
+            emailSenderService.sendEmail(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             double finalPrice = evaluateOrder.getPostDiscountPrice();
-            PaymentResponseDTO paymentResponseDTO = paymentService.createPayment(finalPrice, ipAddress);
-            return mapOrderToResponse(orderRepository.save(order), paymentResponseDTO);
-        } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD.toString())) {
-            order.setStatus(CODPaymentStatus.COD_PENDING_CONFIRMATION.toString());
-            return mapOrderToResponse(orderRepository.save(order), null);
+            return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress, order.getCreatedDate());
+        } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD)) {
+            order.setStatus(CODPaymentStatus.COD_PENDING_CONFIRMATION);
+            order = orderRepository.save(order);
+            emailSenderService.sendEmail(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
+            return mapOrderToResponse(order);
         } else {
             throw new IllegalArgumentException("Invalid payment method");
         }
     }
 
-    private OrderResponseDTO mapOrderToResponse(Order order, PaymentResponseDTO paymentResponseDTO) {
+    public String handleVNPayCallback(Map<String, String> fields) {
+        String vnpResponseCode = fields.get("vnp_ResponseCode");
+        String orderId = fields.get("vnp_TxnRef");
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        if ("00".equals(vnpResponseCode)) {
+            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_SUCCESS);
+        } else {
+            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_FAILED);
+        }
+        orderRepository.save(order);
+        return "http://localhost:3000/";
+    }
+
+    private OrderResponseDTO mapOrderToResponse(Order order) {
         OrderResponseDTO orderResponseDTO = orderMapper.toOrderResponseDTO(order);
-        orderResponseDTO.setPaymentResponse(paymentResponseDTO);
         orderResponseDTO.setCusCity(ghnService.getCityName(order.getCusCityCode()));
         orderResponseDTO.setCusDistrict(ghnService.getDistrictName(order.getCusCityCode(), order.getCusDistrictId()));
         orderResponseDTO.setCusWard(ghnService.getWardName(order.getCusDistrictId(), order.getCusWardCode()));
@@ -347,5 +384,39 @@ public class OrderService {
                 .quantity(cartItemDTO.getQuantity())
                 .point(gift.getPoint())
                 .build());
+    }
+
+    @Transactional
+    public ShippingResponseDTO confirmOrder(String id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        if (order.getStatus().equals(CODPaymentStatus.COD_PENDING_CONFIRMATION)) {
+            order.setStatus(CODPaymentStatus.COD_ORDER_CONFIRMED);
+            // neu km ship -> shop tra ship -> phan ship con lai + vao cod
+            // neu km base -> cus tra ship -> cod chi co base
+            boolean isShopPayShip = true;
+            double cod = order.getPostDiscountPrice();
+            Voucher voucher = order.getVoucher();
+            if (voucher != null && (voucher.getType().equals(VoucherType.FLAT) || voucher.getType().equals(VoucherType.PERCENTAGE))) {
+                cod = order.getFinalBasePrice();
+                isShopPayShip = false;
+            }
+            ShippingResponseDTO response = ghnService.createShipping(order, (int) cod, isShopPayShip);
+            if (response.getCode() != 200) {
+                throw new RuntimeException("Cannot create shipping order");
+            }
+            order.setTrackingCode(response.getData().getTrackingCode());
+            return response;
+        } else if (order.getStatus().equals(OnlinePaymentStatus.ONLINE_PAYMENT_SUCCESS)) {
+            order.setStatus(OnlinePaymentStatus.ONLINE_ORDER_CONFIRMED);
+            ShippingResponseDTO response = ghnService.createShipping(order, 0, true);
+            if (response.getCode() != 200) {
+                throw new RuntimeException("Cannot create shipping order");
+            }
+            order.setTrackingCode(response.getData().getTrackingCode());
+            return response;
+        } else {
+            throw new IllegalArgumentException("Cannot confirm order from status: " + order.getStatus());
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.vtcorp.store.controllers;
 
 import com.vtcorp.store.dtos.UserRequestDTO;
-import com.vtcorp.store.enums.Role;
+import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +43,8 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> addUser(@RequestBody UserRequestDTO userRequestDTO) {
         String role = userRequestDTO.getRole();
-        if (role == null || (!role.equals(Role.ROLE_ADMIN.toString()) && !role.equals(Role.ROLE_CUSTOMER.toString())
-                && !role.equals(Role.ROLE_STAFF.toString()))) {
+        if (role == null || (!role.equals(Role.ROLE_ADMIN) && !role.equals(Role.ROLE_CUSTOMER)
+                && !role.equals(Role.ROLE_STAFF))) {
             return ResponseEntity.badRequest().body("Invalid role");
         }
         try {

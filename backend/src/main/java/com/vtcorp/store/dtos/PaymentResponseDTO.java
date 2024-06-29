@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.vtcorp.store.jsonview.Views;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
