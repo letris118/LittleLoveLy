@@ -22,6 +22,9 @@ import StaffBrandList from "../pages/StaffBrandList";
 import UpdateProduct from "../pages/UpdateProduct";
 import AddProduct from "../pages/AddProduct";
 import Checkout from "../pages/Checkout";
+import Statistics from "../pages/Statistics";
+import ManageStaff from "../pages/ManageStaff";
+import ManageMember from "../pages/ManageMember";
 
 export default function AppRoute() {
   return (
@@ -47,6 +50,9 @@ export default function AppRoute() {
       <Route path={`${routes.updateProduct}/:name`} element={<UpdateProduct />} />
       <Route path={routes.addProduct} element={<AddProduct />} />
       <Route path={routes.checkout} element={<Checkout />} />
+      <Route path={routes.statistics} element={<Statistics />} />
+      <Route path={routes.manageMember} element={<ManageMember />} />
+      <Route path={routes.manageStaff} element={<ManageStaff />} />
     </Routes>
   );
 }

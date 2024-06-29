@@ -87,32 +87,6 @@ const Sidebar = ({ role, customerName, customerPoint }) => {
             </Link>
           </div>
         </>
-      ) : role === "ROLE_STAFF" ? (
-        <>
-          <div className="staff-nav-bar">
-            <Link to={routes.staffProfile}>Tài khoản</Link>
-            <Link to={routes.manageOrder}>Quản lý đơn hàng</Link>
-            <Link to={routes.manageProduct}>Quản lý sản phẩm</Link>
-            <Link to={routes.manageArticle}>Quản lý bài viết</Link>
-            <Link to={routes.manageVoucher}>Quản lý voucher</Link>
-            <Link to="#">Chăm sóc khách hàng</Link>
-            <Link onClick={handleLogout}>Đăng xuất</Link>
-          </div>
-        </>
-      ) : role === "ROLE_ADMIN" ? (
-        <>
-          <div className="staff-nav-bar">
-            <Link to="#">Tài khoản</Link>
-
-            <Link to="#">Quản lý khách hàng</Link>
-
-            <Link to="#">Quản lý nhân viên</Link>
-
-            <Link to="#">Thống kê doanh thu</Link>
-
-            <Link onClick={handleLogout}>Đăng xuất</Link>
-          </div>
-        </>
       ) : (
         <>
           <div className="profile">
