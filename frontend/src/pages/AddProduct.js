@@ -4,17 +4,15 @@ import { Link, useNavigate } from "react-router-dom";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
 import {
-  articles,
-  brands,
-  handleLogout,
-  products,
-  users,
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
 
-export default function ManageOrder() {
-    const [productList, setProductList] = useState([]);
+export default function AddProduct() {
+  const [productInfo, setProductInfo] = useState(null);
+  const [allBrands, setAllBrands] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const [allCate, setAllCate] = useState([]);
 
     const navigate = useNavigate();
 
@@ -28,21 +26,6 @@ export default function ManageOrder() {
         };
         checkAuthentication();
 
-        const fetchProducts = async () => {
-          try {
-            let response = await products();
-            if (response) {
-              setProductList(response.slice(0, 20));
-            } else {
-              setProductList([]);
-            }
-          } catch (error) {
-            console.error("Error fetching products:", error);
-            toast.error("Không thể tải sản phẩm");
-            setProductList([]);
-          }
-        };
-        fetchProducts();
     }, []);
 
     return (
@@ -55,7 +38,11 @@ export default function ManageOrder() {
           />    
 
           <div className="manage-content-detail">   
-            ORDER
+            {/* 
+            
+            
+            
+            */}
           </div>   
                
         </div>

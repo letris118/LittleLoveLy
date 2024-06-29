@@ -62,7 +62,7 @@ public class GiftController {
     }
 
     @Operation(summary = "Update gift by ID")
-    @PutMapping
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<?> updateGift(@PathVariable long id, @ModelAttribute GiftRequestDTO giftRequestDTO) {
         if (id != giftRequestDTO.getGiftId()) {
             return ResponseEntity.badRequest().body("Gift ID in the path variable does not match the one in the request body");
@@ -70,6 +70,26 @@ public class GiftController {
         try {
             return ResponseEntity.ok(giftService.updateGift(giftRequestDTO));
 
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Deactivate gift by ID")
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateGift(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(giftService.deactivateProduct(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Activate gift by ID")
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<?> activateGift(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(giftService.activateProduct(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

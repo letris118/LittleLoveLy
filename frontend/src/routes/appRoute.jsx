@@ -16,6 +16,11 @@ import ProductList from "../pages/ProductList";
 import ProductDetail from "../pages/ProductDetail";
 import Cart from "../pages/Cart";
 import StaffHomePage from "../pages/StaffHomePage";
+import StaffChat from "../pages/StaffChat";
+import ManageGift from "../pages/ManageGift";
+import StaffBrandList from "../pages/StaffBrandList";
+import UpdateProduct from "../pages/UpdateProduct";
+import AddProduct from "../pages/AddProduct";
 import Checkout from "../pages/Checkout";
 
 export default function AppRoute() {
@@ -36,6 +41,11 @@ export default function AppRoute() {
       <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
       <Route path={routes.cart} element={<Cart />} />
       <Route path={routes.staffHomePage} element={<StaffHomePage />} />
+      <Route path={routes.staffChat} element={<StaffChat />} />
+      <Route path={routes.manageGift} element={<ManageGift />} />
+      <Route path={routes.staffBrandList} element={<StaffBrandList />} />
+      <Route path={`${routes.updateProduct}/:name`} element={<UpdateProduct />} />
+      <Route path={routes.addProduct} element={<AddProduct />} />
       <Route path={routes.checkout} element={<Checkout />} />
     </Routes>
   );

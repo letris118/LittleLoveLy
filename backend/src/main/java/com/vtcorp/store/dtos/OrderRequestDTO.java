@@ -19,7 +19,7 @@ public class OrderRequestDTO {
 
     private String paymentMethod;
 
-    private long voucherId;
+    private Long voucherId;
 
     private List<CartItemDTO> cartItems;
 

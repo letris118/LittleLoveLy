@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
-import DropdownMenu from "./DropdownMenu";
+import StaffDropdownMenu from "./StaffDropdownMenu";
 import Dropdown from "react-bootstrap/Dropdown";
 
 export default function Header() {
@@ -15,7 +15,7 @@ export default function Header() {
           </Link>
         </div>
 
-          {window.location.pathname === routes.staffHomePage && (
+          {(window.location.pathname === routes.staffHomePage || window.location.pathname === routes.staffBrandList) &&(
             <div className="manage-search-bar">
                 <input type="text" placeholder="Tìm kiếm sản phẩm..." />
                 <div className="manage-search-icon">
@@ -26,58 +26,38 @@ export default function Header() {
             </div>
           )}
 
-          {window.location.pathname === routes.manageProduct && (
-            <div className="manage-search-bar">
-                <input type="text" placeholder="Tên sản phẩm..." />
-                <div className="manage-search-icon">
-                  <Link className="manage-search">
-                    <img src="../assets/images/search_icon.png" alt="search logo" />
-                  </Link>
-                </div>
-            </div>
+          {/* {window.location.pathname === routes.manageProduct && (
+            
           )}
 
           {window.location.pathname === routes.manageOrder && (
-            <div className="manage-search-bar">
-                <input type="text" placeholder="Số điện thoại đặt hàng..." />
-                <div className="manage-search-icon">
-                  <Link className="manage-search">
-                    <img src="../assets/images/search_icon.png" alt="search logo" />
-                  </Link>
-                </div>
-            </div>
+            
           )}
 
           {window.location.pathname === routes.manageArticle && (
-            <div className="manage-search-bar">
-              <input type="text" placeholder="Tên bài báo..." />
-                <div className="manage-search-icon">
-                  <Link className="manage-search">
-                    <img src="../assets/images/search_icon.png" alt="search logo" />
-                  </Link>
-                </div>  
-            </div>
+            
           )}
 
           {window.location.pathname === routes.manageVoucher && (
-            <div className="manage-search-bar">
-                <input type="text" placeholder="Tên voucher..." />
-                <div className="manage-search-icon">
-                  <Link className="manage-search">
-                    <img src="../assets/images/search_icon.png" alt="search logo" />
-                  </Link>
-                </div>
-            </div>
+            
           )}
+
+          {window.location.pathname === routes.manageGift && (
+            
+          )}
+
+          {window.location.pathname === routes.staffChat && (
+           
+          )} */}
 
           <div
             style={{
               display: "flex",
               justifyContent: "end",
-              width: "30%",
+              width: "100%",
             }}>
             {localStorage.getItem("token") ? (
-              <DropdownMenu style={{ marginLeft: "10px" }} />
+              <StaffDropdownMenu style={{ marginLeft: "10px" }} />
             ) : (
               <>
                 <Dropdown>

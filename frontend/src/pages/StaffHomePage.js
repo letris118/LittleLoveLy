@@ -102,15 +102,10 @@ export default function StaffHomePage() {
 
   return (
     <div>
-      <ToastContainer />
       <StaffHeader />
 
       <div className="manage-content">
-        <StaffSideBar
-          role={localStorage.getItem("userRole")}
-          customerName={localStorage.getItem("username")}
-          customerPoint={localStorage.getItem("point")}
-        />
+        <StaffSideBar />
 
         <div className="manage-content-detail">
           <div className="manage-content-display ">
@@ -118,7 +113,7 @@ export default function StaffHomePage() {
               <div className="manage-row-1-top " style={{ width: "100%" }}>
                 <h4>Thương hiệu</h4>
                 <Link
-                  to={routes.brands}
+                  to={routes.staffBrandList}
                   style={{ textDecoration: "none", color: "#ff469e" }}>
                   Xem tất cả <i className="fa-solid fa-arrow-right"></i>
                 </Link>
@@ -132,7 +127,7 @@ export default function StaffHomePage() {
               <div className="manage-row-3-top ">
                 <h4>Sản phẩm</h4>
                 <Link
-                  to={routes.products}
+                  to="#"
                   style={{ textDecoration: "none", color: "#ff469e" }}>
                   Xem tất cả <i className="fa-solid fa-arrow-right"></i>
                 </Link>

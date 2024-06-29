@@ -6,10 +6,11 @@ import { ToastContainer, toast } from "react-toastify";
 import Switch from 'react-switch';
 import instance from "../services/auth/customize-axios";
 import {
-  articles,
+  articlesAll,
+  deactivateArticle,
+  activateArticle,
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
-import { jwtDecode } from "jwt-decode";
 import "../assets/css/manage.css";
 
 export default function ManageArticle() {
@@ -29,7 +30,7 @@ export default function ManageArticle() {
         
         const fetchArticles = async () => {
       try {
-        let response = await articles();
+        let response = await articlesAll();
         if (response) {
           setArticleList(response.slice(0, 3));
         } else {
@@ -45,15 +46,46 @@ export default function ManageArticle() {
 
     }, []);
 
+    const handleToggle = async (articleId, currentStatus) => {
+      if (currentStatus) {
+        await deactivateArticle(articleId);
+      } else {
+        await activateArticle(articleId);
+      }
+
+      setArticleList(prevState =>
+        prevState.map(article =>
+          article.articleId === articleId ? { ...article, active: !article.active } : article
+        )
+      );
+  };
+
     return (
         <div>
-          <ToastContainer />
           <StaffHeader/>
     
           <div className="manage-content">
             <StaffSideBar/>    
 
             <div className="manage-content-detail">   
+
+            <div className="search-add-table">
+              <div className="table-search-bar">
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm bài viết..."
+                />
+                <button className="table-search-icon">
+                  <img src="../assets/images/search_icon.png" alt="search logo" />
+                </button>
+              </div>
+
+              <div className="add-product-btn">
+                <Link to={routes.addProduct} className="add-product-link">
+                  Thêm bài viết mới
+                </Link>
+              </div>
+            </div>
               
             <table className="manage-table">
               <thead>
@@ -70,21 +102,28 @@ export default function ManageArticle() {
 
               <tbody>
                 {articleList.map((article, index) =>(
-                  <tr key={article.articleId}>
+                  <tr key={article.articleId}>  
                     <td className="index-body">{index + 1}</td>
                     <td className="name-body">{article.title}</td>
                     <td className="img-body">
                       {article.articleImages.slice(0, 1).map((image) => (
                         <img
                           src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
-                          alt={article.title}
+                           
                           style={{ width: '50%', height: '50%' }}
                         />
                       ))}
                     </td>
                     <td className="date-body">{article.uploadedDate}</td>
                     <th className="content-body">{article.content.length > 170 ? `${article.content.slice(0, 170)}...` : article.content}</th>
-                    <td className="active-body"></td>
+                    <td className="active-body">
+                      <Switch
+                        onChange={() => handleToggle(article.articleId, article.active)}
+                        checked={article.active}
+                        offColor="#ff0000"
+                        onColor="#27ae60"
+                      />
+                    </td>
                     <td className="update-body">
                       <Link
                       to="#" style={{color: "#7f8c8d"}}>

@@ -24,7 +24,11 @@ export default function StaffSideBar() {
                 Quản lý voucher
             </Link>
 
-            <Link to="#" style={{color: 'black'}}>
+            <Link to={routes.manageGift} style={{color: 'black'}}>
+                Quản lý quà tặng
+            </Link>
+
+            <Link to={routes.staffChat} style={{color: 'black'}}>
                 Chăm sóc khách hàng
             </Link>
         </div>
