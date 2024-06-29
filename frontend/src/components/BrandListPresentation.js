@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { routes } from "../routes";
 import instance from "../services/auth/customize-axios";
 
-export default function BrandListPresentation({ brands }) {
+export default function BrandListPresentation({ brands,role }) {
   return (
     <>
       {brands.map((brand) => (
