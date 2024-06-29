@@ -20,9 +20,9 @@ export default function StaffDropdownMenu() {
       <CSSTransition
         in={showMenu}
         timeout={300}
-        classNames="staff-dropdown-menu"
+        classNames="dropdown-menu"
         unmountOnExit>
-        <Dropdown.Menu className="staff-dropdown-menu">
+        <Dropdown.Menu className="dropdown-menu">
           <Link
             to={{}}
             style={{

@@ -65,10 +65,9 @@
   border: none !important;
 }
 
-
 /* =================================Staff========================================= */
 
-.manage-dropdown-menu {
+.staff-dropdown.dropdown-menu {
   position: absolute;
   top: 100%;
   right: 0;
@@ -81,7 +80,7 @@
   width: 200px;
 }
 
-.manage-dropdown-menu::before {
+.staff-dropdown.dropdown-menu::before {
   content: "";
   position: absolute;
   top: -10px;
@@ -91,50 +90,46 @@
   border-color: transparent transparent white transparent;
 }
 
-.manage-dropdown-item {
+.staff-dropdown.dropdown-item {
   padding: 10px 20px;
   font-size: 16px;
   color: #333;
 }
 
-.manage-dropdown-item:hover {
-  background-color: white;
+.staff-dropdown.dropdown-item:hover {
+  background-color: #f5f5f5;
   cursor: pointer;
 }
 
-.manage-dropdown-item:active {
-  background-color: white;
+.staff-dropdown.dropdown-item:active {
+  background-color: #f5f5f5;
   cursor: pointer;
   color: black;
 }
 
-.manage-dropdown-menu-enter {
+.staff-dropdown.dropdown-menu-enter {
   opacity: 0;
   transform: translateY(-10px);
 }
 
-.manage-dropdown-menu-enter-active {
+.staff-dropdown.dropdown-menu-enter-active {
   opacity: 1;
   transform: translateY(0);
   transition: opacity 300ms, transform 300ms;
 }
 
-.manage-dropdown-menu-exit {
+.staff-dropdown.dropdown-menu-exit {
   opacity: 1;
   transform: translateY(0);
 }
 
-.manage-dropdown-menu-exit-active {
+.staff-dropdown.dropdown-menu-exit-active {
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 300ms, transform 300ms;
 }
 
-.manage-dropdown-basic {
-  background-color: black !important;
+#staff-dropdown-basic {
+  background-color: #ffffff !important;
   border: none !important;
-}
-
-#manage-dropdown-basic {
-  background-color: #ffffff;
 }

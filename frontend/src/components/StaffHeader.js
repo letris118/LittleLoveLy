@@ -60,9 +60,9 @@ export default function Header() {
               <StaffDropdownMenu style={{ marginLeft: "10px" }} />
             ) : (
               <>
-                <Dropdown>
+                <Dropdown className="staff-dropdown">
                   <Link to={routes.login}>
-                    <Dropdown.Toggle id="manage-dropdown-basic">
+                    <Dropdown.Toggle id="staff-dropdown-basic">
                       <i class="fa-solid fa-user"></i>
                     </Dropdown.Toggle>
                   </Link>
