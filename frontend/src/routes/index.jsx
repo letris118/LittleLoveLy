@@ -21,4 +21,7 @@ export const routes = {
   updateProduct: "/updateProduct",
   addProduct: "/addProduct",
   checkout: "/checkout",
+  statistics: "/statistics",
+  manageMember: "/manageMember",
+  manageStaff: "/manageStaff",
 };

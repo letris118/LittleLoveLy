@@ -4,27 +4,16 @@ import { routes } from "../routes";
 import StaffDropdownMenu from "./StaffDropdownMenu";
 import Dropdown from "react-bootstrap/Dropdown";
 
-export default function Header() {
+export default function AdminHeader() {
   return (
     <>
       <header className="manage-header">
         {/* logo + store name to return home page */}
         <div className="manage-store-name">
-          <Link to={routes.staffHomePage} style={{ color: "white" }}>
+          <Link to={routes.statistics} style={{ color: "white" }}>
             Little Lovely
           </Link>
         </div>
-
-          {(window.location.pathname === routes.staffHomePage || window.location.pathname === routes.staffBrandList) &&(
-            <div className="manage-search-bar">
-                <input type="text" placeholder="Tìm kiếm sản phẩm..." />
-                <div className="manage-search-icon">
-                  <Link className="manage-search">
-                    <img src="../assets/images/search_icon.png" alt="search logo" />
-                  </Link>
-                </div>
-            </div>
-          )}          
 
           <div
             style={{

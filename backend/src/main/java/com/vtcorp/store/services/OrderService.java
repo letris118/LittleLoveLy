@@ -29,9 +29,10 @@ public class OrderService {
     private final GHNService ghnService;
     private final PaymentService paymentService;
     private final VoucherRepository voucherRepository;
+    private final EmailSenderService emailSenderService;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService, PaymentService paymentService, VoucherRepository voucherRepository) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService, PaymentService paymentService, VoucherRepository voucherRepository, EmailSenderService emailSenderService) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.userRepository = userRepository;
@@ -40,6 +41,7 @@ public class OrderService {
         this.ghnService = ghnService;
         this.paymentService = paymentService;
         this.voucherRepository = voucherRepository;
+        this.emailSenderService = emailSenderService;
     }
 
     public List<OrderResponseDTO> getAllOrders() {
@@ -235,7 +237,8 @@ public class OrderService {
             order.setOrderDetails(new ArrayList<>());
             order.setGiftIncludings(new ArrayList<>());
         }
-        Voucher voucher = voucherRepository.findById(orderRequestDTO.getVoucherId()).orElse(null);
+        Long voucherId = orderRequestDTO.getVoucherId();
+        Voucher voucher = (voucherId == null) ? null : voucherRepository.findById(voucherId).orElse(null);
         List<OrderDetail> orderDetails = new ArrayList<>();
         List<GiftIncluding> giftIncludings = new ArrayList<>();
         for (CartItemDTO item : cartItems) {
@@ -290,12 +293,15 @@ public class OrderService {
 
         if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.VN_PAY)) {
             order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING);
-            orderRepository.save(order);
+            order = orderRepository.save(order);
+            emailSenderService.sendEmail(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             double finalPrice = evaluateOrder.getPostDiscountPrice();
             return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress, order.getCreatedDate());
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD)) {
             order.setStatus(CODPaymentStatus.COD_PENDING_CONFIRMATION);
-            return mapOrderToResponse(orderRepository.save(order));
+            order = orderRepository.save(order);
+            emailSenderService.sendEmail(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
+            return mapOrderToResponse(order);
         } else {
             throw new IllegalArgumentException("Invalid payment method");
         }
