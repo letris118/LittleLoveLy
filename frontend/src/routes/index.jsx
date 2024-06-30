@@ -24,4 +24,5 @@ export const routes = {
   statistics: "/statistics",
   manageMember: "/manageMember",
   manageStaff: "/manageStaff",
+  searchProduct: "/search",
 };

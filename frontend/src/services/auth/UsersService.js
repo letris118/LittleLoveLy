@@ -41,10 +41,10 @@ const getProductById = (productId) => {
 //add
 const addProduct = async (productRequestDTO) => {
   try {
-    const response = await instance.post('/api/products', productRequestDTO, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+    const response = await instance.post("/api/products", productRequestDTO, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
-    return response; 
+    return response;
   } catch (error) {
     throw new Error(`Error adding product: ${error.message}`);
   }
@@ -54,13 +54,8 @@ const addProduct = async (productRequestDTO) => {
 const updateProduct = (productId, productData) => {
   return instance.put(`/api/products/${productId}`, productData, {
     headers: {
-<<<<<<< HEAD
       "Content-Type": "multipart/form-data",
     },
-=======
-      'Content-Type': 'multipart/form-data',
-    }
->>>>>>> main
   });
 };
 
@@ -157,9 +152,6 @@ const createOrder = (order) => {
   return instance.post(`/api/orders`, order);
 };
 
-const searchProducts = () => {
-  return instance.get(`/api/products/search`);
-};
 
 export {
   loginAPI,
@@ -186,13 +178,10 @@ export {
   deactivateGift,
   activateGift,
   formatPrice,
-
-
   updateCart,
   removeItemCard,
   getCart,
   evaluateCart,
   getUserInfo,
   createOrder,
-  searchProducts,
 };

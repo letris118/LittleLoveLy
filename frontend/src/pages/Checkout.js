@@ -12,6 +12,21 @@ import {
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import { routes } from "../routes";
+import * as Yup from "yup";
+
+const checkoutSchema = Yup.object({
+  cusName: Yup.string().required("Vui lòng nhập tên người nhận hàng"),
+  cusMail: Yup.string()
+    .email("Vui lòng nhập đúng định dạng email")
+    .required("Vui lòng nhập email"),
+  cusPhone: Yup.string().required("Vui lòng nhập số điện thoại"),
+  cusCityCode: Yup.string().required("Vui lòng chọn tỉnh/thành phố"),
+  cusDistrictId: Yup.string().required("Vui lòng chọn quận/huyện"),
+  cusWardCode: Yup.string().required("Vui lòng chọn phường/xã"),
+  cusStreet: Yup.string().required("Vui lòng nhập địa chỉ"),
+  paymentMethod: Yup.string().required("Vui lòng chọn phương thức thanh toán"),
+  cartItems: Yup.array().min(1, "Vui lòng chọn sản phẩm"),
+});
 
 export default function Checkout() {
   //const [paymentMethod, setPaymentMethod] = useState("");
@@ -57,6 +72,7 @@ export default function Checkout() {
       cartItems: submitCart,
     },
     enableReinitialize: true,
+    validateSchema: checkoutSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
       try {

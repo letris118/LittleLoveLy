@@ -33,7 +33,7 @@ header {
   /* margin: 0 auto; */
   font-size: 22px;
   font-weight: bold;
-  margin-left: 350px;
+  margin-left: 250px;
   width: 80%;
 }
 
@@ -45,7 +45,7 @@ header {
   font-size: 15px;
   outline: none;
   box-shadow: 0 0px 5px 0px #706f6faf;
-  min-width: 400px;
+  min-width: 600px;
 }
 
 .content {
@@ -136,19 +136,15 @@ header {
   min-width: 70px;
 }
 
-.search-icon {
-  width: 70px;
+.search-icon button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
   background-color: #ff469e;
   border-radius: 0 10px 10px 0;
   box-shadow: 0 0px 5px 0px #706f6faf;
-}
-
-.search {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .search-icon img {
@@ -176,8 +172,6 @@ header {
   border-radius: 10px;
   background-color: white;
 }
-
-
 
 .content-row-3 {
   padding-bottom: 20px;
