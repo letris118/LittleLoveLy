@@ -140,6 +140,10 @@ const createOrder = (order) => {
   return instance.post(`/api/orders`, order);
 };
 
+const searchProducts = () => {
+  return instance.get(`/api/products/search`);
+};
+
 export {
   loginAPI,
   users,
@@ -170,4 +174,5 @@ export {
   evaluateCart,
   getUserInfo,
   createOrder,
+  searchProducts,
 };

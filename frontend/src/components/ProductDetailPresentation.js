@@ -15,6 +15,7 @@ import Slider from "react-slick";
 import instance from "../services/auth/customize-axios";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "../assets/css/articleDetailPresentation.css";
 
 export default function ProductDetailPresentation() {
   const [productInfo, setProductInfo] = useState(null);

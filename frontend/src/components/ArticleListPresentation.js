@@ -9,9 +9,9 @@ export default function ArticleListPresentation(articles) {
       {articles.articles.map((article) => (
         <div className="article-card-list col-4" id={article.articleId}>
           <Link
-            to={`${routes.articles}/${encodeURIComponent(article.title)}/${
-              article.articleId
-            }`}
+            to={`${routes.articles}/${encodeURIComponent(
+              article.title.replace(/\n/g, "")
+            )}`}
             style={{ textDecoration: "none" }}>
             <div className="article-card-list-img">
               {article.articleImages.slice(0, 1).map((image) => (

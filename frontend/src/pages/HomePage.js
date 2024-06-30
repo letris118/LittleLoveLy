@@ -28,7 +28,6 @@ export default function HomePage() {
         }
       } catch (error) {
         console.error("Error fetching products:", error);
-        toast.error("Không thể tải sản phẩm");
         setProductList([]);
       }
     };
@@ -43,7 +42,6 @@ export default function HomePage() {
         }
       } catch (error) {
         console.error("Error fetching brands:", error);
-        toast.error("Không thể tải được nhãn hàng");
         setArticleList([]);
       }
     };
@@ -58,7 +56,6 @@ export default function HomePage() {
         }
       } catch (error) {
         console.error("Error fetching articles:", error);
-        toast.error("Không thể tải được tin tức");
         setBrandList([]);
       }
     };

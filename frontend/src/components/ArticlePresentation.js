@@ -25,7 +25,9 @@ export default function ArticlePresentation({ articles }) {
         <Slider {...settings}>
           {articles.map((article) => (
             <Link
-              to={`${routes.articles}/${article.title}.${article.articleId}`}>
+              to={`${routes.articles}/${encodeURIComponent(
+                article.title.replace(/\n/g, "")
+              )}`}>
               <div className="article-card" key={article.articleId}>
                 <div className="article-card-img">
                   {article.articleImages.slice(0, 1).map((image) => (
@@ -50,7 +52,9 @@ export default function ArticlePresentation({ articles }) {
         {article1 && (
           <div className="article-right-card-container">
             <Link
-              to={`${routes.articles}/${article1.title}.${article1.articleId}`}
+              to={`${routes.articles}/${encodeURIComponent(
+                article1.title.replace(/\n/g, "")
+              )}`}
               sx={{ height: "inherit" }}>
               <div className="article-right-card" key={article1.articleId}>
                 <div className="article-right-card-img">
@@ -75,7 +79,9 @@ export default function ArticlePresentation({ articles }) {
         {article2 && (
           <div className="article-right-card-container">
             <Link
-              to={`${routes.articles}/${article1.title}.${article1.articleId}`}>
+              to={`${routes.articles}/${encodeURIComponent(
+                article2.title.replace(/\n/g, "")
+              )}`}>
               <div className="article-right-card" key={article2.articleId}>
                 <div className="article-right-card-img">
                   {article2.articleImages.slice(0, 1).map((image) => (

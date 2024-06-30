@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
 import { handleLogout } from "../services/auth/UsersService";
@@ -6,6 +6,22 @@ import DropdownMenu from "./DropdownMenu";
 import Dropdown from "react-bootstrap/Dropdown";
 
 export default function Header() {
+  const [searchProduct, setSearchProduct] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+
+  const handleSearchChange = async (e) => {
+    setSearchProduct(e.target.value);
+    if (e.target.value) {
+      let response = await searchProduct();
+      const filteredProducts = response.filter((product) =>
+        product.name.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+      setSearchResult(filteredProducts);
+    } else {
+      setSearchResult([]);
+    }
+  };
+
   return (
     <>
       <header>
@@ -47,7 +63,6 @@ export default function Header() {
             )}
           </div>
         </div>
-        
       </header>
     </>
   );

@@ -53,10 +53,7 @@ export default function AppRoute() {
       <Route path={routes.addProduct} element={<AddProduct />} />
       <Route path={routes.checkout} element={<Checkout />} />
       <Route path={routes.articles} element={<ArticleList />} />
-      <Route
-        path={`${routes.articles}/:title/:id`}
-        element={<ArticleDetail />}
-      />
+      <Route path={`${routes.articles}/:title`} element={<ArticleDetail />} />
     </Routes>
   );
 }
