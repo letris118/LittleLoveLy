@@ -1,7 +1,6 @@
 package com.vtcorp.store.dtos;
 
 import com.fasterxml.jackson.annotation.*;
-import com.vtcorp.store.entities.ArticleImage;
 import com.vtcorp.store.entities.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +24,6 @@ public class ArticleResponseDTO {
     @JsonIgnoreProperties({"brand", "categories", "articles", "orderDetails", "productReviews", "productImages"})
     private List<Product> products;
 
-    @JsonIgnoreProperties("article")
-    private List<ArticleImage> articleImages;
+//    @JsonIgnoreProperties("article")
+////    private List<ArticleImage> articleImages;
 }
