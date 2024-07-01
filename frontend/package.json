@@ -12,11 +12,10 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
-<<<<<<< HEAD
+
     "date-fns": "^3.6.0",
-=======
+
     "formik": "^2.4.6",
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.2",

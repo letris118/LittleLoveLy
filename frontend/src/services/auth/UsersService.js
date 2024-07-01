@@ -76,7 +76,6 @@ const activateGift = (giftId) => {
   return instance.put(`/api/gifts/activate/${giftId}`);
 };
 
-<<<<<<< HEAD
 const addGift = (giftRequestDTO) => {
   return instance.post('/api/gifts', giftRequestDTO, {
     headers: {
@@ -99,9 +98,6 @@ const getGiftById = (giftId) => {
 
 
 
-
-=======
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
 const vouchersAll = () => {
   return instance.get("/api/vouchers/all");
 };
@@ -114,7 +110,6 @@ const activateVoucher = (voucherId) => {
   return instance.put(`/api/vouchers/activate/${voucherId}`);
 };
 
-<<<<<<< HEAD
 const addVoucher = (voucherRequestDTO) => {
   return instance.post('/api/vouchers', voucherRequestDTO, {
     headers: {
@@ -124,8 +119,6 @@ const addVoucher = (voucherRequestDTO) => {
 };
 
 
-=======
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
 //all brand
 const brands = () => {
   return instance.get("/api/brands");
@@ -212,11 +205,9 @@ export {
   vouchersAll,
   deactivateVoucher,
   activateVoucher,
-<<<<<<< HEAD
+
   addVoucher,
 
-=======
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
   articles,
   articlesAll,
   deactivateArticle,
@@ -224,13 +215,12 @@ export {
   giftsAll,
   deactivateGift,
   activateGift,
-<<<<<<< HEAD
+
   addGift,
   updateGift,
   getGiftById,
 
-=======
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
+
   formatPrice,
   updateCart,
   removeItemCard,

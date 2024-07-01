@@ -21,14 +21,11 @@ export default function ManageProduct() {
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSortBy, setActiveSortBy] = useState(null);
-<<<<<<< HEAD
+
   const [activeSortOrder, setActiveSortOrder] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(20);
-=======
-  const [activeSortOrder, setActiveSortOrder] = useState("asc");
   const [loading, setLoading] = useState(false);
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
 
   const navigate = useNavigate();
 
@@ -232,14 +229,10 @@ export default function ManageProduct() {
                     <span>{activeSortOrder === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
-<<<<<<< HEAD
+
                 <th className="update-head" style={{ width: '9%' }}>Chỉnh sửa</th>
                 <th className="lastModified-head" style={{ width: '9%' }}>Lần cuối chỉnh sửa</th>
-=======
-                <th className="update-head" style={{ width: "9%" }}>
-                  Chỉnh sửa
-                </th>
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
+
               </tr>
             </thead>
 
@@ -287,17 +280,12 @@ export default function ManageProduct() {
                       Chi tiết
                     </Link>
                   </td>
-<<<<<<< HEAD
-
                   <td className="lastModified-body">{product.lastModifiedDate}</td>
-
-=======
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
                 </tr>
               ))}
             </tbody>
           </table>
-<<<<<<< HEAD
+
 
           {/* Pagination */}
           <div className="manage-pagination">
@@ -312,8 +300,7 @@ export default function ManageProduct() {
             ))}
           </div>
 
-=======
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
+
         </div>
       </div>
     </div>

@@ -27,14 +27,14 @@ import ArticleDetail from "../pages/ArticleDetail";
 import Statistics from "../pages/Statistics";
 import ManageStaff from "../pages/ManageStaff";
 import ManageMember from "../pages/ManageMember";
-<<<<<<< HEAD
+
 import AddGift from "../pages/AddGift";
 import UpdateGift from "../pages/UpdateGift";
 import AddVoucher from "../pages/AddVoucher";
-=======
+
 import SearchProduct from "../pages/SearchProduct";
 import Gift from "../pages/Gift";
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
+
 
 export default function AppRoute() {
   return (
@@ -68,14 +68,14 @@ export default function AppRoute() {
       <Route path={routes.statistics} element={<Statistics />} />
       <Route path={routes.manageMember} element={<ManageMember />} />
       <Route path={routes.manageStaff} element={<ManageStaff />} />
-<<<<<<< HEAD
+
       <Route path={routes.addGift} element={<AddGift />} />
       <Route path={`${routes.updateGift}/:name`} element={<UpdateGift />} />
       <Route path={routes.addVoucher} element={<AddVoucher />} />
-=======
+
       <Route path={routes.searchProduct} element={<SearchProduct />} />
       <Route path={routes.gift} element={<Gift />} />
->>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
+
     </Routes>
   );
 }
