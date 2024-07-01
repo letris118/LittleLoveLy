@@ -28,6 +28,7 @@ import Statistics from "../pages/Statistics";
 import ManageStaff from "../pages/ManageStaff";
 import ManageMember from "../pages/ManageMember";
 import SearchProduct from "../pages/SearchProduct";
+import Gift from "../pages/Gift";
 
 export default function AppRoute() {
   return (
@@ -62,6 +63,7 @@ export default function AppRoute() {
       <Route path={routes.manageMember} element={<ManageMember />} />
       <Route path={routes.manageStaff} element={<ManageStaff />} />
       <Route path={routes.searchProduct} element={<SearchProduct />} />
+      <Route path={routes.gift} element={<Gift />} />
     </Routes>
   );
 }

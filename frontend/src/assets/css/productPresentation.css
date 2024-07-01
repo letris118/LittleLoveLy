@@ -65,3 +65,10 @@
   border-radius: 50%;
   margin: 0 5px 5px 0;
 }
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: bottom;
+  margin-top: 20px;
+}

@@ -116,3 +116,9 @@
 .content-checkout-product-list-right-btn {
   padding: 0 30px;
 }
+
+.content-checkout-tbl-left .error,
+.content-checkout-tbl-right .error {
+  color: red;
+  font-size: 12px;
+}

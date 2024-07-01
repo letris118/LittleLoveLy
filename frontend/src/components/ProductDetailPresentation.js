@@ -15,7 +15,6 @@ import Slider from "react-slick";
 import instance from "../services/auth/customize-axios";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "../assets/css/articleDetailPresentation.css";
 
 export default function ProductDetailPresentation() {
   const [productInfo, setProductInfo] = useState(null);
@@ -25,6 +24,8 @@ export default function ProductDetailPresentation() {
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(null);
 
   const fetchProduct = useCallback(async () => {
     try {
@@ -180,6 +181,48 @@ export default function ProductDetailPresentation() {
         setSelectedImage(productInfo.productImages[next].imageId),
     }),
     [productInfo, nav1]
+  );
+
+  // hàm tải reviews
+  // const renderReviews = useCallback(() => {
+  //   const reviewsToShow = selectedRating
+  //     ? filterReviewsByRating(selectedRating)
+  //     : showAllReviews
+  //     ? productInfo.reviews
+  //     : productInfo.reviews.slice(0, 5);
+
+  //   return reviewsToShow.map((review, index) => (
+  //     <div className="product-detail-reviews-comments-user" key={index}>
+  //       <span
+  //         style={{
+  //           width: "10%",
+  //           height: "100%",
+  //           display: "flex",
+  //           justifyContent: "center",
+  //         }}>
+  //         <i className="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+  //       </span>
+  //       <div>
+  //         <div
+  //           style={{
+  //             fontWeight: "bold",
+  //             fontSize: "15px",
+  //           }}>
+  //           {review.username}
+  //         </div>
+  //         <div>
+  //           <Rating value={review.rating} size="medium" readOnly />
+  //         </div>
+  //       </div>
+  //     </div>
+  //   ));
+  // }, [selectedRating, showAllReviews, filterReviewsByRating, productInfo]);
+
+  const filterReviewsByRating = useCallback(
+    (rating) => {
+      return productInfo.reviews.filter((review) => review.rating === rating);
+    },
+    [productInfo]
   );
 
   return (
@@ -365,6 +408,185 @@ export default function ProductDetailPresentation() {
         <div className="product-detail-description">
           <h5>Chi Tiết Sản Phẩm</h5>
           {productInfo?.description}
+        </div>
+
+        <div className="product-detail-reviews">
+          <h5>Đánh giá</h5>
+          <div className="product-detail-reviews-stars">
+            <div className="product-detail-reviews-stars-left">
+              <span
+                style={{
+                  fontWeight: "bold",
+                  fontFamily: "MuseoModerno",
+                  fontSize: "20px",
+                }}>
+                <span style={{ color: "#FF469E", fontSize: "30px" }}>
+                  {productInfo?.averageRating.toFixed(1)}
+                </span>
+                /5.0
+              </span>
+              <Rating
+                value={productInfo?.averageRating ?? 0}
+                precision={0.1}
+                size="large"
+                readOnly
+              />
+              <p>Có ... lượt đánh giá</p>
+            </div>
+            <div className="product-detail-reviews-stars-right">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <div key={star}>
+                  <button onClick={() => setSelectedRating(star)}>
+                    {star} <i className="fa-solid fa-star"></i>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="product-detail-reviews-comments">
+            {/* dùng để hiện reviews */}
+
+            {/* {renderReviews()}
+            {productInfo?.reviews?.length > 5 && !showAllReviews && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "10px",
+                }}>
+                <button
+                  onClick={() => setShowAllReviews(true)}
+                  style={{
+                    backgroundColor: "#FF469E",
+                    color: "white",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}>
+                  Xem thêm đánh giá
+                </button>
+              </div>
+            )} */}
+            <div className="product-detail-reviews-comments-user">
+              <span
+                style={{
+                  width: "10%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+                <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+              </span>
+              <div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                  }}>
+                  Trung Hiếu
+                </div>
+                <div>
+                  <Rating value={5} size="medium" readOnly />
+                </div>
+              </div>
+            </div>
+            {/*  */}
+            <div className="product-detail-reviews-comments-user">
+              <span
+                style={{
+                  width: "10%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+                <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+              </span>
+              <div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                  }}>
+                  Trung Hiếu
+                </div>
+                <div>
+                  <Rating value={4} size="medium" readOnly />
+                </div>
+              </div>
+            </div>
+            {/*  */}
+            <div className="product-detail-reviews-comments-user">
+              <span
+                style={{
+                  width: "10%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+                <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+              </span>
+              <div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                  }}>
+                  Trung Hiếu
+                </div>
+                <div>
+                  <Rating value={3} size="medium" readOnly />
+                </div>
+              </div>
+            </div>
+            {/*  */}
+            <div className="product-detail-reviews-comments-user">
+              <span
+                style={{
+                  width: "10%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+                <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+              </span>
+              <div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                  }}>
+                  Trung Hiếu
+                </div>
+                <div>
+                  <Rating value={2} size="medium" readOnly />
+                </div>
+              </div>
+            </div>
+            {/*  */}
+            <div className="product-detail-reviews-comments-user">
+              <span
+                style={{
+                  width: "10%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+                <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+              </span>
+              <div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                  }}>
+                  Trung Hiếu
+                </div>
+                <div>
+                  <Rating value={1} size="medium" readOnly />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

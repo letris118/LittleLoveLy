@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
-import {
-  formatPrice,
-  handleLogout,
-  products,
-} from "../services/auth/UsersService";
+import { formatPrice, products } from "../services/auth/UsersService";
 import DropdownMenu from "./DropdownMenu";
 import Dropdown from "react-bootstrap/Dropdown";
 import {
-  TextField,
-  IconButton,
-  InputAdornment,
   Paper,
   MenuList,
   MenuItem,

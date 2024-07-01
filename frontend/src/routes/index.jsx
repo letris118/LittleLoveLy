@@ -25,4 +25,5 @@ export const routes = {
   manageMember: "/manageMember",
   manageStaff: "/manageStaff",
   searchProduct: "/search",
+  gift: "/gift",
 };

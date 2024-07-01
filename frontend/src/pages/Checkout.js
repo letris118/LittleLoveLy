@@ -72,7 +72,7 @@ export default function Checkout() {
       cartItems: submitCart,
     },
     enableReinitialize: true,
-    validateSchema: checkoutSchema,
+    validationSchema: checkoutSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
       try {
@@ -83,11 +83,8 @@ export default function Checkout() {
           if (formik.values.paymentMethod === "VN_PAY") {
             window.location.href = response.data;
           } else {
-            // toast.success("Đặt hàng thành công");
             window.location.href = routes.homePage;
           }
-        } else {
-          // toast.error("Đặt hàng thất bại");
         }
       } catch (error) {
         // Handle the error
@@ -101,7 +98,6 @@ export default function Checkout() {
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem("cart")) || [];
     setCartItems(storedCartItems);
-    //** */
     const submitCartItems = storedCartItems.map((item) => ({
       id: item.productId,
       itemType: "product",
@@ -207,8 +203,10 @@ export default function Checkout() {
                         name="cusName"
                         value={formik.values.cusName}
                         onChange={formik.handleChange}
-                        required
                       />
+                      {formik.errors.cusName && formik.touched.cusName && (
+                        <div className="error">{formik.errors.cusName}</div>
+                      )}
                     </div>
                     <div>
                       <input
@@ -217,20 +215,22 @@ export default function Checkout() {
                         name="cusPhone"
                         value={formik.values.cusPhone}
                         onChange={formik.handleChange}
-                        required
                       />
+                      {formik.errors.cusPhone && formik.touched.cusPhone && (
+                        <div className="error">{formik.errors.cusPhone}</div>
+                      )}
                     </div>
                     <div>
                       <input
                         type="email"
                         placeholder="Gmail"
-                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                        title="Nhập đúng định dạng mail"
                         name="cusMail"
                         value={formik.values.cusMail}
                         onChange={formik.handleChange}
-                        required
                       />
+                      {formik.errors.cusMail && formik.touched.cusMail && (
+                        <div className="error">{formik.errors.cusMail}</div>
+                      )}
                     </div>
                     <div className="content-checkout-tbl-left-method-payment">
                       <select
@@ -238,13 +238,18 @@ export default function Checkout() {
                         name="paymentMethod"
                         value={formik.values.paymentMethod}
                         onChange={formik.handleChange}
-                        required
                         // onChange={handlePaymentMethodChange}
                       >
                         <option value="">Chọn phương thức thanh toán</option>
                         <option value="VN_PAY">VNPay</option>
                         <option value="COD">Thanh toán khi nhận hàng</option>
                       </select>
+                      {formik.errors.paymentMethod &&
+                        formik.touched.paymentMethod && (
+                          <div className="error">
+                            {formik.errors.paymentMethod}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div className="content-checkout-tbl-right">
@@ -252,7 +257,6 @@ export default function Checkout() {
                       <select
                         id="city"
                         name="cusCityCode"
-                        required
                         value={formik.values.cusCityCode}
                         onChange={handleCityChange}>
                         <option value="">Chọn Tỉnh / Thành Phố</option>
@@ -262,12 +266,17 @@ export default function Checkout() {
                           </option>
                         ))}
                       </select>
+                      {formik.errors.cusCityCode &&
+                        formik.touched.cusCityCode && (
+                          <div className="error">
+                            {formik.errors.cusCityCode}
+                          </div>
+                        )}
                     </div>
                     <div>
                       <select
                         id="district"
                         name="cusDistrictId"
-                        required
                         value={formik.values.cusDistrictId}
                         onChange={handleDistrictChange}>
                         <option value="">Chọn Quận / Huyện</option>
@@ -277,12 +286,17 @@ export default function Checkout() {
                           </option>
                         ))}
                       </select>
+                      {formik.errors.cusDistrictId &&
+                        formik.touched.cusDistrictId && (
+                          <div className="error">
+                            {formik.errors.cusDistrictId}
+                          </div>
+                        )}
                     </div>
                     <div>
                       <select
                         id="ward"
                         name="cusWardCode"
-                        required
                         value={formik.values.cusWardCode}
                         onChange={formik.handleChange}>
                         <option value="">Chọn Phường / Xã</option>
@@ -292,6 +306,12 @@ export default function Checkout() {
                           </option>
                         ))}
                       </select>
+                      {formik.errors.cusWardCode &&
+                        formik.touched.cusWardCode && (
+                          <div className="error">
+                            {formik.errors.cusWardCode}
+                          </div>
+                        )}
                     </div>
                     <div>
                       <input
@@ -299,8 +319,10 @@ export default function Checkout() {
                         name="cusStreet"
                         value={formik.values.cusStreet}
                         onChange={formik.handleChange}
-                        required
                       />
+                      {formik.errors.cusStreet && formik.touched.cusStreet && (
+                        <div className="error">{formik.errors.cusStreet}</div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -129,16 +129,66 @@
   padding: 0 !important;
 }
 
-.product-detail-description h5 {
+.product-detail-description h5,
+.product-detail-reviews h5 {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
   font-family: "MuseoModerno";
 }
 
-.product-detail-bottom {
+.product-detail-description,
+.product-detail-reviews {
   margin-top: 20px;
   background-color: white;
   padding: 20px;
   border-radius: 20px;
+}
+
+.product-detail-reviews-stars {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  background-color: aliceblue;
+  border-radius: 20px;
+  margin: 0 30px;
+}
+
+.product-detail-reviews-stars-left {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.product-detail-reviews-stars-right {
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 50px;
+}
+
+.product-detail-reviews-stars-right button {
+  width: 80px;
+  background-color: transparent;
+  border: 1px solid black;
+  padding: 10px 0;
+  border-radius: 20px;
+}
+
+.product-detail-reviews-stars-right i {
+  color: #fcc00d;
+  font-size: 20px;
+}
+
+.product-detail-reviews-comments-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  padding: 10px 0;
+  border-bottom: 1px solid rgb(208, 208, 208);
 }
