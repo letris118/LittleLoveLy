@@ -43,7 +43,7 @@
 }
 
 .product-card-noSold {
-  font-size: 12px;
+  font-size: 13px;
   color: gray;
   margin-left: 3px;
 }
@@ -64,4 +64,11 @@
   padding: 4px 8px 1px 8px;
   border-radius: 50%;
   margin: 0 5px 5px 0;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: bottom;
+  margin-top: 20px;
 }

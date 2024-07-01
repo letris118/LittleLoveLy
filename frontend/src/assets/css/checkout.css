@@ -61,7 +61,7 @@
 
 .content-checkout-product-list-left {
   width: 60%;
-  height: inherit(100%);
+  height: 248px;
   border-radius: 20px;
   padding: 10px 5px 5px 20px;
   border: 2px solid #ff469e;
@@ -115,4 +115,10 @@
 
 .content-checkout-product-list-right-btn {
   padding: 0 30px;
+}
+
+.content-checkout-tbl-left .error,
+.content-checkout-tbl-right .error {
+  color: red;
+  font-size: 12px;
 }

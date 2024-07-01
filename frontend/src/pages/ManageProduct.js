@@ -3,12 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
-import Switch from 'react-switch';
+import Switch from "react-switch";
 import instance from "../services/auth/customize-axios";
 import {
   productsAll,
   deactivateProduct,
-  activateProduct
+  activateProduct,
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
@@ -18,12 +18,17 @@ export default function ManageProduct() {
   const [productList, setProductList] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [sortBy, setSortBy] = useState(null);
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [searchQuery, setSearchQuery] = useState("");
   const [activeSortBy, setActiveSortBy] = useState(null);
+<<<<<<< HEAD
   const [activeSortOrder, setActiveSortOrder] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(20);
+=======
+  const [activeSortOrder, setActiveSortOrder] = useState("asc");
+  const [loading, setLoading] = useState(false);
+>>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
 
   const navigate = useNavigate();
 
@@ -31,7 +36,7 @@ export default function ManageProduct() {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
       if (!userRole || userRole !== "ROLE_STAFF") {
-        navigate('/');
+        navigate("/");
       }
     };
     checkAuthentication();
@@ -64,44 +69,46 @@ export default function ManageProduct() {
 
   const sortProducts = (field) => {
     let sortedProducts = [...filteredProducts];
-    if (field === 'active') {
-      sortedProducts.sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1));
+    if (field === "active") {
+      sortedProducts.sort((a, b) =>
+        a.active === b.active ? 0 : a.active ? -1 : 1
+      );
     } else {
       sortedProducts.sort((a, b) => {
-        if (field === 'name') {
+        if (field === "name") {
           return a.name.localeCompare(b.name);
-        } else if (field === 'stock') {
+        } else if (field === "stock") {
           return a.stock - b.stock;
-        } else if (field === 'sellingPrice') {
+        } else if (field === "sellingPrice") {
           return a.sellingPrice - b.sellingPrice;
         }
         return 0;
       });
     }
-    if (field === 'active' && activeSortOrder === 'desc') {
+    if (field === "active" && activeSortOrder === "desc") {
       sortedProducts.reverse();
-    } else if (sortOrder === 'desc') {
+    } else if (sortOrder === "desc") {
       sortedProducts.reverse();
     }
     setFilteredProducts(sortedProducts);
   };
 
   const handleActiveSort = () => {
-    if (activeSortBy === 'active') {
-      setActiveSortOrder(activeSortOrder === 'asc' ? 'desc' : 'asc');
+    if (activeSortBy === "active") {
+      setActiveSortOrder(activeSortOrder === "asc" ? "desc" : "asc");
     } else {
-      setActiveSortBy('active');
-      setActiveSortOrder('asc');
+      setActiveSortBy("active");
+      setActiveSortOrder("asc");
     }
-    sortProducts('active');
+    sortProducts("active");
   };
 
   const handleSort = (field) => {
     if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortBy(field);
-      setSortOrder('asc');
+      setSortOrder("asc");
     }
     sortProducts(field);
   };
@@ -113,9 +120,11 @@ export default function ManageProduct() {
       } else {
         await activateProduct(productId);
       }
-      setFilteredProducts(prevState =>
-        prevState.map(product =>
-          product.productId === productId ? { ...product, active: !product.active } : product
+      setFilteredProducts((prevState) =>
+        prevState.map((product) =>
+          product.productId === productId
+            ? { ...product, active: !product.active }
+            : product
         )
       );
     } catch (error) {
@@ -128,7 +137,7 @@ export default function ManageProduct() {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = productList.filter(product =>
+    const filtered = productList.filter((product) =>
       product.name.toLowerCase().includes(query)
     );
     setFilteredProducts(filtered);
@@ -155,7 +164,6 @@ export default function ManageProduct() {
         <StaffSideBar />
 
         <div className="manage-content-detail">
-
           <div className="search-add-table">
             <div className="table-search-bar">
               <input
@@ -174,41 +182,64 @@ export default function ManageProduct() {
                 Thêm sản phẩm mới
               </Link>
             </div>
-
           </div>
 
           <table className="manage-table">
             <thead>
               <tr>
-                <th className="index-head" style={{ width: '5%' }}>STT</th>
-                <th className="name-head" style={{ width: '20%' }} onClick={() => handleSort('name')}>
+                <th className="index-head" style={{ width: "5%" }}>
+                  STT
+                </th>
+                <th
+                  className="name-head"
+                  style={{ width: "20%" }}
+                  onClick={() => handleSort("name")}>
                   Tên sản phẩm
-                  {sortBy === 'name' && (
-                    <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
+                  {sortBy === "name" && (
+                    <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
-                <th className="img-head" style={{ width: '15%' }}>Hình ảnh</th>
-                <th className="brand-head" style={{ width: '10%' }}>Thương hiệu</th>
-                <th className="stock-head" style={{ width: '8%' }} onClick={() => handleSort('stock')}>
+                <th className="img-head" style={{ width: "15%" }}>
+                  Hình ảnh
+                </th>
+                <th className="brand-head" style={{ width: "10%" }}>
+                  Thương hiệu
+                </th>
+                <th
+                  className="stock-head"
+                  style={{ width: "8%" }}
+                  onClick={() => handleSort("stock")}>
                   Tồn kho
-                  {sortBy === 'stock' && (
-                    <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
+                  {sortBy === "stock" && (
+                    <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
-                <th className="sellingPrice-head" style={{ width: '10%' }} onClick={() => handleSort('sellingPrice')}>
+                <th
+                  className="sellingPrice-head"
+                  style={{ width: "10%" }}
+                  onClick={() => handleSort("sellingPrice")}>
                   Giá bán
-                  {sortBy === 'sellingPrice' && (
-                    <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
+                  {sortBy === "sellingPrice" && (
+                    <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
-                <th className="active-head" style={{ width: '9%' }} onClick={handleActiveSort}>
+                <th
+                  className="active-head"
+                  style={{ width: "9%" }}
+                  onClick={handleActiveSort}>
                   Trạng thái
-                  {activeSortBy === 'active' && (
-                    <span>{activeSortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
+                  {activeSortBy === "active" && (
+                    <span>{activeSortOrder === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
+<<<<<<< HEAD
                 <th className="update-head" style={{ width: '9%' }}>Chỉnh sửa</th>
                 <th className="lastModified-head" style={{ width: '9%' }}>Lần cuối chỉnh sửa</th>
+=======
+                <th className="update-head" style={{ width: "9%" }}>
+                  Chỉnh sửa
+                </th>
+>>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
               </tr>
             </thead>
 
@@ -223,7 +254,7 @@ export default function ManageProduct() {
                         key={image.imageId}
                         src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
                         alt={product.name}
-                        style={{ width: '30%', height: '30%' }}
+                        style={{ width: "30%", height: "30%" }}
                       />
                     ))}
                   </td>
@@ -232,7 +263,7 @@ export default function ManageProduct() {
                     <img
                       src={`${instance.defaults.baseURL}/images/brands/${product.brand.logo}`}
                       alt={product.brand.name}
-                      style={{ width: '50%', height: '50%' }}
+                      style={{ width: "50%", height: "50%" }}
                     />
                   </td>
 
@@ -240,7 +271,9 @@ export default function ManageProduct() {
                   <td className="sellingPrice-body">{product.sellingPrice}</td>
                   <td className="active-body">
                     <Switch
-                      onChange={() => handleToggle(product.productId, product.active)}
+                      onChange={() =>
+                        handleToggle(product.productId, product.active)
+                      }
                       checked={product.active}
                       offColor="#ff0000"
                       onColor="#27ae60"
@@ -249,17 +282,22 @@ export default function ManageProduct() {
 
                   <td className="update-body">
                     <Link
-                      to={`${routes.updateProduct}/${product.name}?id=${product.productId}`} className="update-link">
+                      to={`${routes.updateProduct}/${product.name}?id=${product.productId}`}
+                      className="update-link">
                       Chi tiết
                     </Link>
                   </td>
+<<<<<<< HEAD
 
                   <td className="lastModified-body">{product.lastModifiedDate}</td>
 
+=======
+>>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
                 </tr>
               ))}
             </tbody>
           </table>
+<<<<<<< HEAD
 
           {/* Pagination */}
           <div className="manage-pagination">
@@ -274,8 +312,9 @@ export default function ManageProduct() {
             ))}
           </div>
 
+=======
+>>>>>>> 9688c193a4a803ca7fe76e455bad473d74c5d3ea
         </div>
-
       </div>
     </div>
   );
