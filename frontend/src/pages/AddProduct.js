@@ -47,7 +47,7 @@ export default function AddProduct() {
   }
 
   const imageInput = (
-    <input name="newImageFiles" type="file" required></input>
+    <input name="newImageFiles" type="file" required accept=".png, .jpg"></input>
   )
 
   const addNewImageElement = (e) => {
@@ -67,20 +67,16 @@ export default function AddProduct() {
     setImageElements(updatedImageElements)
   }
 
-  const handleCancel = () => {
-    navigate(routes.manageProduct)
-  }
-
   const handleSubmit = async (e) => {
     try {
 
       e.preventDefault()
       const productRequestDTO = new FormData(e.target)
 
-      const uniqueCategoryIds = new Set(productRequestDTO.getAll('categoryIds'));
+      const uniqueCategoryIds = new Set(productRequestDTO.getAll('categoryIds'))
       if (uniqueCategoryIds.size !== productRequestDTO.getAll('categoryIds').length) {
-        toast.error('Phân loại trùng lặp!');
-        return;
+        toast.error('Phân loại trùng lặp!')
+        return
       }
 
       await addProduct(productRequestDTO)
@@ -91,6 +87,11 @@ export default function AddProduct() {
     }
   }
 
+  const handleReload = (e) => {
+    e.preventDefault(); 
+    window.location.reload()
+  }
+
   useEffect(() => {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole")
@@ -98,27 +99,12 @@ export default function AddProduct() {
         navigate('/')
       }
     }
-
     const fetchBrandsAndCategories = async () => {
       try {
         const brandResponse = await brands()
         const categoryResponse = await categories()
         setAllBrands(brandResponse)
         setAllCategories(categoryResponse)
-
-        const categorySelect = (
-          <select name="categoryIds" required>
-            <option value="">Chọn phân loại</option>
-            {categoryResponse.map((category, index) => (
-              <option key={index} value={category.categoryId}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        )
-
-        setCategoryElements([{ id: 1, content: categorySelect }])
-        setImageElements([{ id: 1, content: imageInput }])
       } catch (error) {
         console.error("Error fetching brands or categories:", error)
       }
@@ -127,7 +113,23 @@ export default function AddProduct() {
     checkAuthentication()
     fetchBrandsAndCategories()
 
-  }, [])
+  }, [navigate])
+
+  useEffect(() => {
+    const categorySelect = (
+      <select name="categoryIds" required>
+        <option value="">Chọn phân loại</option>
+        {allCategories.map((category, index) => (
+          <option key={index} value={category.categoryId}>
+            {category.name}
+          </option>
+        ))}
+      </select>
+    )
+    setCategoryElements([{ id: 1, content: categorySelect }])
+    setImageElements([{ id: 1, content: imageInput }])
+
+  }, [allCategories])
 
 
   return (
@@ -199,7 +201,7 @@ export default function AddProduct() {
                     {e.id === categoryElements.length && (
                       <button onClick={addNewCategoryElement}>Thêm</button>
                     )}
-                    {e.id != 1 && e.id === categoryElements.length && (
+                    {e.id !== 1 && e.id === categoryElements.length && (
                       <button onClick={removeCategoryElement}>Hủy bỏ</button>
                     )}
 
@@ -214,10 +216,10 @@ export default function AddProduct() {
                 {imageElements.map((e) => (
                   <div key={e.id}>
                     {e.content}
-                    {e.id == 1 && (
+                    {e.id === 1 && (
                       <button onClick={addNewImageElement}>Thêm</button>
                     )}
-                    {e.id == 1 && imageElements.length > 1 && (
+                    {e.id === 1 && imageElements.length > 1 && (
                       <button onClick={removeImageElement}>Hủy bỏ</button>
                     )}
 
@@ -231,8 +233,8 @@ export default function AddProduct() {
                 </button>
 
                 <div className="cancel-manage-btn">
-                  <button onClick={handleCancel} className="cancel-manage-link">
-                    Hủy
+                  <button onClick={handleReload} className="cancel-manage-link">
+                    Đặt lại
                   </button>
                 </div>
 

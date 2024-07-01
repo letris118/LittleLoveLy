@@ -121,7 +121,6 @@ public class ProductService {
         if (categories.size() != productRequestDTO.getCategoryIds().size()) {
             throw new RuntimeException("One or more categories not found");
         }
-
         Product product = productMapper.toEntity(productRequestDTO);
         product.setNoSold(0);
         product.setActive(true);
@@ -130,6 +129,7 @@ public class ProductService {
         List<ProductImage> images = handleProductImages(productRequestDTO.getNewImageFiles(), product);
         product.setProductImages(images);
         product.setAddedDate(new Date());
+        product.setLastModifiedDate(product.getAddedDate());
         try {
             return productMapper.toResponseDTO(productRepository.save(product));
         } catch (Exception e) {
@@ -209,7 +209,7 @@ public class ProductService {
         product.setCategories(categories);
         product.getProductImages().clear();
         product.getProductImages().addAll(newImages);
-
+        product.setLastModifiedDate(new Date());
         if (imagesToDelete != null) {
             removeImages(imagesToDelete);
         }
