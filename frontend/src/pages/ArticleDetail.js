@@ -1,16 +1,15 @@
 import React from "react";
 import Header from "../components/Header";
+import ArticleDetailPresentation from "../components/ArticleDetailPresentation";
 import Sidebar from "../components/SideBar";
-import Footer from "../components/Footer";
-import ProductDetailPresentation from "../components/ProductDetailPresentation";
-import "../assets/css/productDetail.css";
-import Breadcrumb from "../components/Breadcrum";
 import { useParams } from "react-router-dom";
+import Breadcrumb from "../components/Breadcrum";
+import Footer from "../components/Footer";
 
-export default function ProductDetail() {
-  const { name: productName } = useParams();
+export default function ArticleDetail() {
+  const { title: articleTitle } = useParams();
   return (
-    <>
+    <div>
       <Header />
       <div className="content">
         <Sidebar
@@ -19,15 +18,15 @@ export default function ProductDetail() {
           customerPoint={localStorage.getItem("point")}
         />
         <div className="content-detail">
-          <Breadcrumb value={productName} customName="Tất cả sản phẩm" />
+          <Breadcrumb value={articleTitle} customName="Tất cả bài báo" />
           <div className="content-display ">
-            <div className="content-product-detail-row-1">
-              <ProductDetailPresentation />
+            <div className="content-article-detail-row-1">
+              <ArticleDetailPresentation />
             </div>
           </div>
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

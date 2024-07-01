@@ -13,7 +13,6 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  /* border: 1px solid black; */
 }
 
 .brand-card-img img {
@@ -116,7 +115,6 @@
   height: 100%;
 }
 
-
 .manage-slick-prev {
   left: 0px !important;
   z-index: 999 !important;
@@ -180,4 +178,3 @@
   color: black;
   text-align: center;
 }
-

@@ -33,7 +33,9 @@ export default function Cart() {
       const itemToRemove = prevItems[index];
       const { productId, quantity } = itemToRemove;
       if (localStorage.getItem("userRole") === "ROLE_CUSTOMER") {
-        removeItemCard(productId, "product", quantity);
+        removeItemCard(productId, "product", quantity).catch((error) => {
+          console.error("Error removing item from cart:", error);
+        });
       }
       const updatedCartItems = prevItems.filter((_, i) => i !== index);
       localStorage.setItem("cart", JSON.stringify(updatedCartItems));
@@ -48,7 +50,11 @@ export default function Cart() {
         updatedCartItems[index].quantity = value;
         localStorage.setItem("cart", JSON.stringify(updatedCartItems));
         if (localStorage.getItem("userRole") === "ROLE_CUSTOMER") {
-          updateCart(updatedCartItems[index].productId, "product", value);
+          updateCart(updatedCartItems[index].productId, "product", value).catch(
+            (error) => {
+              console.error("Error updating cart item:", error);
+            }
+          );
         }
       }
       return updatedCartItems;
@@ -61,7 +67,7 @@ export default function Cart() {
       <div className="content">
         <Sidebar
           role={localStorage.getItem("userRole")}
-          customerName={localStorage.getItem("username")}
+          customerName={localStorage.getItem("name")}
           customerPoint={localStorage.getItem("point")}
         />
         <div className="content-detail">

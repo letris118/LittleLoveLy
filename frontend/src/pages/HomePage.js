@@ -9,6 +9,7 @@ import BrandPresentation from "../components/BrandPresentation";
 import "../assets/css/homePage.css";
 import ProductPresentation from "../components/ProductPresentation";
 import Sidebar from "../components/SideBar";
+import ArticlePresentation from "../components/ArticlePresentation";
 
 export default function HomePage() {
   const [productList, setProductList] = useState([]);
@@ -27,7 +28,6 @@ export default function HomePage() {
         }
       } catch (error) {
         console.error("Error fetching products:", error);
-        toast.error("Không thể tải sản phẩm");
         setProductList([]);
       }
     };
@@ -42,7 +42,6 @@ export default function HomePage() {
         }
       } catch (error) {
         console.error("Error fetching brands:", error);
-        toast.error("Không thể tải được nhãn hàng");
         setArticleList([]);
       }
     };
@@ -57,7 +56,6 @@ export default function HomePage() {
         }
       } catch (error) {
         console.error("Error fetching articles:", error);
-        toast.error("Không thể tải được tin tức");
         setBrandList([]);
       }
     };
@@ -100,14 +98,14 @@ export default function HomePage() {
       <div className="content">
         <Sidebar
           role={localStorage.getItem("userRole")}
-          customerName={localStorage.getItem("username")}
+          customerName={localStorage.getItem("name")}
           customerPoint={localStorage.getItem("point")}
         />
 
         <div className="content-detail">
           <div className="content-display ">
             <div className="content-row-1">
-              <div className="row-1-top " style={{ width: "100%" }}>
+              <div className="row-top " style={{ width: "100%" }}>
                 <h4>Thương hiệu</h4>
                 <Link
                   to={routes.brands}
@@ -119,9 +117,19 @@ export default function HomePage() {
                 <BrandPresentation brands={brandList} />
               </div>
             </div>
-            <div className="content-row-2">Article</div>
+            <div className="content-row-2">
+              <div className="row-top">
+                <h4>Thông tin bổ ích</h4>
+                <Link
+                  to={routes.articles}
+                  style={{ textDecoration: "none", color: "#ff469e" }}>
+                  Xem tất cả <i className="fa-solid fa-arrow-right"></i>
+                </Link>
+              </div>
+              <ArticlePresentation articles={articleList} />
+            </div>
             <div className="content-row-3">
-              <div className="row-3-top ">
+              <div className="row-top ">
                 <h4>Sản phẩm</h4>
                 <Link
                   to={routes.products}

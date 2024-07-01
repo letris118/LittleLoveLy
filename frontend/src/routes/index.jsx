@@ -1,5 +1,3 @@
-import { articles } from "../services/auth/UsersService";
-
 export const routes = {
   homePage: "/",
   login: "/login",
@@ -26,4 +24,6 @@ export const routes = {
   statistics: "/statistics",
   manageMember: "/manageMember",
   manageStaff: "/manageStaff",
+  searchProduct: "/search",
+  gift: "/gift",
 };
