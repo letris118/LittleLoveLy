@@ -12,7 +12,7 @@ import {
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
-import { Button } from "react-bootstrap";
+
 
 export default function ManageProduct() {
   const [productList, setProductList] = useState([]);

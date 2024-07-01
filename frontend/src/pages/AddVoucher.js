@@ -6,10 +6,14 @@ import { ToastContainer, toast } from "react-toastify";
 import { addVoucher } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function AddVoucher() {
     const navigate = useNavigate();
     const [selectedType, setSelectedType] = useState('');
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     const handleButtonClick = (type) => {
         setSelectedType(type);
@@ -24,8 +28,15 @@ export default function AddVoucher() {
             return;
         }
 
+        if (!startDate || !endDate) {
+            toast.error('Vui lòng chọn ngày có hiệu lực và ngày hết hiệu lực.');
+            return;
+        }
+
         const voucherRequestDTO = new FormData(e.target);
         voucherRequestDTO.append('type', selectedType);
+        voucherRequestDTO.append('startDate', startDate.toLocaleDateString('en-GB'));
+        voucherRequestDTO.append('endDate', endDate.toLocaleDateString('en-GB'));
 
         try {
             await addVoucher(voucherRequestDTO);
@@ -168,15 +179,26 @@ export default function AddVoucher() {
                             <div className="manage-form-group">
                                 <label>Ngày có hiệu lực</label>
                                 <div className="manage-form-control">
-                                    <input type="date" name="start_Date" required />
+                                    <DatePicker
+                                        selected={startDate}
+                                        onChange={(date) => setStartDate(date)}
+                                        dateFormat="dd/MM/yyyy"
+                                        required
+                                    />
                                 </div>
+
                             </div>
 
                             {/* 11 end_date */}
                             <div className="manage-form-group">
                                 <label>Ngày hết hiệu lực</label>
                                 <div className="manage-form-control">
-                                    <input type="date" name="end_Date" required />
+                                    <DatePicker
+                                        selected={endDate}
+                                        onChange={(date) => setEndDate(date)}
+                                        dateFormat="dd/MM/yyyy"
+                                        required
+                                    />
                                 </div>
                             </div>
                         </div>
