@@ -25,6 +25,9 @@ import Checkout from "../pages/Checkout";
 import Statistics from "../pages/Statistics";
 import ManageStaff from "../pages/ManageStaff";
 import ManageMember from "../pages/ManageMember";
+import AddGift from "../pages/AddGift";
+import UpdateGift from "../pages/UpdateGift";
+import AddVoucher from "../pages/AddVoucher";
 
 export default function AppRoute() {
   return (
@@ -53,6 +56,9 @@ export default function AppRoute() {
       <Route path={routes.statistics} element={<Statistics />} />
       <Route path={routes.manageMember} element={<ManageMember />} />
       <Route path={routes.manageStaff} element={<ManageStaff />} />
+      <Route path={routes.addGift} element={<AddGift />} />
+      <Route path={`${routes.updateGift}/:name`} element={<UpdateGift />} />
+      <Route path={routes.addVoucher} element={<AddVoucher />} />
     </Routes>
   );
 }

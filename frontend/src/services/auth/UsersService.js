@@ -73,6 +73,27 @@ const activateGift = (giftId) => {
   return instance.put(`/api/gifts/activate/${giftId}`);
 };
 
+const addGift = (giftRequestDTO) => {
+  return instance.post('/api/gifts', giftRequestDTO, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
+
+const updateGift = (giftId, giftRequestDTO) => {
+  return instance.put(`/api/gifts/${giftId}`, giftRequestDTO, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+const getGiftById = (giftId) => {
+  return instance.get(`/api/gifts/${giftId}`);
+};
+
+
 
 
 const vouchersAll = () => {
@@ -85,6 +106,14 @@ const deactivateVoucher = (voucherId) => {
 
 const activateVoucher = (voucherId) => {
   return instance.put(`/api/vouchers/activate/${voucherId}`);
+};
+
+const addVoucher = (voucherRequestDTO) => {
+  return instance.post('/api/vouchers', voucherRequestDTO, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 };
 
 
@@ -112,7 +141,6 @@ const articlesAll = () => {
 const deactivateArticle = (articleId) => {
   return instance.put(`/api/articles/deactivate/${articleId}`);
 };
-
 
 const activateArticle = (articleId) => {
   return instance.put(`/api/articles/activate/${articleId}`);
@@ -170,6 +198,7 @@ export {
   vouchersAll,
   deactivateVoucher,
   activateVoucher,
+  addVoucher,
 
   articles,
   articlesAll,
@@ -179,6 +208,9 @@ export {
   giftsAll,
   deactivateGift,
   activateGift,
+  addGift,
+  updateGift,
+  getGiftById,
 
   formatPrice,
 

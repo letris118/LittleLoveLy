@@ -15,8 +15,13 @@ import "../assets/css/manage.css";
 
 export default function ManageArticle() {
   const [articleList, setArticleList] = useState([]);
+  const [filteredArticles, setFilteredArticles] = useState([]);
   const [sortByActive, setSortByActive] = useState(null);
   const [sortOrderActive, setSortOrderActive] = useState('asc');
+  const [sortOrderDate, setSortOrderDate] = useState('asc');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 20;
 
   const navigate = useNavigate();
 
@@ -33,18 +38,21 @@ export default function ManageArticle() {
       try {
         let response = await articlesAll();
         if (response) {
-          setArticleList(response.slice(0, 3));
+          setArticleList(response);
+          setFilteredArticles(response);
         } else {
           setArticleList([]);
+          setFilteredArticles([]);
         }
       } catch (error) {
         console.error("Error fetching articles:", error);
         toast.error("Không thể tải được tin tức");
         setArticleList([]);
+        setFilteredArticles([]);
       }
     };
     fetchArticles();
-  }, []);
+  }, [navigate]);
 
   const handleToggle = async (articleId, currentStatus) => {
     try {
@@ -54,7 +62,7 @@ export default function ManageArticle() {
         await activateArticle(articleId);
       }
 
-      setArticleList(prevState =>
+      setFilteredArticles(prevState =>
         prevState.map(article =>
           article.articleId === articleId ? { ...article, active: !article.active } : article
         )
@@ -66,12 +74,12 @@ export default function ManageArticle() {
   };
 
   const sortArticlesByActive = () => {
-    let sortedArticles = [...articleList];
+    let sortedArticles = [...filteredArticles];
     sortedArticles.sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1));
     if (sortOrderActive === 'desc') {
       sortedArticles.reverse();
     }
-    setArticleList(sortedArticles);
+    setFilteredArticles(sortedArticles);
   };
 
   const handleActiveSort = () => {
@@ -84,12 +92,46 @@ export default function ManageArticle() {
     sortArticlesByActive();
   };
 
+  const sortArticlesByDate = () => {
+    let sortedArticles = [...filteredArticles];
+    sortedArticles.sort((a, b) => new Date(a.uploadedDate) - new Date(b.uploadedDate));
+    if (sortOrderDate === 'desc') {
+      sortedArticles.reverse();
+    }
+    setFilteredArticles(sortedArticles);
+  };
+
+  const handleDateSort = () => {
+    setSortOrderDate(sortOrderDate === 'asc' ? 'desc' : 'asc');
+    sortArticlesByDate();
+  };
+
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = articleList.filter(article =>
+      article.title && article.title.toLowerCase().includes(query)
+    );
+    setFilteredArticles(filtered);
+    setCurrentPage(1); // Reset to first page on new search
+  };
+
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentArticles = filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
+  const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
+
+  const handleClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div>
-      <StaffHeader/>
+      <StaffHeader />
 
       <div className="manage-content">
-        <StaffSideBar/>
+        <StaffSideBar />
 
         <div className="manage-content-detail">
 
@@ -98,6 +140,8 @@ export default function ManageArticle() {
               <input
                 type="text"
                 placeholder="Tìm kiếm bài viết..."
+                value={searchQuery}
+                onChange={handleSearch}
               />
               <button className="table-search-icon">
                 <img src="../assets/images/search_icon.png" alt="search logo" />
@@ -115,9 +159,12 @@ export default function ManageArticle() {
             <thead>
               <tr>
                 <th className="index-head" style={{ width: '5%' }}>STT</th>
-                <th className="name-head" style={{ width: '25%' }}>Tiêu đề</th>
+                <th className="name-head" style={{ width: '22%' }}>Tiêu đề</th>
                 <th className="img-head" style={{ width: '12%' }}>Hình ảnh</th>
-                <th className="date-head" style={{ width: '9%' }}>Ngày đăng</th>
+                <th className="date-head" style={{ width: '11%' }} onClick={handleDateSort}>
+                  Ngày đăng
+                  <span>{sortOrderDate === 'asc' ? ' ▲' : ' ▼'}</span>
+                </th>
                 <th className="content-head" style={{ width: '22%' }}>Nội dung</th>
                 <th className="active-head" style={{ width: '11%' }} onClick={handleActiveSort}>
                   Trạng thái
@@ -130,12 +177,12 @@ export default function ManageArticle() {
             </thead>
 
             <tbody>
-              {articleList.map((article, index) => (
+              {currentArticles.map((article, index) => (
                 <tr key={article.articleId}>
-                  <td className="index-body">{index + 1}</td>
+                  <td className="index-body">{indexOfFirstArticle + index + 1}</td>
                   <td className="name-body">{article.title}</td>
                   <td className="img-body">
-                    {article.articleImages.slice(0, 1).map((image) => (
+                    {article.articleImages && article.articleImages.slice(0, 1).map((image) => (
                       <img
                         key={image.imageId}
                         src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
@@ -145,7 +192,9 @@ export default function ManageArticle() {
                     ))}
                   </td>
                   <td className="date-body">{article.uploadedDate}</td>
-                  <td className="content-body">{article.content.length > 170 ? `${article.content.slice(0, 170)}...` : article.content}</td>
+                  <td className="content-body">
+                    {article.content && (article.content.length > 170 ? `${article.content.slice(0, 170)}...` : article.content)}
+                  </td>
                   <td className="active-body">
                     <Switch
                       onChange={() => handleToggle(article.articleId, article.active)}
@@ -162,8 +211,20 @@ export default function ManageArticle() {
                 </tr>
               ))}
             </tbody>
-
           </table>
+
+          {/* Pagination */}
+          <div className="manage-pagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => handleClick(i + 1)}
+                className={currentPage === i + 1 ? 'active' : ''}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
 
         </div>
       </div>
