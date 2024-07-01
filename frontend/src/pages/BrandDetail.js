@@ -33,7 +33,7 @@ export default function BrandDetail() {
       <div className="content">
         <Sidebar
           role={localStorage.getItem("userRole")}
-          customerName={localStorage.getItem("username")}
+          customerName={localStorage.getItem("name")}
           customerPoint={localStorage.getItem("point")}
         />
         <div className="content-detail">

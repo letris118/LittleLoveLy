@@ -1,10 +1,18 @@
 import { toast } from "react-toastify";
 import instance from "./customize-axios";
 import { routes } from "../../routes";
-import axios from "axios";
 const loginAPI = (username, password) => {
   return instance.post("/api/auth/login", {
     username,
+    password,
+  });
+};
+
+const registerAPI = (mail, phone, name, password) => {
+  return instance.post("/api/auth/register", {
+    mail,
+    phone,
+    name,
     password,
   });
 };
@@ -13,11 +21,7 @@ const users = () => {
   return instance.get("/api/users");
 };
 
-
-
-
-
-//get active products 
+//get active products
 const products = () => {
   return instance.get("/api/products");
 };
@@ -44,10 +48,10 @@ const getProductById = (productId) => {
 
 //add
 const addProduct = (productRequestDTO) => {
-  return instance.post('/api/products', productRequestDTO, {
+  return instance.post("/api/products", productRequestDTO, {
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+      "Content-Type": "multipart/form-data",
+    },
   });
 };
 
@@ -55,11 +59,10 @@ const addProduct = (productRequestDTO) => {
 const updateProduct = (productId, productRequestDTO) => {
   return instance.put(`/api/products/${productId}`, productRequestDTO, {
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-}
-
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
 
 const giftsAll = () => {
   return instance.get("/api/gifts/all");
@@ -71,6 +74,26 @@ const deactivateGift = (giftId) => {
 
 const activateGift = (giftId) => {
   return instance.put(`/api/gifts/activate/${giftId}`);
+};
+
+const addGift = (giftRequestDTO) => {
+  return instance.post('/api/gifts', giftRequestDTO, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
+
+const updateGift = (giftId, giftRequestDTO) => {
+  return instance.put(`/api/gifts/${giftId}`, giftRequestDTO, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+const getGiftById = (giftId) => {
+  return instance.get(`/api/gifts/${giftId}`);
 };
 
 
@@ -87,6 +110,14 @@ const activateVoucher = (voucherId) => {
   return instance.put(`/api/vouchers/activate/${voucherId}`);
 };
 
+const addVoucher = (voucherRequestDTO) => {
+  return instance.post('/api/vouchers', voucherRequestDTO, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
+
 
 //all brand
 const brands = () => {
@@ -97,9 +128,6 @@ const brands = () => {
 const categories = () => {
   return instance.get("/api/categories");
 };
-
-
-
 
 const articles = () => {
   return instance.get("/api/articles");
@@ -113,7 +141,6 @@ const deactivateArticle = (articleId) => {
   return instance.put(`/api/articles/deactivate/${articleId}`);
 };
 
-
 const activateArticle = (articleId) => {
   return instance.put(`/api/articles/activate/${articleId}`);
 };
@@ -121,18 +148,12 @@ const activeProducts = () => {
   return instance.get("/api/products");
 };
 
-
-
-
-
-
 const handleLogout = (navigate) => (e) => {
   e.preventDefault();
   localStorage.clear();
   navigate(routes.homePage);
   toast.success("Đăng xuất thành công");
 };
-
 
 const formatPrice = (num) => {
   return new Intl.NumberFormat("de-DE").format(num);
@@ -150,11 +171,27 @@ const getCart = () => {
   return instance.get(`/api/cart`);
 };
 
+const evaluateCart = (cartItems, cusDistrictId, cusWardCode, voucherId) => {
+  return instance.post(`/api/orders/evaluate`, {
+    cartItems,
+    cusDistrictId,
+    cusWardCode,
+    voucherId,
+  });
+};
+
+const getUserInfo = (userId) => {
+  return instance.get(`/api/users/${userId}`);
+};
+
+const createOrder = (order) => {
+  return instance.post(`/api/orders`, order);
+};
+
 export {
   loginAPI,
   users,
   handleLogout,
-
   products,
   productsAll,
   deactivateProduct,
@@ -163,27 +200,33 @@ export {
   addProduct,
   updateProduct,
   activeProducts,
-
   brands,
   categories,
-
   vouchersAll,
   deactivateVoucher,
   activateVoucher,
+
+  addVoucher,
 
   articles,
   articlesAll,
   deactivateArticle,
   activateArticle,
-
   giftsAll,
   deactivateGift,
   activateGift,
 
+  addGift,
+  updateGift,
+  getGiftById,
+
+
   formatPrice,
-
-
   updateCart,
   removeItemCard,
   getCart,
+  evaluateCart,
+  getUserInfo,
+  createOrder,
+  registerAPI,
 };

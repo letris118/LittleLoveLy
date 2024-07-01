@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Header from "../components/Header";
-import Sidebar from "../components/SideBar";
 import Footer from "../components/Footer";
+import Sidebar from "../components/SideBar";
+import SearchPresentation from "../components/SearchPresentation";
 
-export default function Gift() {
+export default function SearchProduct() {
   return (
     <div>
       <Header />
@@ -15,7 +16,9 @@ export default function Gift() {
         />
         <div className="content-detail">
           <div className="content-display ">
-            <div className="content-gift-row"></div>
+            <div className="content-search-row">
+              <SearchPresentation />
+            </div>
           </div>
         </div>
       </div>

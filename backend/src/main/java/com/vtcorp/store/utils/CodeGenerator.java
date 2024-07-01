@@ -23,4 +23,11 @@ public class CodeGenerator {
         String randomStr = generateRandomCode(6);
         return prefix + dateStr + randomStr;
     }
+
+    public static String generateUsername() {
+        String prefix = "CUS";
+        String dateStr = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
+        String randomStr = generateRandomCode(6);
+        return prefix + dateStr + randomStr;
+    }
 }

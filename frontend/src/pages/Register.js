@@ -1,13 +1,65 @@
-import { useState } from "react";
-import React, { useEffect } from "react";
+import { useState, useEffect } from "react";
 import backgroundImage from "../assets/images/backgroundDemo.jpg";
 import "../assets/css/loginAndRegister.css";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../routes";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { registerAPI } from "../services/auth/UsersService";
+import { FaExclamationCircle } from "react-icons/fa";
+import Tooltip from "@mui/material/Tooltip";
+import { Button, Container, Icon, IconButton, Typography } from "@mui/material";
+
+const checkChema = Yup.object({
+  mail: Yup.string()
+    .email("Vui lòng nhập đúng định dạng email")
+    .required("Vui lòng nhập email"),
+  phone: Yup.string().required("Vui lòng điền số điện thoại"),
+  name: Yup.string().required("Vui lòng điền họ và tên"),
+  password: Yup.string().required("Vui lòng điền mật khẩu"),
+  confirmPassword: Yup.string()
+    .required("Vui lòng điền đầy đủ mật khẩu")
+    .oneOf([Yup.ref("password"), null], "Mật khẩu không trùng nhau"),
+});
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      mail: "",
+      phone: "",
+      name: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema: checkChema,
+    onSubmit: async (values) => {
+      setIsSubmitting(true);
+      try {
+        const formValues = {
+          mail: values.mail,
+          phone: values.phone,
+          name: values.name,
+          password: values.password,
+        };
+        const response = await registerAPI(formValues);
+        console.log("API response:", response);
+        if (response.success) {
+          navigate(routes.login);
+        } else {
+          console.error("Registration failed:", response.message);
+        }
+      } catch (error) {
+        console.error("Error during form submission:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+  });
 
   useEffect(() => {
     // Set class and background image for the body
@@ -30,30 +82,63 @@ export default function Register() {
           <div className="col-md-6 col-lg-4">
             <div className="login-wrap p-0">
               <h3 className="mb-4 text-center">Đăng kí tài khoản</h3>
-              <form action="#" className="signin-form">
+              <form onSubmit={formik.handleSubmit} className="signin-form">
                 <div className="form-group">
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Gmail"
-                    required
+                    name="mail"
+                    value={formik.values.mail}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  {formik.touched.mail && formik.errors.mail && (
+                    <Tooltip title={formik.errors.mail} placement="right" arrow>
+                      <span className="tooltip-icon">
+                        <FaExclamationCircle />
+                      </span>
+                    </Tooltip>
+                  )}
                 </div>
                 <div className="form-group">
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Số điện thoại"
-                    required
+                    name="phone"
+                    value={formik.values.phone}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  {formik.touched.phone && formik.errors.phone && (
+                    <Tooltip
+                      title={formik.errors.phone}
+                      placement="right"
+                      arrow>
+                      <span className="tooltip-icon">
+                        <FaExclamationCircle />
+                      </span>
+                    </Tooltip>
+                  )}
                 </div>
                 <div className="form-group">
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Họ và tên"
-                    required
+                    name="name"
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  {formik.touched.name && formik.errors.name && (
+                    <Tooltip title={formik.errors.name} placement="right" arrow>
+                      <span className="tooltip-icon">
+                        <FaExclamationCircle />
+                      </span>
+                    </Tooltip>
+                  )}
                 </div>
                 <div className="form-group">
                   <input
@@ -61,8 +146,10 @@ export default function Register() {
                     type={showPassword ? "text" : "password"}
                     className="form-control"
                     placeholder="Mật khẩu"
-                    minLength="8"
-                    required
+                    name="password"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <span
                     toggle="#password-field"
@@ -74,19 +161,57 @@ export default function Register() {
                     onClick={() => {
                       setShowPassword((prevState) => !prevState);
                     }}></span>
+                  {formik.touched.password && formik.errors.password && (
+                    <Tooltip
+                      title={formik.errors.password}
+                      placement="right"
+                      arrow>
+                      <span className="tooltip-icon">
+                        <FaExclamationCircle />
+                      </span>
+                    </Tooltip>
+                  )}
                 </div>
                 <div className="form-group">
                   <input
                     id="confirm-password-field"
-                    type="text"
+                    type={showConfirmPassword ? "text" : "password"}
                     className="form-control"
                     placeholder="Xác nhận mật khẩu"
-                    required
+                    name="confirmPassword"
+                    value={formik.values.confirmPassword}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  <span
+                    toggle="#confirm-password-field"
+                    className={
+                      showConfirmPassword
+                        ? "fa fa-fw fa-eye-slash field-icon"
+                        : "fa fa-fw fa-eye field-icon"
+                    }
+                    onClick={() => {
+                      setShowConfirmPassword((prevState) => !prevState);
+                    }}></span>
+                  {formik.touched.confirmPassword &&
+                    formik.errors.confirmPassword && (
+                      <Tooltip
+                        title={formik.errors.confirmPassword}
+                        placement="right"
+                        arrow>
+                        <span className="tooltip-icon">
+                          <FaExclamationCircle />
+                        </span>
+                      </Tooltip>
+                    )}
                 </div>
                 <div className="form-group">
                   <button
                     type="submit"
+                    disabled={
+                      isSubmitting ||
+                      formik.values.password !== formik.values.confirmPassword
+                    }
                     className="form-control btn btn-primary submit px-3">
                     Đăng kí
                   </button>
@@ -97,9 +222,7 @@ export default function Register() {
               </p>
               <div className="form-group">
                 <button
-                  onClick={() => {
-                    navigate({ pathname: routes.login });
-                  }}
+                  onClick={() => navigate(routes.login)}
                   className="form-control btn btn-primary submit px-3">
                   Đăng nhập
                 </button>

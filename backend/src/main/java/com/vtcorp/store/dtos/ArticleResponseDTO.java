@@ -27,4 +27,5 @@ public class ArticleResponseDTO {
 
     @JsonIgnoreProperties("article")
     private List<ArticleImage> articleImages;
+
 }

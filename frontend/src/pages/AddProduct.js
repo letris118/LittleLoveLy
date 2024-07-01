@@ -88,7 +88,7 @@ export default function AddProduct() {
   }
 
   const handleReload = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     window.location.reload()
   }
 
@@ -140,93 +140,106 @@ export default function AddProduct() {
       <div className="manage-content">
         <StaffSideBar />
 
-        <div className="manage-content-detail">
+        <div className="add-update-content-detail">
           {
             <form onSubmit={handleSubmit}>
+              <div className="manage-form-input">
 
-              <div>
-                <label>Tên sản phẩm</label>
-                <div>
-                  <input type="text" name="name" required></input>
+                {/* Product NAME */}
+                <div className="manage-form-group">
+                  <label>Tên sản phẩm</label>
+                  <div className="manage-form-control">
+                    <input type="text" name="name" required></input>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label>Giá niêm yết</label>
-                <div>
-                  <input type="number" name="listedPrice" step="500" min="0" required></input>
+                {/* Product list PRICE */}
+                <div className="manage-form-group">
+                  <label>Giá niêm yết</label>
+                  <div className="manage-form-control">
+                    <input type="number" name="listedPrice" step="500" min="0" required></input>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label>Giá bán</label>
-                <div>
-                  <input type="number" name="sellingPrice" step="500" min="0" required></input>
+                {/* Product sell PRICE */}
+                <div className="manage-form-group">
+                  <label>Giá bán</label>
+                  <div className="manage-form-control">
+                    <input type="number" name="sellingPrice" step="500" min="0" required></input>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label>Mô tả sản phẩm</label>
-                <div>
-                  <textarea name="description" required></textarea>
+                {/* Product DESCRIPTION */}
+                <div className="manage-form-group">
+                  <label>Mô tả sản phẩm</label>
+                  <div className="manage-form-control">
+                    <textarea name="description" required></textarea>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label>Tồn kho</label>
-                <div>
-                  <input type="number" name="stock" step="1" min="1" defaultValue="1"></input>
+                {/* Product STOCK */}
+                <div className="manage-form-group">
+                  <label>Tồn kho</label>
+                  <div className="manage-form-control">
+                    <input type="number" name="stock" step="1" min="1" defaultValue="1"></input>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label>Thương hiệu</label>
-                <div>
-                  <select name="brandId" required>
-                    <option value="">Chọn thương hiệu</option>
-                    {allBrands.map((brand, index) => (
-                      <option key={index} value={brand.brandId}>{brand.name}</option>
+
+                {/* Product BRAND */}
+                <div className="manage-form-group">
+                  <label>Thương hiệu</label>
+                  <div className="manage-form-control">
+                    <select name="brandId" required>
+                      <option value="">Chọn thương hiệu</option>
+                      {allBrands.map((brand, index) => (
+                        <option key={index} value={brand.brandId}>{brand.name}</option>
+                      ))}
+
+                    </select>
+                  </div>
+                </div>
+
+                {/* Product TYPE */}
+                <div className="manage-form-group">
+                  <label>Phân loại</label>
+                  <div className="manage-form-type-control">
+                    {categoryElements.map((e) => (
+                      <div key={e.id}>
+                        {e.content}
+                        {e.id === categoryElements.length && (
+                          <button onClick={addNewCategoryElement}>Thêm</button>
+                        )}
+                        {e.id !== 1 && e.id === categoryElements.length && (
+                          <button onClick={removeCategoryElement}>Hủy bỏ</button>
+                        )}
+
+                      </div>
                     ))}
+                  </div>
+                </div>
 
-                  </select>
+                {/* Product IMAGE */}
+                <div className="manage-form-group">
+                  <label>Hình minh họa sản phẩm</label>
+                  <div className="manage-form-control-img">
+                    {imageElements.map((e) => (
+                      <div key={e.id}>
+                        {e.content}
+                        {e.id === 1 && (
+                          <button onClick={addNewImageElement}>Thêm</button>
+                        )}
+                        {e.id === 1 && imageElements.length > 1 && (
+                          <button onClick={removeImageElement}>Hủy bỏ</button>
+                        )}
+
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label>Phân loại</label>
-
-                {categoryElements.map((e) => (
-                  <div key={e.id}>
-                    {e.content}
-                    {e.id === categoryElements.length && (
-                      <button onClick={addNewCategoryElement}>Thêm</button>
-                    )}
-                    {e.id !== 1 && e.id === categoryElements.length && (
-                      <button onClick={removeCategoryElement}>Hủy bỏ</button>
-                    )}
-
-                  </div>
-                ))}
-
-              </div>
-
-              <div>
-                <label>Hình minh họa sản phẩm</label>
-
-                {imageElements.map((e) => (
-                  <div key={e.id}>
-                    {e.content}
-                    {e.id === 1 && (
-                      <button onClick={addNewImageElement}>Thêm</button>
-                    )}
-                    {e.id === 1 && imageElements.length > 1 && (
-                      <button onClick={removeImageElement}>Hủy bỏ</button>
-                    )}
-
-                  </div>
-                ))}
-              </div>
-
+              {/* Product BUTTON */}
               <div className="manage-form-btn">
                 <button className="save-manage-btn save-manage-link" type="submit">
                   Thêm sản phẩm
@@ -242,10 +255,8 @@ export default function AddProduct() {
 
             </form>
 
-
           }
         </div>
-
       </div>
     </div>
   )
