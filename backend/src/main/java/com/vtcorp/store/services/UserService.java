@@ -4,6 +4,7 @@ import com.vtcorp.store.dtos.*;
 import com.vtcorp.store.entities.User;
 import com.vtcorp.store.mappers.UserMapper;
 import com.vtcorp.store.repositories.UserRepository;
+import com.vtcorp.store.utils.CodeGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,10 +50,14 @@ public class UserService {
     }
 
     public String register(UserRequestDTO userRequestDTO) {
-        if (userRepository.existsByUsername(userRequestDTO.getUsername())) {
-            throw new IllegalArgumentException("User already exists");
+        if (userRepository.existsByMail(userRequestDTO.getMail())) {
+            throw new IllegalArgumentException("Mail already used");
+        }
+        if (userRepository.existsByPhone(userRequestDTO.getPhone())) {
+            throw new IllegalArgumentException("Phone already used");
         }
         User user = userMapper.toEntity(userRequestDTO);
+        user.setUsername(CodeGenerator.generateUsername());
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         user.setRole("ROLE_CUSTOMER");
         user.setPoint(0);

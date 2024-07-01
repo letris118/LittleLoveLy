@@ -24,6 +24,4 @@ public class ArticleResponseDTO {
     @JsonIgnoreProperties({"brand", "categories", "articles", "orderDetails", "productReviews", "productImages"})
     private List<Product> products;
 
-//    @JsonIgnoreProperties("article")
-////    private List<ArticleImage> articleImages;
 }

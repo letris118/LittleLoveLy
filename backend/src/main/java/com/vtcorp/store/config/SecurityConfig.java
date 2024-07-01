@@ -68,7 +68,6 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/cart/**").hasAuthority(Role.ROLE_CUSTOMER)
                         .requestMatchers("/api/auth/**").anonymous()
-                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
