@@ -1,7 +1,6 @@
 package com.vtcorp.store.dtos;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,6 +15,4 @@ public class ArticleRequestDTO {
     private String content;
 
     List<Long> productIds;
-    List<Long> imageIds;
-    List<MultipartFile> newImageFiles;
 }

@@ -47,20 +47,17 @@ const getProductById = (productId) => {
 };
 
 //add
-const addProduct = async (productRequestDTO) => {
-  try {
-    const response = await instance.post("/api/products", productRequestDTO, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    return response;
-  } catch (error) {
-    throw new Error(`Error adding product: ${error.message}`);
-  }
+const addProduct = (productRequestDTO) => {
+  return instance.post("/api/products", productRequestDTO, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 //update
-const updateProduct = (productId, productData) => {
-  return instance.put(`/api/products/${productId}`, productData, {
+const updateProduct = (productId, productRequestDTO) => {
+  return instance.put(`/api/products/${productId}`, productRequestDTO, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

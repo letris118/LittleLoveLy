@@ -39,8 +39,9 @@ public class Product {
     @JsonView(Views.Cart.class)
     private Integer stock;
     private boolean active;
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date addedDate;
+
+    private Date lastModifiedDate;
 
     @ManyToOne
     @JoinColumn(name = "fk_brand_id")

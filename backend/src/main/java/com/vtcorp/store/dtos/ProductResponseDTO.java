@@ -1,5 +1,6 @@
 package com.vtcorp.store.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vtcorp.store.entities.Brand;
 import com.vtcorp.store.entities.Category;
@@ -24,7 +25,10 @@ public class ProductResponseDTO {
     private Integer stock;
     private boolean active;
     private double averageRating;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date addedDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private Date lastModifiedDate;
 
     @JsonIgnoreProperties("products")
     private Brand brand;

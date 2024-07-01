@@ -1,7 +1,6 @@
 package com.vtcorp.store.dtos;
 
 import com.fasterxml.jackson.annotation.*;
-import com.vtcorp.store.entities.ArticleImage;
 import com.vtcorp.store.entities.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +16,7 @@ public class ArticleResponseDTO {
     private long articleId;
     private String title;
 
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date uploadedDate;
     private String content;
     private boolean active;
@@ -25,6 +24,4 @@ public class ArticleResponseDTO {
     @JsonIgnoreProperties({"brand", "categories", "articles", "orderDetails", "productReviews", "productImages"})
     private List<Product> products;
 
-    @JsonIgnoreProperties("article")
-    private List<ArticleImage> articleImages;
 }
