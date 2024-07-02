@@ -15,7 +15,11 @@ export default function Header() {
           </Link>
         </div>
 
-          {(window.location.pathname === routes.staffHomePage || window.location.pathname === routes.staffBrandList) &&(
+          {(window.location.pathname === routes.staffHomePage 
+          || window.location.pathname === routes.staffBrandList
+          || window.location.pathname.startsWith(`${routes.staffBrandList}/`)
+          || window.location.pathname === routes.staffArticleList
+          || window.location.pathname.startsWith(`${routes.staffArticleList}/`)) && (
             <div className="manage-search-bar">
                 <input type="text" placeholder="Tìm kiếm sản phẩm..." />
                 <div className="manage-search-icon">

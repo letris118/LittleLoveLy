@@ -37,6 +37,9 @@ import UpdateVoucher from "../pages/UpdateVoucher";
 
 import SearchProduct from "../pages/SearchProduct";
 import Gift from "../pages/Gift";
+import StaffBrandDetail from "../pages/StaffBrandDetail";
+import StaffArticleDetail from "../pages/StaffArticleDetail";
+import StaffArticleList from "../pages/StaffArticleList";
 
 export default function AppRoute() {
   return (
@@ -85,6 +88,9 @@ export default function AppRoute() {
       <Route path={routes.statistics} element={<Statistics />} />
       <Route path={routes.manageMember} element={<ManageMember />} />
       <Route path={routes.manageStaff} element={<ManageStaff />} />
+      <Route path={`${routes.staffBrandList}/:name`} element={<StaffBrandDetail />} />
+      <Route path={`${routes.staffArticleList}/:title`} element={<StaffArticleDetail />} />
+      <Route path={routes.staffArticleList} element={<StaffArticleList />} />
     </Routes>
   );
 }
