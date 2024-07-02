@@ -19,13 +19,20 @@ import { routes } from "../routes";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
+  const [giftItems, setGiftItems] = useState([]);
   const [hasCart, setHasCart] = useState(false);
 
   useEffect(() => {
-    const storedCartItems = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(storedCartItems);
     const cart = localStorage.getItem("cart");
-    setHasCart(!!cart);
+    const gifts = localStorage.getItem("gifts");
+
+    const storedCartItems = JSON.parse(cart) || [];
+    setCartItems(storedCartItems);
+
+    const storedGiftItems = JSON.parse(gifts) || [];
+    setGiftItems(storedGiftItems);
+
+    setHasCart(!!cart || !!gifts);
   }, []);
 
   const handleRemoveItem = useCallback((index) => {

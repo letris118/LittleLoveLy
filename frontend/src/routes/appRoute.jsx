@@ -37,6 +37,7 @@ import UpdateVoucher from "../pages/UpdateVoucher";
 
 import SearchProduct from "../pages/SearchProduct";
 import Gift from "../pages/Gift";
+import Order from "../pages/Order";
 
 export default function AppRoute() {
   return (
@@ -66,7 +67,10 @@ export default function AppRoute() {
       <Route path={routes.staffChat} element={<StaffChat />} />
 
       <Route path={routes.manageProduct} element={<ManageProduct />} />
-      <Route path={`${routes.updateProduct}/:name`} element={<UpdateProduct />} />
+      <Route
+        path={`${routes.updateProduct}/:name`}
+        element={<UpdateProduct />}
+      />
       <Route path={routes.addProduct} element={<AddProduct />} />
 
       <Route path={routes.manageOrder} element={<ManageOrder />} />
@@ -76,7 +80,10 @@ export default function AppRoute() {
 
       <Route path={routes.manageVoucher} element={<ManageVoucher />} />
       <Route path={routes.addVoucher} element={<AddVoucher />} />
-      <Route path={`${routes.updateVoucher}/:title`} element={<UpdateVoucher />} />
+      <Route
+        path={`${routes.updateVoucher}/:title`}
+        element={<UpdateVoucher />}
+      />
 
       <Route path={routes.manageGift} element={<ManageGift />} />
       <Route path={routes.addGift} element={<AddGift />} />
@@ -85,6 +92,9 @@ export default function AppRoute() {
       <Route path={routes.statistics} element={<Statistics />} />
       <Route path={routes.manageMember} element={<ManageMember />} />
       <Route path={routes.manageStaff} element={<ManageStaff />} />
+      <Route path={routes.searchProduct} element={<SearchProduct />} />
+      <Route path={routes.gift} element={<Gift />} />
+      <Route path={routes.order} element={<Order />} />
     </Routes>
   );
 }

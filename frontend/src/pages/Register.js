@@ -9,6 +9,7 @@ import { registerAPI } from "../services/auth/UsersService";
 import { FaExclamationCircle } from "react-icons/fa";
 import Tooltip from "@mui/material/Tooltip";
 import { Button, Container, Icon, IconButton, Typography } from "@mui/material";
+import { toast } from "react-toastify";
 
 const checkChema = Yup.object({
   mail: Yup.string().email("Vui lòng nhập đúng định dạng email").required("Vui lòng nhập email"),
@@ -38,15 +39,14 @@ export default function Register() {
     onSubmit: async (values) => {
       setIsSubmitting(true);
       try {
-        const formValues = {
-          mail: values.mail,
-          phone: values.phone,
-          name: values.name,
-          password: values.password,
-        };
-        const response = await registerAPI(formValues);
-        console.log("API response:", response);
-        if (response.success) {
+        const response = await registerAPI(
+          values.mail,
+          values.phone,
+          values.name,
+          values.password
+        );
+        if (response) {
+          toast.success("Đăng kí tài khoản thành công !");
           navigate(routes.login);
         } else {
           console.error("Registration failed:", response.message);
