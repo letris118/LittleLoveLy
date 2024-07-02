@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { routes } from "../routes"
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom"
 import StaffHeader from "../components/StaffHeader"
@@ -20,10 +20,18 @@ export default function UpdateProduct() {
   const [categoryElements, setCategoryElements] = useState([])
   const [imageElements, setImageElements] = useState([])
   const [selectedImageIds, setSelectedImageIds] = useState([])
+  const textareaRef = useRef(null);
 
 
   const location = useLocation()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = '${textareaRef.current.scrollHeight + 1}px';
+    }
+  }, [productInfo?.description]);
 
   const addNewCategoryElement = (e) => {
     e.preventDefault()
@@ -226,7 +234,12 @@ export default function UpdateProduct() {
                 <div className="manage-form-group">
                   <label>Tên sản phẩm</label>
                   <div className="manage-form-control">
-                    <input type="text" name="name" required defaultValue={productInfo.name}></input>
+                    <input 
+                      type="text" 
+                      name="name" 
+                      required 
+                      defaultValue={productInfo.name}>
+                    </input>
                   </div>
                 </div>
 
@@ -234,7 +247,13 @@ export default function UpdateProduct() {
                 <div className="manage-form-group">
                   <label>Giá niêm yết</label>
                   <div className="manage-form-control">
-                    <input type="number" name="listedPrice" step="500" min="0" required defaultValue={productInfo.listedPrice}></input>
+                    <input 
+                      type="number" 
+                      name="listedPrice" 
+                      step="500" min="0" 
+                      required 
+                      defaultValue={productInfo.listedPrice}>
+                    </input>
                   </div>
                 </div>
 
@@ -242,7 +261,13 @@ export default function UpdateProduct() {
                 <div className="manage-form-group">
                   <label>Giá bán</label>
                   <div className="manage-form-control">
-                    <input type="number" name="sellingPrice" step="500" min="0" required defaultValue={productInfo.sellingPrice}></input>
+                    <input 
+                      type="number" 
+                      name="sellingPrice" 
+                      step="500" min="0" 
+                      required 
+                      defaultValue={productInfo.sellingPrice}>
+                    </input>
                   </div>
                 </div>
 
@@ -250,7 +275,13 @@ export default function UpdateProduct() {
                 <div className="manage-form-group">
                   <label>Mô tả sản phẩm</label>
                   <div className="manage-form-control">
-                    <textarea name="description" required defaultValue={productInfo.description}></textarea>
+                    <textarea 
+                      name="description" 
+                      required 
+                      defaultValue={productInfo.description}
+                      ref={textareaRef}
+                      style={{ resize: "none" }}>
+                    </textarea>
                   </div>
                 </div>
 
@@ -288,10 +319,18 @@ export default function UpdateProduct() {
                       <div key={e.id}>
                         {e.content}
                         {e.id === categoryElements.length && (
-                          <button onClick={addNewCategoryElement}>Thêm</button>
+                          <button 
+                            style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                            onClick={addNewCategoryElement}>
+                            Thêm
+                          </button>
                         )}
                         {e.id !== 1 && e.id === categoryElements.length && (
-                          <button onClick={removeCategoryElement}>Hủy bỏ</button>
+                          <button 
+                            style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                            onClick={removeCategoryElement}>
+                            Hủy bỏ
+                            </button>
                         )}
 
                       </div>
@@ -322,10 +361,18 @@ export default function UpdateProduct() {
                     <div key={e.id}>
                       {e.content}
                       {e.id === 1 && (
-                        <button onClick={addNewImageElement}>Thêm</button>
+                        <button 
+                          style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                          onClick={addNewImageElement}>
+                          Thêm
+                        </button>
                       )}
                       {e.id === 1 && imageElements.length > 1 && (
-                        <button onClick={removeImageElement}>Hủy bỏ</button>
+                        <button 
+                          style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                          onClick={removeImageElement}>
+                          Hủy bỏ
+                        </button>
                       )}
 
                     </div>

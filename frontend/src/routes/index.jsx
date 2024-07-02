@@ -18,6 +18,7 @@ export const routes = {
 
   manageVoucher: "/manageVoucher",
   addVoucher: "/addVoucher",
+  updateVoucher: "/updateVoucher",
 
   manageAccount: "/manageAccount",
   cart: "/cart",

@@ -93,7 +93,7 @@ export default function AddGift() {
 
               </div>
 
-              {/* Product BUTTON */}
+              {/* BUTTON */}
               <div className="manage-form-btn">
                 <button className="save-manage-btn save-manage-link" type="submit">
                   Thêm quà tặng

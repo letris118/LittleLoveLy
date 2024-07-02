@@ -21,6 +21,7 @@ const users = () => {
   return instance.get("/api/users");
 };
 
+// =========================================PRODUCT===========================================
 //get active products
 const products = () => {
   return instance.get("/api/products");
@@ -64,6 +65,8 @@ const updateProduct = (productId, productRequestDTO) => {
   });
 };
 
+// =========================================GIFT===========================================
+
 const giftsAll = () => {
   return instance.get("/api/gifts/all");
 };
@@ -97,7 +100,7 @@ const getGiftById = (giftId) => {
 };
 
 
-
+// =========================================VOUCHER===========================================
 const vouchersAll = () => {
   return instance.get("/api/vouchers/all");
 };
@@ -118,7 +121,19 @@ const addVoucher = (voucherRequestDTO) => {
   });
 };
 
+const getVoucherById = (voucherId) => {
+  return instance.get(`/api/vouchers/${voucherId}`);
+};
 
+const updateVoucher = (voucherId, voucherRequestDTO) => {
+  return instance.put(`/api/vouchers/${voucherId}`, voucherRequestDTO, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+// =========================================BRAND + CATEGORIES===========================================
 //all brand
 const brands = () => {
   return instance.get("/api/brands");
@@ -129,6 +144,7 @@ const categories = () => {
   return instance.get("/api/categories");
 };
 
+// =========================================ARTICLE===========================================
 const articles = () => {
   return instance.get("/api/articles");
 };
@@ -192,6 +208,9 @@ export {
   loginAPI,
   users,
   handleLogout,
+  brands,
+  categories,
+
   products,
   productsAll,
   deactivateProduct,
@@ -200,13 +219,13 @@ export {
   addProduct,
   updateProduct,
   activeProducts,
-  brands,
-  categories,
+
+  addVoucher,
+  getVoucherById,
   vouchersAll,
   deactivateVoucher,
   activateVoucher,
-
-  addVoucher,
+  updateVoucher,
 
   articles,
   articlesAll,
@@ -219,7 +238,6 @@ export {
   addGift,
   updateGift,
   getGiftById,
-
 
   formatPrice,
   updateCart,
