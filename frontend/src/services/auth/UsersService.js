@@ -106,6 +106,10 @@ const articlesAll = () => {
   return instance.get("/api/articles/all");
 };
 
+const getArticleById = (articleId) => {
+  return instance.get(`/api/articles/${articleId}`);
+};
+
 const deactivateArticle = (articleId) => {
   return instance.put(`/api/articles/deactivate/${articleId}`);
 };
@@ -113,6 +117,15 @@ const deactivateArticle = (articleId) => {
 const activateArticle = (articleId) => {
   return instance.put(`/api/articles/activate/${articleId}`);
 };
+
+const addArticle = (articleRequestDTO) => {
+  return instance.post("/api/articles", articleRequestDTO);
+};
+
+const updateArticle = (articleId, articleRequestDTO) => {
+  return instance.put(`/api/articles/${articleId}`, articleRequestDTO);
+};
+
 const activeProducts = () => {
   return instance.get("/api/products");
 };
@@ -189,4 +202,7 @@ export {
   getUserInfo,
   createOrder,
   registerAPI,
+  addArticle,
+  getArticleById,
+  updateArticle,
 };

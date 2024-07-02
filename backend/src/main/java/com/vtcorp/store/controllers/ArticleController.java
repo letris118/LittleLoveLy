@@ -1,6 +1,8 @@
 package com.vtcorp.store.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.vtcorp.store.dtos.ArticleRequestDTO;
+import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.services.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ public class ArticleController {
 
     @Operation(summary = "Get all articles")
     @GetMapping("/all")
+    @JsonView(Views.Article.class)
     public ResponseEntity<?> getAllArticles() {
         try {
             return ResponseEntity.ok(articleService.getAllArticles());
@@ -29,6 +32,7 @@ public class ArticleController {
 
     @Operation(summary = "Get active articles")
     @GetMapping
+    @JsonView(Views.Article.class)
     public ResponseEntity<?> getActiveArticles() {
         try {
             return ResponseEntity.ok(articleService.getActiveArticles());
@@ -39,6 +43,7 @@ public class ArticleController {
 
     @Operation(summary = "Get article by ID")
     @GetMapping("/{id}")
+    @JsonView(Views.Article.class)
     ResponseEntity<?> getArticleById(@PathVariable Long id) {
         try{
             return ResponseEntity.ok(articleService.getArticleById(id));
@@ -49,6 +54,7 @@ public class ArticleController {
 
     @Operation(summary = "Add article")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @JsonView(Views.Article.class)
     public ResponseEntity<?> addArticle(@ModelAttribute ArticleRequestDTO articleRequestDTO) {
         try {
             return ResponseEntity.ok(articleService.addArticle(articleRequestDTO));
@@ -59,6 +65,7 @@ public class ArticleController {
 
     @Operation(summary = "Update article by ID")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @JsonView(Views.Article.class)
     public ResponseEntity<?> updateArticle(@PathVariable long id, @ModelAttribute ArticleRequestDTO articleRequestDTO) {
         if (id != articleRequestDTO.getArticleId()) {
             return ResponseEntity.badRequest().body("Article ID in the path variable does not match the one in the request body");

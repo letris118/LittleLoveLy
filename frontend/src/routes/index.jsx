@@ -20,6 +20,8 @@ export const routes = {
   staffBrandList: "/brand-list",
   updateProduct: "/updateProduct",
   addProduct: "/addProduct",
+  addArticle: "/addArticle",
+  updateArticle: "/updateArticle",
   checkout: "/checkout",
   statistics: "/statistics",
   manageMember: "/manageMember",
