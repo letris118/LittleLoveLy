@@ -21,6 +21,8 @@ import ManageGift from "../pages/ManageGift";
 import StaffBrandList from "../pages/StaffBrandList";
 import UpdateProduct from "../pages/UpdateProduct";
 import AddProduct from "../pages/AddProduct";
+import AddArticle from "../pages/AddArticle";
+import UpdateArticle from "../pages/UpdateArticle";
 import Checkout from "../pages/Checkout";
 import ArticleList from "../pages/ArticleList";
 import ArticleDetail from "../pages/ArticleDetail";
@@ -36,7 +38,6 @@ import UpdateVoucher from "../pages/UpdateVoucher";
 import SearchProduct from "../pages/SearchProduct";
 import Gift from "../pages/Gift";
 
-
 export default function AppRoute() {
   return (
     <Routes>
@@ -50,8 +51,10 @@ export default function AppRoute() {
 
       <Route path={routes.brands} element={<BrandList />} />
       <Route path={`${routes.brands}/:name`} element={<BrandDetail />} />
+
       <Route path={routes.products} element={<ProductList />} />
       <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
+
       <Route path={routes.checkout} element={<Checkout />} />
       <Route path={routes.articles} element={<ArticleList />} />
       <Route path={`${routes.articles}/:title`} element={<ArticleDetail />} />
@@ -63,11 +66,13 @@ export default function AppRoute() {
       <Route path={routes.staffChat} element={<StaffChat />} />
 
       <Route path={routes.manageProduct} element={<ManageProduct />} />
-      <Route path={`${routes.updateProduct}/:name`}element={<UpdateProduct />}/>
+      <Route path={`${routes.updateProduct}/:name`} element={<UpdateProduct />} />
       <Route path={routes.addProduct} element={<AddProduct />} />
 
       <Route path={routes.manageOrder} element={<ManageOrder />} />
       <Route path={routes.manageArticle} element={<ManageArticle />} />
+      <Route path={routes.addArticle} element={<AddArticle />} />
+      <Route path={`${routes.updateArticle}/:id`} element={<UpdateArticle />} />
 
       <Route path={routes.manageVoucher} element={<ManageVoucher />} />
       <Route path={routes.addVoucher} element={<AddVoucher />} />

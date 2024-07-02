@@ -161,6 +161,9 @@ public class ArticleService {
             } catch (IOException e) {
                 throw new RuntimeException("Failed to save image", e);
             }
+            if (!Files.exists(imagePath) || !Files.isReadable(imagePath)) {
+                throw new RuntimeException("File is not accessible after saving: " + imagePath);
+            }
             // Replace the Base64 encoded image in the content with the image URL
             String imageUrl = "http://localhost:8010/images/articles/" + fileName;
             content = content.replace(matcherBase64.group(0), imageUrl);

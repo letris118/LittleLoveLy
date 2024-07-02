@@ -21,10 +21,10 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView({Views.Cart.class, Views.Order.class})
+    @JsonView({Views.Cart.class, Views.Order.class, Views.Article.class})
     private long productId;
 
-    @JsonView({Views.Cart.class, Views.Order.class})
+    @JsonView({Views.Cart.class, Views.Order.class, Views.Article.class})
     private String name;
 
     @JsonView(Views.Cart.class)

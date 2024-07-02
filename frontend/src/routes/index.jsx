@@ -15,6 +15,8 @@ export const routes = {
 
   manageOrder: "/manageOrder",
   manageArticle: "/manageArticle",
+  addArticle: "/addArticle",
+  updateArticle: "/updateArticle",
 
   manageVoucher: "/manageVoucher",
   addVoucher: "/addVoucher",
@@ -30,7 +32,6 @@ export const routes = {
   addGift: "/addGift",
 
   staffBrandList: "/brand-list",
-  
   checkout: "/checkout",
   statistics: "/statistics",
   manageMember: "/manageMember",
