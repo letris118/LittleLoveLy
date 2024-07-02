@@ -1,6 +1,9 @@
 package com.vtcorp.store.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +20,7 @@ public class UserResponseDTO {
     private String street;
     private Integer point;
     private String role;
+
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date registeredDate;
 }
