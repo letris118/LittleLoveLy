@@ -13,8 +13,10 @@ import {
   Pagination,
   styled,
 } from "@mui/material";
-import { gifts, users } from "../services/auth/UsersService";
+import { gifts, updateCart, users } from "../services/auth/UsersService";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../routes";
 
 export default function Gift() {
   const [giftstList, setGiftsList] = useState([]);
@@ -23,7 +25,15 @@ export default function Gift() {
   const [selectedGift, setSelectedGift] = useState(null);
   const [confirmPopup, setConfirmPopup] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const navigate = useNavigate();
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    const userRole = localStorage.getItem("userRole");
+    if (userRole !== "ROLE_CUSTOMER") {
+      navigate(routes.homePage);
+    }
+  }, [navigate]);
 
   const CustomDialog = styled(Dialog)({
     "& .MuiPaper-root": {
@@ -106,12 +116,16 @@ export default function Gift() {
   }, []);
 
   const handleExchange = async (gift) => {
-    if (userPoint >= gift.point) {
-      setSelectedGift(gift);
-      setConfirmPopup(true);
-    } else {
-      toast.error("Không đủ điểm để đổi quà.");
-    }
+    // nếu điểm lớn hơn quà thì đổi
+
+    // if (userPoint >= gift.point) {
+    //   setSelectedGift(gift);
+    //   setConfirmPopup(true);
+    // } else {
+    //   toast.error("Không đủ điểm để đổi quà.");
+    // }
+    setSelectedGift(gift);
+    setConfirmPopup(true);
   };
 
   const handleConfirmExchange = async () => {
@@ -126,26 +140,26 @@ export default function Gift() {
     if (existingProductIndex !== -1) {
       setConfirmPopup(false);
       setIsProcessing(false);
-      toast.error("Bạn đã đổi quà rồi");
+      toast.error("Mỗi phần quà chỉ đổi được 1 lần !", {
+        autoClose: 1500,
+      });
       return;
     }
 
-    // try {
-    //   await instance.post("/update-points", {
-    //     points: userPoint - selectedGift.point,
-    //   });
-    //   giftCartItems.push(selectedGift);
-    //   localStorage.setItem("gifts", JSON.stringify(giftCartItems));
-    //   setUserPoint(userPoint - selectedGift.point);
-    //   localStorage.setItem("point", userPoint - selectedGift.point);
-    //   toast.success("Đổi quà thành công!");
-    //   setConfirmPopup(false);
-    // } catch (error) {
-    //   console.error("Error exchanging gift:", error);
-    //   toast.error("Đã có lỗi xảy ra khi đổi quà.");
-    // } finally {
-    //   setIsProcessing(false); // End processing
-    // }
+    try {
+      giftCartItems.push(selectedGift);
+      localStorage.setItem("gifts", JSON.stringify(giftCartItems));
+      // setUserPoint(userPoint - selectedGift.point);
+      // localStorage.setItem("point", userPoint - selectedGift.point);
+      toast.success("Đổi quà thành công!", {
+        autoClose: 1500,
+      });
+      setConfirmPopup(false);
+    } catch (error) {
+      console.error("Error exchanging gift:", error);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleCloseDialog = () => {
@@ -180,7 +194,6 @@ export default function Gift() {
               }}>
               <GiftPresentation
                 giftstList={currentItems}
-                userPoint={userPoint}
                 onExchange={handleExchange}
               />
             </div>

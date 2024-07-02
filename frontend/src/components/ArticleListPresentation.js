@@ -2,6 +2,7 @@ import React from "react";
 import { routes } from "../routes";
 import instance from "../services/auth/customize-axios";
 import { Link } from "react-router-dom";
+import parse from "html-react-parser";
 
 export default function ArticleListPresentation(articles) {
   return (
@@ -23,7 +24,11 @@ export default function ArticleListPresentation(articles) {
               ))}
             </div>
             <div className="article-card-list-title">{article.title}</div>
-            <div className="article-card-list-content">{article.content}</div>
+            <div
+              className="article-card-list-content"
+              style={{ fontWeight: "400" }}>
+              {parse(article.content)}
+            </div>
           </Link>
           <div className="article-card-list-uploadDate">
             <i>{article.uploadedDate}</i>

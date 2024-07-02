@@ -132,7 +132,7 @@
 }
 
 .article-card-list {
-  max-width: 420px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   border-radius: 20px;

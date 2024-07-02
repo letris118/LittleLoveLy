@@ -3,39 +3,7 @@ import instance from "../services/auth/customize-axios";
 import "../assets/css/giftPresentation.css";
 import { ToastContainer, toast } from "react-toastify";
 
-export default function GiftPresentation({
-  giftstList,
-  userPoint,
-  onExchange,
-}) {
-  // chưa xònng thêm vào giỏ hàng, trừ điểm,
-
-  const handleExchange = async (gift) => {
-    const giftCartItems = JSON.parse(localStorage.getItem("gifts")) || [];
-    const existingProductIndex = giftCartItems.findIndex(
-      (item) => item.giftId === gift.giftId
-    );
-
-    if (existingProductIndex !== -1) {
-      toast.error("Bạn đã đổi quà này rồi.");
-      return;
-    }
-
-    if (userPoint < gift.point) {
-      toast.error("Không đủ điểm để đổi quà.");
-      return;
-    }
-
-    // try {
-    //   await instance.post("/update-points", { points: userPoint - gift.point });
-    //   giftCartItems.push(gift);
-    //   localStorage.setItem("gifts", JSON.stringify(giftCartItems));
-    //   setUserPoint(userPoint - gift.point);
-    //   toast.success("Đổi quà thành công!");
-    // } catch (error) {
-    //   console.error("Error exchanging gift:", error);
-    // }
-  };
+export default function GiftPresentation({ giftstList, onExchange }) {
   return (
     <>
       <div className="gift-container">
