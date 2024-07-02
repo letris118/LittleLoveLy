@@ -39,4 +39,5 @@ export const routes = {
   searchProduct: "/search",
   gift: "/gift",
   order: "/order",
+  staffArticleList: "/article-list",
 };

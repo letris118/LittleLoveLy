@@ -38,6 +38,9 @@ import UpdateVoucher from "../pages/UpdateVoucher";
 import SearchProduct from "../pages/SearchProduct";
 import Gift from "../pages/Gift";
 import Order from "../pages/Order";
+import StaffBrandDetail from "../pages/StaffBrandDetail";
+import StaffArticleDetail from "../pages/StaffArticleDetail";
+import StaffArticleList from "../pages/StaffArticleList";
 
 export default function AppRoute() {
   return (
@@ -95,6 +98,9 @@ export default function AppRoute() {
       <Route path={routes.searchProduct} element={<SearchProduct />} />
       <Route path={routes.gift} element={<Gift />} />
       <Route path={routes.order} element={<Order />} />
+      <Route path={`${routes.staffBrandList}/:name`} element={<StaffBrandDetail />} />
+      <Route path={`${routes.staffArticleList}/:title`} element={<StaffArticleDetail />} />
+      <Route path={routes.staffArticleList} element={<StaffArticleList />} />
     </Routes>
   );
 }
