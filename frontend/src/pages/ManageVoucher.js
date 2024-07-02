@@ -185,7 +185,7 @@ export default function ManageVoucher() {
                     />
                   </td>
                   <td className="update-body">
-                    <Link to="#" style={{ color: "#7f8c8d" }}>
+                    <Link to={`${routes.updateVoucher}/${voucher.title}?id=${voucher.voucherId}`} style={{ color: "#7f8c8d" }}>
                       Chi tiết
                     </Link>
                   </td>

@@ -96,15 +96,15 @@ export default function AddVoucher() {
                                 </div>
                             </div>
 
-                            {/* 8 min_order_amount */}
+                            {/* 4 min_order_amount */}
                             <div className="manage-form-group">
                                 <label>Giá trị đơn hàng yêu cầu</label>
                                 <div className="manage-form-control">
-                                    <input type="number" name="min_order_amount" step="500" min="0" required />
+                                    <input type="number" name="minOrderAmount" step="500" min="0" required />
                                 </div>
                             </div>
 
-                            {/* 9 type */}
+                            {/* 5 type */}
                             <div className="manage-form-group">
                                 <label>Phân loại</label>
                                 <div className="manage-form-type-voucher-control">
@@ -143,12 +143,12 @@ export default function AddVoucher() {
                                 </div>
                             </div>
 
-                            {/* Conditional Fields based on type */}
+                            {/* 6 Conditional Fields based on type */}
                             {selectedType === 'FLAT' && (
                                 <div className="manage-form-group">
                                     <label>Số tiền giảm</label>
                                     <div className="manage-form-control">
-                                        <input type="number" name="discount_amount" step="500" min="0" required />
+                                        <input type="number" name="discountAmount" step="500" min="0" required />
                                     </div>
                                 </div>
                             )}
@@ -158,13 +158,13 @@ export default function AddVoucher() {
                                     <div className="manage-form-group">
                                         <label>Phần trăm giảm</label>
                                         <div className="manage-form-control">
-                                            <input type="number" name="discount_percentage" step="0.1" min="0" required />
+                                            <input type="number" name="discountPercentage" step="0.1" min="0" required />
                                         </div>
                                     </div>
                                     <div className="manage-form-group">
                                         <label>Số tiền giảm tối đa</label>
                                         <div className="manage-form-control">
-                                            <input type="number" name="max_discount_amount" step="500" min="0" />
+                                            <input type="number" name="maxDiscountAmount" step="500" min="0" />
                                         </div>
                                     </div>
                                 </>
@@ -174,12 +174,12 @@ export default function AddVoucher() {
                                 <div className="manage-form-group">
                                     <label>Giảm phí giao hàng</label>
                                     <div className="manage-form-control">
-                                        <input type="number" name="ship_discount_amount" step="500" min="0" required />
+                                        <input type="number" name="shipDiscountAmount" step="500" min="0" required />
                                     </div>
                                 </div>
                             )}
 
-                            {/* 10 start_date */}
+                            {/* 7 start_date */}
                             <div className="manage-form-group">
                                 <label>Ngày có hiệu lực</label>
                                 <div className="manage-form-control">
@@ -193,7 +193,7 @@ export default function AddVoucher() {
 
                             </div>
 
-                            {/* 11 end_date */}
+                            {/* 8 end_date */}
                             <div className="manage-form-group">
                                 <label>Ngày hết hiệu lực</label>
                                 <div className="manage-form-control">
@@ -207,7 +207,7 @@ export default function AddVoucher() {
                             </div>
                         </div>
 
-                        {/* Product BUTTON */}
+                        {/*BUTTON */}
                         <div className="manage-form-btn">
                             <button className="save-manage-btn save-manage-link" type="submit">
                                 Thêm voucher

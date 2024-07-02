@@ -31,6 +31,7 @@ import ManageMember from "../pages/ManageMember";
 import AddGift from "../pages/AddGift";
 import UpdateGift from "../pages/UpdateGift";
 import AddVoucher from "../pages/AddVoucher";
+import UpdateVoucher from "../pages/UpdateVoucher";
 
 import SearchProduct from "../pages/SearchProduct";
 import Gift from "../pages/Gift";
@@ -47,7 +48,6 @@ export default function AppRoute() {
       <Route path={routes.homePage} element={<HomePage />} />
       <Route path={routes.staffHomePage} element={<StaffHomePage />} />
 
-      
       <Route path={routes.brands} element={<BrandList />} />
       <Route path={`${routes.brands}/:name`} element={<BrandDetail />} />
       <Route path={routes.products} element={<ProductList />} />
@@ -67,11 +67,11 @@ export default function AppRoute() {
       <Route path={routes.addProduct} element={<AddProduct />} />
 
       <Route path={routes.manageOrder} element={<ManageOrder />} />
-
       <Route path={routes.manageArticle} element={<ManageArticle />} />
 
       <Route path={routes.manageVoucher} element={<ManageVoucher />} />
       <Route path={routes.addVoucher} element={<AddVoucher />} />
+      <Route path={`${routes.updateVoucher}/:title`} element={<UpdateVoucher />} />
 
       <Route path={routes.manageGift} element={<ManageGift />} />
       <Route path={routes.addGift} element={<AddGift />} />
