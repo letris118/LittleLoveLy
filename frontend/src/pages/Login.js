@@ -37,6 +37,7 @@ export default function Login() {
         } else if (decodedToken.roles === "ROLE_STAFF") {
           navigate(routes.manageProduct);
         } else if (decodedToken.roles === "ROLE_CUSTOMER") {
+          navigate(routes.homePage);
           const resCart = await getCart();
           const cart = JSON.parse(localStorage.getItem("cart")) || [];
           resCart.orderDetails.map((item) =>
@@ -49,7 +50,6 @@ export default function Login() {
             gifts.push({ ...item.gift, quantity: item.quantity })
           );
           localStorage.setItem("gifts", JSON.stringify(gifts));
-          navigate(routes.homePage);
         }
       } else {
         if (res && res.status === 401) {

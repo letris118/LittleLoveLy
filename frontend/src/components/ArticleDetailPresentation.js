@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { articles } from "../services/auth/UsersService";
 import { useParams } from "react-router-dom";
+import "../assets/css/articleDetailPresentation.css";
 
 export default function ArticleDetailPresentation() {
   const [articleInfo, setArticleInfo] = useState(null);

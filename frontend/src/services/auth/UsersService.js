@@ -157,6 +157,17 @@ const createOrder = (order) => {
   return instance.post(`/api/orders`, order);
 };
 
+const gifts = () => {
+  return instance.get("/api/gifts");
+};
+
+const orders = () => {
+  return instance.get("/api/orders");
+};
+
+const getOrderById = (orderId) => {
+  return instance.get(`/api/orders/${orderId}`);
+};
 export {
   loginAPI,
   users,
@@ -189,4 +200,7 @@ export {
   getUserInfo,
   createOrder,
   registerAPI,
+  gifts,
+  orders,
+  getOrderById,
 };

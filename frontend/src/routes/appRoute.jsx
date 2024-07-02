@@ -29,6 +29,7 @@ import ManageStaff from "../pages/ManageStaff";
 import ManageMember from "../pages/ManageMember";
 import SearchProduct from "../pages/SearchProduct";
 import Gift from "../pages/Gift";
+import Order from "../pages/Order";
 
 export default function AppRoute() {
   return (
@@ -64,6 +65,7 @@ export default function AppRoute() {
       <Route path={routes.manageStaff} element={<ManageStaff />} />
       <Route path={routes.searchProduct} element={<SearchProduct />} />
       <Route path={routes.gift} element={<Gift />} />
+      <Route path={routes.order} element={<Order />} />
     </Routes>
   );
 }

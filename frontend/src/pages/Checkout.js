@@ -29,25 +29,21 @@ const checkoutSchema = Yup.object({
 });
 
 export default function Checkout() {
-  //const [paymentMethod, setPaymentMethod] = useState("");
   const [cartItems, setCartItems] = useState([]);
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
-  //const [selectedProvince, setSelectedProvince] = useState("");
-  //const [selectedDistrict, setSelectedDistrict] = useState("");
-  //** */
   const [submitCart, setSubmitCart] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
   const [evaluateResult, setEvaluateResult] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  //** */
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const userId = localStorage.getItem("userId");
+      const userId = localStorage.getItem("username");
       if (!userId) return;
       try {
-        let response = await getUserInfo(localStorage.getItem("userId"));
+        let response = await getUserInfo(userId);
+        console.log(response);
         if (response) {
           setUserInfo(response);
         }
@@ -140,10 +136,7 @@ export default function Checkout() {
       setWards([]);
     }
   }, [formik.values.cusCityCode, formik.values.cusDistrictId]);
-  // const handlePaymentMethodChange = (event) => {
-  //   setPaymentMethod(event.target.value);
-  // };
-  //** */
+
   useEffect(() => {
     const evaluate = async () => {
       let response = await evaluateCart(
