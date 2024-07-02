@@ -8,18 +8,30 @@ export const routes = {
   brands: "/brands",
   articles: "/articles",
   customer: "/customer",
+
   manageProduct: "/manageProduct",
+  updateProduct: "/updateProduct",
+  addProduct: "/addProduct",
+
   manageOrder: "/manageOrder",
   manageArticle: "/manageArticle",
+  addArticle: "/addArticle",
+  updateArticle: "/updateArticle",
+
   manageVoucher: "/manageVoucher",
+  addVoucher: "/addVoucher",
+  updateVoucher: "/updateVoucher",
+
   manageAccount: "/manageAccount",
   cart: "/cart",
   staffHomePage: "/staff",
   staffChat: "/chatWithCustomer",
+
   manageGift: "/manageGift",
+  updateGift: "/updateGift",
+  addGift: "/addGift",
+
   staffBrandList: "/brand-list",
-  updateProduct: "/updateProduct",
-  addProduct: "/addProduct",
   checkout: "/checkout",
   statistics: "/statistics",
   manageMember: "/manageMember",

@@ -21,6 +21,9 @@ export default function ManageGift() {
   const [sortByActive, setSortByActive] = useState(null); 
   const [sortOrderActive, setSortOrderActive] = useState('asc'); 
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const giftsPerPage = 20;
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,9 +39,8 @@ export default function ManageGift() {
       try {
         let response = await giftsAll();
         if (response) {
-          let sortedGifts = response.slice(0, 20); // Adjust as needed
-          setGiftList(sortedGifts);
-          setFilteredGifts(sortedGifts); // Initialize filtered list
+          setGiftList(response);
+          setFilteredGifts(response); // Initialize filtered list
         } else {
           setGiftList([]);
           setFilteredGifts([]);
@@ -51,7 +53,7 @@ export default function ManageGift() {
       }
     };
     fetchGifts();
-  }, []);
+  }, [navigate]);
 
   const sortGifts = (field) => {
     let sortedGifts = [...filteredGifts];
@@ -116,13 +118,23 @@ export default function ManageGift() {
       gift.name.toLowerCase().includes(query)
     );
     setFilteredGifts(filtered);
+    setCurrentPage(1); // Reset to first page on new search
+  };
+
+  const indexOfLastGift = currentPage * giftsPerPage;
+  const indexOfFirstGift = indexOfLastGift - giftsPerPage;
+  const currentGifts = filteredGifts.slice(indexOfFirstGift, indexOfLastGift);
+  const totalPages = Math.ceil(filteredGifts.length / giftsPerPage);
+
+  const handleClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
     <div>
-      <StaffHeader/>
+      <StaffHeader />
       <div className="manage-content">
-        <StaffSideBar/>
+        <StaffSideBar />
         <div className="manage-content-detail">
           <div className="search-add-table">
             <div className="table-search-bar">
@@ -175,9 +187,9 @@ export default function ManageGift() {
               </tr>
             </thead>
             <tbody className="manage-table-body">
-              {filteredGifts.map((gift, index) => (
+              {currentGifts.map((gift, index) => (
                 <tr key={gift.giftId}>
-                  <td className="index-body">{index + 1}</td>
+                  <td className="index-body">{indexOfFirstGift + index + 1}</td>
                   <td className="name-body">{gift.name}</td>
                   <td className="img-body">
                     <img
@@ -198,8 +210,7 @@ export default function ManageGift() {
                   </td>
                   <td className="update-body">
                     <Link
-                      to={`${routes.updateGift}/${gift.name}?id=${gift.giftId}`} 
-                      style={{ color: "#7f8c8d" }}>
+                     to={`${routes.updateGift}/${gift.name}?id=${gift.giftId}`} className="update-link">
                       Chi tiết
                     </Link>
                   </td>
@@ -207,6 +218,20 @@ export default function ManageGift() {
               ))}
             </tbody>
           </table>
+
+          {/* Pagination */}
+          <div className="manage-pagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => handleClick(i + 1)}
+                className={currentPage === i + 1 ? 'active' : ''}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+
         </div>
       </div>
     </div>

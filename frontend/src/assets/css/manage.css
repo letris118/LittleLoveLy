@@ -1,9 +1,10 @@
 .manage-content {
-
     display: flex;
     min-width: 1350px;
     background-color: #f5f6fa;
 }
+
+
 
 .manage-content-detail {
     background-color:#f5f6fa;
@@ -63,7 +64,8 @@
 .endDate-body,
 .point-body,
 .sellingPrice-head,
-.sellingPrice-body{
+.sellingPrice-body,
+.lastModified-head{
     text-align: center; 
     vertical-align: middle;
 
@@ -100,6 +102,19 @@
 
 .staff-back-to-top:hover {
   background-color: #1e272e;
+}
+
+.manage-pagination{
+    margin-top: 20px;
+}
+
+.manage-pagination button{
+    margin-right: 15px;
+    width: 30px;
+    border-radius: 10px;
+    border: 1px solid #a8adae;
+    box-shadow: 0 0px 5px 0px #8f8f8faf;
+    background-color: white;
 }
 
 
@@ -168,13 +183,19 @@
     background-color: #ccc;
 }
 
-
-.update-content-detail{
+.add-update-content-detail{
     flex-grow: 1;
+}
+
+.manage-form-input{
     padding: 20px 20px 20px 20px;
     border: 1px solid #b3b1b3;
     border-radius: 10px;
     margin: 20px 10px 20px 10px;
+}
+
+.manage-form-group button{
+    width: 70px;
 }
 
 .manage-form-group,
@@ -183,12 +204,16 @@
     color: #3c3e3e ;
 }
 
-.manage-label {
+.manage-form-group label{
     display: block;
     margin-bottom: 5px;
+    color: black;
+    font-weight: 550;
 }
 
-.manage-form-control {
+.manage-form-control select,
+.manage-form-control textarea,
+.manage-form-control input{
     width: 100%;
     padding: 8px;
     font-size: 14px;
@@ -197,6 +222,39 @@
     box-sizing: border-box;
 }
 
+.manage-form-control-img{
+    width: 100%;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+
+.manage-form-type-control select{
+    width: 85%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.manage-form-control img{
+    width: 20%;
+    height: 20%;
+    margin-right: 15px;
+}
+
+
+.manage-form-type-voucher-control{
+    display: flex;
+}
+
+.manage-form-type-voucher-control button{
+    width: 20%;
+}
+
+.manage-form-type-voucher-control button.selected {
+    background-color: #c0bfbf; 
+}
 
 .save-manage-link,
 .cancel-manage-link {

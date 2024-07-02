@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { routes } from "../routes"
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom"
 import StaffHeader from "../components/StaffHeader"
@@ -20,10 +20,18 @@ export default function UpdateProduct() {
   const [categoryElements, setCategoryElements] = useState([])
   const [imageElements, setImageElements] = useState([])
   const [selectedImageIds, setSelectedImageIds] = useState([])
+  const textareaRef = useRef(null);
 
 
   const location = useLocation()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = '${textareaRef.current.scrollHeight + 1}px';
+    }
+  }, [productInfo?.description]);
 
   const addNewCategoryElement = (e) => {
     e.preventDefault()
@@ -216,113 +224,164 @@ export default function UpdateProduct() {
       <div className="manage-content">
         <StaffSideBar />
 
-        <div className="update-content-detail">
+        <div className="add-update-content-detail">
           {productInfo ? (
             <form onSubmit={handleSubmit}>
 
-              <div>
-                <label>Tên sản phẩm</label>
-                <div>
-                  <input type="text" name="name" required defaultValue={productInfo.name}></input>
-                </div>
-              </div>
+              <div className="manage-form-input">
 
-              <div>
-                <label>Giá niêm yết</label>
-                <div>
-                  <input type="number" name="listedPrice" step="500" min="0" required defaultValue={productInfo.listedPrice}></input>
-                </div>
-              </div>
-
-              <div>
-                <label>Giá bán</label>
-                <div>
-                  <input type="number" name="sellingPrice" step="500" min="0" required defaultValue={productInfo.sellingPrice}></input>
-                </div>
-              </div>
-
-              <div>
-                <label>Mô tả sản phẩm</label>
-                <div>
-                  <textarea name="description" required defaultValue={productInfo.description}></textarea>
-                </div>
-              </div>
-
-              <div>
-                <label>Tồn kho</label>
-                <div>
-                  <input type="number" name="stock" step="1" min="1" defaultValue={productInfo.stock}></input>
-                </div>
-              </div>
-
-              <div>
-                <label>Thương hiệu</label>
-                <div>
-                  <select name="brandId" required>
-
-                    <option value={productInfo.brand.brandId}>{productInfo.brand.name}</option>
-                    {allBrands
-                      .filter(brand => brand.brandId !== productInfo.brand.brandId)
-                      .map((brand, index) => (
-                        <option key={index} value={brand.brandId}>{brand.name}</option>
-                      ))}
-
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label>Phân loại</label>
-
-                {categoryElements.map((e) => (
-                  <div key={e.id}>
-                    {e.content}
-                    {e.id === categoryElements.length && (
-                      <button onClick={addNewCategoryElement}>Thêm</button>
-                    )}
-                    {e.id !== 1 && e.id === categoryElements.length && (
-                      <button onClick={removeCategoryElement}>Hủy bỏ</button>
-                    )}
-
+                {/* Product NAME */}
+                <div className="manage-form-group">
+                  <label>Tên sản phẩm</label>
+                  <div className="manage-form-control">
+                    <input 
+                      type="text" 
+                      name="name" 
+                      required 
+                      defaultValue={productInfo.name}>
+                    </input>
                   </div>
-                ))}
+                </div>
 
-              </div>
+                {/* Product list PRICE */}
+                <div className="manage-form-group">
+                  <label>Giá niêm yết</label>
+                  <div className="manage-form-control">
+                    <input 
+                      type="number" 
+                      name="listedPrice" 
+                      step="500" min="0" 
+                      required 
+                      defaultValue={productInfo.listedPrice}>
+                    </input>
+                  </div>
+                </div>
 
-              <div>
-                <label>Hình minh họa sản phẩm</label>
-                <div>
-                  {productInfo.productImages.map((image, index) => (
-                    <img
-                      src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
-                      alt={productInfo.name}
-                      key={index}
-                      style={{
-                        filter: selectedImageIds.includes(image.imageId) ? 'brightness(50%)' : 'none',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => handleImageClick(image.imageId)}
+                {/* Product sell PRICE */}
+                <div className="manage-form-group">
+                  <label>Giá bán</label>
+                  <div className="manage-form-control">
+                    <input 
+                      type="number" 
+                      name="sellingPrice" 
+                      step="500" min="0" 
+                      required 
+                      defaultValue={productInfo.sellingPrice}>
+                    </input>
+                  </div>
+                </div>
 
-                    />
+                {/* Product DESCRIPTION */}
+                <div className="manage-form-group">
+                  <label>Mô tả sản phẩm</label>
+                  <div className="manage-form-control">
+                    <textarea 
+                      name="description" 
+                      required 
+                      defaultValue={productInfo.description}
+                      ref={textareaRef}
+                      style={{ resize: "none" }}>
+                    </textarea>
+                  </div>
+                </div>
+
+                {/* Product STOCK */}
+                <div className="manage-form-group">
+                  <label>Tồn kho</label>
+                  <div className="manage-form-control">
+                    <input type="number" name="stock" step="1" min="1" defaultValue={productInfo.stock}></input>
+                  </div>
+                </div>
+
+                {/* Product BRAND */}
+                <div className="manage-form-group">
+                  <label>Thương hiệu</label>
+                  <div className="manage-form-control">
+                    <select name="brandId" required>
+
+                      <option value={productInfo.brand.brandId}>{productInfo.brand.name}</option>
+                      {allBrands
+                        .filter(brand => brand.brandId !== productInfo.brand.brandId)
+                        .map((brand, index) => (
+                          <option key={index} value={brand.brandId}>{brand.name}</option>
+                        ))}
+
+                    </select>
+                  </div>
+                </div>
+
+                {/* Product TYPE */}
+                <div className="manage-form-group">
+                  <label>Phân loại</label>
+
+                  <div className="manage-form-type-control">
+                    {categoryElements.map((e) => (
+                      <div key={e.id}>
+                        {e.content}
+                        {e.id === categoryElements.length && (
+                          <button 
+                            style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                            onClick={addNewCategoryElement}>
+                            Thêm
+                          </button>
+                        )}
+                        {e.id !== 1 && e.id === categoryElements.length && (
+                          <button 
+                            style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                            onClick={removeCategoryElement}>
+                            Hủy bỏ
+                            </button>
+                        )}
+
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+
+                {/* Product IMAGE */}
+                <div className="manage-form-group">
+                  <label>Hình minh họa sản phẩm</label>
+                  <div className="manage-form-control">
+                    {productInfo.productImages.map((image, index) => (
+                      <img
+                        src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
+                        alt={productInfo.name}
+                        key={index}
+                        style={{
+                          filter: selectedImageIds.includes(image.imageId) ? 'brightness(50%)' : 'none',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => handleImageClick(image.imageId)}
+
+                      />
+                    ))}
+                  </div>
+                  {imageElements.map((e) => (
+                    <div key={e.id}>
+                      {e.content}
+                      {e.id === 1 && (
+                        <button 
+                          style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                          onClick={addNewImageElement}>
+                          Thêm
+                        </button>
+                      )}
+                      {e.id === 1 && imageElements.length > 1 && (
+                        <button 
+                          style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                          onClick={removeImageElement}>
+                          Hủy bỏ
+                        </button>
+                      )}
+
+                    </div>
                   ))}
+
                 </div>
-                {imageElements.map((e) => (
-                  <div key={e.id}>
-                    {e.content}
-                    {e.id === 1 && (
-                      <button onClick={addNewImageElement}>Thêm</button>
-                    )}
-                    {e.id === 1 && imageElements.length > 1 && (
-                      <button onClick={removeImageElement}>Hủy bỏ</button>
-                    )}
-
-                  </div>
-                ))}
-
-
               </div>
 
-
+              {/* Product BUTTON */}
               <div className="manage-form-btn">
                 <button className="save-manage-btn save-manage-link" type="submit">
                   Cập nhật sản phẩm

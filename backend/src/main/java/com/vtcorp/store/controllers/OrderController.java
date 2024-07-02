@@ -27,13 +27,11 @@ public class OrderController {
 
     private final OrderService orderService;
     private final GHNService ghnService;
-    private final PaymentService paymentService;
 
     @Autowired
     public OrderController(OrderService orderService, GHNService ghnService, PaymentService paymentService) {
         this.orderService = orderService;
         this.ghnService = ghnService;
-        this.paymentService = paymentService;
     }
 
     @Operation(summary = "Get all orders")

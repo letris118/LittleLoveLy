@@ -12,7 +12,7 @@ import {
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
-import { Button } from "react-bootstrap";
+
 
 export default function ManageProduct() {
   const [productList, setProductList] = useState([]);
@@ -21,7 +21,10 @@ export default function ManageProduct() {
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSortBy, setActiveSortBy] = useState(null);
-  const [activeSortOrder, setActiveSortOrder] = useState("asc");
+
+  const [activeSortOrder, setActiveSortOrder] = useState('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(20);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -39,9 +42,14 @@ export default function ManageProduct() {
       try {
         let response = await productsAll();
         if (response) {
-          let sortedProducts = response.slice(0, 110);
-          setProductList(sortedProducts);
-          setFilteredProducts(sortedProducts); // Initialize filtered list with all products
+          // Filter out products with any null attributes
+          const validProducts = response.filter(product =>
+            product.name && product.stock !== null && product.sellingPrice !== null &&
+            product.productImages && product.productImages.length > 0 &&
+            product.brand && product.brand.logo
+          );
+          setProductList(validProducts);
+          setFilteredProducts(validProducts); // Initialize filtered list with all products
         } else {
           setProductList([]);
           setFilteredProducts([]);
@@ -130,6 +138,19 @@ export default function ManageProduct() {
       product.name.toLowerCase().includes(query)
     );
     setFilteredProducts(filtered);
+    setCurrentPage(1); // Reset to the first page when search is performed
+  };
+
+  // Calculate current products to display based on current page
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  // Determine the total number of pages
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  const handleClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -208,16 +229,17 @@ export default function ManageProduct() {
                     <span>{activeSortOrder === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
-                <th className="update-head" style={{ width: "9%" }}>
-                  Chỉnh sửa
-                </th>
+
+                <th className="update-head" style={{ width: '9%' }}>Chỉnh sửa</th>
+                <th className="lastModified-head" style={{ width: '9%' }}>Lần cuối chỉnh sửa</th>
+
               </tr>
             </thead>
 
             <tbody>
-              {filteredProducts.map((product, index) => (
+              {currentProducts.map((product, index) => (
                 <tr key={product.productId}>
-                  <td className="index-body">{index + 1}</td>
+                  <td className="index-body">{indexOfFirstProduct + index + 1}</td>
                   <td className="name-body">{product.name}</td>
                   <td className="img-body">
                     {product.productImages.slice(0, 1).map((image) => (
@@ -258,10 +280,27 @@ export default function ManageProduct() {
                       Chi tiết
                     </Link>
                   </td>
+                  <td className="lastModified-body">{product.lastModifiedDate}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+
+
+          {/* Pagination */}
+          <div className="manage-pagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button 
+                key={i + 1}
+                onClick={() => handleClick(i + 1)}
+                className={currentPage === i + 1 ? 'active' : ''}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+
+
         </div>
       </div>
     </div>

@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -61,6 +62,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         user.setRole("ROLE_CUSTOMER");
         user.setPoint(0);
+        user.setRegisteredDate(new Date());
         user = userRepository.save(user);
         emailSenderService.sendEmail(user.getMail(), "Welcome to our store", "Welcome to our store, " + user.getName());
         return "User registered successfully";
@@ -72,6 +74,7 @@ public class UserService {
         }
         User user = userMapper.toEntity(userRequestDTO);
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        user.setRegisteredDate(new Date());
         return userMapper.toResponseDTO(userRepository.save(user));
     }
 
