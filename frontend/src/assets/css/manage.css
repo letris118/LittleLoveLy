@@ -195,11 +195,7 @@
 }
 
 .manage-form-group button{
-    border: 1px solid;
     width: 70px;
-    margin-left: 15px;
-    border-radius: 10px;
-    border: 1px solid rgb(67, 65, 65);
 }
 
 .manage-form-group,

@@ -108,7 +108,8 @@ export default function AddVoucher() {
                             <div className="manage-form-group">
                                 <label>Phân loại</label>
                                 <div className="manage-form-type-voucher-control">
-                                    <button
+                                    <button 
+                                        style={{marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
                                         type="button"
                                         className={selectedType === 'FLAT' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('FLAT')}
@@ -116,6 +117,7 @@ export default function AddVoucher() {
                                         FLAT
                                     </button>
                                     <button
+                                        style={{marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
                                         type="button"
                                         className={selectedType === 'FREE_SHIPPING' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('FREE_SHIPPING')}
@@ -123,6 +125,7 @@ export default function AddVoucher() {
                                         FREE_SHIPPING
                                     </button>
                                     <button
+                                        style={{marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
                                         type="button"
                                         className={selectedType === 'PERCENTAGE' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('PERCENTAGE')}
@@ -130,6 +133,7 @@ export default function AddVoucher() {
                                         PERCENTAGE
                                     </button>
                                     <button
+                                        style={{marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
                                         type="button"
                                         className={selectedType === 'DISCOUNT_SHIPPING' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('DISCOUNT_SHIPPING')}

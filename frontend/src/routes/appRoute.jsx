@@ -39,43 +39,47 @@ import Gift from "../pages/Gift";
 export default function AppRoute() {
   return (
     <Routes>
-      <Route path={routes.homePage} element={<HomePage />} />
       <Route path={routes.login} element={<Login />} />
       <Route path={routes.register} element={<Register />} />
       <Route path={routes.forgotPassword} element={<ForgotPassword />} />
       <Route path={routes.resetPassword} element={<ResetPassword />} />
+
+      <Route path={routes.homePage} element={<HomePage />} />
+      <Route path={routes.staffHomePage} element={<StaffHomePage />} />
+
+      
       <Route path={routes.brands} element={<BrandList />} />
       <Route path={`${routes.brands}/:name`} element={<BrandDetail />} />
-      <Route path={routes.manageProduct} element={<ManageProduct />} />
-      <Route path={routes.manageOrder} element={<ManageOrder />} />
-      <Route path={routes.manageArticle} element={<ManageArticle />} />
-      <Route path={routes.manageVoucher} element={<ManageVoucher />} />
       <Route path={routes.products} element={<ProductList />} />
       <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
-      <Route path={routes.cart} element={<Cart />} />
-      <Route path={routes.staffHomePage} element={<StaffHomePage />} />
-      <Route path={routes.staffChat} element={<StaffChat />} />
-      <Route path={routes.manageGift} element={<ManageGift />} />
-      <Route path={routes.staffBrandList} element={<StaffBrandList />} />
-      <Route
-        path={`${routes.updateProduct}/:name`}
-        element={<UpdateProduct />}
-      />
-      <Route path={routes.addProduct} element={<AddProduct />} />
       <Route path={routes.checkout} element={<Checkout />} />
       <Route path={routes.articles} element={<ArticleList />} />
       <Route path={`${routes.articles}/:title`} element={<ArticleDetail />} />
-      <Route path={routes.statistics} element={<Statistics />} />
-      <Route path={routes.manageMember} element={<ManageMember />} />
-      <Route path={routes.manageStaff} element={<ManageStaff />} />
-
-      <Route path={routes.addGift} element={<AddGift />} />
-      <Route path={`${routes.updateGift}/:name`} element={<UpdateGift />} />
-      <Route path={routes.addVoucher} element={<AddVoucher />} />
-
+      <Route path={routes.cart} element={<Cart />} />
       <Route path={routes.searchProduct} element={<SearchProduct />} />
       <Route path={routes.gift} element={<Gift />} />
 
+      <Route path={routes.staffBrandList} element={<StaffBrandList />} />
+      <Route path={routes.staffChat} element={<StaffChat />} />
+
+      <Route path={routes.manageProduct} element={<ManageProduct />} />
+      <Route path={`${routes.updateProduct}/:name`}element={<UpdateProduct />}/>
+      <Route path={routes.addProduct} element={<AddProduct />} />
+
+      <Route path={routes.manageOrder} element={<ManageOrder />} />
+
+      <Route path={routes.manageArticle} element={<ManageArticle />} />
+
+      <Route path={routes.manageVoucher} element={<ManageVoucher />} />
+      <Route path={routes.addVoucher} element={<AddVoucher />} />
+
+      <Route path={routes.manageGift} element={<ManageGift />} />
+      <Route path={routes.addGift} element={<AddGift />} />
+      <Route path={`${routes.updateGift}/:name`} element={<UpdateGift />} />
+
+      <Route path={routes.statistics} element={<Statistics />} />
+      <Route path={routes.manageMember} element={<ManageMember />} />
+      <Route path={routes.manageStaff} element={<ManageStaff />} />
     </Routes>
   );
 }

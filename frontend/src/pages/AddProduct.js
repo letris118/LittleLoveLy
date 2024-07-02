@@ -208,10 +208,18 @@ export default function AddProduct() {
                       <div key={e.id}>
                         {e.content}
                         {e.id === categoryElements.length && (
-                          <button onClick={addNewCategoryElement}>Thêm</button>
+                          <button 
+                            style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                            onClick={addNewCategoryElement}>
+                            Thêm
+                          </button>
                         )}
                         {e.id !== 1 && e.id === categoryElements.length && (
-                          <button onClick={removeCategoryElement}>Hủy bỏ</button>
+                          <button 
+                            style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                            onClick={removeCategoryElement}>
+                            Hủy bỏ
+                          </button>
                         )}
 
                       </div>
@@ -227,10 +235,18 @@ export default function AddProduct() {
                       <div key={e.id}>
                         {e.content}
                         {e.id === 1 && (
-                          <button onClick={addNewImageElement}>Thêm</button>
+                          <button 
+                            style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                            onClick={addNewImageElement}>
+                            Thêm
+                          </button>
                         )}
                         {e.id === 1 && imageElements.length > 1 && (
-                          <button onClick={removeImageElement}>Hủy bỏ</button>
+                          <button 
+                            style={{marginLeft: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                            onClick={removeImageElement}>
+                            Hủy bỏ
+                          </button>
                         )}
 
                       </div>
