@@ -9,7 +9,7 @@ import { routes } from "../routes";
 import Rating from "@mui/material/Rating";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Slider from "react-slick";
 import instance from "../services/auth/customize-axios";
@@ -227,15 +227,21 @@ export default function ProductDetailPresentation() {
 
   return (
     <>
-      {(window.location.pathname.startsWith(`${routes.products}/`)) && (
+      {window.location.pathname.startsWith(`${routes.products}/`) && (
         <div className="product-detail-container">
           <div className="product-detail-top">
             <div className="product-detail-left">
               {productInfo?.productImages?.length > 1 ? (
                 <>
-                  <Slider {...settingsImgTop} ref={(slider1) => setNav1(slider1)}>
+                  <Slider
+                    {...settingsImgTop}
+                    ref={(slider1) => setNav1(slider1)}
+                  >
                     {productInfo.productImages.map((proImg) => (
-                      <div className="product-detail-top-img" key={proImg.imageId}>
+                      <div
+                        className="product-detail-top-img"
+                        key={proImg.imageId}
+                      >
                         <img
                           src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
                           alt=""
@@ -247,11 +253,13 @@ export default function ProductDetailPresentation() {
                   <Slider
                     {...settingsImgBottom}
                     ref={(slider2) => setNav2(slider2)}
-                    style={{ margin: "10px" }}>
+                    style={{ margin: "10px" }}
+                  >
                     {productInfo.productImages.map((proImg) => (
                       <div
                         className="product-detail-bottom-img"
-                        key={proImg.imageId}>
+                        key={proImg.imageId}
+                      >
                         <img
                           onClick={() => setSelectedImage(proImg.imageId)}
                           src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
@@ -274,7 +282,8 @@ export default function ProductDetailPresentation() {
                   <>
                     <div
                       className="product-detail-top-img"
-                      key={productInfo.productImages[0].imageId}>
+                      key={productInfo.productImages[0].imageId}
+                    >
                       <img
                         src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
                         alt=""
@@ -283,7 +292,8 @@ export default function ProductDetailPresentation() {
                     </div>
                     <div
                       className="product-detail-bottom-img"
-                      style={{ margin: "10px", textAlign: "center" }}>
+                      style={{ margin: "10px", textAlign: "center" }}
+                    >
                       <img
                         src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
                         alt=""
@@ -306,7 +316,8 @@ export default function ProductDetailPresentation() {
                   {productInfo?.brand ? (
                     <Link
                       to={`${routes.brands}/${productInfo.brand.name}`}
-                      style={{ textDecoration: "none" }}>
+                      style={{ textDecoration: "none" }}
+                    >
                       {productInfo.brand.name}
                     </Link>
                   ) : (
@@ -322,7 +333,8 @@ export default function ProductDetailPresentation() {
                         margin: "0 5px",
                         textDecoration: "underline",
                         fontWeight: "bold",
-                      }}>
+                      }}
+                    >
                       {productInfo?.averageRating}
                     </div>
                     <Rating
@@ -332,10 +344,16 @@ export default function ProductDetailPresentation() {
                       readOnly
                     />
                   </div>
-                  <div className="product-detail-amount-rate">Lượt đánh giá</div>
+                  <div className="product-detail-amount-rate">
+                    Lượt đánh giá
+                  </div>
                   <div className="product-detail-amount-selling">
                     <span
-                      style={{ fontWeight: "bold", textDecoration: "underline" }}>
+                      style={{
+                        fontWeight: "bold",
+                        textDecoration: "underline",
+                      }}
+                    >
                       {productInfo?.noSold}
                     </span>
                     &nbsp;đã bán
@@ -359,7 +377,8 @@ export default function ProductDetailPresentation() {
                           alignItems: "center",
                           marginRight: "10px",
                           fontWeight: "lighter",
-                        }}>
+                        }}
+                      >
                         {formatPrice(productInfo?.listedPrice) + "đ"}
                       </div>
                       <div style={{ color: "#FF469E", fontSize: "30px" }}>
@@ -388,7 +407,8 @@ export default function ProductDetailPresentation() {
                     />
                     <button
                       onClick={handleIncrease}
-                      style={{ paddingTop: "2px", paddingLeft: "1px" }}>
+                      style={{ paddingTop: "2px", paddingLeft: "1px" }}
+                    >
                       +
                     </button>
                   </Box>
@@ -405,7 +425,6 @@ export default function ProductDetailPresentation() {
             </div>
           </div>
 
-          <ToastContainer />
           <div className="product-detail-bottom">
             <div className="product-detail-description">
               <h5>Chi Tiết Sản Phẩm</h5>
@@ -421,7 +440,8 @@ export default function ProductDetailPresentation() {
                       fontWeight: "bold",
                       fontFamily: "MuseoModerno",
                       fontSize: "20px",
-                    }}>
+                    }}
+                  >
                     <span style={{ color: "#FF469E", fontSize: "30px" }}>
                       {productInfo?.averageRating.toFixed(1)}
                     </span>
@@ -476,15 +496,20 @@ export default function ProductDetailPresentation() {
                       height: "100%",
                       display: "flex",
                       justifyContent: "center",
-                    }}>
-                    <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+                    }}
+                  >
+                    <i
+                      className="fa-solid fa-user"
+                      style={{ fontSize: "30px" }}
+                    ></i>
                   </span>
                   <div>
                     <div
                       style={{
                         fontWeight: "bold",
                         fontSize: "15px",
-                      }}>
+                      }}
+                    >
                       Trung Hiếu
                     </div>
                     <div>
@@ -500,15 +525,20 @@ export default function ProductDetailPresentation() {
                       height: "100%",
                       display: "flex",
                       justifyContent: "center",
-                    }}>
-                    <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+                    }}
+                  >
+                    <i
+                      className="fa-solid fa-user"
+                      style={{ fontSize: "30px" }}
+                    ></i>
                   </span>
                   <div>
                     <div
                       style={{
                         fontWeight: "bold",
                         fontSize: "15px",
-                      }}>
+                      }}
+                    >
                       Trung Hiếu
                     </div>
                     <div>
@@ -524,15 +554,20 @@ export default function ProductDetailPresentation() {
                       height: "100%",
                       display: "flex",
                       justifyContent: "center",
-                    }}>
-                    <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+                    }}
+                  >
+                    <i
+                      className="fa-solid fa-user"
+                      style={{ fontSize: "30px" }}
+                    ></i>
                   </span>
                   <div>
                     <div
                       style={{
                         fontWeight: "bold",
                         fontSize: "15px",
-                      }}>
+                      }}
+                    >
                       Trung Hiếu
                     </div>
                     <div>
@@ -548,15 +583,20 @@ export default function ProductDetailPresentation() {
                       height: "100%",
                       display: "flex",
                       justifyContent: "center",
-                    }}>
-                    <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+                    }}
+                  >
+                    <i
+                      className="fa-solid fa-user"
+                      style={{ fontSize: "30px" }}
+                    ></i>
                   </span>
                   <div>
                     <div
                       style={{
                         fontWeight: "bold",
                         fontSize: "15px",
-                      }}>
+                      }}
+                    >
                       Trung Hiếu
                     </div>
                     <div>
@@ -572,15 +612,20 @@ export default function ProductDetailPresentation() {
                       height: "100%",
                       display: "flex",
                       justifyContent: "center",
-                    }}>
-                    <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+                    }}
+                  >
+                    <i
+                      className="fa-solid fa-user"
+                      style={{ fontSize: "30px" }}
+                    ></i>
                   </span>
                   <div>
                     <div
                       style={{
                         fontWeight: "bold",
                         fontSize: "15px",
-                      }}>
+                      }}
+                    >
                       Trung Hiếu
                     </div>
                     <div>
@@ -594,15 +639,21 @@ export default function ProductDetailPresentation() {
         </div>
       )}
 
-      {(window.location.pathname.startsWith(`${routes.staffProductList}/`)) && (
+      {window.location.pathname.startsWith(`${routes.staffProductList}/`) && (
         <div className="product-detail-container">
           <div className="product-detail-top">
             <div className="product-detail-left">
               {productInfo?.productImages?.length > 1 ? (
                 <>
-                  <Slider {...settingsImgTop} ref={(slider1) => setNav1(slider1)}>
+                  <Slider
+                    {...settingsImgTop}
+                    ref={(slider1) => setNav1(slider1)}
+                  >
                     {productInfo.productImages.map((proImg) => (
-                      <div className="product-detail-top-img" key={proImg.imageId}>
+                      <div
+                        className="product-detail-top-img"
+                        key={proImg.imageId}
+                      >
                         <img
                           src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
                           alt=""
@@ -614,11 +665,13 @@ export default function ProductDetailPresentation() {
                   <Slider
                     {...settingsImgBottom}
                     ref={(slider2) => setNav2(slider2)}
-                    style={{ margin: "10px" }}>
+                    style={{ margin: "10px" }}
+                  >
                     {productInfo.productImages.map((proImg) => (
                       <div
                         className="product-detail-bottom-img"
-                        key={proImg.imageId}>
+                        key={proImg.imageId}
+                      >
                         <img
                           onClick={() => setSelectedImage(proImg.imageId)}
                           src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
@@ -641,7 +694,8 @@ export default function ProductDetailPresentation() {
                   <>
                     <div
                       className="product-detail-top-img"
-                      key={productInfo.productImages[0].imageId}>
+                      key={productInfo.productImages[0].imageId}
+                    >
                       <img
                         src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
                         alt=""
@@ -650,7 +704,8 @@ export default function ProductDetailPresentation() {
                     </div>
                     <div
                       className="product-detail-bottom-img"
-                      style={{ margin: "10px", textAlign: "center" }}>
+                      style={{ margin: "10px", textAlign: "center" }}
+                    >
                       <img
                         src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
                         alt=""
@@ -673,7 +728,8 @@ export default function ProductDetailPresentation() {
                   {productInfo?.brand ? (
                     <Link
                       to={`${routes.staffBrandList}/${productInfo.brand.name}`}
-                      style={{ textDecoration: "none" }}>
+                      style={{ textDecoration: "none" }}
+                    >
                       {productInfo.brand.name}
                     </Link>
                   ) : (
@@ -689,7 +745,8 @@ export default function ProductDetailPresentation() {
                         margin: "0 5px",
                         textDecoration: "underline",
                         fontWeight: "bold",
-                      }}>
+                      }}
+                    >
                       {productInfo?.averageRating}
                     </div>
                     <Rating
@@ -699,10 +756,16 @@ export default function ProductDetailPresentation() {
                       readOnly
                     />
                   </div>
-                  <div className="product-detail-amount-rate">Lượt đánh giá</div>
+                  <div className="product-detail-amount-rate">
+                    Lượt đánh giá
+                  </div>
                   <div className="product-detail-amount-selling">
                     <span
-                      style={{ fontWeight: "bold", textDecoration: "underline" }}>
+                      style={{
+                        fontWeight: "bold",
+                        textDecoration: "underline",
+                      }}
+                    >
                       {productInfo?.noSold}
                     </span>
                     &nbsp;đã bán
@@ -726,7 +789,8 @@ export default function ProductDetailPresentation() {
                           alignItems: "center",
                           marginRight: "10px",
                           fontWeight: "lighter",
-                        }}>
+                        }}
+                      >
                         {formatPrice(productInfo?.listedPrice) + "đ"}
                       </div>
                       <div style={{ color: "#FF469E", fontSize: "30px" }}>
@@ -755,7 +819,8 @@ export default function ProductDetailPresentation() {
                     />
                     <button
                       onClick={handleIncrease}
-                      style={{ paddingTop: "2px", paddingLeft: "1px" }}>
+                      style={{ paddingTop: "2px", paddingLeft: "1px" }}
+                    >
                       +
                     </button>
                   </Box>
@@ -772,18 +837,14 @@ export default function ProductDetailPresentation() {
             </div>
           </div>
 
-          <ToastContainer />
           <div className="product-detail-bottom">
             <div className="product-detail-description">
               <h5>Chi Tiết Sản Phẩm</h5>
               {productInfo?.description}
             </div>
-
-          
           </div>
         </div>
       )}
-
     </>
   );
 }

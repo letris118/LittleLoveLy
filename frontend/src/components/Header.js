@@ -147,7 +147,7 @@ export default function Header({ handleLogoutSuccess }) {
                 <Dropdown>
                   <Link to={routes.login}>
                     <Dropdown.Toggle id="dropdown-basic">
-                      <i class="fa-solid fa-user"></i>
+                      <i className="fa-solid fa-user"></i>
                     </Dropdown.Toggle>
                   </Link>
                 </Dropdown>
