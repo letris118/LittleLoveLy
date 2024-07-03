@@ -16,5 +16,5 @@ public interface VoucherMapper {
     @Mapping(target = "voucherId", ignore = true)
     void updateEntity(VoucherRequestDTO voucherResponseDTO, @MappingTarget Voucher voucher);
 
-    VoucherResponseDTO toDTO(Voucher voucher);
+    VoucherResponseDTO toResponseDTO(Voucher voucher);
 }

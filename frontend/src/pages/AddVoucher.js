@@ -35,8 +35,8 @@ export default function AddVoucher() {
 
         const voucherRequestDTO = new FormData(e.target);
         voucherRequestDTO.append('type', selectedType);
-        voucherRequestDTO.append('startDate', startDate.toLocaleDateString('en-GB'));
-        voucherRequestDTO.append('endDate', endDate.toLocaleDateString('en-GB'));
+        voucherRequestDTO.append('startDate', formatDate(startDate.toLocaleDateString('en-GB')))
+        voucherRequestDTO.append('endDate', formatDate(endDate.toLocaleDateString('en-GB')))
 
         try {
             await addVoucher(voucherRequestDTO);
@@ -45,6 +45,25 @@ export default function AddVoucher() {
         } catch (error) {
             toast.error(`Error adding voucher: ${error.message}`);
         }
+    };
+    
+    const formatDate = (dateString) => {
+        // Split the date string into day, month, and year
+        const [day, month, year] = dateString.split('/');
+
+        // Array of month abbreviations
+        const monthAbbreviations = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ];
+
+        // Map the month to its abbreviation
+        const monthAbbreviation = monthAbbreviations[parseInt(month, 10) - 1];
+
+        // Format the date in 'dd MMM yyyy' format
+        const formattedDate = `${day} ${monthAbbreviation} ${year}`;
+
+        return formattedDate;
     };
 
     const handleReload = (e) => {
@@ -108,8 +127,8 @@ export default function AddVoucher() {
                             <div className="manage-form-group">
                                 <label>Phân loại</label>
                                 <div className="manage-form-type-voucher-control">
-                                    <button 
-                                        style={{marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                                    <button
+                                        style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
                                         type="button"
                                         className={selectedType === 'FLAT' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('FLAT')}
@@ -117,7 +136,7 @@ export default function AddVoucher() {
                                         FLAT
                                     </button>
                                     <button
-                                        style={{marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                                        style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
                                         type="button"
                                         className={selectedType === 'FREE_SHIPPING' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('FREE_SHIPPING')}
@@ -125,7 +144,7 @@ export default function AddVoucher() {
                                         FREE_SHIPPING
                                     </button>
                                     <button
-                                        style={{marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                                        style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
                                         type="button"
                                         className={selectedType === 'PERCENTAGE' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('PERCENTAGE')}
@@ -133,7 +152,7 @@ export default function AddVoucher() {
                                         PERCENTAGE
                                     </button>
                                     <button
-                                        style={{marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)'}}
+                                        style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
                                         type="button"
                                         className={selectedType === 'DISCOUNT_SHIPPING' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('DISCOUNT_SHIPPING')}
