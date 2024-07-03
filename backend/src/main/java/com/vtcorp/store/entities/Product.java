@@ -64,7 +64,7 @@ public class Product {
     private List<ProductReview> productReviews;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class})
     private List<ProductImage> productImages;
 
 }
