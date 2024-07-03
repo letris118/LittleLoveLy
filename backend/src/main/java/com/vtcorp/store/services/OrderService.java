@@ -48,6 +48,12 @@ public class OrderService {
         return orderMapper.toOrderResponseDTOs(orderRepository.findAllExceptCart());
     }
 
+    public List<OrderResponseDTO> getOrdersByUsername(String username) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return orderMapper.toOrderResponseDTOs(orderRepository.findByUserAndStatusNotCart(user));
+    }
+
     public OrderResponseDTO getOrderById(String id) {
         return mapOrderToResponse(orderRepository.findByIdAndStatusNotCart(id));
     }
@@ -418,4 +424,6 @@ public class OrderService {
             throw new IllegalArgumentException("Cannot confirm order from status: " + order.getStatus());
         }
     }
+
+
 }
