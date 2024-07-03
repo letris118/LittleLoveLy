@@ -5,20 +5,19 @@ import Footer from "../components/Footer";
 import "../assets/css/searchOrder.css";
 import {
   formatPrice,
-  getProductById,
   getOrderById,
   getOrdersByUsername,
 } from "../services/auth/UsersService";
 import { Pagination } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import instance from "../services/auth/customize-axios";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
 
 export default function Order() {
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersList, setOrdersList] = useState([]);
-  const [productImage, setProductImage] = useState([]);
-  //const [searchClick, setSearchClick] = useState("");
-  const [searchInput, setSearchInput] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const itemsPerPage = 10;
 
   const CustomPagination = styled(Pagination)(({ theme }) => ({
@@ -35,18 +34,8 @@ export default function Order() {
     [ordersList.length]
   );
 
-  const currentItems = useMemo(
-    () =>
-      ordersList.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      ),
-    [currentPage, ordersList]
-  );
-
   useEffect(() => {
-    const fetchOrders = async () => {
-      const username = localStorage.getItem("username");
+    const fetchOrders = async (username) => {
       try {
         const response = await getOrdersByUsername(username);
         if (response) {
@@ -55,54 +44,41 @@ export default function Order() {
           setOrdersList([]);
         }
       } catch (error) {
+        toast.error("Không thể lấy thông tin đơn hàng");
         console.error("Error fetching orders:", error);
         setOrdersList([]);
       }
     };
 
-    fetchOrders();
+    const username = localStorage.getItem("username");
+    if (username) {
+      fetchOrders(username);
+    }
   }, []);
 
-  const handleSearchInputChange = (event) => {
-    setSearchInput(event.target.value);
-  };
-
-  const handleSearchButtonClick = () => {
-    //setSearchClick(searchInput);
-  };
-
-  // const filteredOrders = ordersList.filter((order) =>
-  //   order.orderId.toString().equals(searchClick)
-  // );
-  useEffect(() => {
-    const fetchProductImage = async () => {
+  const formik = useFormik({
+    initialValues: {
+      search: "",
+    },
+    enableReinitialize: true,
+    onSubmit: async () => {
+      setIsSubmitting(true);
       try {
-        const image = {};
-        for (const order of ordersList) {
-          for (const detail of order.orderDetails) {
-            const productDetail = await getProductById(
-              detail.product.productId
-            );
-            console.log(productDetail);
-            image[detail.product.productId] =
-              productDetail.productImages[0].imagePath;
-          }
+        const response = await getOrderById(formik.values.search);
+        if (response) {
+          console.log(response);
+          setOrdersList([response]);
+        } else {
+          setOrdersList([]);
         }
-        setProductImage(image);
       } catch (error) {
-        console.error("Error fetching product image:", error);
+        toast.error("Mã đơn hàng không hợp lệ");
+        console.error("Error searching order:", error);
+      } finally {
+        setIsSubmitting(false);
       }
-    };
-
-    if (ordersList.length > 0) {
-      fetchProductImage();
-    }
-  }, [ordersList]);
-
-  useEffect(() => {
-    console.log(searchInput);
-    console.log(localStorage.getItem("username"));
-  }, [searchInput]);
+    },
+  });
 
   return (
     <div>
@@ -126,17 +102,18 @@ export default function Order() {
             </div>
             <div className="content-order-row" style={{ minHeight: "100vh" }}>
               <div className="search-order">
-                <form onSubmit={(e) => e.preventDefault()}>
+                <form onSubmit={formik.handleSubmit}>
                   <input
                     type="text"
                     placeholder="Nhập mã đơn hàng"
-                    value={searchInput}
-                    onChange={handleSearchInputChange}
+                    name="search"
+                    value={formik.values.search}
+                    onChange={formik.handleChange}
                   />
                   <button
-                    type="button"
+                    type="submit"
+                    disabled={isSubmitting}
                     className="search-btn"
-                    onClick={handleSearchButtonClick}
                   >
                     Tìm
                   </button>
@@ -154,11 +131,7 @@ export default function Order() {
                           >
                             <div className="order-product-img">
                               <img
-                                src={`${
-                                  instance.defaults.baseURL
-                                }/images/products/${
-                                  productImage[orderDetail.product.productId]
-                                }`}
+                                src={`${instance.defaults.baseURL}/images/products/${orderDetail.product.productImages[0].imagePath}`}
                                 alt={orderDetail.product.name}
                               />
                             </div>
