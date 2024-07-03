@@ -187,8 +187,6 @@ export default function UpdateProduct() {
         }
       })
 
-      console.log(productRequestDTO.getAll('newImageFiles'))
-
       if (productRequestDTO.getAll('imageIds').length === 0 && productRequestDTO.getAll('newImageFiles').length === 0) {
         toast.error('Hãy chọn hình ảnh cho sản phẩm!')
         return
