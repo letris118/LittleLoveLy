@@ -18,7 +18,7 @@ public class ProductImage {
     @JsonView(Views.Cart.class)
     private long imageId;
 
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class})
     private String imagePath;
 
     @ManyToOne
