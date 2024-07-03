@@ -194,6 +194,59 @@ export default function Cart() {
                       </TableCell>
                     </TableRow>
                   ))}
+                  {/* hiện quà */}
+                  {giftItems.map((item) => (
+                    <TableRow
+                      key={item.giftId}
+                      sx={{
+                        borderCollapse: "collapse",
+                        height: "100px",
+                        padding: "20px",
+                      }}>
+                      <TableCell sx={{ width: "15%" }}>
+                        <img
+                          src={`${instance.defaults.baseURL}/images/gifts/${item.imagePath}`}
+                          alt={item.name}
+                          style={{ width: "100%" }}
+                        />
+                      </TableCell>
+                      <TableCell sx={{ width: "50%" }}>
+                        <span
+                          style={{ color: "black", textDecoration: "none" }}>
+                          {item.name}
+                        </span>
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          width: "18%",
+                        }}>
+                        <div
+                          style={{
+                            textAlign: "center",
+                            fontWeight: "bold",
+                          }}>
+                          {""}
+                        </div>
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          width: "15%",
+                          textAlign: "center",
+                          paddingRight: 4,
+                        }}>
+                        <span>1</span>
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          width: "17%",
+                          textAlign: "right",
+                          fontWeight: "bold",
+                        }}>
+                        0đ
+                      </TableCell>
+                      <TableCell sx={{ width: "5%" }}>{""}</TableCell>
+                    </TableRow>
+                  ))}
                 </Table>
               </div>
             </div>

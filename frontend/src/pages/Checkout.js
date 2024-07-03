@@ -13,6 +13,14 @@ import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import { routes } from "../routes";
 import * as Yup from "yup";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+import VoucherPresentation from "../components/VoucherPresentation";
 
 const checkoutSchema = Yup.object({
   cusName: Yup.string().required("Vui lòng nhập tên người nhận hàng"),
@@ -37,6 +45,7 @@ export default function Checkout() {
   const [userInfo, setUserInfo] = useState([]);
   const [evaluateResult, setEvaluateResult] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openVoucherDialog, setOpenVoucherDialog] = useState(false);
   useEffect(() => {
     const fetchUserInfo = async () => {
       const userId = localStorage.getItem("username");
@@ -155,7 +164,6 @@ export default function Checkout() {
     formik.values.voucherId,
   ]);
 
-  //** */
   const handleCityChange = (e) => {
     const selectedCityCode = e.target.value;
     formik.setFieldValue("cusCityCode", selectedCityCode);
@@ -171,6 +179,14 @@ export default function Checkout() {
     formik.setFieldValue("cusWardCode", "");
     formik.setFieldValue("cusStreet", "");
     setWards([]);
+  };
+
+  const handleVoucherClick = () => {
+    setOpenVoucherDialog(true);
+  };
+
+  const handleCloseVoucherDialog = () => {
+    setOpenVoucherDialog(false);
   };
 
   return (
@@ -428,26 +444,25 @@ export default function Checkout() {
                     </div>
                     <div className="content-checkout-product-list-right-btn">
                       {localStorage.getItem("token") ? (
-                        <Link>
-                          <button
-                            style={{
-                              width: "45%",
-                              height: "50px",
-                              color: "#ff469e",
-                              border: "3px solid #ff469e",
-                              backgroundColor: "rgb(255, 232, 243)",
-                              borderRadius: "10px",
-                              fontSize: "17px",
-                              fontWeight: "550",
-                              marginRight: "12px",
-                            }}>
-                            Voucher
-                          </button>
-                        </Link>
+                        <button
+                          type="button"
+                          onClick={handleVoucherClick}
+                          style={{
+                            width: "45%",
+                            height: "50px",
+                            color: "#ff469e",
+                            border: "3px solid #ff469e",
+                            backgroundColor: "rgb(255, 232, 243)",
+                            borderRadius: "10px",
+                            fontSize: "17px",
+                            fontWeight: "550",
+                            marginRight: "12px",
+                          }}>
+                          Voucher
+                        </button>
                       ) : (
                         ""
                       )}
-                      {/* <Link> */}
                       <button
                         type="submit"
                         disabled={isSubmitting}
@@ -464,7 +479,6 @@ export default function Checkout() {
                         }}>
                         Mua ngay
                       </button>
-                      {/* </Link> */}
                     </div>
                   </div>
                 </div>
@@ -474,6 +488,15 @@ export default function Checkout() {
         </div>
       </div>
       <Footer />
+      <Dialog open={openVoucherDialog} onClose={handleCloseVoucherDialog}>
+        <DialogTitle>Mã giảm giá</DialogTitle>
+        <DialogContent>
+          <VoucherPresentation />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseVoucherDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
