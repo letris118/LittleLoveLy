@@ -38,6 +38,8 @@ export default function SearchPresentation() {
                 return b.sellingPrice - a.sellingPrice;
               } else if (sortOrder === "bestSeller") {
                 return b.noSold - a.noSold;
+              } else if (sortOrder === "newest") {
+                return b.addedDate - a.addedDate;
               }
             });
           }
@@ -54,14 +56,14 @@ export default function SearchPresentation() {
     fetchProducts(searchTerm);
   }, [searchTerm, sortOrder]);
 
-  const CustomPagination = styled(Pagination)(({ theme }) => ({
+  const CustomPagination = styled(Pagination)({
     "& .MuiPaginationItem-root": {
       "&.Mui-selected": {
         backgroundColor: "#ff69b4",
         color: "white",
       },
     },
-  }));
+  });
 
   const totalPages = useMemo(
     () => Math.ceil(searchProducts.length / itemsPerPage),
@@ -84,148 +86,163 @@ export default function SearchPresentation() {
   };
 
   return (
-    <>
-      <div>
-        <span>
-          <p style={{ color: "#4b4a4a" }}>
-            <i class="fa-solid fa-circle-check" style={{ color: "green" }} />{" "}
-            &nbsp; Kết quả tìm kiếm với từ khóa <b>'{searchTerm}'</b>
-          </p>
-        </span>
-        <div className="filter-row">
-          <div>
-            <button
-              style={{
-                backgroundColor: activeButton === "bestSeller" ? "#ff69b4" : "",
-                color: activeButton === "bestSeller" ? "white" : "",
-              }}
-              onClick={() => handleSort("bestSeller", "bestSeller")}
-              disabled={currentItems.length === 0}>
-              Bán chạy
-            </button>
-          </div>
-          <div>
-            <button
-              // style={{
-              //   backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
-              //   color: activeButton === "asc" ? "white" : "",
-              // }}
-              // onClick={() => handleSort("asc", "asc")}
-              disabled={currentItems.length === 0}>
-              Hàng mới
-            </button>
-          </div>
-          <div>
-            <button
-              style={{
-                backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
-                color: activeButton === "asc" ? "white" : "",
-              }}
-              onClick={() => handleSort("asc", "asc")}
-              disabled={currentItems.length === 0}>
-              Giá Thấp - Cao
-            </button>
-          </div>
-          <div>
-            <button
-              style={{
-                backgroundColor: activeButton === "desc" ? "#ff69b4" : "",
-                color: activeButton === "desc" ? "white" : "",
-              }}
-              onClick={() => handleSort("desc", "desc")}
-              disabled={currentItems.length === 0}>
-              Giá Cao - Thấp
-            </button>
-          </div>
+    <div>
+      <span>
+        <p style={{ color: "#4b4a4a" }}>
+          <i className="fa-solid fa-circle-check" style={{ color: "green" }} />{" "}
+          &nbsp; Kết quả tìm kiếm với từ khóa <b>'{searchTerm}'</b>
+        </p>
+      </span>
+      <div className="filter-row">
+        <div>
+          <button
+            style={{
+              background:
+                activeButton === "bestSeller"
+                  ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
+                  : "",
+              color: activeButton === "bestSeller" ? "white" : "",
+            }}
+            onClick={() => handleSort("bestSeller", "bestSeller")}
+            disabled={currentItems.length === 0}>
+            Bán chạy
+          </button>
         </div>
-
-        <div className="search-product-container">
-          <ProductPresentation products={currentItems} />
+        <div>
+          <button
+            style={{
+              background:
+                activeButton === "newest"
+                  ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
+                  : "",
+              color: activeButton === "newest" ? "white" : "",
+            }}
+            onClick={() => handleSort("newest", "newest")}
+            disabled={currentItems.length === 0}>
+            Hàng mới
+          </button>
         </div>
-        <div className="pagination-container" style={{ textAlign: "center" }}>
-          <CustomPagination
-            count={totalPages}
-            page={currentPage}
-            onChange={(event, page) => setCurrentPage(page)}
-            color="primary"
-          />
+        <div>
+          <button
+            style={{
+              background:
+                activeButton === "asc"
+                  ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
+                  : "",
+              color: activeButton === "asc" ? "white" : "",
+            }}
+            onClick={() => handleSort("asc", "asc")}
+            disabled={currentItems.length === 0}>
+            Giá Thấp - Cao
+          </button>
+        </div>
+        <div>
+          <button
+            style={{
+              background:
+                activeButton === "desc"
+                  ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
+                  : "",
+              color: activeButton === "desc" ? "white" : "",
+            }}
+            onClick={() => handleSort("desc", "desc")}
+            disabled={currentItems.length === 0}>
+            Giá Cao - Thấp
+          </button>
         </div>
       </div>
-      {(window.location.pathname === routes.staffHomePage
-        || window.location.pathname === routes.staffProductSearch
-        || window.location.pathname === routes.staffBrandList
-        || window.location.pathname.startsWith(`${routes.staffBrandList}/`)
-        || window.location.pathname === routes.staffArticleList
-        || window.location.pathname.startsWith(`${routes.staffArticleList}/`)
-        || window.location.pathname === routes.staffProductList
-        || window.location.pathname.startsWith(`${routes.staffProductList}/`)) && (
-          <div>
-            <span>
-              <p style={{ color: "#4b4a4a" }}>
-                <i class="fa-solid fa-circle-check" style={{ color: "green" }} />{" "}
-                &nbsp; Kết quả tìm kiếm với từ khóa <b>'{searchTerm}'</b>
-              </p>
-            </span>
-            <div className="manage-filter-row">
-              <div>
-                <button
-                  style={{
-                    backgroundColor: activeButton === "bestSeller" ? "#ff69b4" : "",
-                    color: activeButton === "bestSeller" ? "white" : "",
-                  }}
-                  onClick={() => handleSort("bestSeller", "bestSeller")}
-                  disabled={currentItems.length === 0}>
-                  Bán chạy
-                </button>
-              </div>
-              <div>
-                <button
-                  // style={{
-                  //   backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
-                  //   color: activeButton === "asc" ? "white" : "",
-                  // }}
-                  // onClick={() => handleSort("asc", "asc")}
-                  disabled={currentItems.length === 0}>
-                  Hàng mới
-                </button>
-              </div>
-              <div>
-                <button
-                  style={{
-                    backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
-                    color: activeButton === "asc" ? "white" : "",
-                  }}
-                  onClick={() => handleSort("asc", "asc")}
-                  disabled={currentItems.length === 0}>
-                  Giá Thấp - Cao
-                </button>
-              </div>
-              <div>
-                <button
-                  style={{
-                    backgroundColor: activeButton === "desc" ? "#ff69b4" : "",
-                    color: activeButton === "desc" ? "white" : "",
-                  }}
-                  onClick={() => handleSort("desc", "desc")}
-                  disabled={currentItems.length === 0}>
-                  Giá Cao - Thấp
-                </button>
-              </div>
-            </div>
 
-            <div className="manage-search-product-container">
-              <ProductPresentation products={currentItems} />
+      <div className="search-product-container">
+        <ProductPresentation products={currentItems} />
+      </div>
+      <div className="pagination-container" style={{ textAlign: "center" }}>
+        <CustomPagination
+          count={totalPages}
+          page={currentPage}
+          onChange={(event, page) => setCurrentPage(page)}
+          color="primary"
+        />
+      </div>
+
+      {(window.location.pathname === routes.staffHomePage ||
+        window.location.pathname === routes.staffProductSearch ||
+        window.location.pathname === routes.staffBrandList ||
+        window.location.pathname.startsWith(`${routes.staffBrandList}/`) ||
+        window.location.pathname === routes.staffArticleList ||
+        window.location.pathname.startsWith(`${routes.staffArticleList}/`) ||
+        window.location.pathname === routes.staffProductList ||
+        window.location.pathname.startsWith(`${routes.staffProductList}/`)) && (
+        <div>
+          <span>
+            <p style={{ color: "#4b4a4a" }}>
+              <i
+                className="fa-solid fa-circle-check"
+                style={{ color: "green" }}
+              />{" "}
+              &nbsp; Kết quả tìm kiếm với từ khóa <b>'{searchTerm}'</b>
+            </p>
+          </span>
+          <div className="manage-filter-row">
+            <div>
+              <button
+                style={{
+                  backgroundColor:
+                    activeButton === "bestSeller" ? "#ff69b4" : "",
+                  color: activeButton === "bestSeller" ? "white" : "",
+                }}
+                onClick={() => handleSort("bestSeller", "bestSeller")}
+                disabled={currentItems.length === 0}>
+                Bán chạy
+              </button>
             </div>
-            <div className="pagination-container" style={{ textAlign: "center" }}>
-              <CustomPagination
-                count={totalPages}
-                page={currentPage}
-                onChange={(event, page) => setCurrentPage(page)}
-                color="primary"
-              />
+            <div>
+              <button
+                // style={{
+                //   backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
+                //   color: activeButton === "asc" ? "white" : "",
+                // }}
+                // onClick={() => handleSort("asc", "asc")}
+                disabled={currentItems.length === 0}>
+                Hàng mới
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
+                  color: activeButton === "asc" ? "white" : "",
+                }}
+                onClick={() => handleSort("asc", "asc")}
+                disabled={currentItems.length === 0}>
+                Giá Thấp - Cao
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  backgroundColor: activeButton === "desc" ? "#ff69b4" : "",
+                  color: activeButton === "desc" ? "white" : "",
+                }}
+                onClick={() => handleSort("desc", "desc")}
+                disabled={currentItems.length === 0}>
+                Giá Cao - Thấp
+              </button>
             </div>
           </div>
-        )}
-    </>
+
+          <div className="manage-search-product-container">
+            <ProductPresentation products={currentItems} />
+          </div>
+          <div className="pagination-container" style={{ textAlign: "center" }}>
+            <CustomPagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(event, page) => setCurrentPage(page)}
+              color="primary"
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

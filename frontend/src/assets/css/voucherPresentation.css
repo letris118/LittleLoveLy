@@ -1,0 +1,19 @@
+.voucher-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  background-color: #fdebf2;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  height: 100px;
+}
+
+.voucher-item-right {
+  margin: 0 5px 0 50px;
+}
+
+.voucher-container {
+  height: 450px;
+}

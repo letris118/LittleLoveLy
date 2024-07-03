@@ -16,11 +16,13 @@ import {
 } from "../services/auth/UsersService";
 import instance from "../services/auth/customize-axios";
 import { routes } from "../routes";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [giftItems, setGiftItems] = useState([]);
   const [hasCart, setHasCart] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cart = localStorage.getItem("cart");
@@ -68,8 +70,19 @@ export default function Cart() {
     });
   }, []);
 
+  const handleCheckout = () => {
+    if (cartItems.length === 0) {
+      toast.error("Mời bạn mua 1 sản phẩm để nhận thưởng !", {
+        autoClose: 2000,
+      });
+    } else {
+      navigate(routes.checkout);
+    }
+  };
+
   return (
     <div>
+      <ToastContainer />
       <Header />
       <div className="content">
         <Sidebar
@@ -300,9 +313,9 @@ export default function Cart() {
               </div>
               <div className="content-cart-col-right-button">
                 {hasCart ? (
-                  <Link to={routes.checkout}>
-                    <button>Tiếp tục</button>
-                  </Link>
+                  <button component={Link} onClick={handleCheckout}>
+                    Tiếp tục
+                  </button>
                 ) : (
                   <button disabled>Tiếp tục</button>
                 )}
