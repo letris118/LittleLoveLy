@@ -181,11 +181,12 @@ const activeProducts = () => {
   return instance.get("/api/products");
 };
 
-const handleLogout = (navigate) => (e) => {
+const handleLogout = (navigate, callback) => (e) => {
   e.preventDefault();
   localStorage.clear();
   navigate(routes.homePage);
   toast.success("Đăng xuất thành công");
+  if (callback) callback();
 };
 
 const formatPrice = (num) => {

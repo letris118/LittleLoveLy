@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
-import StaffBackToTop from './StaffBackToTop';
 
 export default function StaffSideBar() {
   return (
@@ -32,7 +31,6 @@ export default function StaffSideBar() {
                 Chăm sóc khách hàng
             </Link>
         </div>
-        <StaffBackToTop />
     </div>
     
    

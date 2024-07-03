@@ -107,12 +107,17 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  /* border: 1px solid black; */
 }
 
 .manage-brand-card-img img {
   width: 150px;
   height: 100%;
+}
+
+.slick-prev::before,
+.slick-next::before {
+  color: hotpink !important;
+  font-size: 30px !important;
 }
 
 .manage-slick-prev {

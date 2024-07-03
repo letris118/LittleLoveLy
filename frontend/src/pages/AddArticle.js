@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { routes } from "../routes"
 import ImageResize from "quill-image-resize-module-react";
-import { addArticle, productsAll } from "../services/auth/UsersService";
+import { addArticle } from "../services/auth/UsersService";
 import { ToastContainer, toast } from "react-toastify";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import { useNavigate } from "react-router-dom";
+import StaffBackToTop from "../components/StaffBackToTop"
 
 Quill.register("modules/imageResize", ImageResize);
 window.Quill = Quill;
@@ -14,8 +16,6 @@ window.Quill = Quill;
 export default function AddArticle() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [productIds, setProductIds] = useState([]);
-  const [productList, setProductList] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const quillRef = useRef(null);
   const navigate = useNavigate();
@@ -28,23 +28,7 @@ export default function AddArticle() {
       }
     };
 
-    const fetchProducts = async () => {
-      try {
-        let response = await productsAll();
-        if (response) {
-          setProductList(response);
-        } else {
-          setProductList([]);
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        toast.error("Không thể tải thông tin sản phẩm");
-        setProductList([]);
-      }
-    };
-
     checkAuthentication();
-    fetchProducts();
   }, [navigate]);
 
   const handleSubmit = async (e) => {
@@ -60,17 +44,10 @@ export default function AddArticle() {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("content", content);
-      productIds.forEach((productId) => {
-        formData.append("productIds[]", productId);
-      });
 
-      console.log("formData:", formData);
       const response = await addArticle(formData);
       if (response) {
-        toast.success("Thêm bài viết thành công");
-        setContent("");
-        setTitle("");
-        setProductIds([]);
+        navigate(routes.manageArticle, { state: { success: 'Thêm bài viết thành công!' } });
       } else {
         toast.error("Không thể thêm bài viết");
       }
@@ -130,60 +107,61 @@ export default function AddArticle() {
     setTitle(e.target.value);
   };
 
-  const handleProductChange = (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions).map((option) =>
-      parseInt(option.value, 10)
-    );
-    setProductIds(selectedOptions);
-  };
+  const handleReload = (e) => {
+    e.preventDefault();
+    window.location.reload()
+  }
 
   return (
     <div>
       <ToastContainer />
       <StaffHeader />
+
       <div className="manage-content">
         <StaffSideBar />
-        <div className="manage-content-detail">
+
+        <div className="add-update-content-detail">
           <form onSubmit={handleSubmit}>
-            <div>
-              <label>Tiêu đề:</label>
-              <input type="text" value={title} onChange={handleTitleChange} />
+            <div className="manage-form-input">
+              <div className="manage-form-group">
+                <label>Tiêu đề:</label>
+                <div className="manage-form-control">
+                  <input type="text" value={title} onChange={handleTitleChange} />
+                </div>
+              </div>
+
+              <div className="manage-form-group">
+                <label>Nội dung:</label>
+                <div className="manage-form-control">
+                  <ReactQuill
+                    style={{backgroundColor: 'white'}}
+                    ref={quillRef}
+                    value={content}
+                    modules={modules}
+                    formats={formats}
+                    onChange={setContent}
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <label>Sản phẩm liên quan:</label>
-              <select multiple value={productIds} onChange={handleProductChange}>
-                <option value="" disabled>
-                  Chọn sản phẩm
-                </option>
-                {productList.map((product) => (
-                  <option key={product.productId} value={product.productId}>
-                    {product.name}
-                  </option>
-                ))}
-              </select>
-              <ul>
-                {productIds.map((id) => {
-                  const product = productList.find((product) => product.productId === id);
-                  return <li key={id}>{product ? product.name : "Không tìm thấy sản phẩm"}</li>;
-                })}
-              </ul>
+
+            <div className="manage-form-btn">
+
+              <button className="save-manage-btn save-manage-link" type="submit" disabled={isSubmitting}>
+                Thêm bài viết
+              </button>
+
+              <div className="cancel-manage-btn">
+                  <button onClick={handleReload} className="cancel-manage-link">
+                    Đặt lại
+                  </button>
+                </div>
+
             </div>
-            <div>
-              <label>Nội dung:</label>
-              <ReactQuill
-                ref={quillRef}
-                value={content}
-                modules={modules}
-                formats={formats}
-                onChange={setContent}
-              />
-            </div>
-            <button type="submit" disabled={isSubmitting}>
-              Thêm bài viết
-            </button>
           </form>
         </div>
-      </div>
-    </div>
+      </div >
+      <StaffBackToTop />
+    </div >
   );
 }

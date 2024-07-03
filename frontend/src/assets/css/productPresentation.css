@@ -72,3 +72,81 @@
   align-items: bottom;
   margin-top: 20px;
 }
+
+/* ==========================Staff================================= */
+
+
+.manage-product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.manage-product-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  margin: 15px;
+  padding: 5px;
+  width: 200px;
+}
+
+.manage-product-card-img {
+  width: 100%;
+  height: 200px;
+  border: 5px solid #ff469e;
+  border-radius: 10px;
+}
+
+.manage-product-card-img img {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.manage-product-card-link {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  margin: 10px 0 5px 0;
+  color: rgb(235, 235, 7);
+}
+
+.manage-roduct-card-link a {
+  line-height: 18px;
+  color: black;
+  font-weight: 400;
+}
+
+.manage-product-card-noSold {
+  font-size: 13px;
+  color: gray;
+  margin-left: 3px;
+}
+
+.manage-product-card-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: black;
+  margin-left: 3px;
+}
+
+.manage-product-card-price a {
+  color: rgba(61, 58, 58, 0.708);
+  background-color: rgba(202, 199, 199, 0.385);
+  padding: 4px 8px 1px 8px;
+  border-radius: 50%;
+  margin: 0 5px 5px 0;
+}
+
+.manage-pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: bottom;
+  margin-top: 20px;
+}

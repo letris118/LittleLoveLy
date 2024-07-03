@@ -40,20 +40,25 @@ export default function Login() {
           navigate(routes.homePage);
           const resCart = await getCart();
           const cart = JSON.parse(localStorage.getItem("cart")) || [];
-          resCart.orderDetails.map((item) =>
+          resCart.orderDetails?.map((item) =>
             cart.push({ ...item.product, quantity: item.quantity })
           );
           localStorage.setItem("cart", JSON.stringify(cart));
 
           const gifts = JSON.parse(localStorage.getItem("gifts")) || [];
-          resCart.giftIncludings.map((item) =>
+          resCart.giftIncludings?.map((item) =>
             gifts.push({ ...item.gift, quantity: item.quantity })
           );
           localStorage.setItem("gifts", JSON.stringify(gifts));
         }
       }
     } catch (error) {
-      toast.error("Tài khoản hoặc mật khẩu không đúng");
+      if (error.response.data === "Bad credentials") {
+        toast.error("Tài khoản hoặc mật khẩu không đúng");
+      } else {
+        toast.error("Đã xảy ra lỗi, vui lòng thử lại sau");
+        console.error(error);
+      }
     }
     setLoadingAPI(false);
   };
@@ -148,7 +153,9 @@ export default function Login() {
                     </div>
                   </div>
                 </form>
-                <p className="w-100 text-center">&mdash; Chưa có tài khoản ? &mdash;</p>
+                <p className="w-100 text-center">
+                  &mdash; Chưa có tài khoản ? &mdash;
+                </p>
                 <div className="form-group">
                   <button
                     onClick={() => {
@@ -163,7 +170,10 @@ export default function Login() {
                 </div>
                 <div className="form-group">
                   <div className="forgot-pwd text-center">
-                    <Link to={routes.homePage} style={{ textDecoration: "none", color: "white" }}>
+                    <Link
+                      to={routes.homePage}
+                      style={{ textDecoration: "none", color: "white" }}
+                    >
                       Quay lại trang chủ
                     </Link>
                   </div>

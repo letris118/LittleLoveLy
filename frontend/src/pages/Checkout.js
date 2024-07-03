@@ -19,6 +19,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  styled,
 } from "@mui/material";
 import VoucherPresentation from "../components/VoucherPresentation";
 
@@ -188,6 +189,35 @@ export default function Checkout() {
   const handleCloseVoucherDialog = () => {
     setOpenVoucherDialog(false);
   };
+
+  const CustomDialogTitle = styled(DialogTitle)({
+    fontWeight: "bold",
+    backgroundColor: "#ff469e",
+    color: "white",
+    marginBottom: "20px",
+  });
+
+  const CustomDialog = styled(Dialog)({
+    "& .MuiDialog-paper": {
+      width: "50%",
+      height: "auto",
+    },
+    "& .MuiPaper-root": {
+      borderRadius: "20px",
+    },
+  });
+
+  const CustomButton = styled(Button)({
+    backgroundColor: "hotpink",
+    color: "white",
+    "&:hover": {
+      background:
+        "linear-gradient(90deg, rgba(255,0,132,0.8) 0%, rgba(255,99,132,0.8) 100%)",
+    },
+    marginBottom: "20px",
+    marginRight: "20px",
+    borderRadius: "10px",
+  });
 
   return (
     <div>
@@ -488,15 +518,15 @@ export default function Checkout() {
         </div>
       </div>
       <Footer />
-      <Dialog open={openVoucherDialog} onClose={handleCloseVoucherDialog}>
-        <DialogTitle>Mã giảm giá</DialogTitle>
+      <CustomDialog open={openVoucherDialog} onClose={handleCloseVoucherDialog}>
+        <CustomDialogTitle>Mã giảm giá</CustomDialogTitle>
         <DialogContent>
           <VoucherPresentation />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseVoucherDialog}>Close</Button>
+          <CustomButton onClick={handleCloseVoucherDialog}>Close</CustomButton>
         </DialogActions>
-      </Dialog>
+      </CustomDialog>
     </div>
   );
 }

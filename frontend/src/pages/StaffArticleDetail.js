@@ -5,7 +5,7 @@ import StaffSideBar from "../components/StaffSideBar";
 import { useNavigate,useParams } from "react-router-dom";
 import Breadcrumb from "../components/Breadcrum";
 import Footer from "../components/Footer";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function StaffArticleDetail() {
   const { title: articleTitle } = useParams();
   const navigate = useNavigate();
@@ -32,7 +32,6 @@ export default function StaffArticleDetail() {
           customerPoint={localStorage.getItem("point")}
         />
         <div className="manage-content-detail">
-          <Breadcrumb value={articleTitle} customName="Tất cả bài báo" />
           <div className="manage-content-display ">
             <div className="manage-content-article-detail-row-1">
               <ArticleDetailPresentation />
@@ -41,6 +40,7 @@ export default function StaffArticleDetail() {
         </div>
       </div>
       <Footer />
+      <StaffBackToTop />
     </div>
   );
 }

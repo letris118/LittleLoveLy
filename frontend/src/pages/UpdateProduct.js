@@ -12,7 +12,7 @@ import {
 import StaffSideBar from "../components/StaffSideBar"
 import instance from "../services/auth/customize-axios"
 import "../assets/css/manage.css"
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function UpdateProduct() {
   const [productInfo, setProductInfo] = useState(null)
   const [allBrands, setAllBrands] = useState([])
@@ -197,8 +197,7 @@ export default function UpdateProduct() {
 
 
       await updateProduct(productRequestDTO.get('productId'), productRequestDTO)
-      navigate(routes.manageProduct)
-      toast.success('Cập nhật sản phẩm thành công!')
+      navigate(routes.manageProduct, { state: { success: 'Cập nhập sản phẩm thành công!' } });
 
 
     } catch (error) {
@@ -398,6 +397,7 @@ export default function UpdateProduct() {
           )}
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   )
 }

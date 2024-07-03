@@ -10,7 +10,7 @@ import {
 } from "../services/auth/UsersService"
 import StaffSideBar from "../components/StaffSideBar"
 import "../assets/css/manage.css"
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function AddProduct() {
 
   const [allBrands, setAllBrands] = useState([])
@@ -80,8 +80,7 @@ export default function AddProduct() {
       }
 
       await addProduct(productRequestDTO)
-      navigate(routes.manageProduct)
-      toast.success('Thêm sản phẩm thành công!')
+      navigate(routes.manageProduct, { state: { success: 'Thêm sản phẩm thành công!' } });
     } catch (error) {
       toast.error(`Error adding product: ${error.message}`)
     }
@@ -274,6 +273,7 @@ export default function AddProduct() {
           }
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   )
 }

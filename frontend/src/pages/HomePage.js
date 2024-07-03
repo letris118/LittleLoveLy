@@ -15,6 +15,9 @@ export default function HomePage() {
   const [productList, setProductList] = useState([]);
   const [brandList, setBrandList] = useState([]);
   const [articleList, setArticleList] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(
+    localStorage.getItem("token") ? true : false
+  );
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -89,13 +92,18 @@ export default function HomePage() {
     fetchArticles();
   }, []);
 
+  const handleLogoutSuccess = () => {
+    setLoggedIn(false);
+  };
+
   return (
     <div>
       <ToastContainer />
-      <Header />
+      <Header handleLogoutSuccess={handleLogoutSuccess} />
 
       <div className="content">
         <Sidebar
+          loggedIn={loggedIn}
           role={localStorage.getItem("userRole")}
           customerName={localStorage.getItem("name")}
           customerPoint={localStorage.getItem("point")}
@@ -108,7 +116,8 @@ export default function HomePage() {
                 <h4>Thương hiệu</h4>
                 <Link
                   to={routes.brands}
-                  style={{ textDecoration: "none", color: "#ff469e" }}>
+                  style={{ textDecoration: "none", color: "#ff469e" }}
+                >
                   Xem tất cả <i className="fa-solid fa-arrow-right"></i>
                 </Link>
               </div>
@@ -121,7 +130,8 @@ export default function HomePage() {
                 <h4>Thông tin bổ ích</h4>
                 <Link
                   to={routes.articles}
-                  style={{ textDecoration: "none", color: "#ff469e" }}>
+                  style={{ textDecoration: "none", color: "#ff469e" }}
+                >
                   Xem tất cả <i className="fa-solid fa-arrow-right"></i>
                 </Link>
               </div>
@@ -132,7 +142,8 @@ export default function HomePage() {
                 <h4>Sản phẩm</h4>
                 <Link
                   to={routes.products}
-                  style={{ textDecoration: "none", color: "#ff469e" }}>
+                  style={{ textDecoration: "none", color: "#ff469e" }}
+                >
                   Xem tất cả <i className="fa-solid fa-arrow-right"></i>
                 </Link>
               </div>

@@ -48,6 +48,12 @@ public class OrderService {
         return orderMapper.toOrderResponseDTOs(orderRepository.findAllExceptCart());
     }
 
+    public List<OrderResponseDTO> getOrdersByUsername(String username) {
+        User user = userRepository.findById(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return orderMapper.toOrderResponseDTOs(orderRepository.findByUserAndStatusNotCart(user));
+    }
+
     public OrderResponseDTO getOrderById(String id) {
         return mapOrderToResponse(orderRepository.findByIdAndStatusNotCart(id));
     }
@@ -293,13 +299,13 @@ public class OrderService {
         if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.VN_PAY)) {
             order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING);
             order = orderRepository.save(order);
-            emailSenderService.sendEmail(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             double finalPrice = evaluateOrder.getPostDiscountPrice();
             return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress, order.getCreatedDate());
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD)) {
             order.setStatus(CODPaymentStatus.COD_PENDING_CONFIRMATION);
             order = orderRepository.save(order);
-            emailSenderService.sendEmail(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             return mapOrderToResponse(order);
         } else {
             throw new IllegalArgumentException("Invalid payment method");
@@ -418,4 +424,6 @@ public class OrderService {
             throw new IllegalArgumentException("Cannot confirm order from status: " + order.getStatus());
         }
     }
+
+
 }

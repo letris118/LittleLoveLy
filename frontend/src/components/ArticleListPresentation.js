@@ -26,48 +26,54 @@ export default function ArticleListPresentation(articles) {
                   ))}
                 </div>
 
-            <div className="article-card-list-title">{article.title}</div>
-            <div
-              className="article-card-list-content"
-              style={{ fontWeight: "400" }}>
-              {parse(article.content)}
-            </div>
-          </Link>
-          <div className="article-card-list-uploadDate">
-            <i>{article.uploadedDate}</i>
-          </div>
-        </div>
-      
-          ))}
-        </>
-      )}
-      {(window.location.pathname === routes.staffArticleList) && (
-        <>
-          {articles.articles.map((article) => (
-            <div className="article-card-list col-4" id={article.articleId}>
-              <Link
-                to={`${routes.staffArticleList}/${encodeURIComponent(
-                  article.title.replace(/\n/g, "")
-                )}`}
-                style={{ textDecoration: "none" }}>
-                <div className="article-card-list-img">
-                  {article.articleImages.slice(0, 1).map((image) => (
-                    <img
-                      src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
-                      alt={article.title}
-                      key={image.imageId}
-                    />
-                  ))}
-                </div>
                 <div className="article-card-list-title">{article.title}</div>
-                <div className="article-card-list-content">{article.content}</div>
+                <div
+                  className="article-card-list-content"
+                  style={{ fontWeight: "400" }}>
+                  {parse(article.content)}
+                </div>
               </Link>
               <div className="article-card-list-uploadDate">
                 <i>{article.uploadedDate}</i>
               </div>
             </div>
+
           ))}
         </>
+      )}
+      {(window.location.pathname === routes.staffArticleList) && (
+        <>
+        {articles.articles.map((article) => (
+          <div className="manage-article-card-list col-4" id={article.articleId}>
+            <Link
+              to={`${routes.staffArticleList}/${encodeURIComponent(
+                article.title.replace(/\n/g, "")
+              )}`}
+              style={{ textDecoration: "none" }}>
+              <div className="manage-article-card-list-img">
+                {article.articleImages.slice(0, 1).map((image) => (
+                  <img
+                    src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
+                    alt={article.title}
+                    key={image.imageId}
+                  />
+                ))}
+              </div>
+
+              <div className="manage-article-card-list-title">{article.title}</div>
+              <div
+                className="manage-article-card-list-content"
+                style={{ fontWeight: "400" }}>
+                {parse(article.content)}
+              </div>
+            </Link>
+            <div className="manage-article-card-list-uploadDate">
+              <i>{article.uploadedDate}</i>
+            </div>
+          </div>
+
+        ))}
+      </>
       )}
     </>
   );

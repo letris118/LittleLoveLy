@@ -6,7 +6,7 @@ import { articles } from "../services/auth/UsersService";
 import ArticleListPresentation from "../components/ArticleListPresentation";
 import Footer from "../components/Footer";
 import { useNavigate,useParams } from "react-router-dom";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function StaffArticleList() {
   const [articleList, setArticleList] = useState([]);
   const navigate = useNavigate();
@@ -51,10 +51,9 @@ export default function StaffArticleList() {
         />
 
         <div className="manage-content-detail">
-          <Breadcrumb value="Tất cả bài báo" />
           <div className="manage-content-display ">
             <div className="manage-content-row-1">
-              <div className="manage-row-top" style={{ width: "100%" }}>
+              <div className="manage-row-1-top" style={{ width: "100%" }}>
                 <h4>Tất cả bài báo</h4>
               </div>
               <div className="manage-row-article-list-bottom">
@@ -65,6 +64,7 @@ export default function StaffArticleList() {
         </div>
       </div>
       <Footer />
+      <StaffBackToTop />
     </div>
   );
 }

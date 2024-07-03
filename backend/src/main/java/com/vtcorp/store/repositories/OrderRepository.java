@@ -18,4 +18,7 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     @Query("SELECT o FROM Order o WHERE o.orderId = :orderId AND o.status <> 'CART'")
     Order findByIdAndStatusNotCart(String orderId);
+
+    @Query("SELECT o FROM Order o WHERE o.user = :user AND o.status <> 'CART'")
+    List<Order> findByUserAndStatusNotCart(User user);
 }

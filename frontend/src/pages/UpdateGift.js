@@ -9,7 +9,7 @@ import {
 } from "../services/auth/UsersService"
 import StaffSideBar from "../components/StaffSideBar"
 import "../assets/css/manage.css"
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function UpdateGift() {
     const [giftInfo, setGiftInfo] = useState(null)
 
@@ -57,8 +57,7 @@ export default function UpdateGift() {
                     return
             }
             await updateGift(giftRequestDTO.get('giftId'), giftRequestDTO)
-            navigate(routes.manageGift)
-            toast.success('Cập nhật quà tặng thành công!')
+            navigate(routes.manageGift, { state: { success: 'Cập nhập quà tặng thành công!' } });
         } catch (error) {
             toast.error(`Error adding gift: ${error.message}`)
         }
@@ -152,6 +151,7 @@ export default function UpdateGift() {
                     )}
                 </div>
             </div>
+            <StaffBackToTop />
         </div>
     )
 }

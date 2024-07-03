@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
-import Header from "../components/Header";
+import StaffHeader from "../components/StaffHeader";
 import { products } from "../services/auth/UsersService";
 import ProductPresentation from "../components/ProductPresentation";
-import Sidebar from "../components/SideBar";
-import Breadcrumb from "../components/Breadcrum";
+import StaffSideBar from "../components/StaffSideBar";
 import Footer from "../components/Footer";
 import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
-
-export default function ProductList() {
+import StaffBackToTop from "../components/StaffBackToTop"
+export default function StaffProductList() {
   const [productList, setProductList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState(null);
@@ -34,8 +33,6 @@ export default function ProductList() {
                 return b.sellingPrice - a.sellingPrice;
               } else if (sortOrder === "bestSeller") {
                 return b.noSold - a.noSold;
-              } else if (sortOrder === "newest") {
-                return b.addedDate - a.addedDate;
               }
             });
           }
@@ -82,25 +79,22 @@ export default function ProductList() {
 
   return (
     <div>
-      <Header />
-      <div className="content">
-        <Sidebar
+      <StaffHeader />
+      <div className="manage-content">
+        <StaffSideBar
           role={localStorage.getItem("userRole")}
           customerName={localStorage.getItem("name")}
           customerPoint={localStorage.getItem("point")}
         />
 
-        <div className="content-detail">
-          <Breadcrumb value="Tất cả sản phẩm" />
-          <div className="content-display ">
+        <div className="manage-content-detail">
+          <div className="manage-content-display ">
             <div className="filter-row">
               <div>
                 <button
                   style={{
-                    background:
-                      activeButton === "bestSeller"
-                        ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
-                        : "",
+                    backgroundColor:
+                      activeButton === "bestSeller" ? "#ff69b4" : "",
                     color: activeButton === "bestSeller" ? "white" : "",
                   }}
                   onClick={() => handleSort("bestSeller", "bestSeller")}
@@ -110,14 +104,11 @@ export default function ProductList() {
               </div>
               <div>
                 <button
-                  style={{
-                    background:
-                      activeButton === "newest"
-                        ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
-                        : "",
-                    color: activeButton === "newest" ? "white" : "",
-                  }}
-                  onClick={() => handleSort("newest", "newest")}
+                  // style={{
+                  //   backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
+                  //   color: activeButton === "asc" ? "white" : "",
+                  // }}
+                  // onClick={() => handleSort("asc", "asc")}
                   disabled={currentItems.length === 0}>
                   Hàng mới
                 </button>
@@ -125,10 +116,7 @@ export default function ProductList() {
               <div>
                 <button
                   style={{
-                    background:
-                      activeButton === "asc"
-                        ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
-                        : "",
+                    backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
                     color: activeButton === "asc" ? "white" : "",
                   }}
                   onClick={() => handleSort("asc", "asc")}
@@ -139,10 +127,7 @@ export default function ProductList() {
               <div>
                 <button
                   style={{
-                    background:
-                      activeButton === "desc"
-                        ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
-                        : "",
+                    backgroundColor: activeButton === "desc" ? "#ff69b4" : "",
                     color: activeButton === "desc" ? "white" : "",
                   }}
                   onClick={() => handleSort("desc", "desc")}
@@ -151,17 +136,17 @@ export default function ProductList() {
                 </button>
               </div>
             </div>
-            <div className="content-row-3">
-              <div className="row-top">
+            <div className="manage-content-row-3">
+              <div className="manage-row-1-top">
                 <h4>Tất cả sản phẩm</h4>
               </div>
 
-              <div className="row-3-bottom">
+              <div className="manage-row-3-bottom">
                 <ProductPresentation products={currentItems} />
               </div>
 
               <div
-                className="pagination-container"
+                className="manage-pagination-container"
                 style={{ textAlign: "center" }}>
                 <CustomPagination
                   count={totalPages}
@@ -175,6 +160,7 @@ export default function ProductList() {
         </div>
       </div>
       <Footer />
+      <StaffBackToTop />
     </div>
   );
 }
