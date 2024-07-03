@@ -53,7 +53,12 @@ export default function Login() {
         }
       }
     } catch (error) {
-      toast.error("Tài khoản hoặc mật khẩu không đúng");
+      if (error.response.data === "Bad credentials") {
+        toast.error("Tài khoản hoặc mật khẩu không đúng");
+      } else {
+        toast.error("Đã xảy ra lỗi, vui lòng thử lại sau");
+        console.error(error);
+      }
     }
     setLoadingAPI(false);
   };
@@ -148,7 +153,9 @@ export default function Login() {
                     </div>
                   </div>
                 </form>
-                <p className="w-100 text-center">&mdash; Chưa có tài khoản ? &mdash;</p>
+                <p className="w-100 text-center">
+                  &mdash; Chưa có tài khoản ? &mdash;
+                </p>
                 <div className="form-group">
                   <button
                     onClick={() => {
@@ -163,7 +170,10 @@ export default function Login() {
                 </div>
                 <div className="form-group">
                   <div className="forgot-pwd text-center">
-                    <Link to={routes.homePage} style={{ textDecoration: "none", color: "white" }}>
+                    <Link
+                      to={routes.homePage}
+                      style={{ textDecoration: "none", color: "white" }}
+                    >
                       Quay lại trang chủ
                     </Link>
                   </div>

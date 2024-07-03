@@ -177,16 +177,16 @@ const updateArticle = (articleId, articleRequestDTO) => {
   return instance.put(`/api/articles/${articleId}`, articleRequestDTO);
 };
 
-
 const activeProducts = () => {
   return instance.get("/api/products");
 };
 
-const handleLogout = (navigate) => (e) => {
+const handleLogout = (navigate, callback) => (e) => {
   e.preventDefault();
   localStorage.clear();
   navigate(routes.homePage);
   toast.success("Đăng xuất thành công");
+  if (callback) callback();
 };
 
 const formatPrice = (num) => {
