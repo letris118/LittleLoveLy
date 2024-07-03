@@ -23,7 +23,7 @@ public class ProductReview {
     private String feedback;
     private Integer star;
     private String imagePath;
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy", timezone = "Asia/Ho_Chi_Minh")
     private Date uploadedDate;
 
     @ManyToOne

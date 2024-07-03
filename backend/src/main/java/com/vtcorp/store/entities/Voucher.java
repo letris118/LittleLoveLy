@@ -34,7 +34,7 @@ public class Voucher {
     private Double discountAmount;
     private Double minOrderAmount;
     private Double shipDiscountAmount;
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy", timezone = "Asia/Ho_Chi_Minh")
     private Date startDate;
     private Date endDate;
     private boolean active;

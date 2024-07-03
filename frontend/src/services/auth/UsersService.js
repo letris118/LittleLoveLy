@@ -100,6 +100,11 @@ const getGiftById = (giftId) => {
 };
 
 // =========================================VOUCHER===========================================
+
+const vouchers = () => {
+  return instance.get("/api/vouchers");
+};
+
 const vouchersAll = () => {
   return instance.get("/api/vouchers/all");
 };
@@ -271,4 +276,5 @@ export {
   addArticle,
   getArticleById,
   updateArticle,
+  vouchers,
 };
