@@ -3,7 +3,6 @@ import Header from "../components/Header";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import Footer from "../components/Footer";
-import { ToastContainer, toast } from "react-toastify";
 import { articles, brands, products } from "../services/auth/UsersService";
 import BrandPresentation from "../components/BrandPresentation";
 import "../assets/css/homePage.css";
@@ -98,7 +97,6 @@ export default function HomePage() {
 
   return (
     <div>
-      <ToastContainer />
       <Header handleLogoutSuccess={handleLogoutSuccess} />
 
       <div className="content">

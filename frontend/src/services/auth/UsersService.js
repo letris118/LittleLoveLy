@@ -17,6 +17,19 @@ const registerAPI = (mail, phone, name, password) => {
   });
 };
 
+const forgotPasswordAPI = (mail) => {
+  return instance.post("/api/auth/forgot-password", {
+    mail,
+  });
+};
+
+const resetPasswordAPI = (newPassword, token) => {
+  return instance.post("/api/auth/change-password", {
+    newPassword,
+    token,
+  });
+};
+
 const users = () => {
   return instance.get("/api/users");
 };
@@ -278,4 +291,6 @@ export {
   getArticleById,
   updateArticle,
   vouchers,
+  forgotPasswordAPI,
+  resetPasswordAPI,
 };
