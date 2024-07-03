@@ -239,13 +239,18 @@ const gifts = () => {
   return instance.get("/api/gifts");
 };
 
-const orders = () => {
-  return instance.get("/api/orders");
-};
+// const orders = () => {
+//   return instance.get("/api/orders");
+// };
 
 const getOrderById = (orderId) => {
   return instance.get(`/api/orders/${orderId}`);
 };
+
+const getOrdersByUsername = (username) => {
+  return instance.get(`/api/orders/user/${username}`);
+};
+
 export {
   loginAPI,
   users,
@@ -285,7 +290,7 @@ export {
   createOrder,
   registerAPI,
   gifts,
-  orders,
+  // orders,
   getOrderById,
   addArticle,
   getArticleById,
@@ -293,4 +298,5 @@ export {
   vouchers,
   forgotPasswordAPI,
   resetPasswordAPI,
+  getOrdersByUsername,
 };

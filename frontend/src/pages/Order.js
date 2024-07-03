@@ -6,7 +6,8 @@ import "../assets/css/searchOrder.css";
 import {
   formatPrice,
   getProductById,
-  orders,
+  getOrderById,
+  getOrdersByUsername,
 } from "../services/auth/UsersService";
 import { Pagination } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -16,7 +17,7 @@ export default function Order() {
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersList, setOrdersList] = useState([]);
   const [productImage, setProductImage] = useState([]);
-  const [searchClick, setSearchClick] = useState("");
+  //const [searchClick, setSearchClick] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const itemsPerPage = 10;
 
@@ -42,18 +43,14 @@ export default function Order() {
       ),
     [currentPage, ordersList]
   );
+
   useEffect(() => {
     const fetchOrders = async () => {
-      const userId = localStorage.getItem("username");
+      const username = localStorage.getItem("username");
       try {
-        const response = await orders();
-        console.log(response.user.username);
-        const cusOrder = response.find(
-          (order) => order.user.username === userId
-        );
-
-        if (cusOrder) {
-          setOrdersList(cusOrder);
+        const response = await getOrdersByUsername(username);
+        if (response) {
+          setOrdersList(response);
         } else {
           setOrdersList([]);
         }
@@ -71,7 +68,7 @@ export default function Order() {
   };
 
   const handleSearchButtonClick = () => {
-    setSearchClick(searchInput);
+    //setSearchClick(searchInput);
   };
 
   // const filteredOrders = ordersList.filter((order) =>
@@ -102,6 +99,11 @@ export default function Order() {
     }
   }, [ordersList]);
 
+  useEffect(() => {
+    console.log(searchInput);
+    console.log(localStorage.getItem("username"));
+  }, [searchInput]);
+
   return (
     <div>
       <Header />
@@ -117,7 +119,8 @@ export default function Order() {
             style={{
               backgroundColor: "white",
               borderRadius: "20px",
-            }}>
+            }}
+          >
             <div className="row-top">
               <h4>Đơn hàng</h4>
             </div>
@@ -133,7 +136,8 @@ export default function Order() {
                   <button
                     type="button"
                     className="search-btn"
-                    onClick={handleSearchButtonClick}>
+                    onClick={handleSearchButtonClick}
+                  >
                     Tìm
                   </button>
                 </form>
@@ -146,7 +150,8 @@ export default function Order() {
                         {order.orderDetails.map((orderDetail) => (
                           <div
                             className="order-product"
-                            key={orderDetail.product.productId}>
+                            key={orderDetail.product.productId}
+                          >
                             <div className="order-product-img">
                               <img
                                 src={`${
@@ -159,13 +164,15 @@ export default function Order() {
                             </div>
                             <div
                               className="order-product-center"
-                              style={{ borderRight: "1px solid #9fa0a0b0" }}>
+                              style={{ borderRight: "1px solid #9fa0a0b0" }}
+                            >
                               <div
                                 style={{
                                   fontWeight: "bold",
                                   fontSize: "17px",
                                   color: "black",
-                                }}>
+                                }}
+                              >
                                 {orderDetail.product.name}
                               </div>
                               <div>x{orderDetail.quantity}</div>
@@ -175,14 +182,16 @@ export default function Order() {
                             </div>
                             <div
                               className="order-product-right"
-                              style={{ width: "35%" }}>
+                              style={{ width: "35%" }}
+                            >
                               <div
                                 style={{
                                   display: "flex",
                                   justifyContent: "space-between",
                                   borderBottom: "1px solid #9fa0a0b0",
                                   marginTop: "10px",
-                                }}>
+                                }}
+                              >
                                 <div>{order.orderDetails.length} sản phẩm</div>
                                 <div style={{ color: "black" }}>
                                   Thành tiền:{" "}
@@ -190,7 +199,8 @@ export default function Order() {
                                     style={{
                                       color: "#ff469e",
                                       fontWeight: "bold",
-                                    }}>
+                                    }}
+                                  >
                                     {formatPrice(order.postDiscountPrice)}đ
                                   </span>
                                 </div>
@@ -203,13 +213,15 @@ export default function Order() {
                                     fontSize: "15px",
                                     marginRight: "20px",
                                     color: "black",
-                                  }}>
+                                  }}
+                                >
                                   Tình trạng:&nbsp;
                                   <span
                                     style={{
                                       color: "#ff469e",
                                       fontWeight: "bold",
-                                    }}>
+                                    }}
+                                  >
                                     Đang giao
                                   </span>
                                 </div>
@@ -234,7 +246,8 @@ export default function Order() {
               style={{
                 textAlign: "center",
                 padding: "20px 0",
-              }}>
+              }}
+            >
               <CustomPagination
                 count={totalPages}
                 page={currentPage}
