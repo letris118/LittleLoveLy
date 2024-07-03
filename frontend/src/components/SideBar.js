@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { routes } from "../routes";
 import { handleLogout } from "../services/auth/UsersService";
 
-const Sidebar = ({ role, customerName, customerPoint, loggedIn }) => {
+const Sidebar = ({ role, customerName, customerPoint, loggedIn = true }) => {
   return (
     <div className="side-bar">
       {loggedIn && role === "ROLE_CUSTOMER" ? (
