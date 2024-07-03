@@ -21,6 +21,6 @@ public class UserResponseDTO {
     private Integer point;
     private String role;
 
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy", timezone = "Asia/Ho_Chi_Minh")
     private Date registeredDate;
 }

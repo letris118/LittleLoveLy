@@ -23,7 +23,7 @@ public class ArticleResponseDTO {
     private String title;
 
     @JsonView(Views.Article.class)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date uploadedDate;
 
     @JsonView(Views.Article.class)

@@ -25,9 +25,9 @@ public class ProductResponseDTO {
     private Integer stock;
     private boolean active;
     private double averageRating;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date addedDate;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date lastModifiedDate;
 
     @JsonIgnoreProperties("products")
