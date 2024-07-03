@@ -5,6 +5,7 @@ import StaffHeader from "../components/StaffHeader"
 import { ToastContainer, toast } from "react-toastify"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
 import {
     getVoucherById,
     updateVoucher
@@ -52,8 +53,12 @@ export default function UpdateVoucher() {
                 if (voucherResponse) {
                     setVoucherInfo(voucherResponse);
                     setSelectedType(voucherResponse.type);
-                    setStartDate(new Date(voucherResponse.startDate));
-                    setEndDate(new Date(voucherResponse.endDate));
+                    const [sday, smonth, syear] = voucherResponse.startDate.split('-');
+                    const [eday, emonth, eyear] = voucherResponse.endDate.split('-');
+
+
+                    setStartDate(new Date(`${syear}-${smonth}-${sday}`));
+                    setEndDate(new Date(`${eyear}-${emonth}-${eday}`));
                 } else {
                     toast.error("Không thể tải thông tin voucher");
                 }
@@ -77,11 +82,14 @@ export default function UpdateVoucher() {
             const voucherRequestDTO = new FormData(e.target);
             voucherRequestDTO.append('voucherId', voucherInfo.voucherId);
             voucherRequestDTO.append('type', selectedType);
-            voucherRequestDTO.append('startDate', startDate.toLocaleDateString('en-GB'));
-            voucherRequestDTO.append('endDate', endDate.toLocaleDateString('en-GB'));
+            voucherRequestDTO.append('startDate', formatDate(startDate.toLocaleDateString('en-GB')))
+            voucherRequestDTO.append('endDate', formatDate(endDate.toLocaleDateString('en-GB')))
+
 
             await updateVoucher(voucherRequestDTO.get('voucherId'), voucherRequestDTO);
-            navigate(routes.manageVoucher, { state: { success: 'Cập nhập voucher thành công!' } });
+            navigate(routes.manageVoucher);
+          
+            toast.success('Cập nhật voucher thành công!');
         } catch (error) {
             console.error("Error updating voucher:", error);
             toast.error(`Error updating voucher: ${error.message}`);
@@ -95,6 +103,28 @@ export default function UpdateVoucher() {
         e.preventDefault()
         window.location.reload();
     }
+
+    const formatDate = (dateString) => {
+        // Split the date string into day, month, and year
+        const [day, month, year] = dateString.split('/');
+
+        // Array of month abbreviations
+        const monthAbbreviations = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ];
+
+        // Map the month to its abbreviation
+        const monthAbbreviation = monthAbbreviations[parseInt(month, 10) - 1];
+
+        // Format the date in 'dd MMM yyyy' format
+        const formattedDate = `${day} ${monthAbbreviation} ${year}`;
+
+        return formattedDate;
+    };
+
+
+    // Split the date string into day, month, year
 
     return (
         <div>
@@ -273,8 +303,8 @@ export default function UpdateVoucher() {
                                         <DatePicker
                                             selected={startDate}
                                             onChange={(date) => setStartDate(date)}
-                                            dateFormat="dd/MM/yyyy"
                                             required
+                                            dateFormat="dd/MM/yyyy"
                                         />
                                     </div>
                                 </div>
@@ -286,8 +316,8 @@ export default function UpdateVoucher() {
                                         <DatePicker
                                             selected={endDate}
                                             onChange={(date) => setEndDate(date)}
-                                            dateFormat="dd/MM/yyyy"
                                             required
+                                            dateFormat="dd/MM/yyyy"
                                         />
                                     </div>
                                 </div>
