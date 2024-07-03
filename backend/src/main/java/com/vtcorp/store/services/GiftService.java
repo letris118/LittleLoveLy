@@ -3,6 +3,7 @@ package com.vtcorp.store.services;
 import com.vtcorp.store.dtos.GiftRequestDTO;
 import com.vtcorp.store.dtos.GiftResponseDTO;
 import com.vtcorp.store.entities.Gift;
+import com.vtcorp.store.entities.ProductImage;
 import com.vtcorp.store.mappers.GiftMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,10 +57,19 @@ public class GiftService {
 
     //Not complete yet
     @Transactional
-    public Gift updateGift(GiftRequestDTO giftRequestDTO) {
-        Gift GiftResponseDTO = giftRepository.findById(giftRequestDTO.getGiftId())
+    public GiftResponseDTO updateGift(GiftRequestDTO giftRequestDTO) {
+        Gift gift = giftRepository.findById(giftRequestDTO.getGiftId())
                 .orElseThrow(() -> new RuntimeException("Gift not found"));
-        return null;
+        String image = "";
+        if (giftRequestDTO.getNewImageFile() == null || giftRequestDTO.getNewImageFile().isEmpty()) {
+            image = gift.getImagePath();
+        } else {
+            removeImage(gift.getImagePath());
+            image = handleGiftImage(giftRequestDTO.getNewImageFile());
+        }
+        giftMapper.updateEntity(giftRequestDTO, gift);
+        gift.setImagePath(image);
+        return giftMapper.toResponseDTO(giftRepository.save(gift));
     }
 
     public String deactivateProduct(long id) {
@@ -92,6 +102,15 @@ public class GiftService {
             }
         }
         return storedFileName;
+    }
+
+    private void removeImage(String image) {
+        Path imagePath = Paths.get(UPLOAD_DIR, image);
+        try {
+            Files.deleteIfExists(imagePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete image", e);
+        }
     }
 
 }

@@ -87,7 +87,7 @@ export default function AddGift() {
                 <div className="manage-form-group">
                   <label>Hình minh họa quà tặng</label>
                   <div className="manage-form-control-img">
-                    <input name="newImageFiles" type="file" required accept=".png, .jpg"></input>
+                    <input name="newImageFile" type="file" required accept=".png, .jpg"></input>
                   </div>
                 </div>
 
