@@ -34,6 +34,8 @@ export default function ProductList() {
                 return b.sellingPrice - a.sellingPrice;
               } else if (sortOrder === "bestSeller") {
                 return b.noSold - a.noSold;
+              } else if (sortOrder === "newest") {
+                return b.addedDate - a.addedDate;
               }
             });
           }
@@ -95,8 +97,10 @@ export default function ProductList() {
               <div>
                 <button
                   style={{
-                    backgroundColor:
-                      activeButton === "bestSeller" ? "#ff69b4" : "",
+                    background:
+                      activeButton === "bestSeller"
+                        ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
+                        : "",
                     color: activeButton === "bestSeller" ? "white" : "",
                   }}
                   onClick={() => handleSort("bestSeller", "bestSeller")}
@@ -106,11 +110,14 @@ export default function ProductList() {
               </div>
               <div>
                 <button
-                  // style={{
-                  //   backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
-                  //   color: activeButton === "asc" ? "white" : "",
-                  // }}
-                  // onClick={() => handleSort("asc", "asc")}
+                  style={{
+                    background:
+                      activeButton === "newest"
+                        ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
+                        : "",
+                    color: activeButton === "newest" ? "white" : "",
+                  }}
+                  onClick={() => handleSort("newest", "newest")}
                   disabled={currentItems.length === 0}>
                   Hàng mới
                 </button>
@@ -118,7 +125,10 @@ export default function ProductList() {
               <div>
                 <button
                   style={{
-                    backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
+                    background:
+                      activeButton === "asc"
+                        ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
+                        : "",
                     color: activeButton === "asc" ? "white" : "",
                   }}
                   onClick={() => handleSort("asc", "asc")}
@@ -129,7 +139,10 @@ export default function ProductList() {
               <div>
                 <button
                   style={{
-                    backgroundColor: activeButton === "desc" ? "#ff69b4" : "",
+                    background:
+                      activeButton === "desc"
+                        ? "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)"
+                        : "",
                     color: activeButton === "desc" ? "white" : "",
                   }}
                   onClick={() => handleSort("desc", "desc")}

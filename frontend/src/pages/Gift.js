@@ -60,6 +60,7 @@ export default function Gift() {
     "&:hover": {
       backgroundColor: "#ff69b4",
     },
+    borderRadius: "10px",
   });
 
   const CustomPagination = styled(Pagination)({
