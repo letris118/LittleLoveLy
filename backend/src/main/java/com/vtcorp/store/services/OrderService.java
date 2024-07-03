@@ -45,12 +45,11 @@ public class OrderService {
     }
 
     public List<OrderResponseDTO> getAllOrders() {
-        return orderMapper.toOrderResponseDTOs(orderRepository.findAll());
+        return orderMapper.toOrderResponseDTOs(orderRepository.findAllExceptCart());
     }
 
     public OrderResponseDTO getOrderById(String id) {
-        return mapOrderToResponse(orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found")));
+        return mapOrderToResponse(orderRepository.findByIdAndStatusNotCart(id));
     }
 
     public CartResponseDTO getCart(String username) {
