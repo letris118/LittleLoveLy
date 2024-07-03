@@ -80,8 +80,7 @@ export default function AddProduct() {
       }
 
       await addProduct(productRequestDTO)
-      navigate(routes.manageProduct)
-      toast.success('Thêm sản phẩm thành công!')
+      navigate(routes.manageProduct, { state: { success: 'Thêm sản phẩm thành công!' } });
     } catch (error) {
       toast.error(`Error adding product: ${error.message}`)
     }

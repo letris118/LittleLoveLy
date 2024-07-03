@@ -184,7 +184,7 @@
 /* =========================Staff================================= */
 
 .manage-article-container .slick-prev,
-.article-container .slick-next {
+.manage-article-container .slick-next {
   pointer-events: none;
 }
 
@@ -317,7 +317,7 @@
 }
 
 .manage-article-card-list {
-  max-width: 420px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   border-radius: 20px;

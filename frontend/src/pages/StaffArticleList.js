@@ -51,10 +51,9 @@ export default function StaffArticleList() {
         />
 
         <div className="manage-content-detail">
-          <Breadcrumb value="Tất cả bài báo" />
           <div className="manage-content-display ">
             <div className="manage-content-row-1">
-              <div className="manage-row-top" style={{ width: "100%" }}>
+              <div className="manage-row-1-top" style={{ width: "100%" }}>
                 <h4>Tất cả bài báo</h4>
               </div>
               <div className="manage-row-article-list-bottom">

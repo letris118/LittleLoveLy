@@ -41,6 +41,9 @@ import Order from "../pages/Order";
 import StaffBrandDetail from "../pages/StaffBrandDetail";
 import StaffArticleDetail from "../pages/StaffArticleDetail";
 import StaffArticleList from "../pages/StaffArticleList";
+import StaffProductDetail from "../pages/StaffProductDetail";
+import StaffProductList from "../pages/StaffProductList";
+import StaffSearchProduct from "../pages/StaffSearchProduct";
 
 export default function AppRoute() {
   return (
@@ -101,6 +104,10 @@ export default function AppRoute() {
       <Route path={`${routes.staffBrandList}/:name`} element={<StaffBrandDetail />} />
       <Route path={`${routes.staffArticleList}/:title`} element={<StaffArticleDetail />} />
       <Route path={routes.staffArticleList} element={<StaffArticleList />} />
+
+      <Route path={routes.staffProductList} element={<StaffProductList />} />
+      <Route path={`${routes.staffProductList}/:name`} element={<StaffProductDetail />} />
+      <Route path={routes.staffSearchProduct} element={<StaffSearchProduct />} />
     </Routes>
   );
 }

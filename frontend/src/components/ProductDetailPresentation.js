@@ -226,227 +226,229 @@ export default function ProductDetailPresentation() {
   );
 
   return (
-    <div className="product-detail-container">
-      <div className="product-detail-top">
-        <div className="product-detail-left">
-          {productInfo?.productImages?.length > 1 ? (
-            <>
-              <Slider {...settingsImgTop} ref={(slider1) => setNav1(slider1)}>
-                {productInfo.productImages.map((proImg) => (
-                  <div className="product-detail-top-img" key={proImg.imageId}>
-                    <img
-                      src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
-                      alt=""
-                      style={{ width: "100%", borderRadius: "10px" }}
+    <>
+      {(window.location.pathname.startsWith(`${routes.products}/`)) && (
+        <div className="product-detail-container">
+          <div className="product-detail-top">
+            <div className="product-detail-left">
+              {productInfo?.productImages?.length > 1 ? (
+                <>
+                  <Slider {...settingsImgTop} ref={(slider1) => setNav1(slider1)}>
+                    {productInfo.productImages.map((proImg) => (
+                      <div className="product-detail-top-img" key={proImg.imageId}>
+                        <img
+                          src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
+                          alt=""
+                          style={{ width: "100%", borderRadius: "10px" }}
+                        />
+                      </div>
+                    ))}
+                  </Slider>
+                  <Slider
+                    {...settingsImgBottom}
+                    ref={(slider2) => setNav2(slider2)}
+                    style={{ margin: "10px" }}>
+                    {productInfo.productImages.map((proImg) => (
+                      <div
+                        className="product-detail-bottom-img"
+                        key={proImg.imageId}>
+                        <img
+                          onClick={() => setSelectedImage(proImg.imageId)}
+                          src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
+                          alt=""
+                          style={{
+                            width: "100%",
+                            borderRadius: "10px",
+                            border:
+                              proImg.imageId === selectedImage
+                                ? "2px solid rgb(255, 70, 158)"
+                                : "none",
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </Slider>
+                </>
+              ) : (
+                productInfo?.productImages?.length === 1 && (
+                  <>
+                    <div
+                      className="product-detail-top-img"
+                      key={productInfo.productImages[0].imageId}>
+                      <img
+                        src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
+                        alt=""
+                        style={{ width: "100%", borderRadius: "10px" }}
+                      />
+                    </div>
+                    <div
+                      className="product-detail-bottom-img"
+                      style={{ margin: "10px", textAlign: "center" }}>
+                      <img
+                        src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
+                        alt=""
+                        style={{
+                          width: "100px",
+                          borderRadius: "10px",
+                          border: "2px solid rgb(255, 70, 158)",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </div>
+                  </>
+                )
+              )}
+            </div>
+            <div className="product-detail-right">
+              <div className="product-detail-info">
+                <div className="product-detail-brand">
+                  Thương hiệu:&nbsp;
+                  {productInfo?.brand ? (
+                    <Link
+                      to={`${routes.brands}/${productInfo.brand.name}`}
+                      style={{ textDecoration: "none" }}>
+                      {productInfo.brand.name}
+                    </Link>
+                  ) : (
+                    "Không xác định"
+                  )}
+                </div>
+                <div className="product-detail-name">{productInfo?.name}</div>
+                <div className="product-detail-row-2">
+                  <div className="product-detail-rate">
+                    <div
+                      style={{
+                        marginTop: "2px",
+                        margin: "0 5px",
+                        textDecoration: "underline",
+                        fontWeight: "bold",
+                      }}>
+                      {productInfo?.averageRating}
+                    </div>
+                    <Rating
+                      value={productInfo?.averageRating ?? 0}
+                      precision={0.1}
+                      size="small"
+                      readOnly
                     />
                   </div>
-                ))}
-              </Slider>
-              <Slider
-                {...settingsImgBottom}
-                ref={(slider2) => setNav2(slider2)}
-                style={{ margin: "10px" }}>
-                {productInfo.productImages.map((proImg) => (
-                  <div
-                    className="product-detail-bottom-img"
-                    key={proImg.imageId}>
-                    <img
-                      onClick={() => setSelectedImage(proImg.imageId)}
-                      src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
-                      alt=""
+                  <div className="product-detail-amount-rate">Lượt đánh giá</div>
+                  <div className="product-detail-amount-selling">
+                    <span
+                      style={{ fontWeight: "bold", textDecoration: "underline" }}>
+                      {productInfo?.noSold}
+                    </span>
+                    &nbsp;đã bán
+                  </div>
+                  <div className="product-detail-condition">
+                    Tình trạng: {getStockStatus(productInfo?.stock ?? 0)}
+                  </div>
+                </div>
+                <div className="product-detail-price">
+                  {productInfo?.listedPrice === productInfo?.sellingPrice ? (
+                    <div style={{ color: "#FF469E", fontSize: "30px" }}>
+                      {formatPrice(productInfo?.listedPrice) + "đ"}
+                    </div>
+                  ) : (
+                    <>
+                      <div
+                        style={{
+                          textDecoration: "line-through",
+                          fontSize: "13px",
+                          display: "flex",
+                          alignItems: "center",
+                          marginRight: "10px",
+                          fontWeight: "lighter",
+                        }}>
+                        {formatPrice(productInfo?.listedPrice) + "đ"}
+                      </div>
+                      <div style={{ color: "#FF469E", fontSize: "30px" }}>
+                        {formatPrice(productInfo?.sellingPrice) + "đ"}
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="product-detail-quantity">
+                  Số lượng &nbsp; &nbsp; &nbsp;
+                  <Box display="flex" alignItems="center" m={1} marginLeft={7}>
+                    <button onClick={handleDecrease}>-</button>
+                    <TextField
+                      value={quantity}
+                      onChange={handleQuantityChange}
+                      inputProps={{
+                        min: 1,
+                        max: productInfo?.stock ?? 0,
+                        style: { textAlign: "center" },
+                      }}
                       style={{
-                        width: "100%",
-                        borderRadius: "10px",
-                        border:
-                          proImg.imageId === selectedImage
-                            ? "2px solid rgb(255, 70, 158)"
-                            : "none",
+                        width: "70px",
+                        margin: "0 10px",
+                        height: "inherit",
                       }}
                     />
+                    <button
+                      onClick={handleIncrease}
+                      style={{ paddingTop: "2px", paddingLeft: "1px" }}>
+                      +
+                    </button>
+                  </Box>
+                </div>
+                <div className="product-detail-button">
+                  <div className="product-detail-add-to-cart">
+                    <button onClick={handleAddToCart}>Thêm vào giỏ hàng</button>
                   </div>
-                ))}
-              </Slider>
-            </>
-          ) : (
-            productInfo?.productImages?.length === 1 && (
-              <>
-                <div
-                  className="product-detail-top-img"
-                  key={productInfo.productImages[0].imageId}>
-                  <img
-                    src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
-                    alt=""
-                    style={{ width: "100%", borderRadius: "10px" }}
-                  />
+                  <div className="product-detail-buy-now">
+                    <button onClick={handleBuyNow}>Mua ngay</button>
+                  </div>
                 </div>
-                <div
-                  className="product-detail-bottom-img"
-                  style={{ margin: "10px", textAlign: "center" }}>
-                  <img
-                    src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
-                    alt=""
-                    style={{
-                      width: "100px",
-                      borderRadius: "10px",
-                      border: "2px solid rgb(255, 70, 158)",
-                      cursor: "pointer",
-                    }}
-                  />
-                </div>
-              </>
-            )
-          )}
-        </div>
-        <div className="product-detail-right">
-          <div className="product-detail-info">
-            <div className="product-detail-brand">
-              Thương hiệu:&nbsp;
-              {productInfo?.brand ? (
-                <Link
-                  to={`${routes.brands}/${productInfo.brand.name}`}
-                  style={{ textDecoration: "none" }}>
-                  {productInfo.brand.name}
-                </Link>
-              ) : (
-                "Không xác định"
-              )}
-            </div>
-            <div className="product-detail-name">{productInfo?.name}</div>
-            <div className="product-detail-row-2">
-              <div className="product-detail-rate">
-                <div
-                  style={{
-                    marginTop: "2px",
-                    margin: "0 5px",
-                    textDecoration: "underline",
-                    fontWeight: "bold",
-                  }}>
-                  {productInfo?.averageRating}
-                </div>
-                <Rating
-                  value={productInfo?.averageRating ?? 0}
-                  precision={0.1}
-                  size="small"
-                  readOnly
-                />
-              </div>
-              <div className="product-detail-amount-rate">Lượt đánh giá</div>
-              <div className="product-detail-amount-selling">
-                <span
-                  style={{ fontWeight: "bold", textDecoration: "underline" }}>
-                  {productInfo?.noSold}
-                </span>
-                &nbsp;đã bán
-              </div>
-              <div className="product-detail-condition">
-                Tình trạng: {getStockStatus(productInfo?.stock ?? 0)}
               </div>
             </div>
-            <div className="product-detail-price">
-              {productInfo?.listedPrice === productInfo?.sellingPrice ? (
-                <div style={{ color: "#FF469E", fontSize: "30px" }}>
-                  {formatPrice(productInfo?.listedPrice) + "đ"}
-                </div>
-              ) : (
-                <>
-                  <div
+          </div>
+
+          <ToastContainer />
+          <div className="product-detail-bottom">
+            <div className="product-detail-description">
+              <h5>Chi Tiết Sản Phẩm</h5>
+              {productInfo?.description}
+            </div>
+
+            <div className="product-detail-reviews">
+              <h5>Đánh giá</h5>
+              <div className="product-detail-reviews-stars">
+                <div className="product-detail-reviews-stars-left">
+                  <span
                     style={{
-                      textDecoration: "line-through",
-                      fontSize: "13px",
-                      display: "flex",
-                      alignItems: "center",
-                      marginRight: "10px",
-                      fontWeight: "lighter",
+                      fontWeight: "bold",
+                      fontFamily: "MuseoModerno",
+                      fontSize: "20px",
                     }}>
-                    {formatPrice(productInfo?.listedPrice) + "đ"}
-                  </div>
-                  <div style={{ color: "#FF469E", fontSize: "30px" }}>
-                    {formatPrice(productInfo?.sellingPrice) + "đ"}
-                  </div>
-                </>
-              )}
-            </div>
-            <div className="product-detail-quantity">
-              Số lượng &nbsp; &nbsp; &nbsp;
-              <Box display="flex" alignItems="center" m={1} marginLeft={7}>
-                <button onClick={handleDecrease}>-</button>
-                <TextField
-                  value={quantity}
-                  onChange={handleQuantityChange}
-                  inputProps={{
-                    min: 1,
-                    max: productInfo?.stock ?? 0,
-                    style: { textAlign: "center" },
-                  }}
-                  style={{
-                    width: "70px",
-                    margin: "0 10px",
-                    height: "inherit",
-                  }}
-                />
-                <button
-                  onClick={handleIncrease}
-                  style={{ paddingTop: "2px", paddingLeft: "1px" }}>
-                  +
-                </button>
-              </Box>
-            </div>
-            <div className="product-detail-button">
-              <div className="product-detail-add-to-cart">
-                <button onClick={handleAddToCart}>Thêm vào giỏ hàng</button>
-              </div>
-              <div className="product-detail-buy-now">
-                <button onClick={handleBuyNow}>Mua ngay</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <ToastContainer />
-      <div className="product-detail-bottom">
-        <div className="product-detail-description">
-          <h5>Chi Tiết Sản Phẩm</h5>
-          {productInfo?.description}
-        </div>
-
-        <div className="product-detail-reviews">
-          <h5>Đánh giá</h5>
-          <div className="product-detail-reviews-stars">
-            <div className="product-detail-reviews-stars-left">
-              <span
-                style={{
-                  fontWeight: "bold",
-                  fontFamily: "MuseoModerno",
-                  fontSize: "20px",
-                }}>
-                <span style={{ color: "#FF469E", fontSize: "30px" }}>
-                  {productInfo?.averageRating.toFixed(1)}
-                </span>
-                /5.0
-              </span>
-              <Rating
-                value={productInfo?.averageRating ?? 0}
-                precision={0.1}
-                size="large"
-                readOnly
-              />
-              <p>Có ... lượt đánh giá</p>
-            </div>
-            <div className="product-detail-reviews-stars-right">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <div key={star}>
-                  <button onClick={() => setSelectedRating(star)}>
-                    {star} <i className="fa-solid fa-star"></i>
-                  </button>
+                    <span style={{ color: "#FF469E", fontSize: "30px" }}>
+                      {productInfo?.averageRating.toFixed(1)}
+                    </span>
+                    /5.0
+                  </span>
+                  <Rating
+                    value={productInfo?.averageRating ?? 0}
+                    precision={0.1}
+                    size="large"
+                    readOnly
+                  />
+                  <p>Có ... lượt đánh giá</p>
                 </div>
-              ))}
-            </div>
-          </div>
-          <div className="product-detail-reviews-comments">
-            {/* dùng để hiện reviews */}
+                <div className="product-detail-reviews-stars-right">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <div key={star}>
+                      <button onClick={() => setSelectedRating(star)}>
+                        {star} <i className="fa-solid fa-star"></i>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="product-detail-reviews-comments">
+                {/* dùng để hiện reviews */}
 
-            {/* {renderReviews()}
+                {/* {renderReviews()}
             {productInfo?.reviews?.length > 5 && !showAllReviews && (
               <div
                 style={{
@@ -467,128 +469,321 @@ export default function ProductDetailPresentation() {
                 </button>
               </div>
             )} */}
-            <div className="product-detail-reviews-comments-user">
-              <span
-                style={{
-                  width: "10%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}>
-                <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
-              </span>
-              <div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "15px",
-                  }}>
-                  Trung Hiếu
+                <div className="product-detail-reviews-comments-user">
+                  <span
+                    style={{
+                      width: "10%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}>
+                    <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+                  </span>
+                  <div>
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "15px",
+                      }}>
+                      Trung Hiếu
+                    </div>
+                    <div>
+                      <Rating value={5} size="medium" readOnly />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <Rating value={5} size="medium" readOnly />
+                {/*  */}
+                <div className="product-detail-reviews-comments-user">
+                  <span
+                    style={{
+                      width: "10%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}>
+                    <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+                  </span>
+                  <div>
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "15px",
+                      }}>
+                      Trung Hiếu
+                    </div>
+                    <div>
+                      <Rating value={4} size="medium" readOnly />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            {/*  */}
-            <div className="product-detail-reviews-comments-user">
-              <span
-                style={{
-                  width: "10%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}>
-                <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
-              </span>
-              <div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "15px",
-                  }}>
-                  Trung Hiếu
+                {/*  */}
+                <div className="product-detail-reviews-comments-user">
+                  <span
+                    style={{
+                      width: "10%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}>
+                    <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+                  </span>
+                  <div>
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "15px",
+                      }}>
+                      Trung Hiếu
+                    </div>
+                    <div>
+                      <Rating value={3} size="medium" readOnly />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <Rating value={4} size="medium" readOnly />
+                {/*  */}
+                <div className="product-detail-reviews-comments-user">
+                  <span
+                    style={{
+                      width: "10%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}>
+                    <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+                  </span>
+                  <div>
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "15px",
+                      }}>
+                      Trung Hiếu
+                    </div>
+                    <div>
+                      <Rating value={2} size="medium" readOnly />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            {/*  */}
-            <div className="product-detail-reviews-comments-user">
-              <span
-                style={{
-                  width: "10%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}>
-                <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
-              </span>
-              <div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "15px",
-                  }}>
-                  Trung Hiếu
-                </div>
-                <div>
-                  <Rating value={3} size="medium" readOnly />
-                </div>
-              </div>
-            </div>
-            {/*  */}
-            <div className="product-detail-reviews-comments-user">
-              <span
-                style={{
-                  width: "10%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}>
-                <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
-              </span>
-              <div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "15px",
-                  }}>
-                  Trung Hiếu
-                </div>
-                <div>
-                  <Rating value={2} size="medium" readOnly />
-                </div>
-              </div>
-            </div>
-            {/*  */}
-            <div className="product-detail-reviews-comments-user">
-              <span
-                style={{
-                  width: "10%",
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}>
-                <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
-              </span>
-              <div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "15px",
-                  }}>
-                  Trung Hiếu
-                </div>
-                <div>
-                  <Rating value={1} size="medium" readOnly />
+                {/*  */}
+                <div className="product-detail-reviews-comments-user">
+                  <span
+                    style={{
+                      width: "10%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}>
+                    <i class="fa-solid fa-user" style={{ fontSize: "30px" }}></i>
+                  </span>
+                  <div>
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "15px",
+                      }}>
+                      Trung Hiếu
+                    </div>
+                    <div>
+                      <Rating value={1} size="medium" readOnly />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+
+      {(window.location.pathname.startsWith(`${routes.staffProductList}/`)) && (
+        <div className="product-detail-container">
+          <div className="product-detail-top">
+            <div className="product-detail-left">
+              {productInfo?.productImages?.length > 1 ? (
+                <>
+                  <Slider {...settingsImgTop} ref={(slider1) => setNav1(slider1)}>
+                    {productInfo.productImages.map((proImg) => (
+                      <div className="product-detail-top-img" key={proImg.imageId}>
+                        <img
+                          src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
+                          alt=""
+                          style={{ width: "100%", borderRadius: "10px" }}
+                        />
+                      </div>
+                    ))}
+                  </Slider>
+                  <Slider
+                    {...settingsImgBottom}
+                    ref={(slider2) => setNav2(slider2)}
+                    style={{ margin: "10px" }}>
+                    {productInfo.productImages.map((proImg) => (
+                      <div
+                        className="product-detail-bottom-img"
+                        key={proImg.imageId}>
+                        <img
+                          onClick={() => setSelectedImage(proImg.imageId)}
+                          src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
+                          alt=""
+                          style={{
+                            width: "100%",
+                            borderRadius: "10px",
+                            border:
+                              proImg.imageId === selectedImage
+                                ? "2px solid rgb(255, 70, 158)"
+                                : "none",
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </Slider>
+                </>
+              ) : (
+                productInfo?.productImages?.length === 1 && (
+                  <>
+                    <div
+                      className="product-detail-top-img"
+                      key={productInfo.productImages[0].imageId}>
+                      <img
+                        src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
+                        alt=""
+                        style={{ width: "100%", borderRadius: "10px" }}
+                      />
+                    </div>
+                    <div
+                      className="product-detail-bottom-img"
+                      style={{ margin: "10px", textAlign: "center" }}>
+                      <img
+                        src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
+                        alt=""
+                        style={{
+                          width: "100px",
+                          borderRadius: "10px",
+                          border: "2px solid rgb(255, 70, 158)",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </div>
+                  </>
+                )
+              )}
+            </div>
+            <div className="product-detail-right">
+              <div className="product-detail-info">
+                <div className="product-detail-brand">
+                  Thương hiệu:&nbsp;
+                  {productInfo?.brand ? (
+                    <Link
+                      to={`${routes.staffBrandList}/${productInfo.brand.name}`}
+                      style={{ textDecoration: "none" }}>
+                      {productInfo.brand.name}
+                    </Link>
+                  ) : (
+                    "Không xác định"
+                  )}
+                </div>
+                <div className="product-detail-name">{productInfo?.name}</div>
+                <div className="product-detail-row-2">
+                  <div className="product-detail-rate">
+                    <div
+                      style={{
+                        marginTop: "2px",
+                        margin: "0 5px",
+                        textDecoration: "underline",
+                        fontWeight: "bold",
+                      }}>
+                      {productInfo?.averageRating}
+                    </div>
+                    <Rating
+                      value={productInfo?.averageRating ?? 0}
+                      precision={0.1}
+                      size="small"
+                      readOnly
+                    />
+                  </div>
+                  <div className="product-detail-amount-rate">Lượt đánh giá</div>
+                  <div className="product-detail-amount-selling">
+                    <span
+                      style={{ fontWeight: "bold", textDecoration: "underline" }}>
+                      {productInfo?.noSold}
+                    </span>
+                    &nbsp;đã bán
+                  </div>
+                  <div className="product-detail-condition">
+                    Tình trạng: {getStockStatus(productInfo?.stock ?? 0)}
+                  </div>
+                </div>
+                <div className="product-detail-price">
+                  {productInfo?.listedPrice === productInfo?.sellingPrice ? (
+                    <div style={{ color: "#FF469E", fontSize: "30px" }}>
+                      {formatPrice(productInfo?.listedPrice) + "đ"}
+                    </div>
+                  ) : (
+                    <>
+                      <div
+                        style={{
+                          textDecoration: "line-through",
+                          fontSize: "13px",
+                          display: "flex",
+                          alignItems: "center",
+                          marginRight: "10px",
+                          fontWeight: "lighter",
+                        }}>
+                        {formatPrice(productInfo?.listedPrice) + "đ"}
+                      </div>
+                      <div style={{ color: "#FF469E", fontSize: "30px" }}>
+                        {formatPrice(productInfo?.sellingPrice) + "đ"}
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="product-detail-quantity">
+                  Số lượng &nbsp; &nbsp; &nbsp;
+                  <Box display="flex" alignItems="center" m={1} marginLeft={7}>
+                    <button onClick={handleDecrease}>-</button>
+                    <TextField
+                      value={quantity}
+                      onChange={handleQuantityChange}
+                      inputProps={{
+                        min: 1,
+                        max: productInfo?.stock ?? 0,
+                        style: { textAlign: "center" },
+                      }}
+                      style={{
+                        width: "70px",
+                        margin: "0 10px",
+                        height: "inherit",
+                      }}
+                    />
+                    <button
+                      onClick={handleIncrease}
+                      style={{ paddingTop: "2px", paddingLeft: "1px" }}>
+                      +
+                    </button>
+                  </Box>
+                </div>
+                <div className="product-detail-button">
+                  <div className="product-detail-add-to-cart">
+                    <button>Thêm vào giỏ hàng</button>
+                  </div>
+                  <div className="product-detail-buy-now">
+                    <button>Mua ngay</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ToastContainer />
+          <div className="product-detail-bottom">
+            <div className="product-detail-description">
+              <h5>Chi Tiết Sản Phẩm</h5>
+              {productInfo?.description}
+            </div>
+
+          
+          </div>
+        </div>
+      )}
+
+    </>
   );
 }
