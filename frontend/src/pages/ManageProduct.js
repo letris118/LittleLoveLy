@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useLocation } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
@@ -28,6 +28,7 @@ export default function ManageProduct() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const checkAuthentication = () => {
@@ -37,6 +38,13 @@ export default function ManageProduct() {
       }
     };
     checkAuthentication();
+
+    
+    if (location.state && location.state.success) {
+      toast.success(location.state.success);
+      // Clear the state to prevent the message from showing again on page reload
+      navigate(location.pathname, { replace: true, state: {} });
+  }
 
     const fetchProducts = async () => {
       try {
@@ -155,6 +163,7 @@ export default function ManageProduct() {
 
   return (
     <div>
+      <ToastContainer />
       <StaffHeader />
 
       <div className="manage-content">
@@ -169,9 +178,6 @@ export default function ManageProduct() {
                 value={searchQuery}
                 onChange={handleSearch}
               />
-              <button className="table-search-icon">
-                <img src="../assets/images/search_icon.png" alt="search logo" />
-              </button>
             </div>
 
             <div className="add-product-btn">

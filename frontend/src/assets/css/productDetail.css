@@ -192,3 +192,201 @@
   padding: 10px 0;
   border-bottom: 1px solid rgb(208, 208, 208);
 }
+
+
+/* ===============================Staff====================================== */
+
+.manage-product-detail-top {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 20px;
+  .product-detail-left {
+    width: 40%;
+    height: 100%;
+    padding: 20px 40px 0 20px;
+  }
+  .manage-product-detail-right {
+    width: 60%;
+    height: 100%;
+    color: rgb(59, 59, 59);
+    padding-top: 20px;
+  }
+}
+
+.manage-content-product-detail-row-1 {
+  min-width: 1000px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.manage-product-detail-top-img {
+  border: 2px solid rgb(208, 208, 208);
+  border-radius: 10px;
+}
+
+.slick-initialized .slick-slide {
+  padding: 5px;
+}
+
+.manage-product-detail-left .slick-prev:before,
+.manage-product-detail-left .slick-next:before {
+  display: none;
+}
+
+.manage-product-detail-brand {
+  font-size: 15px;
+}
+
+.manage-product-detail-brand a {
+  font-weight: 550;
+  font-family: "Courgette", cursive;
+  color: rgb(255, 70, 158);
+}
+
+.manage-product-detail-name {
+  font-weight: bold;
+  color: black;
+  font-size: 25px;
+}
+
+.manage-product-detail-rate {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.manage-product-detail-row-2 {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  align-items: center;
+  font-size: 15px;
+  margin: 10px 0;
+}
+
+.manage-product-detail-price {
+  display: flex;
+  font-size: 20px;
+  font-weight: 550;
+  background-color: #efefef4e;
+  padding: 5px 0 5px 35px;
+  border-radius: 10px;
+  margin: 40px 30px 40px 0;
+}
+
+.manage-product-detail-quantity {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.manage-product-detail-quantity button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: rgb(216, 212, 212);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 550;
+}
+
+.manage-product-detail-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.manage-product-detail-button button {
+  width: 200px;
+  height: 44px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 17px;
+  font-weight: 550;
+}
+
+.manage-product-detail-add-to-cart button {
+  background-color: rgb(255, 232, 243);
+  color: rgb(255, 70, 158);
+  border: 1px solid rgb(255, 70, 158);
+}
+.manage-product-detail-buy-now button {
+  background-color: rgb(255, 70, 158);
+}
+
+.manage-css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+  padding: 0 !important;
+}
+
+.manage-product-detail-description h5,
+.manage-product-detail-reviews h5 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-family: "MuseoModerno";
+}
+
+.manage-product-detail-description,
+.manage-product-detail-reviews {
+  margin-top: 20px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.manage-product-detail-reviews-stars {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  background-color: aliceblue;
+  border-radius: 20px;
+  margin: 0 30px;
+}
+
+.manage-product-detail-reviews-stars-left {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.manage-product-detail-reviews-stars-right {
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 50px;
+}
+
+.manage-product-detail-reviews-stars-right button {
+  width: 80px;
+  background-color: transparent;
+  border: 1px solid black;
+  padding: 10px 0;
+  border-radius: 20px;
+}
+
+.manage-product-detail-reviews-stars-right i {
+  color: #fcc00d;
+  font-size: 20px;
+}
+
+.manage-product-detail-reviews-comments-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  padding: 10px 0;
+  border-bottom: 1px solid rgb(208, 208, 208);
+}

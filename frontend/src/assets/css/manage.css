@@ -153,7 +153,7 @@
 .table-search-bar input[type="text"] {
     flex-grow: 1;
     padding: 10px;
-    border-radius: 10px 0 0 10px;
+    border-radius: 10px;
     border: 2px solid white;
     font-size: 15px;
     outline: none;
