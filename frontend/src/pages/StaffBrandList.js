@@ -4,7 +4,7 @@ import StaffHeader from "../components/StaffHeader";
 import { brands } from "../services/auth/UsersService";
 import BrandListPresentation from "../components/BrandListPresentation";
 import StaffSidebar from "../components/StaffSideBar";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function StaffBrandList() {
   const [brandList, setBrandList] = useState([]);
 
@@ -57,6 +57,7 @@ export default function StaffBrandList() {
           </div>
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   );
 }

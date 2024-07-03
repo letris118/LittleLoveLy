@@ -12,7 +12,7 @@ import {
 import StaffSideBar from "../components/StaffSideBar"
 import instance from "../services/auth/customize-axios"
 import "../assets/css/manage.css"
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function UpdateProduct() {
   const [productInfo, setProductInfo] = useState(null)
   const [allBrands, setAllBrands] = useState([])
@@ -397,6 +397,7 @@ export default function UpdateProduct() {
           )}
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   )
 }

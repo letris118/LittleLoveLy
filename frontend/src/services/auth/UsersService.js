@@ -177,6 +177,7 @@ const updateArticle = (articleId, articleRequestDTO) => {
   return instance.put(`/api/articles/${articleId}`, articleRequestDTO);
 };
 
+
 const activeProducts = () => {
   return instance.get("/api/products");
 };

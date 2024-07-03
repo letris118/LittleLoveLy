@@ -7,7 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { routes } from "../routes";
+import StaffBackToTop from "../components/StaffBackToTop";
 Quill.register("modules/imageResize", ImageResize);
 window.Quill = Quill;
 
@@ -68,10 +69,8 @@ export default function UpdateArticle() {
 
       const response = await updateArticle(id, formData);
       if (response) {
-        toast.success("Lưu bài viết thành công");
-        setContent("");
-        setTitle("");
-        setRefreshTrigger((prev) => prev + 1);
+        navigate(routes.manageArticle, { state: { success: 'Cập nhập bài viết thành công!' } });
+
       } else {
         toast.error("Không thể lưu bài viết");
       }
@@ -131,34 +130,59 @@ export default function UpdateArticle() {
     setTitle(e.target.value);
   };
 
+  const handleReload = (e) => {
+    e.preventDefault()
+    window.location.reload();
+  }
+
   return (
     <div>
       <ToastContainer />
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />
-        <div className="">
+        <div className="add-update-content-detail">
           <form onSubmit={handleSubmit}>
-            <div>
-              <label>Tiêu đề:</label>
-              <input type="text" value={title} onChange={handleTitleChange} />
+            <div className="manage-form-input">
+              <div className="manage-form-group">
+                <label>Tiêu đề:</label>
+                <div className="manage-form-control">
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={handleTitleChange}
+                  />
+                </div>
+              </div>
+              <div className="manage-form-group">
+                <label>Nội dung:</label>
+                <div className="manage-form-control">
+                  <ReactQuill
+                    style={{backgroundColor: 'white'}}
+                    ref={quillRef}
+                    value={content}
+                    modules={modules}
+                    formats={formats}
+                    onChange={setContent}
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <label>Nội dung:</label>
-              <ReactQuill
-                ref={quillRef}
-                value={content}
-                modules={modules}
-                formats={formats}
-                onChange={setContent}
-              />
+            <div className="manage-form-btn">
+              <button className="save-manage-btn save-manage-link" type="submit" disabled={isSubmitting}>
+                Cập nhật bài viết
+              </button>
+
+              <div className="cancel-manage-btn">
+                <button onClick={handleReload} className="cancel-manage-link">
+                  Đặt lại
+                </button>
+              </div>
             </div>
-            <button type="submit" disabled={isSubmitting}>
-              Lưu bài viết
-            </button>
           </form>
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   );
 }

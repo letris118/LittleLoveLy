@@ -6,7 +6,7 @@ import StaffSideBar from "../components/StaffSideBar";
 import Footer from "../components/Footer";
 import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function StaffProductList() {
   const [productList, setProductList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -160,6 +160,7 @@ export default function StaffProductList() {
         </div>
       </div>
       <Footer />
+      <StaffBackToTop />
     </div>
   );
 }

@@ -12,7 +12,7 @@ import {
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 
 export default function ManageProduct() {
   const [productList, setProductList] = useState([]);
@@ -309,6 +309,7 @@ export default function ManageProduct() {
 
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   );
 }
