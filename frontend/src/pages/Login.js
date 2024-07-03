@@ -40,13 +40,13 @@ export default function Login() {
           navigate(routes.homePage);
           const resCart = await getCart();
           const cart = JSON.parse(localStorage.getItem("cart")) || [];
-          resCart.orderDetails.map((item) =>
+          resCart.orderDetails?.map((item) =>
             cart.push({ ...item.product, quantity: item.quantity })
           );
           localStorage.setItem("cart", JSON.stringify(cart));
 
           const gifts = JSON.parse(localStorage.getItem("gifts")) || [];
-          resCart.giftIncludings.map((item) =>
+          resCart.giftIncludings?.map((item) =>
             gifts.push({ ...item.gift, quantity: item.quantity })
           );
           localStorage.setItem("gifts", JSON.stringify(gifts));
