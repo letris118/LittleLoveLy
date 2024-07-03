@@ -10,7 +10,7 @@ import "../assets/css/homePage.css";
 import ProductPresentation from "../components/ProductPresentation";
 import StaffSideBar from "../components/StaffSideBar";
 import ArticlePresentation from "../components/ArticlePresentation";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function StaffHomePage() {
   const [productList, setProductList] = useState([]);
   const [brandList, setBrandList] = useState([]);
@@ -151,6 +151,7 @@ export default function StaffHomePage() {
         </div>
       </div>
       <Footer />
+      <StaffBackToTop />
     </div>
   );
 }

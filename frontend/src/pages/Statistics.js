@@ -9,7 +9,7 @@ import BrandPresentation from "../components/BrandPresentation";
 import "../assets/css/homePage.css";
 import ProductPresentation from "../components/ProductPresentation";
 import AdminSideBar from "../components/AdminSideBar";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function Statistics() {
   const navigate = useNavigate();
 

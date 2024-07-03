@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
@@ -12,7 +12,7 @@ import {
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function ManageVoucher() {
   const [voucherList, setVoucherList] = useState([]);
   const [filteredVouchers, setFilteredVouchers] = useState([]);
@@ -22,7 +22,7 @@ export default function ManageVoucher() {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
   const navigate = useNavigate();
-
+  const location = useLocation();
   useEffect(() => {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
@@ -31,6 +31,11 @@ export default function ManageVoucher() {
       }
     };
     checkAuthentication();
+    if (location.state && location.state.success) {
+      toast.success(location.state.success);
+      // Clear the state to prevent the message from showing again on page reload
+      navigate(location.pathname, { replace: true, state: {} });
+  }
 
     const fetchVouchers = async () => {
       try {
@@ -110,6 +115,7 @@ export default function ManageVoucher() {
 
   return (
     <div>
+      <ToastContainer />
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />
@@ -203,6 +209,7 @@ export default function ManageVoucher() {
           </div>
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   );
 }

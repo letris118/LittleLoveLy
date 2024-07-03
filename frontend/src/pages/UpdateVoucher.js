@@ -11,7 +11,7 @@ import {
 } from "../services/auth/UsersService"
 import StaffSideBar from "../components/StaffSideBar"
 import "../assets/css/manage.css"
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function UpdateVoucher() {
     const [voucherInfo, setVoucherInfo] = useState(null)
     const textareaRef = useRef(null);
@@ -81,8 +81,7 @@ export default function UpdateVoucher() {
             voucherRequestDTO.append('endDate', endDate.toLocaleDateString('en-GB'));
 
             await updateVoucher(voucherRequestDTO.get('voucherId'), voucherRequestDTO);
-            navigate(routes.manageVoucher);
-            toast.success('Cập nhật voucher thành công!');
+            navigate(routes.manageVoucher, { state: { success: 'Cập nhập voucher thành công!' } });
         } catch (error) {
             console.error("Error updating voucher:", error);
             toast.error(`Error updating voucher: ${error.message}`);
@@ -314,6 +313,7 @@ export default function UpdateVoucher() {
                     )}
                 </div>
             </div>
+            <StaffBackToTop />
         </div>
     )
 }

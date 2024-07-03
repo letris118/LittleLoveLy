@@ -5,7 +5,7 @@ import StaffSideBar from "../components/StaffSideBar";
 import { useNavigate,useParams } from "react-router-dom";
 import Breadcrumb from "../components/Breadcrum";
 import Footer from "../components/Footer";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function StaffArticleDetail() {
   const { title: articleTitle } = useParams();
   const navigate = useNavigate();
@@ -40,6 +40,7 @@ export default function StaffArticleDetail() {
         </div>
       </div>
       <Footer />
+      <StaffBackToTop />
     </div>
   );
 }

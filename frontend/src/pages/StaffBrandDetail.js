@@ -4,7 +4,7 @@ import StaffSideBar from "../components/StaffSideBar";
 import { brands } from "../services/auth/UsersService";
 import { useNavigate, useParams } from "react-router-dom";
 import Footer from "../components/Footer";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 
 export default function StaffBrandDetail() {
   const brandName = useParams();
@@ -58,6 +58,7 @@ export default function StaffBrandDetail() {
         </div>
       </div>
       <Footer />
+      <StaffBackToTop />
     </>
   );
 }

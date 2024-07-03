@@ -8,7 +8,7 @@ import {
 } from "../services/auth/UsersService"
 import StaffSideBar from "../components/StaffSideBar"
 import "../assets/css/manage.css"
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function AddGift() {
   const navigate = useNavigate()
 
@@ -20,8 +20,7 @@ export default function AddGift() {
       const giftRequestDTO = new FormData(e.target)
 
       await addGift(giftRequestDTO)
-      navigate(routes.manageGift)
-      toast.success('Thêm quà tặng thành công!')
+      navigate(routes.manageGift, { state: { success: 'Thêm quà tặng thành công!' } });
     } catch (error) {
       toast.error(`Error adding gift: ${error.message}`)
     }
@@ -112,6 +111,7 @@ export default function AddGift() {
           }
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   )
 }

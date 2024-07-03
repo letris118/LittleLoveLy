@@ -8,7 +8,7 @@ import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function AddVoucher() {
     const navigate = useNavigate();
     const [selectedType, setSelectedType] = useState('');
@@ -40,8 +40,7 @@ export default function AddVoucher() {
 
         try {
             await addVoucher(voucherRequestDTO);
-            navigate(routes.manageVoucher);
-            toast.success('Thêm voucher thành công!');
+            navigate(routes.manageVoucher, { state: { success: 'Thêm voucher thành công!' } });
         } catch (error) {
             toast.error(`Error adding voucher: ${error.message}`);
         }
@@ -221,6 +220,7 @@ export default function AddVoucher() {
                     </form>
                 </div>
             </div>
+            <StaffBackToTop />
         </div>
     );
 }
