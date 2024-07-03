@@ -138,9 +138,6 @@ export default function ManageArticle() {
                 value={searchQuery}
                 onChange={handleSearch}
               />
-              <button className="table-search-icon">
-                <img src="../assets/images/search_icon.png" alt="search logo" />
-              </button>
             </div>
 
             <div className="add-product-btn">

@@ -40,4 +40,6 @@ export const routes = {
   gift: "/gift",
   order: "/order",
   staffArticleList: "/article-list",
+  staffProductList: "/product-list",
+  staffSearchProduct: "/search-product"
 };

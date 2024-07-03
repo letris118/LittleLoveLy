@@ -197,8 +197,7 @@ export default function UpdateProduct() {
 
 
       await updateProduct(productRequestDTO.get('productId'), productRequestDTO)
-      navigate(routes.manageProduct)
-      toast.success('Cập nhật sản phẩm thành công!')
+      navigate(routes.manageProduct, { state: { success: 'Cập nhập sản phẩm thành công!' } });
 
 
     } catch (error) {

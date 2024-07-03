@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
-import { productsAll, getArticleById, updateArticle } from "../services/auth/UsersService";
+import { getArticleById, updateArticle } from "../services/auth/UsersService";
 import { ToastContainer, toast } from "react-toastify";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
@@ -14,8 +14,6 @@ window.Quill = Quill;
 export default function UpdateArticle() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [productIds, setProductIds] = useState([]);
-  const [productList, setProductList] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const quillRef = useRef(null);
@@ -30,23 +28,7 @@ export default function UpdateArticle() {
       }
     };
 
-    const fetchProducts = async () => {
-      try {
-        let response = await productsAll();
-        if (response) {
-          setProductList(response);
-        } else {
-          setProductList([]);
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        toast.error("Không thể tải thông tin sản phẩm");
-        setProductList([]);
-      }
-    };
-
     checkAuthentication();
-    fetchProducts();
   }, [navigate]);
 
   useEffect(() => {
@@ -54,10 +36,8 @@ export default function UpdateArticle() {
       try {
         let response = await getArticleById(id);
         if (response) {
-          console.log("response:", response);
           setTitle(response.title);
           setContent(response.content);
-          setProductIds(response.products.map((product) => product.productId));
         } else {
           toast.error("Không thể tải thông tin bài viết");
         }
@@ -85,17 +65,12 @@ export default function UpdateArticle() {
       formData.append("articleId", id);
       formData.append("title", title);
       formData.append("content", content);
-      productIds.forEach((productId) => {
-        formData.append("productIds[]", productId);
-      });
 
-      console.log("formData:", formData);
       const response = await updateArticle(id, formData);
       if (response) {
         toast.success("Lưu bài viết thành công");
         setContent("");
         setTitle("");
-        setProductIds([]);
         setRefreshTrigger((prev) => prev + 1);
       } else {
         toast.error("Không thể lưu bài viết");
@@ -156,13 +131,6 @@ export default function UpdateArticle() {
     setTitle(e.target.value);
   };
 
-  const handleProductChange = (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions).map((option) =>
-      parseInt(option.value, 10)
-    );
-    setProductIds(selectedOptions);
-  };
-
   return (
     <div>
       <ToastContainer />
@@ -174,25 +142,6 @@ export default function UpdateArticle() {
             <div>
               <label>Tiêu đề:</label>
               <input type="text" value={title} onChange={handleTitleChange} />
-            </div>
-            <div>
-              <label>Sản phẩm liên quan:</label>
-              <select multiple value={productIds} onChange={handleProductChange}>
-                <option value="" disabled>
-                  Chọn sản phẩm
-                </option>
-                {productList.map((product) => (
-                  <option key={product.productId} value={product.productId}>
-                    {product.name}
-                  </option>
-                ))}
-              </select>
-              <ul>
-                {productIds.map((id) => {
-                  const product = productList.find((product) => product.productId === id);
-                  return <li key={id}>{product ? product.name : "Không tìm thấy sản phẩm"}</li>;
-                })}
-              </ul>
             </div>
             <div>
               <label>Nội dung:</label>

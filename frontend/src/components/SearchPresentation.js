@@ -5,6 +5,7 @@ import ProductPresentation from "./ProductPresentation";
 import { products } from "../services/auth/UsersService";
 import { Pagination } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { routes } from "../routes";
 
 export default function SearchPresentation() {
   const [searchParams] = useSearchParams();
@@ -88,7 +89,7 @@ export default function SearchPresentation() {
     <div>
       <span>
         <p style={{ color: "#4b4a4a" }}>
-          <i class="fa-solid fa-circle-check" style={{ color: "green" }} />{" "}
+          <i className="fa-solid fa-circle-check" style={{ color: "green" }} />{" "}
           &nbsp; Kết quả tìm kiếm với từ khóa <b>'{searchTerm}'</b>
         </p>
       </span>
@@ -162,6 +163,86 @@ export default function SearchPresentation() {
           color="primary"
         />
       </div>
+
+      {(window.location.pathname === routes.staffHomePage ||
+        window.location.pathname === routes.staffProductSearch ||
+        window.location.pathname === routes.staffBrandList ||
+        window.location.pathname.startsWith(`${routes.staffBrandList}/`) ||
+        window.location.pathname === routes.staffArticleList ||
+        window.location.pathname.startsWith(`${routes.staffArticleList}/`) ||
+        window.location.pathname === routes.staffProductList ||
+        window.location.pathname.startsWith(`${routes.staffProductList}/`)) && (
+        <div>
+          <span>
+            <p style={{ color: "#4b4a4a" }}>
+              <i
+                className="fa-solid fa-circle-check"
+                style={{ color: "green" }}
+              />{" "}
+              &nbsp; Kết quả tìm kiếm với từ khóa <b>'{searchTerm}'</b>
+            </p>
+          </span>
+          <div className="manage-filter-row">
+            <div>
+              <button
+                style={{
+                  backgroundColor:
+                    activeButton === "bestSeller" ? "#ff69b4" : "",
+                  color: activeButton === "bestSeller" ? "white" : "",
+                }}
+                onClick={() => handleSort("bestSeller", "bestSeller")}
+                disabled={currentItems.length === 0}>
+                Bán chạy
+              </button>
+            </div>
+            <div>
+              <button
+                // style={{
+                //   backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
+                //   color: activeButton === "asc" ? "white" : "",
+                // }}
+                // onClick={() => handleSort("asc", "asc")}
+                disabled={currentItems.length === 0}>
+                Hàng mới
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  backgroundColor: activeButton === "asc" ? "#ff69b4" : "",
+                  color: activeButton === "asc" ? "white" : "",
+                }}
+                onClick={() => handleSort("asc", "asc")}
+                disabled={currentItems.length === 0}>
+                Giá Thấp - Cao
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  backgroundColor: activeButton === "desc" ? "#ff69b4" : "",
+                  color: activeButton === "desc" ? "white" : "",
+                }}
+                onClick={() => handleSort("desc", "desc")}
+                disabled={currentItems.length === 0}>
+                Giá Cao - Thấp
+              </button>
+            </div>
+          </div>
+
+          <div className="manage-search-product-container">
+            <ProductPresentation products={currentItems} />
+          </div>
+          <div className="pagination-container" style={{ textAlign: "center" }}>
+            <CustomPagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(event, page) => setCurrentPage(page)}
+              color="primary"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

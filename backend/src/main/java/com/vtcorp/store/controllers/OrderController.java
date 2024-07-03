@@ -7,7 +7,6 @@ import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.services.GHNService;
 import com.vtcorp.store.services.OrderService;
-import com.vtcorp.store.services.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +28,7 @@ public class OrderController {
     private final GHNService ghnService;
 
     @Autowired
-    public OrderController(OrderService orderService, GHNService ghnService, PaymentService paymentService) {
+    public OrderController(OrderService orderService, GHNService ghnService) {
         this.orderService = orderService;
         this.ghnService = ghnService;
     }
@@ -52,6 +51,17 @@ public class OrderController {
     public ResponseEntity<?> getOrderById(@PathVariable String id) {
         try {
             return ResponseEntity.ok(orderService.getOrderById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Get orders by username")
+    @GetMapping("/user/{username}")
+    @JsonView(Views.Order.class)
+    public ResponseEntity<?> getOrdersByUsername(@PathVariable String username) {
+        try {
+            return ResponseEntity.ok(orderService.getOrdersByUsername(username));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

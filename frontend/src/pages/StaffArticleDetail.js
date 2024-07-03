@@ -32,7 +32,6 @@ export default function StaffArticleDetail() {
           customerPoint={localStorage.getItem("point")}
         />
         <div className="manage-content-detail">
-          <Breadcrumb value={articleTitle} customName="Tất cả bài báo" />
           <div className="manage-content-display ">
             <div className="manage-content-article-detail-row-1">
               <ArticleDetailPresentation />
