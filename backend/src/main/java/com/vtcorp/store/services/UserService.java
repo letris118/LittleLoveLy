@@ -93,7 +93,7 @@ public class UserService {
         }
         String token = tokenService.generatePasswordResetToken(forgotPasswordDTO.getMail());
         String content = "<p>Click to recover password: </p>" +
-                "<a href='http://localhost:3000/reset-password?token=" +
+                "<a href='http://localhost:3000/resetPassword?token=" +
                 token + "'>Recover password</a>";
         emailSenderService.sendEmailAsync(forgotPasswordDTO.getMail(), "Password recovery", content);
         return "Check your email to recover password";
