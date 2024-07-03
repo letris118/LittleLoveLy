@@ -9,6 +9,7 @@ import BrandPresentation from "../components/BrandPresentation";
 import "../assets/css/homePage.css";
 import ProductPresentation from "../components/ProductPresentation";
 import StaffSideBar from "../components/StaffSideBar";
+import ArticlePresentation from "../components/ArticlePresentation";
 
 export default function StaffHomePage() {
   const [productList, setProductList] = useState([]);
@@ -122,7 +123,17 @@ export default function StaffHomePage() {
                 <BrandPresentation brands={brandList} />
               </div>
             </div>
-            <div className="manage-content-row-2">Article</div>
+            <div className="manage-content-row-2">
+              <div className="row-top">
+                <h4>Thông tin bổ ích</h4>
+                <Link
+                  to={routes.staffArticleList}
+                  style={{ textDecoration: "none", color: "#ff469e" }}>
+                  Xem tất cả <i className="fa-solid fa-arrow-right"></i>
+                </Link>
+              </div>
+              <ArticlePresentation articles={articleList} />
+            </div>
             <div className="manage-content-row-3">
               <div className="manage-row-3-top ">
                 <h4>Sản phẩm</h4>

@@ -3,13 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
-import Switch from 'react-switch';
+import Switch from "react-switch";
 import instance from "../services/auth/customize-axios";
-import {
-  articlesAll,
-  deactivateArticle,
-  activateArticle,
-} from "../services/auth/UsersService";
+import { articlesAll, deactivateArticle, activateArticle } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
 
@@ -17,9 +13,9 @@ export default function ManageArticle() {
   const [articleList, setArticleList] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [sortByActive, setSortByActive] = useState(null);
-  const [sortOrderActive, setSortOrderActive] = useState('asc');
-  const [sortOrderDate, setSortOrderDate] = useState('asc');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrderActive, setSortOrderActive] = useState("asc");
+  const [sortOrderDate, setSortOrderDate] = useState("asc");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 20;
 
@@ -29,7 +25,7 @@ export default function ManageArticle() {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
       if (!userRole || userRole !== "ROLE_STAFF") {
-        navigate('/');
+        navigate("/");
       }
     };
     checkAuthentication();
@@ -62,8 +58,8 @@ export default function ManageArticle() {
         await activateArticle(articleId);
       }
 
-      setFilteredArticles(prevState =>
-        prevState.map(article =>
+      setFilteredArticles((prevState) =>
+        prevState.map((article) =>
           article.articleId === articleId ? { ...article, active: !article.active } : article
         )
       );
@@ -76,18 +72,18 @@ export default function ManageArticle() {
   const sortArticlesByActive = () => {
     let sortedArticles = [...filteredArticles];
     sortedArticles.sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1));
-    if (sortOrderActive === 'desc') {
+    if (sortOrderActive === "desc") {
       sortedArticles.reverse();
     }
     setFilteredArticles(sortedArticles);
   };
 
   const handleActiveSort = () => {
-    if (sortByActive === 'active') {
-      setSortOrderActive(sortOrderActive === 'asc' ? 'desc' : 'asc');
+    if (sortByActive === "active") {
+      setSortOrderActive(sortOrderActive === "asc" ? "desc" : "asc");
     } else {
-      setSortByActive('active');
-      setSortOrderActive('asc');
+      setSortByActive("active");
+      setSortOrderActive("asc");
     }
     sortArticlesByActive();
   };
@@ -95,14 +91,14 @@ export default function ManageArticle() {
   const sortArticlesByDate = () => {
     let sortedArticles = [...filteredArticles];
     sortedArticles.sort((a, b) => new Date(a.uploadedDate) - new Date(b.uploadedDate));
-    if (sortOrderDate === 'desc') {
+    if (sortOrderDate === "desc") {
       sortedArticles.reverse();
     }
     setFilteredArticles(sortedArticles);
   };
 
   const handleDateSort = () => {
-    setSortOrderDate(sortOrderDate === 'asc' ? 'desc' : 'asc');
+    setSortOrderDate(sortOrderDate === "asc" ? "desc" : "asc");
     sortArticlesByDate();
   };
 
@@ -110,8 +106,8 @@ export default function ManageArticle() {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = articleList.filter(article =>
-      article.title && article.title.toLowerCase().includes(query)
+    const filtered = articleList.filter(
+      (article) => article.title && article.title.toLowerCase().includes(query)
     );
     setFilteredArticles(filtered);
     setCurrentPage(1); // Reset to first page on new search
@@ -134,7 +130,6 @@ export default function ManageArticle() {
         <StaffSideBar />
 
         <div className="manage-content-detail">
-
           <div className="search-add-table">
             <div className="table-search-bar">
               <input
@@ -149,7 +144,7 @@ export default function ManageArticle() {
             </div>
 
             <div className="add-product-btn">
-              <Link to={routes.addProduct} className="add-product-link">
+              <Link to={routes.addArticle} className="add-product-link">
                 Thêm bài viết mới
               </Link>
             </div>
@@ -158,21 +153,31 @@ export default function ManageArticle() {
           <table className="manage-table">
             <thead>
               <tr>
-                <th className="index-head" style={{ width: '5%' }}>STT</th>
-                <th className="name-head" style={{ width: '22%' }}>Tiêu đề</th>
-                <th className="img-head" style={{ width: '12%' }}>Hình ảnh</th>
-                <th className="date-head" style={{ width: '11%' }} onClick={handleDateSort}>
-                  Ngày đăng
-                  <span>{sortOrderDate === 'asc' ? ' ▲' : ' ▼'}</span>
+                <th className="index-head" style={{ width: "5%" }}>
+                  STT
                 </th>
-                <th className="content-head" style={{ width: '22%' }}>Nội dung</th>
-                <th className="active-head" style={{ width: '11%' }} onClick={handleActiveSort}>
+                <th className="name-head" style={{ width: "22%" }}>
+                  Tiêu đề
+                </th>
+                <th className="img-head" style={{ width: "12%" }}>
+                  Hình ảnh
+                </th>
+                <th className="date-head" style={{ width: "11%" }} onClick={handleDateSort}>
+                  Ngày đăng
+                  <span>{sortOrderDate === "asc" ? " ▲" : " ▼"}</span>
+                </th>
+                <th className="content-head" style={{ width: "22%" }}>
+                  Nội dung
+                </th>
+                <th className="active-head" style={{ width: "11%" }} onClick={handleActiveSort}>
                   Trạng thái
-                  {sortByActive === 'active' && (
-                    <span>{sortOrderActive === 'asc' ? ' ▲' : ' ▼'}</span>
+                  {sortByActive === "active" && (
+                    <span>{sortOrderActive === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
-                <th className="update-head" style={{ width: '9%' }}>Chỉnh sửa</th>
+                <th className="update-head" style={{ width: "9%" }}>
+                  Chỉnh sửa
+                </th>
               </tr>
             </thead>
 
@@ -182,18 +187,28 @@ export default function ManageArticle() {
                   <td className="index-body">{indexOfFirstArticle + index + 1}</td>
                   <td className="name-body">{article.title}</td>
                   <td className="img-body">
-                    {article.articleImages && article.articleImages.slice(0, 1).map((image) => (
-                      <img
-                        key={image.imageId}
-                        src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
-                        alt={article.title}
-                        style={{ width: '50%', height: '50%' }}
-                      />
-                    ))}
+                    {article.articleImages &&
+                      article.articleImages
+                        .slice(0, 1)
+                        .map((image) => (
+                          <img
+                            key={image.imageId}
+                            src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
+                            alt={article.title}
+                            style={{ width: "50%", height: "50%" }}
+                          />
+                        ))}
                   </td>
                   <td className="date-body">{article.uploadedDate}</td>
                   <td className="content-body">
-                    {article.content && (article.content.length > 170 ? `${article.content.slice(0, 170)}...` : article.content)}
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          article.content.length > 170
+                            ? `${article.content.slice(0, 170)}...`
+                            : article.content,
+                      }}
+                    />
                   </td>
                   <td className="active-body">
                     <Switch
@@ -204,7 +219,10 @@ export default function ManageArticle() {
                     />
                   </td>
                   <td className="update-body">
-                    <Link to="#" style={{ color: "#7f8c8d" }}>
+                    <Link
+                      to={`${routes.updateArticle}/${article.articleId}`}
+                      style={{ color: "#7f8c8d" }}
+                    >
                       Chi tiết
                     </Link>
                   </td>
@@ -219,13 +237,12 @@ export default function ManageArticle() {
               <button
                 key={i + 1}
                 onClick={() => handleClick(i + 1)}
-                className={currentPage === i + 1 ? 'active' : ''}
+                className={currentPage === i + 1 ? "active" : ""}
               >
                 {i + 1}
               </button>
             ))}
           </div>
-
         </div>
       </div>
     </div>

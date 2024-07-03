@@ -15,7 +15,6 @@ export default function HomePage() {
   const [productList, setProductList] = useState([]);
   const [brandList, setBrandList] = useState([]);
   const [articleList, setArticleList] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {

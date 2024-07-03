@@ -37,6 +37,7 @@ export default function Login() {
         } else if (decodedToken.roles === "ROLE_STAFF") {
           navigate(routes.manageProduct);
         } else if (decodedToken.roles === "ROLE_CUSTOMER") {
+          navigate(routes.homePage);
           const resCart = await getCart();
           const cart = JSON.parse(localStorage.getItem("cart")) || [];
           resCart.orderDetails.map((item) =>
@@ -49,14 +50,11 @@ export default function Login() {
             gifts.push({ ...item.gift, quantity: item.quantity })
           );
           localStorage.setItem("gifts", JSON.stringify(gifts));
-          navigate(routes.homePage);
-        }
-      } else {
-        if (res && res.status === 401) {
-          toast.error(res.data.error);
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error("Tài khoản hoặc mật khẩu không đúng");
+    }
     setLoadingAPI(false);
   };
 
@@ -126,13 +124,15 @@ export default function Login() {
                       }
                       onClick={() => {
                         setShowPassword((prevState) => !prevState);
-                      }}></span>
+                      }}
+                    ></span>
                   </div>
                   <div className="form-group">
                     <button
                       className={"form-control btn btn-primary submit px-3"}
                       disabled={email_or_username && password ? false : true}
-                      type="submit">
+                      type="submit"
+                    >
                       Đăng nhập &nbsp;
                       {loadingAPI && <i className="fas fa-spinner fa-spin"></i>}
                     </button>
@@ -141,15 +141,14 @@ export default function Login() {
                     <div className="forgot-pwd text-center">
                       <a
                         href={routes.forgotPassword}
-                        style={{ color: "#fff", textDecoration: "none" }}>
+                        style={{ color: "#fff", textDecoration: "none" }}
+                      >
                         Quên mật khẩu ?
                       </a>
                     </div>
                   </div>
                 </form>
-                <p className="w-100 text-center">
-                  &mdash; Chưa có tài khoản ? &mdash;
-                </p>
+                <p className="w-100 text-center">&mdash; Chưa có tài khoản ? &mdash;</p>
                 <div className="form-group">
                   <button
                     onClick={() => {
@@ -157,15 +156,14 @@ export default function Login() {
                         pathname: routes.register,
                       });
                     }}
-                    className="form-control btn btn-primary submit px-3">
+                    className="form-control btn btn-primary submit px-3"
+                  >
                     Đăng kí tài khoản
                   </button>
                 </div>
                 <div className="form-group">
                   <div className="forgot-pwd text-center">
-                    <Link
-                      to={routes.homePage}
-                      style={{ textDecoration: "none", color: "white" }}>
+                    <Link to={routes.homePage} style={{ textDecoration: "none", color: "white" }}>
                       Quay lại trang chủ
                     </Link>
                   </div>

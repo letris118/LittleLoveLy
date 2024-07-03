@@ -5,7 +5,6 @@ import "../assets/css/productPresentation.css";
 import instance from "../services/auth/customize-axios";
 import { formatPrice } from "../services/auth/UsersService";
 import Rating from "@mui/material/Rating";
-import Pagination from "./Pagination";
 
 export default function ProductPresentation({ products }) {
   return (
