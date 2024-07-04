@@ -78,7 +78,7 @@ const Sidebar = ({ role, customerName, customerPoint, loggedIn = true }) => {
               </svg>
               Đổi quà
             </Link>
-            <Link to="#">
+            <Link to={routes.chat}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -142,19 +142,6 @@ const Sidebar = ({ role, customerName, customerPoint, loggedIn = true }) => {
                 <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4z" />
               </svg>
               Đơn hàng
-            </Link>
-            <Link to="#">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="bi bi-chat-right-text-fill"
-                viewBox="0 0 16 16"
-              >
-                <path d="M16 2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h9.586a1 1 0 0 1 .707.293l2.853 2.853a.5.5 0 0 0 .854-.353zM3.5 3h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1 0-1m0 2.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1 0-1m0 2.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1" />
-              </svg>
-              Chăm sóc khách hàng
             </Link>
             <Link to={routes.login}>
               <svg

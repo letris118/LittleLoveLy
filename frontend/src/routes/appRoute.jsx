@@ -17,6 +17,7 @@ import ProductDetail from "../pages/ProductDetail";
 import Cart from "../pages/Cart";
 import StaffHomePage from "../pages/StaffHomePage";
 import StaffChat from "../pages/StaffChat";
+import Chat from "../pages/Chat";
 import ManageGift from "../pages/ManageGift";
 import StaffBrandList from "../pages/StaffBrandList";
 import UpdateProduct from "../pages/UpdateProduct";
@@ -130,6 +131,7 @@ export default function AppRoute() {
         />
 
         <Route path={routes.profileCustomer} element={<ProfileCus />} />
+        <Route path={routes.chat} element={<Chat />} />  
       </Routes>
     </>
   );

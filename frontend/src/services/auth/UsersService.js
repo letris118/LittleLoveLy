@@ -227,8 +227,8 @@ const evaluateCart = (cartItems, cusDistrictId, cusWardCode, voucherId) => {
   });
 };
 
-const getUserInfo = (userId) => {
-  return instance.get(`/api/users/${userId}`);
+const getUserInfo = (username) => {
+  return instance.get(`/api/users/${username}`);
 };
 
 const updateUserInfo = (
