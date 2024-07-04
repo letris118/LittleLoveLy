@@ -58,11 +58,6 @@ export default function Login() {
     setLoadingAPI(false);
   };
 
-  // const fetchCart = async () => {
-  //   let res = await getCart();
-  //   localStorage.setItem("cart", res);
-  // };
-
   useEffect(() => {
     document.body.classList.add("img");
     document.body.classList.add("js-fullheight");
@@ -124,15 +119,13 @@ export default function Login() {
                       }
                       onClick={() => {
                         setShowPassword((prevState) => !prevState);
-                      }}
-                    ></span>
+                      }}></span>
                   </div>
                   <div className="form-group">
                     <button
                       className={"form-control btn btn-primary submit px-3"}
                       disabled={email_or_username && password ? false : true}
-                      type="submit"
-                    >
+                      type="submit">
                       Đăng nhập &nbsp;
                       {loadingAPI && <i className="fas fa-spinner fa-spin"></i>}
                     </button>
@@ -141,14 +134,15 @@ export default function Login() {
                     <div className="forgot-pwd text-center">
                       <a
                         href={routes.forgotPassword}
-                        style={{ color: "#fff", textDecoration: "none" }}
-                      >
+                        style={{ color: "#fff", textDecoration: "none" }}>
                         Quên mật khẩu ?
                       </a>
                     </div>
                   </div>
                 </form>
-                <p className="w-100 text-center">&mdash; Chưa có tài khoản ? &mdash;</p>
+                <p className="w-100 text-center">
+                  &mdash; Chưa có tài khoản ? &mdash;
+                </p>
                 <div className="form-group">
                   <button
                     onClick={() => {
@@ -156,14 +150,15 @@ export default function Login() {
                         pathname: routes.register,
                       });
                     }}
-                    className="form-control btn btn-primary submit px-3"
-                  >
+                    className="form-control btn btn-primary submit px-3">
                     Đăng kí tài khoản
                   </button>
                 </div>
                 <div className="form-group">
                   <div className="forgot-pwd text-center">
-                    <Link to={routes.homePage} style={{ textDecoration: "none", color: "white" }}>
+                    <Link
+                      to={routes.homePage}
+                      style={{ textDecoration: "none", color: "white" }}>
                       Quay lại trang chủ
                     </Link>
                   </div>

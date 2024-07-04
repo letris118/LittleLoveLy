@@ -4,6 +4,7 @@ import { CSSTransition } from "react-transition-group";
 import "../assets/css/dropdown.css";
 import { Link, useNavigate } from "react-router-dom";
 import { handleLogout } from "../services/auth/UsersService";
+import { routes } from "../routes";
 
 export default function DropdownMenu() {
   const [showMenu, setShowMenu] = useState(false);
@@ -23,15 +24,19 @@ export default function DropdownMenu() {
         classNames="dropdown-menu"
         unmountOnExit>
         <Dropdown.Menu className="dropdown-menu">
-          <Link
-            to={{}}
-            style={{
-              textDecoration: "none",
-              width: "inherit",
-              color: "black",
-            }}>
-            <Dropdown.Item>Tài khoản</Dropdown.Item>
-          </Link>
+          <Dropdown.Item>
+            {" "}
+            <Link
+              to={routes.profileCustomer}
+              style={{
+                textDecoration: "none",
+                width: "inherit",
+                color: "black",
+              }}>
+              Tài khoản
+            </Link>
+          </Dropdown.Item>
+
           <Link
             onClick={handleLogout(navigate)}
             style={{

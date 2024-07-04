@@ -44,6 +44,7 @@ import StaffArticleList from "../pages/StaffArticleList";
 import StaffProductDetail from "../pages/StaffProductDetail";
 import StaffProductList from "../pages/StaffProductList";
 import StaffSearchProduct from "../pages/StaffSearchProduct";
+import ProfileCus from "../pages/ProfileCus";
 
 export default function AppRoute() {
   return (
@@ -101,13 +102,26 @@ export default function AppRoute() {
       <Route path={routes.searchProduct} element={<SearchProduct />} />
       <Route path={routes.gift} element={<Gift />} />
       <Route path={routes.order} element={<Order />} />
-      <Route path={`${routes.staffBrandList}/:name`} element={<StaffBrandDetail />} />
-      <Route path={`${routes.staffArticleList}/:title`} element={<StaffArticleDetail />} />
+      <Route
+        path={`${routes.staffBrandList}/:name`}
+        element={<StaffBrandDetail />}
+      />
+      <Route
+        path={`${routes.staffArticleList}/:title`}
+        element={<StaffArticleDetail />}
+      />
       <Route path={routes.staffArticleList} element={<StaffArticleList />} />
 
       <Route path={routes.staffProductList} element={<StaffProductList />} />
-      <Route path={`${routes.staffProductList}/:name`} element={<StaffProductDetail />} />
-      <Route path={routes.staffSearchProduct} element={<StaffSearchProduct />} />
+      <Route
+        path={`${routes.staffProductList}/:name`}
+        element={<StaffProductDetail />}
+      />
+      <Route
+        path={routes.staffSearchProduct}
+        element={<StaffSearchProduct />}
+      />
+      <Route path={routes.profileCustomer} element={<ProfileCus />} />
     </Routes>
   );
 }

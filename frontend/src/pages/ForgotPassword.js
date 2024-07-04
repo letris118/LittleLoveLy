@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import backgroundImage from "../assets/images/backgroundDemo.jpg";
+import { forgotPassword } from "../services/auth/UsersService";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     // Set class and background image for the body
@@ -19,6 +22,28 @@ export default function ForgotPassword() {
       document.body.style.backgroundImage = "none";
     };
   }, []);
+  console.log(email);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Email không đúng định dạng", {
+        timeOut: 2000,
+      });
+      return;
+    }
+    try {
+      const res = await forgotPassword(email);
+      if (res) {
+        toast.success("Vui lòng kiểm tra email để đặt lại mật khẩu");
+        navigate(routes.resetPassword);
+      } else {
+        toast.error("Email khong ton tai");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="ftco-section-forgot-pwd">
       <div className="container">
@@ -26,23 +51,20 @@ export default function ForgotPassword() {
           <div className="col-md-6 col-lg-4">
             <div className="login-wrap p-0">
               <h3 className="mb-4 text-center">Đặt lại mật khẩu</h3>
-              <form action="#" className="signin-form">
+              <form onSubmit={handleSubmit} className="signin-form">
                 <div className="form-group">
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Nhập gmail"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
                 {/* navigate to restPassword */}
                 <div className="form-group">
                   <button
-                    onClick={() => {
-                      navigate({
-                        pathname: routes.resetPassword,
-                      });
-                    }}
                     type="submit"
                     className="form-control btn btn-primary submit px-3">
                     Xác nhận
@@ -73,6 +95,7 @@ export default function ForgotPassword() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
