@@ -17,7 +17,7 @@ export default function AdminSideBar() {
             </Link>
 
             <Link to={routes.manageStaff} style={{color: 'black'}}>
-                Quản Lý nhân viên
+                Quản lý nhân viên
             </Link>            
         </div>
         <StaffBackToTop />
