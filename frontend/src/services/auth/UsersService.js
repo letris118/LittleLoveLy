@@ -227,8 +227,8 @@ const evaluateCart = (cartItems, cusDistrictId, cusWardCode, voucherId) => {
   });
 };
 
-const getUserInfo = (userId) => {
-  return instance.get(`/api/users/${userId}`);
+const getUserInfo = (username) => {
+  return instance.get(`/api/users/${username}`);
 };
 
 const updateUserInfo = (
@@ -289,6 +289,9 @@ const getOrdersByUsername = (username) => {
 const getProductByBrandId = (brandId) => {
   return instance.get(`/api/products/brand/${brandId}`);
 };
+const getUsersByRoleAll = (role) => {
+  return instance.get(`/api/users/role/${role}`);
+};
 
 export {
   loginAPI,
@@ -343,4 +346,5 @@ export {
   resetPasswordAPI,
   getOrdersByUsername,
   getProductByBrandId,
+  getUsersByRoleAll,
 };

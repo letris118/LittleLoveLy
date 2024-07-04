@@ -43,7 +43,7 @@ export default function BrandPresentation({ brands }) {
 
 return (
   <>
-  {(window.location.pathname === routes.homePage) &&(
+ 
   <div className="slider-container">
     <Slider {...settings}>
       {brands.map((brand) => (
@@ -68,7 +68,7 @@ return (
       ))}
     </Slider>
   </div>
-  )}
+  
 
 {(window.location.pathname === routes.staffHomePage) &&(
   <div className="manage-slider-container">

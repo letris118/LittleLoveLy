@@ -50,7 +50,7 @@ export default function StaffHeader() {
       <header className="manage-header">
         {/* logo + store name to return home page */}
         <div className="manage-store-name">
-          <Link to={routes.staffHomePage} style={{ color: "white" }}>
+          <Link to={routes.manageProduct} style={{ color: "white" }}>
             Little Lovely
           </Link>
         </div>
