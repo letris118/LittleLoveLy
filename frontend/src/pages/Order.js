@@ -8,48 +8,61 @@ import {
   getOrderById,
   getOrdersByUsername,
 } from "../services/auth/UsersService";
-import { Pagination } from "@mui/material";
+import {
+  Pagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import instance from "../services/auth/customize-axios";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
+import { min } from "date-fns";
+import { Link } from "react-router-dom";
+import { routes } from "../routes";
 
 export default function Order() {
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersList, setOrdersList] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const itemsPerPage = 10;
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [orderToCancel, setOrderToCancel] = useState(null);
+  const itemsPerPage = 5;
 
-  const CustomPagination = styled(Pagination)(({ theme }) => ({
+  const CustomPagination = styled(Pagination)({
     "& .MuiPaginationItem-root": {
       "&.Mui-selected": {
         backgroundColor: "#ff69b4",
         color: "white",
       },
     },
-  }));
+  });
 
   const totalPages = useMemo(
     () => Math.ceil(ordersList.length / itemsPerPage),
     [ordersList.length]
   );
 
-  useEffect(() => {
-    const fetchOrders = async (username) => {
-      try {
-        const response = await getOrdersByUsername(username);
-        if (response) {
-          setOrdersList(response);
-        } else {
-          setOrdersList([]);
-        }
-      } catch (error) {
-        toast.error("Không thể lấy thông tin đơn hàng");
-        console.error("Error fetching orders:", error);
+  const fetchOrders = async (username) => {
+    try {
+      const response = await getOrdersByUsername(username);
+      if (response) {
+        setOrdersList(response);
+      } else {
         setOrdersList([]);
       }
-    };
+    } catch (error) {
+      toast.error("Không thể lấy thông tin đơn hàng");
+      console.error("Error fetching orders:", error);
+      setOrdersList([]);
+    }
+  };
 
+  useEffect(() => {
     const username = localStorage.getItem("username");
     if (username) {
       fetchOrders(username);
@@ -64,12 +77,19 @@ export default function Order() {
     onSubmit: async () => {
       setIsSubmitting(true);
       try {
-        const response = await getOrderById(formik.values.search);
-        if (response) {
-          console.log(response);
-          setOrdersList([response]);
+        if (!formik.values.search) {
+          const username = localStorage.getItem("username");
+          if (username) {
+            await fetchOrders(username);
+          }
         } else {
-          setOrdersList([]);
+          const response = await getOrderById(formik.values.search);
+          if (response) {
+            console.log(response);
+            setOrdersList([response]);
+          } else {
+            setOrdersList([]);
+          }
         }
       } catch (error) {
         toast.error("Mã đơn hàng không hợp lệ");
@@ -78,6 +98,65 @@ export default function Order() {
         setIsSubmitting(false);
       }
     },
+  });
+
+  const paginatedOrders = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return ordersList.slice(startIndex, startIndex + itemsPerPage);
+  }, [currentPage, ordersList]);
+
+  const handleOrderClick = (order) => {
+    setSelectedOrder(order);
+  };
+
+  const handleClose = () => {
+    setSelectedOrder(null);
+  };
+
+  const handleCancelOrder = (order) => {
+    setOrderToCancel(order);
+    setIsCancelDialogOpen(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Add the logic to cancel the order here
+    console.log(`Đơn hàng <b>${orderToCancel.orderId}</b> của bạn đã hủy`);
+    setIsCancelDialogOpen(false);
+    setSelectedOrder(null);
+  };
+
+  const handleCloseCancelDialog = () => {
+    setIsCancelDialogOpen(false);
+  };
+
+  const CustomDialog = styled(Dialog)({
+    "& .MuiDialog-paper": {
+      width: "70%",
+      maxHeight: "650px",
+    },
+    "& .MuiPaper-root": {
+      borderRadius: "20px",
+    },
+  });
+
+  const CustomDialogTitle = styled(DialogTitle)({
+    fontWeight: "bold",
+    backgroundColor: "#ff469e",
+    color: "white",
+    marginBottom: "20px",
+  });
+
+  const CustomButton = styled(Button)({
+    backgroundColor: "hotpink",
+    color: "white",
+    "&:hover": {
+      background:
+        "linear-gradient(90deg, rgba(255,0,132,0.8) 0%, rgba(255,99,132,0.8) 100%)",
+    },
+    marginBottom: "20px",
+    marginRight: "5px",
+    borderRadius: "10px",
+    width: "100px",
   });
 
   return (
@@ -95,8 +174,7 @@ export default function Order() {
             style={{
               backgroundColor: "white",
               borderRadius: "20px",
-            }}
-          >
+            }}>
             <div className="row-top">
               <h4>Đơn hàng</h4>
             </div>
@@ -113,23 +191,25 @@ export default function Order() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="search-btn"
-                  >
+                    className="search-btn">
                     Tìm
                   </button>
                 </form>
               </div>
               <div className="order-detail">
-                {ordersList.length > 0 ? (
-                  ordersList.map((order) => (
+                {paginatedOrders.length > 0 ? (
+                  paginatedOrders.map((order) => (
                     <div className="order-container" key={order.orderId}>
                       <div>
-                        {order.orderDetails.map((orderDetail) => (
+                        {order.orderDetails.slice(0, 1).map((orderDetail) => (
                           <div
                             className="order-product"
                             key={orderDetail.product.productId}
-                          >
-                            <div className="order-product-img">
+                            style={{ cursor: "pointer" }}>
+                            <div
+                              className="order-product-img"
+                              onClick={() => handleOrderClick(order)}
+                              style={{ cursor: "pointer" }}>
                               <img
                                 src={`${instance.defaults.baseURL}/images/products/${orderDetail.product.productImages[0].imagePath}`}
                                 alt={orderDetail.product.name}
@@ -137,15 +217,17 @@ export default function Order() {
                             </div>
                             <div
                               className="order-product-center"
-                              style={{ borderRight: "1px solid #9fa0a0b0" }}
-                            >
+                              onClick={() => handleOrderClick(order)}
+                              style={{
+                                borderRight: "1px solid #9fa0a0b0",
+                                cursor: "pointer",
+                              }}>
                               <div
                                 style={{
                                   fontWeight: "bold",
                                   fontSize: "17px",
                                   color: "black",
-                                }}
-                              >
+                                }}>
                                 {orderDetail.product.name}
                               </div>
                               <div>x{orderDetail.quantity}</div>
@@ -155,16 +237,16 @@ export default function Order() {
                             </div>
                             <div
                               className="order-product-right"
-                              style={{ width: "35%" }}
-                            >
+                              style={{ width: "35%" }}>
                               <div
+                                onClick={() => handleOrderClick(order)}
                                 style={{
                                   display: "flex",
                                   justifyContent: "space-between",
                                   borderBottom: "1px solid #9fa0a0b0",
                                   marginTop: "10px",
-                                }}
-                              >
+                                  cursor: "pointer",
+                                }}>
                                 <div>{order.orderDetails.length} sản phẩm</div>
                                 <div style={{ color: "black" }}>
                                   Thành tiền:{" "}
@@ -172,8 +254,7 @@ export default function Order() {
                                     style={{
                                       color: "#ff469e",
                                       fontWeight: "bold",
-                                    }}
-                                  >
+                                    }}>
                                     {formatPrice(order.postDiscountPrice)}đ
                                   </span>
                                 </div>
@@ -186,15 +267,13 @@ export default function Order() {
                                     fontSize: "15px",
                                     marginRight: "20px",
                                     color: "black",
-                                  }}
-                                >
+                                  }}>
                                   Tình trạng:&nbsp;
                                   <span
                                     style={{
                                       color: "#ff469e",
                                       fontWeight: "bold",
-                                    }}
-                                  >
+                                    }}>
                                     Đang giao
                                   </span>
                                 </div>
@@ -219,8 +298,7 @@ export default function Order() {
               style={{
                 textAlign: "center",
                 padding: "20px 0",
-              }}
-            >
+              }}>
               <CustomPagination
                 count={totalPages}
                 page={currentPage}
@@ -232,6 +310,104 @@ export default function Order() {
         </div>
       </div>
       <Footer />
+      <CustomDialog
+        open={!!selectedOrder}
+        onClose={handleClose}
+        fullWidth
+        maxWidth="sm">
+        <CustomDialogTitle>Chi tiết đơn hàng</CustomDialogTitle>
+        <DialogContent>
+          {selectedOrder && (
+            <div>
+              <p>
+                <b>Mã đơn hàng:</b> {selectedOrder.orderId}
+              </p>
+              <p>
+                <b>Tổng số sản phẩm:</b> {selectedOrder.orderDetails.length}
+              </p>
+              <p>
+                <b>Tình trạng:</b> {selectedOrder.status}
+              </p>
+
+              <div>
+                {selectedOrder.orderDetails.map((orderDetail) => (
+                  <div
+                    style={{ display: "flex", margin: "20px 0" }}
+                    key={orderDetail.product.productId}>
+                    <div className="popup-detail-left">
+                      <img
+                        src={`${instance.defaults.baseURL}/images/products/${orderDetail.product.productImages[0].imagePath}`}
+                        alt={orderDetail.product.name}
+                        style={{ width: "100px", height: "100px" }}
+                      />
+                    </div>
+                    <div className="popup-detail-right">
+                      <Link
+                        to={`${routes.products}/${orderDetail.product.name}`}
+                        style={{ textDecoration: "none" }}>
+                        <div style={{ fontWeight: "bold", color: "black" }}>
+                          {orderDetail.product.name}
+                        </div>
+                      </Link>
+                      <div>x {orderDetail.quantity}</div>
+                      <div>{formatPrice(orderDetail.price)}đ</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Tổng tiền hàng:</span>{" "}
+                {formatPrice(selectedOrder.basePrice)}đ
+              </p>
+              <p style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Phí vận chuyển:</span>
+                {formatPrice(selectedOrder.shippingFee)}đ
+              </p>
+              <p style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Giảm giá:</span> - {formatPrice(selectedOrder.voucher)}đ
+              </p>
+              <p
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  borderTop: "1px solid #9fa0a0b0",
+                  padding: "10px 0",
+                }}>
+                <span>
+                  <b>Thành tiền:</b>{" "}
+                </span>
+                {formatPrice(selectedOrder.postDiscountPrice)}đ
+              </p>
+            </div>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <CustomButton onClick={() => handleCancelOrder(selectedOrder)}>
+            Hủy đơn
+          </CustomButton>
+          <CustomButton onClick={handleClose}>Đóng</CustomButton>
+        </DialogActions>
+      </CustomDialog>
+      <CustomDialog
+        open={isCancelDialogOpen}
+        onClose={handleCloseCancelDialog}
+        fullWidth
+        maxWidth="xs">
+        <CustomDialogTitle>Xác nhận hủy đơn hàng</CustomDialogTitle>
+        <DialogContent>
+          <span style={{ fontSize: "18px" }}>
+            Bạn có chắc chắn muốn hủy đơn hàng này?
+          </span>
+        </DialogContent>
+        <DialogActions>
+          <CustomButton onClick={handleCloseCancelDialog} color="primary">
+            Không
+          </CustomButton>
+          <CustomButton onClick={handleConfirmCancel} color="secondary">
+            Có
+          </CustomButton>
+        </DialogActions>
+      </CustomDialog>
     </div>
   );
 }

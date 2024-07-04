@@ -103,35 +103,6 @@ export default function AppRoute() {
         <Route path={routes.addGift} element={<AddGift />} />
         <Route path={`${routes.updateGift}/:name`} element={<UpdateGift />} />
 
-<<<<<<< HEAD
-      <Route path={routes.statistics} element={<Statistics />} />
-      <Route path={routes.manageMember} element={<ManageMember />} />
-      <Route path={routes.manageStaff} element={<ManageStaff />} />
-      <Route path={routes.searchProduct} element={<SearchProduct />} />
-      <Route path={routes.gift} element={<Gift />} />
-      <Route path={routes.order} element={<Order />} />
-      <Route
-        path={`${routes.staffBrandList}/:name`}
-        element={<StaffBrandDetail />}
-      />
-      <Route
-        path={`${routes.staffArticleList}/:title`}
-        element={<StaffArticleDetail />}
-      />
-      <Route path={routes.staffArticleList} element={<StaffArticleList />} />
-
-      <Route path={routes.staffProductList} element={<StaffProductList />} />
-      <Route
-        path={`${routes.staffProductList}/:name`}
-        element={<StaffProductDetail />}
-      />
-      <Route
-        path={routes.staffSearchProduct}
-        element={<StaffSearchProduct />}
-      />
-      <Route path={routes.profileCustomer} element={<ProfileCus />} />
-    </Routes>
-=======
         <Route path={routes.statistics} element={<Statistics />} />
         <Route path={routes.manageMember} element={<ManageMember />} />
         <Route path={routes.manageStaff} element={<ManageStaff />} />
@@ -157,8 +128,9 @@ export default function AppRoute() {
           path={routes.staffSearchProduct}
           element={<StaffSearchProduct />}
         />
+
+        <Route path={routes.profileCustomer} element={<ProfileCus />} />
       </Routes>
     </>
->>>>>>> main
   );
 }

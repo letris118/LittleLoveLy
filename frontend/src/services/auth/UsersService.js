@@ -267,7 +267,6 @@ const getOrderById = (orderId) => {
   return instance.get(`/api/orders/${orderId}`);
 };
 
-<<<<<<< HEAD
 const forgotPassword = (mail) => {
   return instance.post("/api/auth/forgot-password", mail);
 };
@@ -282,10 +281,9 @@ const getDistrictByCityId = (cityId) => {
 
 const getWardByDistrictId = (districtId) => {
   return instance.get(`/api/orders/wards/${districtId}`);
-=======
+};
 const getOrdersByUsername = (username) => {
   return instance.get(`/api/orders/user/${username}`);
->>>>>>> main
 };
 
 export {
@@ -332,15 +330,12 @@ export {
   getArticleById,
   updateArticle,
   vouchers,
-<<<<<<< HEAD
   forgotPassword,
   getCities,
   getDistrictByCityId,
   getWardByDistrictId,
   updateUserInfo,
-=======
   forgotPasswordAPI,
   resetPasswordAPI,
   getOrdersByUsername,
->>>>>>> main
 };

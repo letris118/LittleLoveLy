@@ -1,0 +1,76 @@
+.brand-row-1 {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 20px;
+  position: relative;
+}
+
+.brand-row-1-left {
+  width: 35%;
+  height: 100%;
+}
+
+.brand-row-1-right {
+  width: 60%;
+  height: 100%;
+  color: rgb(59, 59, 59);
+  padding-top: 20px;
+}
+
+.row-1-left-content {
+  margin: 20px 40px;
+  position: relative;
+  z-index: 1;
+  border-radius: 20px;
+  height: 150px;
+  border-radius: 20px;
+}
+
+.row-1-left-img {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  z-index: 1;
+  color: black;
+  border-radius: 50%;
+  object-fit: contain;
+  object-position: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-left: 40px;
+}
+
+.ro .row-1-left-text {
+  width: 35%;
+  color: black;
+  z-index: 1;
+}
+
+.row-1-left-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  filter: blur(2px);
+  z-index: -1;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 20px;
+  color: rgba(0, 0, 0, 0.306);
+  border-radius: 20px;
+}
+
+.row-1-left-text {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}

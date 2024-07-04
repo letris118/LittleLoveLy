@@ -1,13 +1,12 @@
-import { useState } from "react";
-import React, { useEffect } from "react";
-import backgroundImage from "../assets/images/backgroundDemo.jpg";
-import "../assets/css/loginAndRegister.css";
+import { jwtDecode } from "jwt-decode";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../assets/css/loginAndRegister.css";
+import backgroundImage from "../assets/images/backgroundDemo.jpg";
 import { routes } from "../routes";
 import { getCart, loginAPI } from "../services/auth/UsersService";
-import "react-toastify/dist/ReactToastify.css";
-import { toast } from "react-toastify";
-import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
   const [email_or_username, setName] = useState("");

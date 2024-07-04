@@ -30,6 +30,9 @@ export default function ProfileCus() {
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false);
+  const [openChangePasswordDialog, setOpenChangePasswordDialog] =
+    useState(false);
+  const [openChangeGmailDialog, setOpenChangeGmailDialog] = useState(false);
 
   console.log(districts, wards);
   const formik = useFormik({
@@ -166,11 +169,34 @@ export default function ProfileCus() {
     setOpenVoucherDialog(false);
   };
 
+  const handleOpenChangePassword = () => {
+    setOpenChangePasswordDialog(true);
+  };
+
+  const handleCloseChangePassword = () => {
+    setOpenChangePasswordDialog(false);
+  };
+
+  const handleOpenChangeGmail = () => {
+    setOpenChangeGmailDialog(true);
+  };
+
+  const handleCloseChangeGmail = () => {
+    setOpenChangeGmailDialog(false);
+  };
+
   const CustomTextField = styled(TextField)({
     "& .MuiOutlinedInput-root": {
       height: "56px",
       paddingLeft: "20px",
     },
+  });
+
+  const CustomDialogTitle = styled(DialogTitle)({
+    fontWeight: "bold",
+    backgroundColor: "#ff469e",
+    color: "white",
+    marginBottom: "20px",
   });
 
   const handleCityChange = async (e) => {
@@ -270,8 +296,12 @@ export default function ProfileCus() {
                 <CustomButton onClick={handleAdjustClick}>
                   Sửa thông tin cá nhân
                 </CustomButton>
-                <CustomButton>Đổi mật khẩu</CustomButton>
-                <CustomButton>Đổi gmail</CustomButton>
+                <CustomButton onClick={handleOpenChangePassword}>
+                  Đổi mật khẩu
+                </CustomButton>
+                <CustomButton onClick={handleOpenChangeGmail}>
+                  Đổi gmail
+                </CustomButton>
               </div>
             </div>
           </div>
@@ -279,7 +309,7 @@ export default function ProfileCus() {
       </div>
       <Footer />
       <CustomDialog open={openVoucherDialog} onClose={handleCloseAdjustDialog}>
-        <DialogTitle>Thay đổi thông tin</DialogTitle>
+        <CustomDialogTitle>Thay đổi thông tin</CustomDialogTitle>
         <DialogContent>
           <form onSubmit={formik.handleSubmit}>
             <div>
@@ -372,6 +402,67 @@ export default function ProfileCus() {
             </DialogActions>
           </form>
         </DialogContent>
+      </CustomDialog>
+      <CustomDialog
+        open={openChangePasswordDialog}
+        onClose={handleCloseChangePassword}>
+        <CustomDialogTitle>Đổi mật khẩu</CustomDialogTitle>
+        <DialogContent>
+          <form>
+            <div>
+              <CustomTextField
+                label="Mật khẩu hiện tại "
+                name="currentPassword"
+                onChange={formik.handleChange}
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div>
+              <CustomTextField
+                label="Mật khẩu mới"
+                name="newPassword"
+                onChange={formik.handleChange}
+                fullWidth
+                margin="normal"
+              />
+            </div>
+            <div>
+              <CustomTextField
+                label="Xác nhận mật khẩu mới"
+                name="confirmNewPassword"
+                onChange={handleCityChange}
+                fullWidth
+                SelectProps={{ native: true }}
+                margin="normal"
+              />
+            </div>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <CustomButton type="submit">Đổi</CustomButton>
+          <CustomButton onClick={handleCloseChangePassword}>Close</CustomButton>
+        </DialogActions>
+      </CustomDialog>
+      <CustomDialog
+        open={openChangeGmailDialog}
+        onClose={handleCloseChangeGmail}>
+        <CustomDialogTitle>Đổi gmail</CustomDialogTitle>
+        <DialogContent>
+          <div>
+            <CustomTextField
+              label="Nhập gmail"
+              name="currentGmail"
+              onChange={formik.handleChange}
+              fullWidth
+              margin="normal"
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <CustomButton type="submit">Đổi</CustomButton>
+          <CustomButton onClick={handleCloseChangeGmail}>Close</CustomButton>
+        </DialogActions>
       </CustomDialog>
     </div>
   );
