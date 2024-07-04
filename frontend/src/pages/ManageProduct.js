@@ -39,7 +39,6 @@ export default function ManageProduct() {
     };
     checkAuthentication();
 
-    
     if (location.state && location.state.success) {
       toast.success(location.state.success);
       // Clear the state to prevent the message from showing again on page reload
@@ -163,7 +162,7 @@ export default function ManageProduct() {
 
   return (
     <div>
-      <ToastContainer />
+      
       <StaffHeader />
 
       <div className="manage-content">

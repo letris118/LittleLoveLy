@@ -51,7 +51,10 @@ export default function Header({ handleLogoutSuccess }) {
         {/* logo + store name to return home page */}
         <div className="store-name">
           <Link to={routes.homePage} style={{ color: "#ff469e" }}>
-            Little Lovely
+            <img
+              src="../assets/images/logo.png"
+              alt="page logo"
+            />
           </Link>
         </div>
 
@@ -147,7 +150,7 @@ export default function Header({ handleLogoutSuccess }) {
                 <Dropdown>
                   <Link to={routes.login}>
                     <Dropdown.Toggle id="dropdown-basic">
-                      <i class="fa-solid fa-user"></i>
+                      <i className="fa-solid fa-user"></i>
                     </Dropdown.Toggle>
                   </Link>
                 </Dropdown>

@@ -7,7 +7,7 @@ import parse from "html-react-parser";
 export default function ArticleListPresentation(articles) {
   return (
     <>
-      {(window.location.pathname === routes.articles) && (
+      
         <>
           {articles.articles.map((article) => (
             <div className="article-card-list col-4" id={article.articleId}>
@@ -40,7 +40,7 @@ export default function ArticleListPresentation(articles) {
 
           ))}
         </>
-      )}
+      
       {(window.location.pathname === routes.staffArticleList) && (
         <>
         {articles.articles.map((article) => (

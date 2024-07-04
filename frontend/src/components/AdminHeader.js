@@ -15,28 +15,27 @@ export default function AdminHeader() {
           </Link>
         </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "end",
-              width: "100%",
-            }}>
-            {localStorage.getItem("token") ? (
-              <StaffDropdownMenu style={{ marginLeft: "10px" }} />
-            ) : (
-              <>
-                <Dropdown className="staff-dropdown">
-                  <Link to={routes.login}>
-                    <Dropdown.Toggle id="staff-dropdown-basic">
-                      <i class="fa-solid fa-user"></i>
-                    </Dropdown.Toggle>
-                  </Link>
-                </Dropdown>
-              </>
-            )}
-          </div>
-        
-        
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "end",
+            width: "100%",
+          }}
+        >
+          {localStorage.getItem("token") ? (
+            <StaffDropdownMenu style={{ marginLeft: "10px" }} />
+          ) : (
+            <>
+              <Dropdown className="staff-dropdown">
+                <Link to={routes.login}>
+                  <Dropdown.Toggle id="staff-dropdown-basic">
+                    <i className="fa-solid fa-user"></i>
+                  </Dropdown.Toggle>
+                </Link>
+              </Dropdown>
+            </>
+          )}
+        </div>
       </header>
     </>
   );

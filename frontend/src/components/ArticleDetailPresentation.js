@@ -27,7 +27,7 @@ export default function ArticleDetailPresentation() {
   }, [articleTitle]);
   return (
     <>
-    {(window.location.pathname.startsWith(`${routes.articles}/`)) && (
+    
       <div>
         {articleInfo && (
           <div className="article-detail-container">
@@ -46,7 +46,7 @@ export default function ArticleDetailPresentation() {
           </div>
         )}
       </div>
-    )}
+    
     {(window.location.pathname.startsWith(`${routes.staffArticleList}/`)) && (
       <div>
         {articleInfo && (

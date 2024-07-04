@@ -12,7 +12,9 @@ import { Button, Container, Icon, IconButton, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 
 const checkChema = Yup.object({
-  mail: Yup.string().email("Vui lòng nhập đúng định dạng email").required("Vui lòng nhập email"),
+  mail: Yup.string()
+    .email("Vui lòng nhập đúng định dạng email")
+    .required("Vui lòng nhập email"),
   phone: Yup.string().required("Vui lòng điền số điện thoại"),
   name: Yup.string().required("Vui lòng điền họ và tên"),
   password: Yup.string().required("Vui lòng điền mật khẩu"),
@@ -52,7 +54,17 @@ export default function Register() {
           console.error("Registration failed:", response.message);
         }
       } catch (error) {
-        console.error("Error during form submission:", error);
+        if (error.response && error.response.data === "Phone already used") {
+          toast.error("Số điện thoại đã được sử dụng");
+        } else if (
+          error.response &&
+          error.response.data === "Mail already used"
+        ) {
+          toast.error("Email đã được sử dụng");
+        } else {
+          toast.error("Đã có lỗi xảy ra, vui lòng thử lại sau");
+          console.error("Error during form submission:", error);
+        }
       } finally {
         setIsSubmitting(false);
       }
@@ -110,7 +122,11 @@ export default function Register() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.phone && formik.errors.phone && (
-                    <Tooltip title={formik.errors.phone} placement="right" arrow>
+                    <Tooltip
+                      title={formik.errors.phone}
+                      placement="right"
+                      arrow
+                    >
                       <span className="tooltip-icon">
                         <FaExclamationCircle />
                       </span>
@@ -158,7 +174,11 @@ export default function Register() {
                     }}
                   ></span>
                   {formik.touched.password && formik.errors.password && (
-                    <Tooltip title={formik.errors.password} placement="right" arrow>
+                    <Tooltip
+                      title={formik.errors.password}
+                      placement="right"
+                      arrow
+                    >
                       <span className="tooltip-icon">
                         <FaExclamationCircle />
                       </span>
@@ -187,19 +207,25 @@ export default function Register() {
                       setShowConfirmPassword((prevState) => !prevState);
                     }}
                   ></span>
-                  {formik.touched.confirmPassword && formik.errors.confirmPassword && (
-                    <Tooltip title={formik.errors.confirmPassword} placement="right" arrow>
-                      <span className="tooltip-icon">
-                        <FaExclamationCircle />
-                      </span>
-                    </Tooltip>
-                  )}
+                  {formik.touched.confirmPassword &&
+                    formik.errors.confirmPassword && (
+                      <Tooltip
+                        title={formik.errors.confirmPassword}
+                        placement="right"
+                        arrow
+                      >
+                        <span className="tooltip-icon">
+                          <FaExclamationCircle />
+                        </span>
+                      </Tooltip>
+                    )}
                 </div>
                 <div className="form-group">
                   <button
                     type="submit"
                     disabled={
-                      isSubmitting || formik.values.password !== formik.values.confirmPassword
+                      isSubmitting ||
+                      formik.values.password !== formik.values.confirmPassword
                     }
                     className="form-control btn btn-primary submit px-3"
                   >
@@ -207,7 +233,9 @@ export default function Register() {
                   </button>
                 </div>
               </form>
-              <p className="w-100 text-center">&mdash; Đã có tài khoản ? &mdash;</p>
+              <p className="w-100 text-center">
+                &mdash; Đã có tài khoản ? &mdash;
+              </p>
               <div className="form-group">
                 <button
                   onClick={() => navigate(routes.login)}

@@ -21,7 +21,7 @@ export default function ArticlePresentation({ articles }) {
   const article2 = articles[2];
   return (
     <>
-      {(window.location.pathname === routes.homePage) && (
+      
         <div className="article-container">
           <div className="article-left">
             <Slider {...settings}>
@@ -105,7 +105,7 @@ export default function ArticlePresentation({ articles }) {
             )}
           </div>
         </div>
-      )}
+      
 
       {(window.location.pathname === routes.staffHomePage) && (
         <div className="manage-article-container">

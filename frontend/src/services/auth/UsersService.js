@@ -17,6 +17,19 @@ const registerAPI = (mail, phone, name, password) => {
   });
 };
 
+const forgotPasswordAPI = (mail) => {
+  return instance.post("/api/auth/forgot-password", {
+    mail,
+  });
+};
+
+const resetPasswordAPI = (newPassword, token) => {
+  return instance.post("/api/auth/change-password", {
+    newPassword,
+    token,
+  });
+};
+
 const users = () => {
   return instance.get("/api/users");
 };
@@ -218,6 +231,30 @@ const getUserInfo = (username) => {
   return instance.get(`/api/users/${username}`);
 };
 
+const updateUserInfo = (
+  userId,
+  password,
+  name,
+  mail,
+  phone,
+  cityCode,
+  districtId,
+  wardCode,
+  street
+) => {
+  return instance.put(
+    `/api/users/${userId}`,
+    password,
+    name,
+    mail,
+    phone,
+    cityCode,
+    districtId,
+    wardCode,
+    street
+  );
+};
+
 const createOrder = (order) => {
   return instance.post(`/api/orders`, order);
 };
@@ -226,13 +263,33 @@ const gifts = () => {
   return instance.get("/api/gifts");
 };
 
-const orders = () => {
-  return instance.get("/api/orders");
-};
-
 const getOrderById = (orderId) => {
   return instance.get(`/api/orders/${orderId}`);
 };
+
+const forgotPassword = (mail) => {
+  return instance.post("/api/auth/forgot-password", mail);
+};
+
+const getCities = () => {
+  return instance.get("/api/orders/cities");
+};
+
+const getDistrictByCityId = (cityId) => {
+  return instance.get(`/api/orders/districts/${cityId}`);
+};
+
+const getWardByDistrictId = (districtId) => {
+  return instance.get(`/api/orders/wards/${districtId}`);
+};
+const getOrdersByUsername = (username) => {
+  return instance.get(`/api/orders/user/${username}`);
+};
+
+const getUsersByRoleAll = (role) =>{
+  return instance.get(`/api/users/role/${role}`);
+};
+
 export {
   loginAPI,
   users,
@@ -272,10 +329,18 @@ export {
   createOrder,
   registerAPI,
   gifts,
-  orders,
   getOrderById,
   addArticle,
   getArticleById,
   updateArticle,
   vouchers,
+  forgotPassword,
+  getCities,
+  getDistrictByCityId,
+  getWardByDistrictId,
+  updateUserInfo,
+  forgotPasswordAPI,
+  resetPasswordAPI,
+  getOrdersByUsername,
+  getUsersByRoleAll,
 };

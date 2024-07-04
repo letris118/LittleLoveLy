@@ -137,7 +137,7 @@ export default function UpdateArticle() {
 
   return (
     <div>
-      <ToastContainer />
+      
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />

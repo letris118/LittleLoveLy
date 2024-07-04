@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import "../assets/css/brandDetail.css";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
 import { brands } from "../services/auth/UsersService";
-import { useNavigate, useParams } from "react-router-dom";
-import Footer from "../components/Footer";
+import BrandDetailPresentation from "../components/BrandDetailPresentation";
 
 export default function BrandDetail() {
   const brandName = useParams();
@@ -38,10 +40,7 @@ export default function BrandDetail() {
         />
         <div className="content-detail">
           <div className="content-display ">
-            <div className="content-row-1">
-              <div className="row-1-left">Ảnh và logo</div>
-              <div className="row-1-right">Text</div>
-            </div>
+            <BrandDetailPresentation />
           </div>
         </div>
       </div>

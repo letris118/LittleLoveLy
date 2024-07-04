@@ -9,7 +9,7 @@ import {
   formatPrice,
   getUserInfo,
 } from "../services/auth/UsersService";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { routes } from "../routes";
 import * as Yup from "yup";
@@ -22,6 +22,7 @@ import {
   styled,
 } from "@mui/material";
 import VoucherPresentation from "../components/VoucherPresentation";
+import { toast } from "react-toastify";
 
 const checkoutSchema = Yup.object({
   cusName: Yup.string().required("Vui lòng nhập tên người nhận hàng"),
@@ -47,6 +48,7 @@ export default function Checkout() {
   const [evaluateResult, setEvaluateResult] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchUserInfo = async () => {
       const userId = localStorage.getItem("username");
@@ -89,7 +91,8 @@ export default function Checkout() {
           if (formik.values.paymentMethod === "VN_PAY") {
             window.location.href = response.data;
           } else {
-            window.location.href = routes.homePage;
+            toast.success("Đặt hàng thành công");
+            navigate(routes.homePage);
           }
         }
       } catch (error) {

@@ -1,5 +1,6 @@
 package com.vtcorp.store.services;
 
+import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.dtos.*;
 import com.vtcorp.store.entities.User;
 import com.vtcorp.store.mappers.UserMapper;
@@ -93,7 +94,7 @@ public class UserService {
         }
         String token = tokenService.generatePasswordResetToken(forgotPasswordDTO.getMail());
         String content = "<p>Click to recover password: </p>" +
-                "<a href='http://localhost:3000/reset-password?token=" +
+                "<a href='http://localhost:3000/resetPassword?token=" +
                 token + "'>Recover password</a>";
         emailSenderService.sendEmailAsync(forgotPasswordDTO.getMail(), "Password recovery", content);
         return "Check your email to recover password";
@@ -149,4 +150,12 @@ public class UserService {
         return "Mail changed successfully";
     }
 
+    public List<UserResponseDTO> getUsersByRole(String role) {
+        switch (role) {
+            case "admin" -> role = Role.ROLE_ADMIN;
+            case "customer" -> role = Role.ROLE_CUSTOMER;
+            case "staff" -> role = Role.ROLE_STAFF;
+        }
+        return userMapper.toResponseDTOs(userRepository.findByRole(role));
+    }
 }
