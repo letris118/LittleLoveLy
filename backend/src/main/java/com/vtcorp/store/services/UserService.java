@@ -64,7 +64,7 @@ public class UserService {
         user.setPoint(0);
         user.setRegisteredDate(new Date());
         user = userRepository.save(user);
-        emailSenderService.sendEmail(user.getMail(), "Welcome to our store", "Welcome to our store, " + user.getName());
+        emailSenderService.sendEmailAsync(user.getMail(), "Welcome to our store", "Welcome to our store, " + user.getName());
         return "User registered successfully";
     }
 
@@ -93,9 +93,9 @@ public class UserService {
         }
         String token = tokenService.generatePasswordResetToken(forgotPasswordDTO.getMail());
         String content = "<p>Click to recover password: </p>" +
-                "<a href='http://localhost:3000/reset-password?token=" +
+                "<a href='http://localhost:3000/resetPassword?token=" +
                 token + "'>Recover password</a>";
-        emailSenderService.sendEmail(forgotPasswordDTO.getMail(), "Password recovery", content);
+        emailSenderService.sendEmailAsync(forgotPasswordDTO.getMail(), "Password recovery", content);
         return "Check your email to recover password";
     }
 
@@ -111,7 +111,7 @@ public class UserService {
         }
         user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         userRepository.save(user);
-        emailSenderService.sendEmail(mail, "Password Changed", "Your password has been changed successfully");
+        emailSenderService.sendEmailAsync(mail, "Password Changed", "Your password has been changed successfully");
         return "Password changed successfully";
     }
 
@@ -135,7 +135,7 @@ public class UserService {
         String content = "<p>Click to confirm mail change: </p>" +
                 "<a href='http://localhost:3000/confirm-mail?token=" +
                 token + "'>Confirm mail change</a>";
-        emailSenderService.sendEmail(newMail, "Mail change", content);
+        emailSenderService.sendEmailAsync(newMail, "Mail change", content);
         return "Check your email to confirm mail change";
     }
 

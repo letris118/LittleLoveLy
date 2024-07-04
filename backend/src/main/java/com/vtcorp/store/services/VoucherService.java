@@ -46,13 +46,9 @@ public class VoucherService {
 
     @Transactional
     public VoucherResponseDTO createVoucher(VoucherRequestDTO voucherRequestDTO) {
-
         Voucher voucher = voucherMapper.toEntity(voucherRequestDTO);
-        try {
-            return voucherMapper.toDTO(voucherRepository.save(voucher));
-        } catch (Exception e) {
-            throw new RuntimeException("Fail to create voucher", e);
-        }
+        voucher.setActive(true);
+        return voucherMapper.toResponseDTO(voucherRepository.save(voucher));
     }
 
     @Transactional
@@ -63,7 +59,6 @@ public class VoucherService {
         voucherMapper.updateEntity(voucherRequestDTO, voucher);
         voucher.setAppliedCount(appliedCount);
         return mapVoucherToVoucherResponseDTO(voucher);
-
     }
 
     public String deactivateVoucher(long id) {
@@ -77,7 +72,7 @@ public class VoucherService {
     }
 
     private VoucherResponseDTO mapVoucherToVoucherResponseDTO(Voucher voucher) {
-        VoucherResponseDTO voucherResponseDTO = voucherMapper.toDTO(voucher);
+        VoucherResponseDTO voucherResponseDTO = voucherMapper.toResponseDTO(voucher);
         return voucherResponseDTO;
     }
 

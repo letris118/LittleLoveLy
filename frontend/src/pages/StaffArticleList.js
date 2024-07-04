@@ -6,7 +6,7 @@ import { articles } from "../services/auth/UsersService";
 import ArticleListPresentation from "../components/ArticleListPresentation";
 import Footer from "../components/Footer";
 import { useNavigate,useParams } from "react-router-dom";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function StaffArticleList() {
   const [articleList, setArticleList] = useState([]);
   const navigate = useNavigate();
@@ -64,6 +64,7 @@ export default function StaffArticleList() {
         </div>
       </div>
       <Footer />
+      <StaffBackToTop />
     </div>
   );
 }

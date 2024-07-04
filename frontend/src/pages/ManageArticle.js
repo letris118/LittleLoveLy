@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,7 +8,7 @@ import instance from "../services/auth/customize-axios";
 import { articlesAll, deactivateArticle, activateArticle } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function ManageArticle() {
   const [articleList, setArticleList] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);
@@ -20,6 +20,7 @@ export default function ManageArticle() {
   const articlesPerPage = 20;
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const checkAuthentication = () => {
@@ -29,6 +30,12 @@ export default function ManageArticle() {
       }
     };
     checkAuthentication();
+
+    if (location.state && location.state.success) {
+      toast.success(location.state.success);
+      // Clear the state to prevent the message from showing again on page reload
+      navigate(location.pathname, { replace: true, state: {} });
+  }
 
     const fetchArticles = async () => {
       try {
@@ -124,6 +131,7 @@ export default function ManageArticle() {
 
   return (
     <div>
+      <ToastContainer />
       <StaffHeader />
 
       <div className="manage-content">
@@ -242,6 +250,7 @@ export default function ManageArticle() {
           </div>
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   );
 }

@@ -10,7 +10,7 @@ import {
 } from "../services/auth/UsersService"
 import StaffSideBar from "../components/StaffSideBar"
 import "../assets/css/manage.css"
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function AddProduct() {
 
   const [allBrands, setAllBrands] = useState([])
@@ -273,6 +273,7 @@ export default function AddProduct() {
           }
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   )
 }

@@ -17,6 +17,19 @@ const registerAPI = (mail, phone, name, password) => {
   });
 };
 
+const forgotPasswordAPI = (mail) => {
+  return instance.post("/api/auth/forgot-password", {
+    mail,
+  });
+};
+
+const resetPasswordAPI = (newPassword, token) => {
+  return instance.post("/api/auth/change-password", {
+    newPassword,
+    token,
+  });
+};
+
 const users = () => {
   return instance.get("/api/users");
 };
@@ -181,11 +194,12 @@ const activeProducts = () => {
   return instance.get("/api/products");
 };
 
-const handleLogout = (navigate) => (e) => {
+const handleLogout = (navigate, callback) => (e) => {
   e.preventDefault();
   localStorage.clear();
   navigate(routes.homePage);
   toast.success("Đăng xuất thành công");
+  if (callback) callback();
 };
 
 const formatPrice = (num) => {
@@ -249,14 +263,11 @@ const gifts = () => {
   return instance.get("/api/gifts");
 };
 
-const orders = () => {
-  return instance.get("/api/orders");
-};
-
 const getOrderById = (orderId) => {
   return instance.get(`/api/orders/${orderId}`);
 };
 
+<<<<<<< HEAD
 const forgotPassword = (mail) => {
   return instance.post("/api/auth/forgot-password", mail);
 };
@@ -271,6 +282,10 @@ const getDistrictByCityId = (cityId) => {
 
 const getWardByDistrictId = (districtId) => {
   return instance.get(`/api/orders/wards/${districtId}`);
+=======
+const getOrdersByUsername = (username) => {
+  return instance.get(`/api/orders/user/${username}`);
+>>>>>>> main
 };
 
 export {
@@ -312,15 +327,20 @@ export {
   createOrder,
   registerAPI,
   gifts,
-  orders,
   getOrderById,
   addArticle,
   getArticleById,
   updateArticle,
   vouchers,
+<<<<<<< HEAD
   forgotPassword,
   getCities,
   getDistrictByCityId,
   getWardByDistrictId,
   updateUserInfo,
+=======
+  forgotPasswordAPI,
+  resetPasswordAPI,
+  getOrdersByUsername,
+>>>>>>> main
 };

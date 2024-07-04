@@ -46,56 +46,64 @@ import StaffProductList from "../pages/StaffProductList";
 import StaffSearchProduct from "../pages/StaffSearchProduct";
 import ProfileCus from "../pages/ProfileCus";
 
+import { ToastContainer } from "react-toastify";
+
 export default function AppRoute() {
   return (
-    <Routes>
-      <Route path={routes.login} element={<Login />} />
-      <Route path={routes.register} element={<Register />} />
-      <Route path={routes.forgotPassword} element={<ForgotPassword />} />
-      <Route path={routes.resetPassword} element={<ResetPassword />} />
+    <>
+      <ToastContainer />
+      <Routes>
+        <Route path={routes.login} element={<Login />} />
+        <Route path={routes.register} element={<Register />} />
+        <Route path={routes.forgotPassword} element={<ForgotPassword />} />
+        <Route path={routes.resetPassword} element={<ResetPassword />} />
 
-      <Route path={routes.homePage} element={<HomePage />} />
-      <Route path={routes.staffHomePage} element={<StaffHomePage />} />
+        <Route path={routes.homePage} element={<HomePage />} />
+        <Route path={routes.staffHomePage} element={<StaffHomePage />} />
 
-      <Route path={routes.brands} element={<BrandList />} />
-      <Route path={`${routes.brands}/:name`} element={<BrandDetail />} />
+        <Route path={routes.brands} element={<BrandList />} />
+        <Route path={`${routes.brands}/:name`} element={<BrandDetail />} />
 
-      <Route path={routes.products} element={<ProductList />} />
-      <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
+        <Route path={routes.products} element={<ProductList />} />
+        <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
 
-      <Route path={routes.checkout} element={<Checkout />} />
-      <Route path={routes.articles} element={<ArticleList />} />
-      <Route path={`${routes.articles}/:title`} element={<ArticleDetail />} />
-      <Route path={routes.cart} element={<Cart />} />
-      <Route path={routes.searchProduct} element={<SearchProduct />} />
-      <Route path={routes.gift} element={<Gift />} />
+        <Route path={routes.checkout} element={<Checkout />} />
+        <Route path={routes.articles} element={<ArticleList />} />
+        <Route path={`${routes.articles}/:title`} element={<ArticleDetail />} />
+        <Route path={routes.cart} element={<Cart />} />
+        <Route path={routes.searchProduct} element={<SearchProduct />} />
+        <Route path={routes.gift} element={<Gift />} />
 
-      <Route path={routes.staffBrandList} element={<StaffBrandList />} />
-      <Route path={routes.staffChat} element={<StaffChat />} />
+        <Route path={routes.staffBrandList} element={<StaffBrandList />} />
+        <Route path={routes.staffChat} element={<StaffChat />} />
 
-      <Route path={routes.manageProduct} element={<ManageProduct />} />
-      <Route
-        path={`${routes.updateProduct}/:name`}
-        element={<UpdateProduct />}
-      />
-      <Route path={routes.addProduct} element={<AddProduct />} />
+        <Route path={routes.manageProduct} element={<ManageProduct />} />
+        <Route
+          path={`${routes.updateProduct}/:name`}
+          element={<UpdateProduct />}
+        />
+        <Route path={routes.addProduct} element={<AddProduct />} />
 
-      <Route path={routes.manageOrder} element={<ManageOrder />} />
-      <Route path={routes.manageArticle} element={<ManageArticle />} />
-      <Route path={routes.addArticle} element={<AddArticle />} />
-      <Route path={`${routes.updateArticle}/:id`} element={<UpdateArticle />} />
+        <Route path={routes.manageOrder} element={<ManageOrder />} />
+        <Route path={routes.manageArticle} element={<ManageArticle />} />
+        <Route path={routes.addArticle} element={<AddArticle />} />
+        <Route
+          path={`${routes.updateArticle}/:id`}
+          element={<UpdateArticle />}
+        />
 
-      <Route path={routes.manageVoucher} element={<ManageVoucher />} />
-      <Route path={routes.addVoucher} element={<AddVoucher />} />
-      <Route
-        path={`${routes.updateVoucher}/:title`}
-        element={<UpdateVoucher />}
-      />
+        <Route path={routes.manageVoucher} element={<ManageVoucher />} />
+        <Route path={routes.addVoucher} element={<AddVoucher />} />
+        <Route
+          path={`${routes.updateVoucher}/:title`}
+          element={<UpdateVoucher />}
+        />
 
-      <Route path={routes.manageGift} element={<ManageGift />} />
-      <Route path={routes.addGift} element={<AddGift />} />
-      <Route path={`${routes.updateGift}/:name`} element={<UpdateGift />} />
+        <Route path={routes.manageGift} element={<ManageGift />} />
+        <Route path={routes.addGift} element={<AddGift />} />
+        <Route path={`${routes.updateGift}/:name`} element={<UpdateGift />} />
 
+<<<<<<< HEAD
       <Route path={routes.statistics} element={<Statistics />} />
       <Route path={routes.manageMember} element={<ManageMember />} />
       <Route path={routes.manageStaff} element={<ManageStaff />} />
@@ -123,5 +131,34 @@ export default function AppRoute() {
       />
       <Route path={routes.profileCustomer} element={<ProfileCus />} />
     </Routes>
+=======
+        <Route path={routes.statistics} element={<Statistics />} />
+        <Route path={routes.manageMember} element={<ManageMember />} />
+        <Route path={routes.manageStaff} element={<ManageStaff />} />
+        <Route path={routes.searchProduct} element={<SearchProduct />} />
+        <Route path={routes.gift} element={<Gift />} />
+        <Route path={routes.order} element={<Order />} />
+        <Route
+          path={`${routes.staffBrandList}/:name`}
+          element={<StaffBrandDetail />}
+        />
+        <Route
+          path={`${routes.staffArticleList}/:title`}
+          element={<StaffArticleDetail />}
+        />
+        <Route path={routes.staffArticleList} element={<StaffArticleList />} />
+
+        <Route path={routes.staffProductList} element={<StaffProductList />} />
+        <Route
+          path={`${routes.staffProductList}/:name`}
+          element={<StaffProductDetail />}
+        />
+        <Route
+          path={routes.staffSearchProduct}
+          element={<StaffSearchProduct />}
+        />
+      </Routes>
+    </>
+>>>>>>> main
   );
 }

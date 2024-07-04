@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { handleLogout } from "../services/auth/UsersService";
 import { routes } from "../routes";
 
-export default function DropdownMenu() {
+export default function DropdownMenu({ handleLogoutSuccess }) {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
 
@@ -25,7 +25,6 @@ export default function DropdownMenu() {
         unmountOnExit>
         <Dropdown.Menu className="dropdown-menu">
           <Dropdown.Item>
-            {" "}
             <Link
               to={routes.profileCustomer}
               style={{
@@ -38,7 +37,7 @@ export default function DropdownMenu() {
           </Dropdown.Item>
 
           <Link
-            onClick={handleLogout(navigate)}
+            onClick={handleLogout(navigate, handleLogoutSuccess)}
             style={{
               textDecoration: "none",
               color: "black",

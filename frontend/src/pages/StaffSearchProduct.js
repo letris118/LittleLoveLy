@@ -3,7 +3,7 @@ import StaffHeader from "../components/StaffHeader";
 import Footer from "../components/Footer";
 import StaffSideBar from "../components/StaffSideBar";
 import SearchPresentation from "../components/SearchPresentation";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function StaffSearchProduct() {
   return (
     <div>
@@ -23,6 +23,7 @@ export default function StaffSearchProduct() {
         </div>
       </div>
       <Footer />
+      <StaffBackToTop />
     </div>
   );
 }

@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
 import { routes } from "../routes";
 import backgroundImage from "../assets/images/backgroundDemo.jpg";
-import { forgotPassword } from "../services/auth/UsersService";
-import { ToastContainer, toast } from "react-toastify";
+import { useFormik } from "formik";
+import { forgotPasswordAPI } from "../services/auth/UsersService";
+import { toast } from "react-toastify";
 
 export default function ForgotPassword() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   useEffect(() => {
     // Set class and background image for the body
@@ -22,72 +21,82 @@ export default function ForgotPassword() {
       document.body.style.backgroundImage = "none";
     };
   }, []);
-  console.log(email);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast.error("Email không đúng định dạng", {
-        timeOut: 2000,
-      });
-      return;
-    }
-    try {
-      const res = await forgotPassword(email);
-      if (res) {
-        toast.success("Vui lòng kiểm tra email để đặt lại mật khẩu");
-        navigate(routes.resetPassword);
-      } else {
-        toast.error("Email khong ton tai");
+
+  const formik = useFormik({
+    initialValues: {
+      mail: "",
+    },
+    enableReinitialize: true,
+    onSubmit: async () => {
+      setIsSubmitting(true);
+      try {
+        const response = await forgotPasswordAPI(formik.values.mail);
+        if (response) {
+          toast.success("Kiểm tra mail của bạn để đặt lại mật khẩu");
+        } else {
+          console.log("fail: " + response);
+          setIsSubmitting(false);
+        }
+      } catch (error) {
+        if (error.response && error.response.data === "Mail not found") {
+          toast.error("Mail không tồn tại");
+        } else {
+          console.error(error);
+          toast.error("Đã có lỗi xảy ra, vui lòng thử lại sau");
+        }
+        setIsSubmitting(false);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    },
+  });
+
   return (
-    <div className="ftco-section-forgot-pwd">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-md-6 col-lg-4">
-            <div className="login-wrap p-0">
-              <h3 className="mb-4 text-center">Đặt lại mật khẩu</h3>
-              <form onSubmit={handleSubmit} className="signin-form">
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Nhập gmail"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                {/* navigate to restPassword */}
-                <div className="form-group">
-                  <button
-                    type="submit"
-                    className="form-control btn btn-primary submit px-3">
-                    Xác nhận
-                  </button>
-                </div>
-                {/* back to login or register page */}
-              </form>
-              <p className="w-100 text-center">
-                &mdash; Quay lại trang &mdash;
-              </p>
-              <div className="row">
-                <div className="form-group col-md-6 border-right">
-                  <div className="forgot-pwd text-center">
-                    <a href={routes.login} style={{ color: "#fff" }}>
-                      Đăng nhập
-                    </a>
+    <>
+      <div className="ftco-section-forgot-pwd">
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-md-6 col-lg-4">
+              <div className="login-wrap p-0">
+                <h3 className="mb-4 text-center">Đặt lại mật khẩu</h3>
+                <form onSubmit={formik.handleSubmit} className="signin-form">
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Nhập gmail"
+                      required
+                      name="mail"
+                      value={formik.values.mail}
+                      onChange={formik.handleChange}
+                    />
                   </div>
-                </div>
-                <div className="form-group col-md-6">
-                  <div className="forgot-pwd text-center">
-                    <a href={routes.register} style={{ color: "#fff" }}>
-                      Đăng kí
-                    </a>
+                  {/* navigate to restPassword */}
+                  <div className="form-group">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="form-control btn btn-primary submit px-3">
+                      Xác nhận
+                    </button>
+                  </div>
+                  {/* back to login or register page */}
+                </form>
+                <p className="w-100 text-center">
+                  &mdash; Quay lại trang &mdash;
+                </p>
+                <div className="row">
+                  <div className="form-group col-md-6 border-right">
+                    <div className="forgot-pwd text-center">
+                      <a href={routes.login} style={{ color: "#fff" }}>
+                        Đăng nhập
+                      </a>
+                    </div>
+                  </div>
+                  <div className="form-group col-md-6">
+                    <div className="forgot-pwd text-center">
+                      <a href={routes.register} style={{ color: "#fff" }}>
+                        Đăng kí
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -95,7 +104,6 @@ export default function ForgotPassword() {
           </div>
         </div>
       </div>
-      <ToastContainer />
-    </div>
+    </>
   );
 }

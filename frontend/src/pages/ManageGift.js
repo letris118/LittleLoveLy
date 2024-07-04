@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
@@ -12,7 +12,7 @@ import {
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function ManageGift() {
   const [giftList, setGiftList] = useState([]);
   const [filteredGifts, setFilteredGifts] = useState([]);
@@ -25,7 +25,7 @@ export default function ManageGift() {
   const giftsPerPage = 20;
 
   const navigate = useNavigate();
-
+  const location = useLocation();
   useEffect(() => {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
@@ -34,6 +34,11 @@ export default function ManageGift() {
       }
     };
     checkAuthentication();
+    if (location.state && location.state.success) {
+      toast.success(location.state.success);
+      // Clear the state to prevent the message from showing again on page reload
+      navigate(location.pathname, { replace: true, state: {} });
+  }
 
     const fetchGifts = async () => {
       try {
@@ -132,6 +137,7 @@ export default function ManageGift() {
 
   return (
     <div>
+      <ToastContainer />
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />
@@ -231,6 +237,7 @@ export default function ManageGift() {
 
         </div>
       </div>
+      <StaffBackToTop />
     </div>
   );
 }

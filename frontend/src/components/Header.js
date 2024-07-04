@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import instance from "../services/auth/customize-axios";
 
-export default function Header() {
+export default function Header({ handleLogoutSuccess }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const navigate = useNavigate();
@@ -84,13 +84,15 @@ export default function Header() {
                 right: 0,
                 zIndex: 10,
                 width: 600,
-              }}>
+              }}
+            >
               <MenuList>
                 {searchResults.slice(0, 5).map((result) => (
                   <MenuItem
                     key={result.productId}
                     component={Link}
-                    to={`${routes.products}/${result.name}`}>
+                    to={`${routes.products}/${result.name}`}
+                  >
                     <ListItemAvatar>
                       {result.productImages.slice(0, 1).map((image) => (
                         <Avatar
@@ -112,7 +114,8 @@ export default function Header() {
                 {searchResults.length > 5 && (
                   <MenuItem
                     component={Link}
-                    to={`${routes.searchProduct}?search_term=${searchTerm}`}>
+                    to={`${routes.searchProduct}?search_term=${searchTerm}`}
+                  >
                     <ListItemText
                       primary={
                         <>
@@ -132,15 +135,19 @@ export default function Header() {
               display: "flex",
               justifyContent: "end",
               width: "50%",
-            }}>
+            }}
+          >
             {localStorage.getItem("token") ? (
-              <DropdownMenu style={{ marginLeft: "10px" }} />
+              <DropdownMenu
+                handleLogoutSuccess={handleLogoutSuccess}
+                style={{ marginLeft: "10px" }}
+              />
             ) : (
               <>
                 <Dropdown>
                   <Link to={routes.login}>
                     <Dropdown.Toggle id="dropdown-basic">
-                      <i class="fa-solid fa-user"></i>
+                      <i className="fa-solid fa-user"></i>
                     </Dropdown.Toggle>
                   </Link>
                 </Dropdown>

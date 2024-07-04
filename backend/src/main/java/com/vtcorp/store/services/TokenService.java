@@ -79,9 +79,11 @@ public class TokenService {
         try {
             Jwt jwt = decoder.decode(token);
             if (jwt.getExpiresAt().isBefore(Instant.now())) {
-                throw new IllegalArgumentException("Token is expired");
+                throw new JwtException("Token is expired");
             }
             return jwt;
+        } catch (JwtException e) {
+            throw new JwtException("Token is expired");
         } catch (Exception e) {
             throw new IllegalArgumentException("Token is not valid", e);
         }

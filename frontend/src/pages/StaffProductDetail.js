@@ -6,7 +6,7 @@ import ProductDetailPresentation from "../components/ProductDetailPresentation";
 import "../assets/css/productDetail.css";
 import Breadcrumb from "../components/Breadcrum";
 import { useParams } from "react-router-dom";
-
+import StaffBackToTop from "../components/StaffBackToTop"
 export default function StaffProductDetail() {
   const { name: productName } = useParams();
   return (
@@ -27,6 +27,7 @@ export default function StaffProductDetail() {
         </div>
       </div>
       <Footer />
+      <StaffBackToTop />
     </>
   );
 }
