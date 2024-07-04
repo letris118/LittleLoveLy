@@ -29,6 +29,16 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Get all users by role", description = "role: admin, customer, staff")
+    @GetMapping("/role/{role}")
+    public ResponseEntity<?> getUsersByRole(@PathVariable String role) {
+        try {
+            return ResponseEntity.ok(userService.getUsersByRole(role));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @Operation(summary = "Get user by username")
     @GetMapping("/{username}")
     ResponseEntity<?> getUserById(@PathVariable String username) {
