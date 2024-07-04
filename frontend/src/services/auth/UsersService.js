@@ -231,6 +231,30 @@ const getUserInfo = (userId) => {
   return instance.get(`/api/users/${userId}`);
 };
 
+const updateUserInfo = (
+  userId,
+  password,
+  name,
+  mail,
+  phone,
+  cityCode,
+  districtId,
+  wardCode,
+  street
+) => {
+  return instance.put(
+    `/api/users/${userId}`,
+    password,
+    name,
+    mail,
+    phone,
+    cityCode,
+    districtId,
+    wardCode,
+    street
+  );
+};
+
 const createOrder = (order) => {
   return instance.post(`/api/orders`, order);
 };
@@ -243,6 +267,21 @@ const getOrderById = (orderId) => {
   return instance.get(`/api/orders/${orderId}`);
 };
 
+const forgotPassword = (mail) => {
+  return instance.post("/api/auth/forgot-password", mail);
+};
+
+const getCities = () => {
+  return instance.get("/api/orders/cities");
+};
+
+const getDistrictByCityId = (cityId) => {
+  return instance.get(`/api/orders/districts/${cityId}`);
+};
+
+const getWardByDistrictId = (districtId) => {
+  return instance.get(`/api/orders/wards/${districtId}`);
+};
 const getOrdersByUsername = (username) => {
   return instance.get(`/api/orders/user/${username}`);
 };
@@ -291,6 +330,11 @@ export {
   getArticleById,
   updateArticle,
   vouchers,
+  forgotPassword,
+  getCities,
+  getDistrictByCityId,
+  getWardByDistrictId,
+  updateUserInfo,
   forgotPasswordAPI,
   resetPasswordAPI,
   getOrdersByUsername,

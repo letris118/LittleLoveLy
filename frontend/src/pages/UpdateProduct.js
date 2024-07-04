@@ -271,7 +271,6 @@ export default function UpdateProduct() {
 
   return (
     <div>
-      
       <StaffHeader />
 
       <div className="manage-content">
@@ -289,8 +288,7 @@ export default function UpdateProduct() {
                       type="text"
                       name="name"
                       required
-                      defaultValue={productInfo.name}
-                    ></input>
+                      defaultValue={productInfo.name}></input>
                   </div>
                 </div>
 
@@ -304,8 +302,7 @@ export default function UpdateProduct() {
                       step="500"
                       min="0"
                       required
-                      defaultValue={productInfo.listedPrice}
-                    ></input>
+                      defaultValue={productInfo.listedPrice}></input>
                   </div>
                 </div>
 
@@ -319,8 +316,7 @@ export default function UpdateProduct() {
                       step="500"
                       min="0"
                       required
-                      defaultValue={productInfo.sellingPrice}
-                    ></input>
+                      defaultValue={productInfo.sellingPrice}></input>
                   </div>
                 </div>
 
@@ -347,8 +343,7 @@ export default function UpdateProduct() {
                       name="stock"
                       step="1"
                       min="1"
-                      defaultValue={productInfo.stock}
-                    ></input>
+                      defaultValue={productInfo.stock}></input>
                   </div>
                 </div>
 
@@ -388,8 +383,7 @@ export default function UpdateProduct() {
                               borderRadius: "10px",
                               border: "1px solid rgb(67, 65, 65)",
                             }}
-                            onClick={addNewCategoryElement}
-                          >
+                            onClick={addNewCategoryElement}>
                             Thêm
                           </button>
                         )}
@@ -400,8 +394,7 @@ export default function UpdateProduct() {
                               borderRadius: "10px",
                               border: "1px solid rgb(67, 65, 65)",
                             }}
-                            onClick={removeCategoryElement}
-                          >
+                            onClick={removeCategoryElement}>
                             Hủy bỏ
                           </button>
                         )}
@@ -439,8 +432,7 @@ export default function UpdateProduct() {
                             borderRadius: "10px",
                             border: "1px solid rgb(67, 65, 65)",
                           }}
-                          onClick={addNewImageElement}
-                        >
+                          onClick={addNewImageElement}>
                           Thêm
                         </button>
                       )}
@@ -451,8 +443,7 @@ export default function UpdateProduct() {
                             borderRadius: "10px",
                             border: "1px solid rgb(67, 65, 65)",
                           }}
-                          onClick={removeImageElement}
-                        >
+                          onClick={removeImageElement}>
                           Hủy bỏ
                         </button>
                       )}
@@ -465,8 +456,7 @@ export default function UpdateProduct() {
               <div className="manage-form-btn">
                 <button
                   className="save-manage-btn save-manage-link"
-                  type="submit"
-                >
+                  type="submit">
                   Cập nhật sản phẩm
                 </button>
 

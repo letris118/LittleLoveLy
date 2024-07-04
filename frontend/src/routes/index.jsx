@@ -41,5 +41,7 @@ export const routes = {
   order: "/order",
   staffArticleList: "/article-list",
   staffProductList: "/product-list",
-  staffSearchProduct: "/search-product"
+  staffSearchProduct: "/search-product",
+
+  profileCustomer: "/profile",
 };

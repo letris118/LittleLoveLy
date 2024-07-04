@@ -74,8 +74,7 @@ export default function ForgotPassword() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="form-control btn btn-primary submit px-3"
-                    >
+                      className="form-control btn btn-primary submit px-3">
                       Xác nhận
                     </button>
                   </div>

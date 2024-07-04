@@ -44,6 +44,7 @@ import StaffArticleList from "../pages/StaffArticleList";
 import StaffProductDetail from "../pages/StaffProductDetail";
 import StaffProductList from "../pages/StaffProductList";
 import StaffSearchProduct from "../pages/StaffSearchProduct";
+import ProfileCus from "../pages/ProfileCus";
 
 import { ToastContainer } from "react-toastify";
 
@@ -127,6 +128,8 @@ export default function AppRoute() {
           path={routes.staffSearchProduct}
           element={<StaffSearchProduct />}
         />
+
+        <Route path={routes.profileCustomer} element={<ProfileCus />} />
       </Routes>
     </>
   );
