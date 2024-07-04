@@ -428,7 +428,10 @@ export default function ProductDetailPresentation() {
           <div className="product-detail-bottom">
             <div className="product-detail-description">
               <h5>Chi Tiết Sản Phẩm</h5>
-              {productInfo?.description}
+              <div
+                className="ql-editor"
+                dangerouslySetInnerHTML={{ __html: productInfo?.description }}
+              />
             </div>
 
             <div className="product-detail-reviews">
