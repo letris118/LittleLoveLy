@@ -187,7 +187,7 @@ export default function AddProduct() {
 
   return (
     <div>
-      <ToastContainer />
+      
       <StaffHeader />
 
       <div className="manage-content">

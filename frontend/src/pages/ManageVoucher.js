@@ -115,7 +115,7 @@ export default function ManageVoucher() {
 
   return (
     <div>
-      <ToastContainer />
+      
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />

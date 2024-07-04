@@ -127,7 +127,7 @@ export default function UpdateVoucher() {
 
     return (
         <div>
-            <ToastContainer />
+            
             <StaffHeader />
 
             <div className="manage-content">

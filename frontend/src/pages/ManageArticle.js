@@ -131,7 +131,7 @@ export default function ManageArticle() {
 
   return (
     <div>
-      <ToastContainer />
+      
       <StaffHeader />
 
       <div className="manage-content">

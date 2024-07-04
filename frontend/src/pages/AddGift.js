@@ -47,7 +47,7 @@ export default function AddGift() {
 
   return (
     <div>
-      <ToastContainer />
+      
       <StaffHeader />
 
       <div className="manage-content">
