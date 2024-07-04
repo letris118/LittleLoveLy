@@ -163,7 +163,7 @@ export default function ManageProduct() {
 
   return (
     <div>
-      <ToastContainer />
+      
       <StaffHeader />
 
       <div className="manage-content">

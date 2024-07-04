@@ -215,7 +215,7 @@ export default function UpdateProduct() {
 
   return (
     <div>
-      <ToastContainer />
+      
       <StaffHeader />
 
       <div className="manage-content">
