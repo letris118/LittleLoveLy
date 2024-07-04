@@ -6,7 +6,7 @@ import instance from "../services/auth/customize-axios";
 export default function BrandListPresentation({ brands}) {
   return (
     <>
-    {(window.location.pathname === routes.brands) &&(
+    
     <>
       {brands.map((brand) => (
         <div className="brand-card-list" id={brand.brandId}>
@@ -29,7 +29,7 @@ export default function BrandListPresentation({ brands}) {
         </div>
       ))}
     </>
-  )}
+
   {(window.location.pathname === routes.staffBrandList) &&(
     <>
       {brands.map((brand) => (

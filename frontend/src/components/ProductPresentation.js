@@ -73,9 +73,7 @@ import Rating from "@mui/material/Rating";
 export default function ProductPresentation({ products }) {
   return (
   <>
-    {(window.location.pathname === routes.homePage
-    || window.location.pathname === routes.products
-    || window.location.pathname === routes.searchProduct) && (
+    
     <div className="product-container">
       {products.map((product) => (
         <div className="product-card" key={product.productId}>
@@ -126,7 +124,7 @@ export default function ProductPresentation({ products }) {
         </div>
       ))}
     </div>
-    )}
+    
 
 {(window.location.pathname === routes.staffHomePage
     || window.location.pathname === routes.staffProductList

@@ -227,7 +227,7 @@ export default function ProductDetailPresentation() {
 
   return (
     <>
-      {window.location.pathname.startsWith(`${routes.products}/`) && (
+      
         <div className="product-detail-container">
           <div className="product-detail-top">
             <div className="product-detail-left">
@@ -640,7 +640,7 @@ export default function ProductDetailPresentation() {
             </div>
           </div>
         </div>
-      )}
+      
 
       {window.location.pathname.startsWith(`${routes.staffProductList}/`) && (
         <div className="product-detail-container">
