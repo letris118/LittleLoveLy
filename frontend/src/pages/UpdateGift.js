@@ -87,7 +87,7 @@ export default function UpdateGift() {
 
     return (
         <div>
-            <ToastContainer />
+            
             <StaffHeader />
 
             <div className="manage-content">

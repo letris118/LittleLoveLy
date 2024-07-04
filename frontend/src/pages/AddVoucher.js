@@ -83,7 +83,7 @@ export default function AddVoucher() {
 
     return (
         <div>
-            <ToastContainer />
+            
             <StaffHeader />
             <div className="manage-content">
                 <StaffSideBar />

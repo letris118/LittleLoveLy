@@ -1,19 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "../assets/css/manage.css";
+import StaffBackToTop from "../components/StaffBackToTop";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import { routes } from "../routes";
 import {
   brands,
   categories,
-  getProductById,
   updateProduct,
 } from "../services/auth/UsersService";
 import instance from "../services/auth/customize-axios";
-import "../assets/css/manage.css";
-import StaffBackToTop from "../components/StaffBackToTop";
+
 export default function UpdateProduct() {
   const [productInfo, setProductInfo] = useState(null);
   const [allBrands, setAllBrands] = useState([]);
@@ -21,18 +22,10 @@ export default function UpdateProduct() {
   const [categoryElements, setCategoryElements] = useState([]);
   const [imageElements, setImageElements] = useState([]);
   const [selectedImageIds, setSelectedImageIds] = useState([]);
-  const textareaRef = useRef(null);
+  const [description, setDescription] = useState("");
 
   const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height =
-        "${textareaRef.current.scrollHeight + 1}px";
-    }
-  }, [productInfo?.description]);
 
   const addNewCategoryElement = (e) => {
     e.preventDefault();
@@ -104,6 +97,7 @@ export default function UpdateProduct() {
         const productResponse = await getProductById(productId);
         if (productResponse) {
           setProductInfo(productResponse);
+          setDescription(productResponse.description);
         } else {
           toast.error("Không thể tải thông tin sản phẩm");
         }
@@ -170,6 +164,7 @@ export default function UpdateProduct() {
     try {
       e.preventDefault();
       const productRequestDTO = new FormData(e.target);
+      productRequestDTO.append("description", description);
       productRequestDTO.append("productId", productInfo.productId);
       selectedImageIds.forEach((imageId) => {
         productRequestDTO.append("imageIds", imageId);
@@ -231,9 +226,49 @@ export default function UpdateProduct() {
     window.location.reload();
   };
 
+  const toolbarOptions = [
+    ["bold", "italic", "underline", "strike"],
+    ["blockquote"],
+    ["link"],
+    [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+    [{ indent: "-1" }, { indent: "+1" }],
+    [{ size: [] }],
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    [{ color: [] }, { background: [] }],
+    [{ font: [] }],
+    [{ align: [] }],
+    ["clean"],
+  ];
+
+  const modules = {
+    toolbar: toolbarOptions,
+    clipboard: {
+      matchVisual: false,
+    },
+  };
+
+  const formats = [
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "link",
+    "list",
+    "indent",
+    "size",
+    "header",
+    "color",
+    "background",
+    "font",
+    "align",
+    "width",
+    "style",
+    "code-block",
+  ];
+
   return (
     <div>
-      <ToastContainer />
       <StaffHeader />
 
       <div className="manage-content">
@@ -287,12 +322,13 @@ export default function UpdateProduct() {
                 <div className="manage-form-group">
                   <label>Mô tả sản phẩm</label>
                   <div className="manage-form-control">
-                    <textarea
-                      name="description"
-                      required
-                      defaultValue={productInfo.description}
-                      ref={textareaRef}
-                      style={{ resize: "none" }}></textarea>
+                    <ReactQuill
+                      style={{ backgroundColor: "white" }}
+                      value={description}
+                      modules={modules}
+                      formats={formats}
+                      onChange={setDescription}
+                    />
                   </div>
                 </div>
 
