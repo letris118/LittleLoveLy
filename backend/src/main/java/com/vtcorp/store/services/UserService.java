@@ -1,5 +1,6 @@
 package com.vtcorp.store.services;
 
+import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.dtos.*;
 import com.vtcorp.store.entities.User;
 import com.vtcorp.store.mappers.UserMapper;
@@ -149,4 +150,12 @@ public class UserService {
         return "Mail changed successfully";
     }
 
+    public List<UserResponseDTO> getUsersByRole(String role) {
+        switch (role) {
+            case "admin" -> role = Role.ROLE_ADMIN;
+            case "customer" -> role = Role.ROLE_CUSTOMER;
+            case "staff" -> role = Role.ROLE_STAFF;
+        }
+        return userMapper.toResponseDTOs(userRepository.findByRole(role));
+    }
 }
