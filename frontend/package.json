@@ -16,6 +16,7 @@
     "formik": "^2.4.6",
     "html-react-parser": "^5.1.10",
     "jwt-decode": "^4.0.0",
+    "net": "^1.0.2",
     "quill-image-resize-module-react": "^3.0.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.2",
@@ -33,9 +34,12 @@
     "react-transition-group": "^4.4.5",
     "slice": "^1.0.0",
     "slick-carousel": "^1.8.1",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"
   },
+  "proxy": "http://localhost:8080",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

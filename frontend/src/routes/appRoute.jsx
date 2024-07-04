@@ -17,6 +17,7 @@ import ProductDetail from "../pages/ProductDetail";
 import Cart from "../pages/Cart";
 import StaffHomePage from "../pages/StaffHomePage";
 import StaffChat from "../pages/StaffChat";
+import Chat from "../pages/Chat";
 import ManageGift from "../pages/ManageGift";
 import StaffBrandList from "../pages/StaffBrandList";
 import UpdateProduct from "../pages/UpdateProduct";
@@ -71,6 +72,8 @@ export default function AppRoute() {
 
       <Route path={routes.staffBrandList} element={<StaffBrandList />} />
       <Route path={routes.staffChat} element={<StaffChat />} />
+      <Route path={routes.chat} element={<Chat />} />
+
 
       <Route path={routes.manageProduct} element={<ManageProduct />} />
       <Route
