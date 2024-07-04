@@ -286,6 +286,10 @@ const getOrdersByUsername = (username) => {
   return instance.get(`/api/orders/user/${username}`);
 };
 
+const getProductByBrandId = (brandId) => {
+  return instance.get(`/api/products/brand/${brandId}`);
+};
+
 export {
   loginAPI,
   users,
@@ -338,4 +342,5 @@ export {
   forgotPasswordAPI,
   resetPasswordAPI,
   getOrdersByUsername,
+  getProductByBrandId,
 };
