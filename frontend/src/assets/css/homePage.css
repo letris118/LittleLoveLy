@@ -19,7 +19,12 @@ header {
   margin-left: 40px;
 }
 
-.store-name a {
+.store-name {
+  min-width: 180px;
+  margin-left: 40px;
+}
+
+.store-name img {
   font-family: "Courgette", cursive;
   font-size: 27px;
   text-decoration: none;
