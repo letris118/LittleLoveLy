@@ -65,7 +65,13 @@
 .point-body,
 .sellingPrice-head,
 .sellingPrice-body,
-.lastModified-head{
+.lastModified-head,
+.usernam-head,
+.name-head,
+.mail-head,
+.phone-head,
+.detail-head,
+.regisDate-head{
     text-align: center; 
     vertical-align: middle;
 
