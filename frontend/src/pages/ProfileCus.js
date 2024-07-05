@@ -8,8 +8,8 @@ import {
   styled,
 } from "@mui/material";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../assets/css/profileCus.css";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -21,53 +21,29 @@ import {
   getUserInfo,
   getWardByDistrictId,
   updateUserInfo,
+  changePasswordAPI,
+  changeMailAPI,
 } from "../services/auth/UsersService";
 import { toast } from "react-toastify";
 export default function ProfileCus() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [cusInfo, setCusInfo] = useState({});
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
-  const [openVoucherDialog, setOpenVoucherDialog] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const [openInfoDialog, setOpenInfoDialog] = useState(false);
   const [openChangePasswordDialog, setOpenChangePasswordDialog] =
     useState(false);
   const [openChangeGmailDialog, setOpenChangeGmailDialog] = useState(false);
 
-  console.log(districts, wards);
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      phone: "",
-      cityId: "",
-      districtId: "",
-      wardId: "",
-      street: "",
-    },
-    enableReinitialize: true,
-    onSubmit: async (values) => {
-      try {
-        const username = localStorage.getItem("username");
-        await updateUserInfo(
-          username,
-          "",
-          values.name.toString(),
-          cusInfo.mail,
-          values.phone,
-          values.cityId,
-          values.districtId,
-          values.wardId,
-          values.street
-        );
-        toast.success("Cập nhật thông tin thành công ");
-        setOpenVoucherDialog(false);
-      } catch (error) {
-        console.error("Failed to update user info:", error);
-      }
-    },
-  });
-
   useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const msg = queryParams.get("msg");
+    if (msg === "mail-changed") {
+      toast.success("Mail đã được thay đổi thành công");
+    }
     const userRole = localStorage.getItem("userRole");
     if (userRole !== "ROLE_CUSTOMER") {
       navigate(routes.homePage);
@@ -77,14 +53,6 @@ export default function ProfileCus() {
       try {
         const res = await getUserInfo(localStorage.getItem("username"));
         setCusInfo(res);
-        formik.setValues({
-          name: res.name || "",
-          phone: res.phone || "",
-          cityId: res.cityCode || "",
-          districtId: res.districtId || "",
-          wardId: res.wardCode || "",
-          street: res.street || "",
-        });
       } catch (error) {
         console.error(error);
       }
@@ -101,41 +69,59 @@ export default function ProfileCus() {
 
     fetchUser();
     fetchCities();
-  }, [navigate]);
+  }, [navigate, refresh]);
 
   useEffect(() => {
     const fetchDistricts = async () => {
       try {
-        if (formik.values.cityId) {
-          const res = await getDistrictByCityId(formik.values.cityId);
+        if (cusInfo.cityCode) {
+          const res = await getDistrictByCityId(cusInfo.cityCode);
           setDistricts(res.data);
         }
       } catch (error) {
         console.error(error);
       }
     };
-
-    if (formik.values.cityId) {
-      fetchDistricts();
-    }
-  }, [formik.values.cityId]);
+    fetchDistricts();
+  }, [cusInfo.cityCode]);
 
   useEffect(() => {
     const fetchWards = async () => {
       try {
-        if (formik.values.districtId) {
-          const res = await getWardByDistrictId(formik.values.districtId);
+        if (cusInfo.districtId) {
+          const res = await getWardByDistrictId(cusInfo.districtId);
           setWards(res.data);
         }
       } catch (error) {
         console.error(error);
       }
     };
+    fetchWards();
+  }, [cusInfo.districtId]);
 
-    if (formik.values.districtId) {
-      fetchWards();
-    }
-  }, [formik.values.districtId]);
+  const CustomDialog = styled(Dialog)({
+    "& .MuiDialog-paper": {
+      width: "50%",
+      height: "auto",
+    },
+    "& .MuiPaper-root": {
+      borderRadius: "20px",
+    },
+  });
+
+  const CustomDialogTitle = styled(DialogTitle)({
+    fontWeight: "bold",
+    backgroundColor: "#ff469e",
+    color: "white",
+    marginBottom: "20px",
+  });
+
+  const CustomTextField = styled(TextField)({
+    "& .MuiOutlinedInput-root": {
+      height: "56px",
+      paddingLeft: "20px",
+    },
+  });
 
   const CustomButton = styled(Button)({
     background: "#FF469E",
@@ -151,81 +137,308 @@ export default function ProfileCus() {
     },
   });
 
-  const CustomDialog = styled(Dialog)({
-    "& .MuiDialog-paper": {
-      width: "50%",
-      height: "auto",
-    },
-    "& .MuiPaper-root": {
-      borderRadius: "20px",
-    },
-  });
-
-  const handleAdjustClick = () => {
-    setOpenVoucherDialog(true);
+  const handleOpenInfoDialog = () => {
+    setOpenInfoDialog(true);
   };
 
-  const handleCloseAdjustDialog = () => {
-    setOpenVoucherDialog(false);
+  const handleCloseInfoDialog = () => {
+    setOpenInfoDialog(false);
   };
 
-  const handleOpenChangePassword = () => {
+  const handleOpenChangePassword = useCallback(() => {
     setOpenChangePasswordDialog(true);
-  };
+  }, []);
 
-  const handleCloseChangePassword = () => {
+  const handleCloseChangePassword = useCallback(() => {
     setOpenChangePasswordDialog(false);
-  };
+  }, []);
 
-  const handleOpenChangeGmail = () => {
+  const handleOpenChangeGmail = useCallback(() => {
     setOpenChangeGmailDialog(true);
-  };
+  }, []);
 
-  const handleCloseChangeGmail = () => {
+  const handleCloseChangeGmail = useCallback(() => {
     setOpenChangeGmailDialog(false);
+  }, []);
+
+  const InfoForm = ({ handleClose }) => {
+    const [localDistricts, setLocalDistricts] = useState(districts);
+    const [localWards, setLocalWards] = useState(wards);
+
+    const formik = useFormik({
+      initialValues: {
+        name: cusInfo.name || "",
+        phone: cusInfo.phone || "",
+        cityId: cusInfo.cityCode || "",
+        districtId: cusInfo.districtId || "",
+        wardId: cusInfo.wardCode || "",
+        street: cusInfo.street || "",
+      },
+      enableReinitialize: true,
+      onSubmit: async (values) => {
+        try {
+          const username = localStorage.getItem("username");
+          if (
+            await updateUserInfo(
+              username,
+              values.name.toString(),
+              values.phone,
+              values.cityId,
+              values.districtId,
+              values.wardId,
+              values.street
+            )
+          ) {
+            toast.success("Cập nhật thông tin thành công ");
+            handleClose();
+            setRefresh(!refresh);
+          }
+        } catch (error) {
+          console.error("Failed to update user info:", error);
+          if (
+            error.response.data &&
+            error.response.data.includes("Cannot insert duplicate key row")
+          ) {
+            toast.error("Số điện thoại đã được sử dụng.");
+          } else {
+            toast.error("Cập nhật thông tin thất bại");
+          }
+        }
+      },
+    });
+
+    const handleCityChange = async (e) => {
+      const cityId = e.target.value;
+      formik.setFieldValue("cityId", cityId);
+      formik.setFieldValue("districtId", "");
+      formik.setFieldValue("wardId", "");
+      formik.setFieldValue("street", "");
+      if (cityId) {
+        const res = await getDistrictByCityId(cityId);
+        setLocalDistricts(res.data);
+        setLocalWards([]);
+      } else {
+        setLocalDistricts([]);
+        setLocalWards([]);
+      }
+    };
+
+    const handleDistrictChange = async (e) => {
+      const districtId = e.target.value;
+      formik.setFieldValue("districtId", districtId);
+      formik.setFieldValue("wardId", "");
+      formik.setFieldValue("street", "");
+      if (districtId) {
+        const res = await getWardByDistrictId(districtId);
+        setLocalWards(res.data);
+      } else {
+        setLocalWards([]);
+      }
+    };
+
+    return (
+      <form onSubmit={formik.handleSubmit}>
+        <div>
+          <CustomTextField
+            label="Tên"
+            name="name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            fullWidth
+            margin="normal"
+            sx={{ marginBottom: "20px" }}
+          />
+        </div>
+        <div>
+          <CustomTextField
+            label="Số điện thoại"
+            name="phone"
+            value={formik.values.phone}
+            onChange={formik.handleChange}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+        <div>
+          <TextField
+            select
+            name="cityId"
+            value={formik.values.cityId}
+            onChange={handleCityChange}
+            fullWidth
+            SelectProps={{ native: true }}
+            margin="normal"
+          >
+            <option value="">Chọn Tỉnh / Thành Phố</option>
+            {cities.map((item) => (
+              <option key={item.CityID} value={item.CityID}>
+                {item.CityName}
+              </option>
+            ))}
+          </TextField>
+        </div>
+        <div>
+          <TextField
+            select
+            name="districtId"
+            value={formik.values.districtId}
+            onChange={handleDistrictChange}
+            fullWidth
+            SelectProps={{ native: true }}
+            margin="normal"
+          >
+            <option value="">Chọn Quận / Huyện</option>
+            {localDistricts.map((item) => (
+              <option key={item.DistrictID} value={item.DistrictID}>
+                {item.DistrictName}
+              </option>
+            ))}
+          </TextField>
+        </div>
+        <div>
+          <TextField
+            select
+            name="wardId"
+            value={formik.values.wardId}
+            onChange={formik.handleChange}
+            fullWidth
+            SelectProps={{ native: true }}
+            margin="normal"
+          >
+            <option value="">Chọn Phường / Xã</option>
+            {localWards.map((item) => (
+              <option key={item.WardCode} value={item.WardCode}>
+                {item.WardName}
+              </option>
+            ))}
+          </TextField>
+        </div>
+        <div>
+          <CustomTextField
+            label="Số nhà, tên đường"
+            name="street"
+            value={formik.values.street}
+            onChange={formik.handleChange}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+        <DialogActions>
+          <CustomButton type="submit">Cập nhật</CustomButton>
+          <CustomButton onClick={handleClose}>Close</CustomButton>
+        </DialogActions>
+      </form>
+    );
   };
 
-  const CustomTextField = styled(TextField)({
-    "& .MuiOutlinedInput-root": {
-      height: "56px",
-      paddingLeft: "20px",
-    },
-  });
+  const PasswordForm = ({ handleClose }) => {
+    const formik = useFormik({
+      initialValues: {
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      },
+      enableReinitialize: true,
+      onSubmit: async (values) => {
+        try {
+          if (
+            await changePasswordAPI(values.currentPassword, values.newPassword)
+          ) {
+            toast.success("Đổi mật khẩu thành công");
+            handleClose();
+          }
+        } catch (error) {
+          console.error("Failed to change password:", error);
+          if (
+            error.response &&
+            error.response.data === "Incorrect current password"
+          ) {
+            toast.error("Mật khẩu hiện tại không đúng");
+          } else {
+            toast.error("Đổi mật khẩu thất bại");
+          }
+        }
+      },
+    });
 
-  const CustomDialogTitle = styled(DialogTitle)({
-    fontWeight: "bold",
-    backgroundColor: "#ff469e",
-    color: "white",
-    marginBottom: "20px",
-  });
-
-  const handleCityChange = async (e) => {
-    const cityId = e.target.value;
-    formik.setFieldValue("cityId", cityId);
-    formik.setFieldValue("districtId", "");
-    formik.setFieldValue("wardId", "");
-    formik.setFieldValue("street", "");
-    if (cityId) {
-      const res = await getDistrictByCityId(cityId);
-      setDistricts(res.data);
-      setWards([]);
-    } else {
-      setDistricts([]);
-      setWards([]);
-    }
+    return (
+      <form onSubmit={formik.handleSubmit}>
+        <div>
+          <CustomTextField
+            label="Mật khẩu hiện tại "
+            name="currentPassword"
+            onChange={formik.handleChange}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+        <div>
+          <CustomTextField
+            label="Mật khẩu mới"
+            name="newPassword"
+            onChange={formik.handleChange}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+        <div>
+          <CustomTextField
+            label="Xác nhận mật khẩu mới"
+            name="confirmNewPassword"
+            onChange={formik.handleChange}
+            fullWidth
+            SelectProps={{ native: true }}
+            margin="normal"
+          />
+        </div>
+        <DialogActions>
+          <CustomButton type="submit">Đổi</CustomButton>
+          <CustomButton onClick={handleClose}>Close</CustomButton>
+        </DialogActions>
+      </form>
+    );
   };
 
-  const handleDistrictChange = async (e) => {
-    const districtId = e.target.value;
-    formik.setFieldValue("districtId", districtId);
-    formik.setFieldValue("wardId", "");
-    formik.setFieldValue("street", "");
-    if (districtId) {
-      const res = await getWardByDistrictId(districtId);
-      setWards(res.data);
-    } else {
-      setWards([]);
-    }
+  const MailForm = ({ handleClose }) => {
+    const formik = useFormik({
+      initialValues: {
+        newMail: "",
+      },
+      enableReinitialize: true,
+      onSubmit: async (values) => {
+        try {
+          if (await changeMailAPI(values.newMail)) {
+            toast.success("Kiểm tra mail mới của bạn để xác nhận");
+            handleClose();
+          }
+        } catch (error) {
+          console.error("Failed to change mail:", error);
+          if (error.response && error.response.data === "Mail already exists") {
+            toast.error("Mail này đã được sử dụng");
+          } else {
+            toast.error("Đổi mail thất bại");
+          }
+        }
+      },
+    });
+
+    return (
+      <form onSubmit={formik.handleSubmit}>
+        <div>
+          <CustomTextField
+            label="Nhập Mail"
+            name="newMail"
+            onChange={formik.handleChange}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+        <DialogActions>
+          <CustomButton type="submit">Đổi</CustomButton>
+          <CustomButton onClick={handleClose}>Close</CustomButton>
+        </DialogActions>
+      </form>
+    );
   };
 
   return (
@@ -265,25 +478,24 @@ export default function ProfileCus() {
                       cusInfo.districtId ||
                       cusInfo.wardCode ? (
                         <>
-                          {cusInfo.street},
-                          {
-                            cities.find(
-                              (city) => city.CityID === cusInfo.cityCode
-                            )?.CityName
-                          }
-                          ,
-                          {
+                          {[
+                            cusInfo.street,
+                            wards.find(
+                              (ward) =>
+                                ward.WardCode === cusInfo.wardCode?.toString()
+                            )?.WardName,
                             districts.find(
                               (district) =>
-                                district.DistrictID === cusInfo.districtId
-                            )?.DistrictName
-                          }
-                          ,
-                          {
-                            wards.find(
-                              (ward) => ward.WardID === cusInfo.wardCode
-                            )?.WardName
-                          }
+                                district.DistrictID ===
+                                cusInfo.districtId?.toString()
+                            )?.DistrictName,
+                            cities.find(
+                              (city) =>
+                                city.CityID === cusInfo.cityCode?.toString()
+                            )?.CityName,
+                          ]
+                            .filter(Boolean)
+                            .join(", ")}
                         </>
                       ) : (
                         ""
@@ -293,7 +505,7 @@ export default function ProfileCus() {
                 </div>
               </div>
               <div className="profile-adjust">
-                <CustomButton onClick={handleAdjustClick}>
+                <CustomButton onClick={handleOpenInfoDialog}>
                   Sửa thông tin cá nhân
                 </CustomButton>
                 <CustomButton onClick={handleOpenChangePassword}>
@@ -308,161 +520,29 @@ export default function ProfileCus() {
         </div>
       </div>
       <Footer />
-      <CustomDialog open={openVoucherDialog} onClose={handleCloseAdjustDialog}>
+      <CustomDialog open={openInfoDialog} onClose={handleCloseInfoDialog}>
         <CustomDialogTitle>Thay đổi thông tin</CustomDialogTitle>
         <DialogContent>
-          <form onSubmit={formik.handleSubmit}>
-            <div>
-              <CustomTextField
-                label="Tên"
-                name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                fullWidth
-                margin="normal"
-                sx={{ marginBottom: "20px" }}
-              />
-            </div>
-            <div>
-              <CustomTextField
-                label="Số điện thoại"
-                name="phone"
-                value={formik.values.phone}
-                onChange={formik.handleChange}
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div>
-              <TextField
-                select
-                name="cityId"
-                value={formik.values.cityId}
-                onChange={handleCityChange}
-                fullWidth
-                SelectProps={{ native: true }}
-                margin="normal">
-                <option value="">Chọn Tỉnh / Thành Phố</option>
-                {cities.map((item) => (
-                  <option key={item.CityID} value={item.CityID}>
-                    {item.CityName}
-                  </option>
-                ))}
-              </TextField>
-            </div>
-            <div>
-              <TextField
-                select
-                name="districtId"
-                value={formik.values.districtId}
-                onChange={handleDistrictChange}
-                fullWidth
-                SelectProps={{ native: true }}
-                margin="normal">
-                <option value="">Chọn Quận / Huyện</option>
-                {districts.map((item) => (
-                  <option key={item.DistrictID} value={item.DistrictID}>
-                    {item.DistrictName}
-                  </option>
-                ))}
-              </TextField>
-            </div>
-            <div>
-              <TextField
-                select
-                name="wardId"
-                value={formik.values.wardId}
-                onChange={formik.handleChange}
-                fullWidth
-                SelectProps={{ native: true }}
-                margin="normal">
-                <option value="">Chọn Phường / Xã</option>
-                {wards.map((item) => (
-                  <option key={item.WardID} value={item.WardID}>
-                    {item.WardName}
-                  </option>
-                ))}
-              </TextField>
-            </div>
-            <div>
-              <CustomTextField
-                label="Số nhà, tên đường"
-                name="street"
-                value={formik.values.street}
-                onChange={formik.handleChange}
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <DialogActions>
-              <CustomButton type="submit">Cập nhật</CustomButton>
-              <CustomButton onClick={handleCloseAdjustDialog}>
-                Close
-              </CustomButton>
-            </DialogActions>
-          </form>
+          <InfoForm handleClose={handleCloseInfoDialog} />
         </DialogContent>
       </CustomDialog>
       <CustomDialog
         open={openChangePasswordDialog}
-        onClose={handleCloseChangePassword}>
+        onClose={handleCloseChangePassword}
+      >
         <CustomDialogTitle>Đổi mật khẩu</CustomDialogTitle>
         <DialogContent>
-          <form>
-            <div>
-              <CustomTextField
-                label="Mật khẩu hiện tại "
-                name="currentPassword"
-                onChange={formik.handleChange}
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div>
-              <CustomTextField
-                label="Mật khẩu mới"
-                name="newPassword"
-                onChange={formik.handleChange}
-                fullWidth
-                margin="normal"
-              />
-            </div>
-            <div>
-              <CustomTextField
-                label="Xác nhận mật khẩu mới"
-                name="confirmNewPassword"
-                onChange={handleCityChange}
-                fullWidth
-                SelectProps={{ native: true }}
-                margin="normal"
-              />
-            </div>
-          </form>
+          <PasswordForm handleClose={handleCloseChangePassword} />
         </DialogContent>
-        <DialogActions>
-          <CustomButton type="submit">Đổi</CustomButton>
-          <CustomButton onClick={handleCloseChangePassword}>Close</CustomButton>
-        </DialogActions>
       </CustomDialog>
       <CustomDialog
         open={openChangeGmailDialog}
-        onClose={handleCloseChangeGmail}>
+        onClose={handleCloseChangeGmail}
+      >
         <CustomDialogTitle>Đổi gmail</CustomDialogTitle>
         <DialogContent>
-          <div>
-            <CustomTextField
-              label="Nhập gmail"
-              name="currentGmail"
-              onChange={formik.handleChange}
-              fullWidth
-              margin="normal"
-            />
-          </div>
+          <MailForm handleClose={handleCloseChangeGmail} />
         </DialogContent>
-        <DialogActions>
-          <CustomButton type="submit">Đổi</CustomButton>
-          <CustomButton onClick={handleCloseChangeGmail}>Close</CustomButton>
-        </DialogActions>
       </CustomDialog>
     </div>
   );

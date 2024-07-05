@@ -88,20 +88,20 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found")));
     }
 
-    public String forgotPassword(ForgotPasswordDTO forgotPasswordDTO) {
-        if (!userRepository.existsByMail(forgotPasswordDTO.getMail())) {
+    public String forgotPassword(MailDTO mailDTO) {
+        if (!userRepository.existsByMail(mailDTO.getMail())) {
             throw new IllegalArgumentException("Mail not found");
         }
-        String token = tokenService.generatePasswordResetToken(forgotPasswordDTO.getMail());
+        String token = tokenService.generatePasswordResetToken(mailDTO.getMail());
         String content = "<p>Click to recover password: </p>" +
                 "<a href='http://localhost:3000/resetPassword?token=" +
                 token + "'>Recover password</a>";
-        emailSenderService.sendEmailAsync(forgotPasswordDTO.getMail(), "Password recovery", content);
+        emailSenderService.sendEmailAsync(mailDTO.getMail(), "Password recovery", content);
         return "Check your email to recover password";
     }
 
-    public String changePassword(ChangePasswordDTO changePasswordDTO) {
-        String token = changePasswordDTO.getToken();
+    public String resetPassword(PasswordDTO passwordDTO) {
+        String token = passwordDTO.getToken();
         if (token == null) {
             throw new IllegalArgumentException("Token not found");
         }
@@ -110,7 +110,7 @@ public class UserService {
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
-        user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
         userRepository.save(user);
         emailSenderService.sendEmailAsync(mail, "Password Changed", "Your password has been changed successfully");
         return "Password changed successfully";
@@ -125,29 +125,34 @@ public class UserService {
         return userMapper.toResponseDTO(user);
     }
 
-    public String updateMail(String username, String newMail) {
+    public String updateMail(String username, MailDTO mailDTO) {
         if (!userRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("User not found");
+        }
+        String newMail = mailDTO.getMail();
+        if(newMail == null || newMail.isEmpty()) {
+            throw new IllegalArgumentException("No mail provided");
         }
         if (userRepository.existsByMail(newMail)) {
             throw new IllegalArgumentException("Mail already exists");
         }
         String token = tokenService.generateMailChangeToken(username, newMail);
         String content = "<p>Click to confirm mail change: </p>" +
-                "<a href='http://localhost:3000/confirm-mail?token=" +
+                "<a href='http://localhost:8010/api/auth/confirm-change-mail?token=" +
                 token + "'>Confirm mail change</a>";
         emailSenderService.sendEmailAsync(newMail, "Mail change", content);
         return "Check your email to confirm mail change";
     }
 
-    public String confirmMailChange(String token) {
+    public String confirmChangeMail(String token) {
         Jwt jwt = tokenService.validateToken(token);
         String username = jwt.getSubject();
         String newEmail = (String) jwt.getClaims().get("newEmail");
         User user = userRepository.findById(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
         user.setMail(newEmail);
         userRepository.save(user);
-        return "Mail changed successfully";
+        emailSenderService.sendEmailAsync(newEmail, "Mail Changed", "Your mail has been changed successfully");
+        return "http://localhost:3000/profile?msg=mail-changed";
     }
 
     public List<UserResponseDTO> getUsersByRole(String role) {
@@ -157,5 +162,16 @@ public class UserService {
             case "staff" -> role = Role.ROLE_STAFF;
         }
         return userMapper.toResponseDTOs(userRepository.findByRole(role));
+    }
+
+    public String changePassword(String username, PasswordDTO passwordDTO) {
+        User user = userRepository.findById(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (!passwordEncoder.matches(passwordDTO.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Incorrect current password");
+        }
+        user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
+        userRepository.save(user);
+        emailSenderService.sendEmailAsync(user.getMail(), "Password Changed", "Your password has been changed successfully");
+        return "Password changed successfully";
     }
 }
