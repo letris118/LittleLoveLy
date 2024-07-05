@@ -302,11 +302,27 @@ const getUsersByRoleAll = (role) => {
   return instance.get(`/api/users/role/${role}`);
 };
 
+const addReview = (productId, username, feedback, star) => {
+  return instance.post(
+    "/api/products/review",
+
+    {
+      productId,
+      username,
+      feedback,
+      star,
+    },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+};
+
 const ordersAll = () => {
   return instance.get("/api/orders");
 };
-
-
 
 export {
   loginAPI,
@@ -364,5 +380,6 @@ export {
   getUsersByRoleAll,
   changePasswordAPI,
   changeMailAPI,
+  addReview,
   ordersAll,
 };

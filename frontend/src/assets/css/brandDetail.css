@@ -9,15 +9,17 @@
 }
 
 .brand-row-1-left {
-  width: 35%;
+  width: 45%;
   height: 100%;
+  max-width: 520px;
 }
 
 .brand-row-1-right {
-  width: 60%;
+  width: 50%;
   height: 100%;
   color: rgb(59, 59, 59);
   padding-top: 20px;
+  max-width: "inherit";
 }
 
 .row-1-left-content {
@@ -80,5 +82,3 @@
   justify-content: space-around;
   font-size: x-large;
 }
-
-
