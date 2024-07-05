@@ -30,7 +30,7 @@ export default function BrandDetail() {
     fetchBrand();
   }, []);
   return (
-    <>
+    <div>
       <Header />
       <div className="content">
         <Sidebar
@@ -45,6 +45,6 @@ export default function BrandDetail() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

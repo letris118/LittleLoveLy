@@ -105,7 +105,7 @@ export default function BrandDetailPresentation() {
     <div>
       <div
         className="brand-row-1"
-        style={{ minWidth: "1350px", display: "flex", alignItems: "center" }}>
+        style={{ minWidth: "1000px", display: "flex", alignItems: "center" }}>
         <div className="brand-row-1-left">
           <div className="row-1-left">
             <div className="row-1-left-content">
@@ -183,7 +183,7 @@ export default function BrandDetailPresentation() {
       </div>
       <div
         className="brand-row-2"
-        style={{ minWidth: "1350px", marginTop: "20px" }}>
+        style={{ minWidth: "1000px", marginTop: "20px" }}>
         <div className="filter-row">
           <div>
             <button
@@ -250,7 +250,7 @@ export default function BrandDetailPresentation() {
           flexDirection: "column",
           justifyContent: "space-between",
           backgroundColor: "white",
-          minWidth: "1350px",
+          minWidth: "1000px",
           borderRadius: "20px",
           marginTop: "20px",
           minHeight: "500px",

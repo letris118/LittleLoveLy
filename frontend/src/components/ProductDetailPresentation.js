@@ -4,6 +4,8 @@ import {
   updateCart,
   formatPrice,
   products,
+  getOrdersByUsername,
+  addReview,
 } from "../services/auth/UsersService";
 import { routes } from "../routes";
 import Rating from "@mui/material/Rating";
@@ -15,6 +17,8 @@ import Slider from "react-slick";
 import instance from "../services/auth/customize-axios";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Button, Input } from "@mui/material";
+import { sub } from "date-fns";
 
 export default function ProductDetailPresentation() {
   const [productInfo, setProductInfo] = useState(null);
@@ -28,6 +32,11 @@ export default function ProductDetailPresentation() {
   const [selectedRating, setSelectedRating] = useState(null);
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [selectedButton, setSelectedButton] = useState("newest");
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(0);
+  const [boughtProducts, setBoughtProducts] = useState([]);
+  const [submittedReview, setSubmittedReview] = useState(false);
+  const [activateSubmit, setActivateSubmit] = useState(false);
 
   const fetchProduct = useCallback(async () => {
     try {
@@ -53,8 +62,37 @@ export default function ProductDetailPresentation() {
   }, [productName]);
 
   useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const username = localStorage.getItem("username");
+        if (username) {
+          let response = await getOrdersByUsername(username);
+
+          response.sort(
+            (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+          );
+
+          const newestOrder = response[0];
+          if (newestOrder) {
+            const boughtProductIds = newestOrder.orderDetails.map(
+              (detail) => detail.product.productId
+            );
+            setBoughtProducts(boughtProductIds);
+            const hasNewOrder = boughtProductIds.includes(
+              productInfo?.productId
+            );
+            setActivateSubmit(hasNewOrder && !submittedReview);
+          }
+        }
+      } catch (error) {
+        toast.error("Không thể lấy thông tin đơn hàng");
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchOrders();
     fetchProduct();
-  }, [fetchProduct]);
+  }, [fetchProduct, productInfo?.productId, submittedReview]);
 
   const handleIncrease = useCallback(() => {
     setQuantity((prevQuantity) =>
@@ -201,6 +239,32 @@ export default function ProductDetailPresentation() {
       (a, b) => new Date(b.date) - new Date(a.date)
     );
     setFilteredReviews(sortedReviews);
+  };
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    if (!comment || rating === 0) {
+      toast.error("Vui lòng điền đủ đánh giá và số sao.", { autoClose: 2000 });
+      return;
+    }
+
+    try {
+      await addReview(
+        productInfo.productId,
+        localStorage.getItem("username"),
+        comment,
+        rating
+      );
+      setComment("");
+      setRating(0);
+      setSubmittedReview(true);
+      setActivateSubmit(false);
+      toast.success("Đánh giá của bạn đã được gửi.", { autoClose: 2000 });
+      console.log("Review submitted successfully");
+    } catch (error) {
+      toast.error("Không thể gửi đánh giá của bạn.", { autoClose: 2000 });
+      console.error("Error submitting review:", error);
+    }
   };
   return (
     <>
@@ -400,7 +464,9 @@ export default function ProductDetailPresentation() {
             />
           </div>
 
-          <div className="product-detail-reviews" style={{ minHeight: "50vh" }}>
+          <div
+            className="product-detail-reviews"
+            style={{ minHeight: "50vh", minWidth: "1100px" }}>
             <h5>Đánh giá</h5>
             <div className="product-detail-reviews-stars">
               <div className="product-detail-reviews-stars-left">
@@ -485,6 +551,9 @@ export default function ProductDetailPresentation() {
                           <Rating value={review.star} size="medium" readOnly />
                         </div>
                         <div>{review.feedback}</div>
+                        <div style={{ fontSize: "12px" }}>
+                          {review.uploadedDate}
+                        </div>
                       </div>
                     </div>
                   ))
@@ -512,13 +581,76 @@ export default function ProductDetailPresentation() {
                     }}>
                     Xem thêm{" "}
                     <b>
-                      <i>{filteredReviews.length - 1}</i>
+                      <i>{filteredReviews.length - 5}</i>
                     </b>{" "}
                     đánh giá khác
                   </button>
                 </div>
               )}
             </div>
+          </div>
+          <div className="product-detail-reviews-inp">
+            <h5
+              style={{
+                marginBottom: "10px",
+                fontWeight: "bold",
+                fontFamily: "MuseoModerno",
+              }}>
+              Nhận xét
+            </h5>
+            {localStorage.getItem("userRole") === "ROLE_CUSTOMER" ? (
+              <form onSubmit={handleCommentSubmit}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    margin: "5px 0",
+                  }}>
+                  <Rating
+                    value={rating}
+                    onChange={(event, newValue) => setRating(newValue)}
+                    size="large"
+                  />
+                </div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Input
+                    placeholder="Hãy nêu cảm nhận của bạn về sản phẩm"
+                    onChange={(e) => setComment(e.target.value)}
+                    multiline
+                    rows={2}
+                    fullWidth
+                    style={{
+                      marginLeft: "10px",
+                      padding: "0 10px",
+                      height: "80px",
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    marginTop: "10px",
+                  }}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    style={{
+                      marginTop: "10px",
+                      backgroundColor: activateSubmit ? "#FF469E" : "gray",
+                      color: "white",
+                    }}
+                    disabled={submittedReview}>
+                    Gửi đánh giá
+                  </Button>
+                </div>
+              </form>
+            ) : (
+              <div style={{ textAlign: "center", padding: "10px 0 20px 0" }}>
+                Mời bạn đăng nhập / đăng kí để sử dụng tính năng này
+              </div>
+            )}
           </div>
         </div>
       </div>
