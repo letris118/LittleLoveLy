@@ -117,7 +117,7 @@ export default function Chat() {
     }, []);
 
 
-    const nameMapping =  {
+    const nameMapping = {
         "staff01": "LittleLoveLy"
     }
 
@@ -127,7 +127,12 @@ export default function Chat() {
 
             {userData.connected ?
                 <div className="manage-content">
-                    <Sidebar />
+                    <Sidebar
+                        role={localStorage.getItem("userRole")}
+                        customerName={localStorage.getItem("name")}
+                        customerPoint={localStorage.getItem("point")}
+                    />
+
                     <div className="staff-chat">
                         <div className="staff-chatbox" ref={chatBoxRef}>
                             <div>
