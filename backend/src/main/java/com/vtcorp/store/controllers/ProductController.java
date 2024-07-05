@@ -1,7 +1,9 @@
 package com.vtcorp.store.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.vtcorp.store.dtos.ProductRequestDTO;
 import com.vtcorp.store.dtos.ReviewRequestDTO;
+import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
@@ -22,6 +24,7 @@ public class ProductController {
 
     @Operation(summary = "Get all products")
     @GetMapping("/all")
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> getAllProducts() {
         try {
             return ResponseEntity.ok(productService.getAllProducts());
@@ -32,6 +35,7 @@ public class ProductController {
 
     @Operation(summary = "Get active products")
     @GetMapping
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> getActiveProducts() {
         try {
             return ResponseEntity.ok(productService.getActiveProducts());
@@ -42,6 +46,7 @@ public class ProductController {
 
     @Operation(summary = "Get product by ID")
     @GetMapping("/{id}")
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(productService.getProductById(id));
@@ -52,6 +57,7 @@ public class ProductController {
 
     @Operation(summary = "Get all products by brand ID")
     @GetMapping("/all/brand/{brandId}")
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> getAllProductsByBrand(@PathVariable Long brandId) {
         try {
             return ResponseEntity.ok(productService.getAllProductsByBrand(brandId));
@@ -62,6 +68,7 @@ public class ProductController {
 
     @Operation(summary = "Get active products by brand ID")
     @GetMapping("/brand/{brandId}")
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> getActiveProductsByBrand(@PathVariable Long brandId) {
         try {
             return ResponseEntity.ok(productService.getActiveProductsByBrand(brandId));
@@ -73,6 +80,7 @@ public class ProductController {
 
     @Operation(summary = "Get all products by categories")
     @GetMapping("/all/category")
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> getAllProductsByCategories(@RequestParam List<Long> categoryIds) {
         try {
             return ResponseEntity.ok(productService.getAllProductsByCategories(categoryIds));
@@ -83,6 +91,7 @@ public class ProductController {
 
     @Operation(summary = "Get active products by categories")
     @GetMapping("/category")
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> getActiveProductsByCategories(@RequestParam List<Long> categoryIds) {
         try {
             return ResponseEntity.ok(productService.getActiveProductsByCategories(categoryIds));
@@ -93,6 +102,7 @@ public class ProductController {
 
     @Operation(summary = "Get all products by search query")
     @GetMapping("/all/search")
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> getAllProductsBySearchQuery(@RequestParam String searchQuery) {
         try {
             return ResponseEntity.ok(productService.getAllProductsBySearchQuery(searchQuery));
@@ -103,6 +113,7 @@ public class ProductController {
 
     @Operation(summary = "Get active products by search query")
     @GetMapping("/search")
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> getActiveProductsBySearchQuery(@RequestParam String searchQuery) {
         try {
             return ResponseEntity.ok(productService.getActiveProductsBySearchQuery(searchQuery));
@@ -113,6 +124,7 @@ public class ProductController {
 
     @Operation(summary = "Sort products by field and by ASC or DESC - Only for staff")
     @GetMapping("/sort")
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> getAllProductsSortByNameAsc(@RequestParam String field, @RequestParam boolean isAsc) {
         try {
             return ResponseEntity.ok(productService.getAllProductsByFieldAndAscOrDesc(field, isAsc));
@@ -123,6 +135,7 @@ public class ProductController {
 
     @Operation(summary = "Add product")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> addProduct(@ModelAttribute ProductRequestDTO productRequestDTO) {
         try {
             return ResponseEntity.ok(productService.addProduct(productRequestDTO));
@@ -133,6 +146,7 @@ public class ProductController {
 
     @Operation(summary = "A user adds a review to the product page")
     @PostMapping(value = "/review", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> addReview(@ModelAttribute ReviewRequestDTO reviewRequestDTO) {
         try {
             return ResponseEntity.ok(productService.addReview(reviewRequestDTO));
@@ -143,6 +157,7 @@ public class ProductController {
 
     @Operation(summary = "Update product by ID")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @JsonView(Views.Product.class)
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @ModelAttribute ProductRequestDTO productRequestDTO) {
         if (id != productRequestDTO.getProductId()) {
             return ResponseEntity.badRequest().body("Product ID in the path variable does not match the one in the request body");

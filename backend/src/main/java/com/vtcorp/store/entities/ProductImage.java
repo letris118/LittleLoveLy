@@ -15,10 +15,10 @@ public class ProductImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(Views.Cart.class)
+    @JsonView({Views.Cart.class, Views.Order.class, Views.Product.class})
     private long imageId;
 
-    @JsonView({Views.Cart.class, Views.Order.class})
+    @JsonView({Views.Cart.class, Views.Order.class, Views.Product.class})
     private String imagePath;
 
     @ManyToOne
