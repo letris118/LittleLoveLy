@@ -9,4 +9,7 @@ public class Views {
 
     public static class Article {
     }
+
+    public static class Product {
+    }
 }

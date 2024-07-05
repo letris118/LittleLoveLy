@@ -1,6 +1,8 @@
 package com.vtcorp.store.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.vtcorp.store.jsonview.Views;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,11 +20,19 @@ public class ProductReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
+    @JsonView(Views.Product.class)
     private long reviewId;
 
+    @JsonView(Views.Product.class)
     private String feedback;
+
+    @JsonView(Views.Product.class)
     private Integer star;
+
+    @JsonView(Views.Product.class)
     private String imagePath;
+
+    @JsonView(Views.Product.class)
     @JsonFormat(pattern = "dd-MM-yyyy", timezone = "Asia/Ho_Chi_Minh")
     private Date uploadedDate;
 
@@ -32,6 +42,7 @@ public class ProductReview {
 
     @ManyToOne
     @JoinColumn(name = "fk_username")
+    @JsonView(Views.Product.class)
     private User user;
 
 }

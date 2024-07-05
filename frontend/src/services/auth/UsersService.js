@@ -320,6 +320,10 @@ const addReview = (productId, username, feedback, star) => {
   );
 };
 
+const ordersAll = () => {
+  return instance.get("/api/orders");
+};
+
 export {
   loginAPI,
   users,
@@ -377,4 +381,5 @@ export {
   changePasswordAPI,
   changeMailAPI,
   addReview,
+  ordersAll,
 };
