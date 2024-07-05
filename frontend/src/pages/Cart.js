@@ -254,7 +254,12 @@ export default function Cart() {
                             fontWeight: "bold",
                           }}
                         >
-                          {""}
+                          {/* {""} */}
+                          <i
+                            className="fa-solid fa-coins"
+                            style={{ color: "rgb(201, 201, 7)" }}
+                          ></i>
+                          &nbsp;{item.point}
                         </div>
                       </TableCell>
                       <TableCell
