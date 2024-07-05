@@ -51,14 +51,14 @@ export default function ProductList() {
     fetchProducts();
   }, [sortOrder]);
 
-  const CustomPagination = styled(Pagination)(({ theme }) => ({
+  const CustomPagination = styled(Pagination)({
     "& .MuiPaginationItem-root": {
       "&.Mui-selected": {
         backgroundColor: "#ff69b4",
         color: "white",
       },
     },
-  }));
+  });
 
   const totalPages = useMemo(
     () => Math.ceil(productList.length / itemsPerPage),
