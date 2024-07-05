@@ -216,17 +216,19 @@ header.manage-header {
   height: 200vh;
 }
 
-.manage-store-name {
+/* .manage-store-name {
   min-width: 180px;
   margin-left: 40px;
-}
+  height: 60px;
+} */
 
-.manage-store-name a {
-  font-family: "Courgette", cursive;
+.manage-header img {
+  /* font-family: "Courgette", cursive;
   font-size: 27px;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 600; */
   width: 162px;
+  margin-left: 40px;
 }
 
 .manage-search-bar {

@@ -24,7 +24,7 @@ export default function DropdownMenu({ handleLogoutSuccess }) {
         classNames="dropdown-menu"
         unmountOnExit>
         <Dropdown.Menu className="dropdown-menu">
-          <Dropdown.Item>
+            <Dropdown.Item>
             <Link
               to={routes.profileCustomer}
               style={{
