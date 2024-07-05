@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForgotPasswordDTO {
-    private String mail;
+public class PasswordDTO {
+    private String token;
+    private String newPassword;
+    private String currentPassword;
 }
