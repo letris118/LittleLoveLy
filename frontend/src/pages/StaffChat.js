@@ -11,6 +11,15 @@ var stompClient = null;
 export default function StaffChat() {
   const navigate = useNavigate();
   const chatBoxRef = useRef(null);
+  const [conversations, setConversations] = useState(new Map());
+  const [tab, setTab] = useState(""); // Start with an empty string for "standing" state
+  const [userData, setUserData] = useState({
+    username: localStorage.getItem('username'),
+    receivername: '',
+    connected: false,
+    message: ''
+  });
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -39,14 +48,7 @@ export default function StaffChat() {
     checkAuthentication();
   }, [navigate]);
 
-  const [privateChats, setPrivateChats] = useState(new Map());
-  const [tab, setTab] = useState(""); // Start with an empty string for "standing" state
-  const [userData, setUserData] = useState({
-    username: localStorage.getItem('username'),
-    receivername: '',
-    connected: false,
-    message: ''
-  });
+
 
 
   const connect = () => {
@@ -72,14 +74,14 @@ export default function StaffChat() {
   const onPrivateMessage = (payload) => {
     console.log(payload);
     var payloadData = JSON.parse(payload.body);
-    if (privateChats.get(payloadData.senderName)) {
-      privateChats.get(payloadData.senderName).push(payloadData);
-      setPrivateChats(new Map(privateChats));
+    if (conversations.get(payloadData.senderName)) {
+      conversations.get(payloadData.senderName).push(payloadData);
+      setConversations(new Map(conversations));
     } else {
       let list = [];
       list.push(payloadData);
-      privateChats.set(payloadData.senderName, list);
-      setPrivateChats(new Map(privateChats));
+      conversations.set(payloadData.senderName, list);
+      setConversations(new Map(conversations));
     }
     scrollToBottom()
   }
@@ -93,7 +95,7 @@ export default function StaffChat() {
     setUserData({ ...userData, "message": value });
   }
 
-  const sendPrivateValue = () => {
+  const sendMessage = () => {
     if (userData.message.length === 0) {
       return
     }
@@ -106,8 +108,8 @@ export default function StaffChat() {
       };
 
       if (userData.username !== tab) {
-        privateChats.get(tab).push(chatMessage);
-        setPrivateChats(new Map(privateChats));
+        conversations.get(tab).push(chatMessage);
+        setConversations(new Map(conversations));
       }
       stompClient.send("/app/private-message", {}, JSON.stringify(chatMessage));
       setUserData({ ...userData, "message": "" });
@@ -143,7 +145,7 @@ export default function StaffChat() {
               <div className="staff-chatbox" ref={chatBoxRef}>
                 <div>
                   <ul className="chat-messages">
-                    {[...privateChats.get(tab)].map((chat, index) => (
+                    {[...conversations.get(tab)].map((chat, index) => (
                       <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
                         {chat.senderName !== userData.username && <div className="avatar">{chat.senderName}</div>}
                         <div className="message-data">{chat.message}</div>
@@ -161,11 +163,11 @@ export default function StaffChat() {
                   onChange={handleMessage}
                   onKeyDown={(event) => {
                     if (event.key === "Enter") {
-                      sendPrivateValue();
+                      sendMessage();
                     }
                   }}
                 />
-                <button type="button" onClick={sendPrivateValue}>Gửi</button>
+                <button type="button" onClick={sendMessage}>Gửi</button>
               </div>
             </div>
           )}
@@ -176,7 +178,7 @@ export default function StaffChat() {
 
       <div className="customer-list">
         <ul>
-          {[...privateChats.keys()]
+          {[...conversations.keys()]
             .filter(name => name !== userData.username)
             .map((name, index) => (
               <li
