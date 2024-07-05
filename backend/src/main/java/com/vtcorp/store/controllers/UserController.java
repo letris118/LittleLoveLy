@@ -68,12 +68,13 @@ public class UserController {
 
     @Operation(summary = "Update user by username", description = "Cannot update username, mail, password and role")
     @PutMapping("/{username}")
-    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody UserRequestDTO userRequestDTO, Authentication authentication) {
         if (!username.equals(userRequestDTO.getUsername())) {
             return ResponseEntity.badRequest().body("Username in URL and body must be the same");
         }
         try {
-            return ResponseEntity.ok(userService.updateUser(userRequestDTO));
+            String usernameAuth = (authentication != null) ? authentication.getName() : null;
+            return ResponseEntity.ok(userService.updateUser(userRequestDTO, usernameAuth));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
