@@ -68,6 +68,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/cart/**").hasAuthority(Role.ROLE_CUSTOMER)
                         .requestMatchers("/api/auth/change-password").authenticated()
+                        .requestMatchers("/api/auth/change-mail").authenticated()
                         .requestMatchers("/api/auth/**").anonymous()
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())

@@ -1,11 +1,13 @@
 package com.vtcorp.store.controllers;
 
+import com.vtcorp.store.dtos.MailDTO;
 import com.vtcorp.store.dtos.UserRequestDTO;
 import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -77,23 +79,4 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "Update user's email by username", description = "Send a link with token to the new email to confirm")
-    @PutMapping("/{username}/mail")
-    public ResponseEntity<?> updateMail(@PathVariable String username, @RequestParam String newMail) {
-        try {
-            return ResponseEntity.ok(userService.updateMail(username, newMail));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @Operation(summary = "Confirm email change", description = "Validates the token and update the email")
-    @PutMapping("/confirm-mail-change")
-    public ResponseEntity<?> confirmMailChange(@RequestParam String token) {
-        try {
-            return ResponseEntity.ok(userService.confirmMailChange(token));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 }

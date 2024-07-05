@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForgotPasswordDTO {
+public class MailDTO {
     private String mail;
 }

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../assets/css/profileCus.css";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -22,10 +22,12 @@ import {
   getWardByDistrictId,
   updateUserInfo,
   changePasswordAPI,
+  changeMailAPI,
 } from "../services/auth/UsersService";
 import { toast } from "react-toastify";
 export default function ProfileCus() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [cusInfo, setCusInfo] = useState({});
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -37,6 +39,11 @@ export default function ProfileCus() {
   const [openChangeGmailDialog, setOpenChangeGmailDialog] = useState(false);
 
   useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const msg = queryParams.get("msg");
+    if (msg === "mail-changed") {
+      toast.success("Mail đã được thay đổi thành công");
+    }
     const userRole = localStorage.getItem("userRole");
     if (userRole !== "ROLE_CUSTOMER") {
       navigate(routes.homePage);
@@ -395,18 +402,32 @@ export default function ProfileCus() {
   const MailForm = ({ handleClose }) => {
     const formik = useFormik({
       initialValues: {
-        currentGmail: "",
+        newMail: "",
       },
       enableReinitialize: true,
-      onSubmit: async (values) => {},
+      onSubmit: async (values) => {
+        try {
+          if (await changeMailAPI(values.newMail)) {
+            toast.success("Kiểm tra mail mới của bạn để xác nhận");
+            handleClose();
+          }
+        } catch (error) {
+          console.error("Failed to change mail:", error);
+          if (error.response && error.response.data === "Mail already exists") {
+            toast.error("Mail này đã được sử dụng");
+          } else {
+            toast.error("Đổi mail thất bại");
+          }
+        }
+      },
     });
 
     return (
       <form onSubmit={formik.handleSubmit}>
         <div>
           <CustomTextField
-            label="Nhập gmail"
-            name="currentGmail"
+            label="Nhập Mail"
+            name="newMail"
             onChange={formik.handleChange}
             fullWidth
             margin="normal"

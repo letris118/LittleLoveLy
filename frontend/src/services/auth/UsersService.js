@@ -37,6 +37,12 @@ const changePasswordAPI = (currentPassword, newPassword) => {
   });
 };
 
+const changeMailAPI = (mail) => {
+  return instance.put("/api/auth/change-mail", {
+    mail,
+  });
+};
+
 const users = () => {
   return instance.get("/api/users");
 };
@@ -342,4 +348,5 @@ export {
   resetPasswordAPI,
   getOrdersByUsername,
   changePasswordAPI,
+  changeMailAPI,
 };
