@@ -302,6 +302,12 @@ const getUsersByRoleAll = (role) => {
   return instance.get(`/api/users/role/${role}`);
 };
 
+const ordersAll = () => {
+  return instance.get("/api/orders");
+};
+
+
+
 export {
   loginAPI,
   users,
@@ -358,4 +364,5 @@ export {
   getUsersByRoleAll,
   changePasswordAPI,
   changeMailAPI,
+  ordersAll,
 };

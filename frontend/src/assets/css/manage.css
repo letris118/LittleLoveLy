@@ -7,35 +7,56 @@
 
 
 .manage-content-detail {
-    background-color:#f5f6fa;
+    background-color: #f5f6fa;
     padding: 20px 20px 20px 0;
 
-  
+
 }
 
 .manage-content-detail {
-  width: 80%;
-  height: 100%;
-  background-color: #f5f6fa;
-  padding: 20px 20px 20px 0;
+    width: 80%;
+    height: 100%;
+    background-color: #f5f6fa;
+    padding: 20px 20px 20px 0;
 }
 
 .manage-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
 }
 
 .manage-table thead {
-  background-color: #f2f2f2;
-  color: #2d3436;
+    background-color: #f2f2f2;
+    color: #2d3436;
 }
 
 .manage-table th,
 .manage-table td {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
 }
+
+.manage-table-none {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.manage-table-none thead {
+    background-color: #f2f2f2;
+    color: #2d3436;
+}
+
+.manage-table-none th,
+.manage-table-none td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+}
+
+
+
 
 .active-head,
 .active-body,
@@ -71,50 +92,64 @@
 .mail-head,
 .phone-head,
 .detail-head,
-.regisDate-head{
-    text-align: center; 
+.regisDate-head,
+.createdDate-head,
+.status-head,
+.trackingCode-head,
+.createdDate-body,
+.status-body,
+.name-body,
+.phone-body,
+.detail-body,
+.username-body,
+.mail-,
+.regisDate-body,
+.username-head,
+.point-head,
+.point-body {
+    text-align: center;
     vertical-align: middle;
 
 }
 
 .update-link {
     color: #7f8c8d;
-    transition: color 0.3s; 
+    transition: color 0.3s;
 }
 
 .update-link:hover {
-    color: #1f272f; 
+    color: #1f272f;
 }
 
 .staff-back-to-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  font-size: 24px;
-  background-color: #636e72;
-  color: white;
-  border: none;
-  border-radius: 100%;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.3s, visibility 0.3s;
-  z-index: 1000;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    background-color: #636e72;
+    color: white;
+    border: none;
+    border-radius: 100%;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 1000;
 }
 
 .staff-back-to-top:hover {
-  background-color: #1e272e;
+    background-color: #1e272e;
 }
 
-.manage-pagination{
+.manage-pagination {
     margin-top: 20px;
 }
 
-.manage-pagination button{
+.manage-pagination button {
     margin-right: 15px;
     width: 30px;
     border-radius: 10px;
@@ -124,7 +159,7 @@
 }
 
 
-.search-add-table{
+.search-add-table {
     display: flex;
     justify-content: space-between;
 }
@@ -142,12 +177,13 @@
     text-decoration: none;
     background-color: #a7c9e5;
     border-radius: 10px;
-    
+
 }
-  
+
 .add-product-link:hover {
-    background-color: #86bae4;;
-    border: 1px solid #5a95c6; 
+    background-color: #86bae4;
+    ;
+    border: 1px solid #5a95c6;
 }
 
 .table-search-bar {
@@ -155,7 +191,7 @@
     font-size: 22px;
     font-weight: bold;
 }
-  
+
 .table-search-bar input[type="text"] {
     flex-grow: 1;
     padding: 10px;
@@ -169,15 +205,15 @@
 
 .table-search-icon,
 .table-search-bar input {
-  height: 50px;
+    height: 50px;
 }
 
 .table-search-icon {
-  width: 70px;
-  background-color: white;
-  border-radius: 0 10px 10px 0;
-  box-shadow: 0 0px 5px 0px #706f6faf;
-  border: none;
+    width: 70px;
+    background-color: white;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 0 0px 5px 0px #706f6faf;
+    border: none;
 }
 
 .table-search-icon img {
@@ -185,32 +221,32 @@
     height: 50%;
 }
 
-.table-search-icon:hover{
+.table-search-icon:hover {
     background-color: #ccc;
 }
 
-.add-update-content-detail{
+.add-update-content-detail {
     flex-grow: 1;
 }
 
-.manage-form-input{
+.manage-form-input {
     padding: 20px 20px 20px 20px;
     border: 1px solid #b3b1b3;
     border-radius: 10px;
     margin: 20px 10px 20px 10px;
 }
 
-.manage-form-group button{
+.manage-form-group button {
     width: 70px;
 }
 
 .manage-form-group,
 .manage-form-group img {
     margin: 0 10px 30px 10px;
-    color: #3c3e3e ;
+    color: #3c3e3e;
 }
 
-.manage-form-group label{
+.manage-form-group label {
     display: block;
     margin-bottom: 5px;
     color: black;
@@ -219,7 +255,7 @@
 
 .manage-form-control select,
 .manage-form-control textarea,
-.manage-form-control input{
+.manage-form-control input {
     width: 100%;
     padding: 8px;
     font-size: 14px;
@@ -228,14 +264,14 @@
     box-sizing: border-box;
 }
 
-.manage-form-control-img{
+.manage-form-control-img {
     width: 100%;
     font-size: 14px;
     box-sizing: border-box;
 }
 
 
-.manage-form-type-control select{
+.manage-form-type-control select {
     width: 85%;
     padding: 8px;
     font-size: 14px;
@@ -243,23 +279,24 @@
     border-radius: 4px;
     box-sizing: border-box;
 }
-.manage-form-control img{
+
+.manage-form-control img {
     width: 20%;
     height: 20%;
     margin-right: 15px;
 }
 
 
-.manage-form-type-voucher-control{
+.manage-form-type-voucher-control {
     display: flex;
 }
 
-.manage-form-type-voucher-control button{
+.manage-form-type-voucher-control button {
     width: 20%;
 }
 
 .manage-form-type-voucher-control button.selected {
-    background-color: #c0bfbf; 
+    background-color: #c0bfbf;
 }
 
 .save-manage-link,
@@ -277,30 +314,39 @@
     border-radius: 10px;
 }
 
-.cancel-manage-link{
+.cancel-manage-link {
     width: 100px;
     height: 50px;
     margin-left: 30px;
 }
-  
-.save-manage-link{
+
+.save-manage-link {
     width: 200px;
     height: 50px;
     background-color: #a7c9e5;
     border: 2px solid #5a95c6;
 }
 
-.save-manage-link:hover{
+.save-manage-link:hover {
     background-color: #86bae4;;
-    border: 1px solid #5a95c6; 
+    border: 1px solid #5a95c6;
 }
 
 
 .cancel-manage-link:hover {
     background-color: #ddd;
-    border: 1px solid #ccc; 
+    border: 1px solid #ccc;
 }
 
-.manage-form-btn{
+.manage-form-btn {
     display: flex;
 }
+
+.manage-dialog-title {
+    display: flex;
+    justify-content: center;
+}
+
+.hidden-select {
+    display: none;
+  }
