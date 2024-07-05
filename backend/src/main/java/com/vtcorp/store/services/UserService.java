@@ -100,8 +100,8 @@ public class UserService {
         return "Check your email to recover password";
     }
 
-    public String changePassword(ChangePasswordDTO changePasswordDTO) {
-        String token = changePasswordDTO.getToken();
+    public String resetPassword(PasswordDTO passwordDTO) {
+        String token = passwordDTO.getToken();
         if (token == null) {
             throw new IllegalArgumentException("Token not found");
         }
@@ -110,7 +110,7 @@ public class UserService {
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
-        user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
         userRepository.save(user);
         emailSenderService.sendEmailAsync(mail, "Password Changed", "Your password has been changed successfully");
         return "Password changed successfully";
@@ -157,5 +157,15 @@ public class UserService {
             case "staff" -> role = Role.ROLE_STAFF;
         }
         return userMapper.toResponseDTOs(userRepository.findByRole(role));
+    }
+
+    public String changePassword(String username, PasswordDTO passwordDTO) {
+        User user = userRepository.findById(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (!passwordEncoder.matches(passwordDTO.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Incorrect current password");
+        }
+        user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
+        userRepository.save(user);
+        return "Password changed successfully";
     }
 }

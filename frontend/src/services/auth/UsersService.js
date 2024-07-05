@@ -30,6 +30,13 @@ const resetPasswordAPI = (newPassword, token) => {
   });
 };
 
+const changePasswordAPI = (currentPassword, newPassword) => {
+  return instance.post("/api/auth/change-password", {
+    currentPassword,
+    newPassword,
+  });
+};
+
 const users = () => {
   return instance.get("/api/users");
 };
@@ -334,4 +341,5 @@ export {
   forgotPasswordAPI,
   resetPasswordAPI,
   getOrdersByUsername,
+  changePasswordAPI,
 };

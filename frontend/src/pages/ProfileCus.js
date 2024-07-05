@@ -21,6 +21,7 @@ import {
   getUserInfo,
   getWardByDistrictId,
   updateUserInfo,
+  changePasswordAPI,
 } from "../services/auth/UsersService";
 import { toast } from "react-toastify";
 export default function ProfileCus() {
@@ -331,7 +332,26 @@ export default function ProfileCus() {
         confirmNewPassword: "",
       },
       enableReinitialize: true,
-      onSubmit: async (values) => {},
+      onSubmit: async (values) => {
+        try {
+          if (
+            await changePasswordAPI(values.currentPassword, values.newPassword)
+          ) {
+            toast.success("Đổi mật khẩu thành công");
+            handleClose();
+          }
+        } catch (error) {
+          console.error("Failed to change password:", error);
+          if (
+            error.response &&
+            error.response.data === "Incorrect current password"
+          ) {
+            toast.error("Mật khẩu hiện tại không đúng");
+          } else {
+            toast.error("Đổi mật khẩu thất bại");
+          }
+        }
+      },
     });
 
     return (

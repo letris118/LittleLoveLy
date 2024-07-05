@@ -1,12 +1,13 @@
 package com.vtcorp.store.controllers;
 
-import com.vtcorp.store.dtos.ChangePasswordDTO;
+import com.vtcorp.store.dtos.PasswordDTO;
 import com.vtcorp.store.dtos.ForgotPasswordDTO;
 import com.vtcorp.store.dtos.LoginDTO;
 import com.vtcorp.store.dtos.UserRequestDTO;
 import com.vtcorp.store.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -51,9 +52,20 @@ public class AuthController {
 
     @Operation(summary = "Reset password", description = "Validates the token from forgot-password and save the new password")
     @PostMapping("/reset-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+    public ResponseEntity<?> resetPassword(@RequestBody PasswordDTO passwordDTO) {
         try {
-            return ResponseEntity.ok(userService.changePassword(changePasswordDTO));
+            return ResponseEntity.ok(userService.resetPassword(passwordDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Change password")
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody PasswordDTO passwordDTO, Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            return ResponseEntity.ok(userService.changePassword(username, passwordDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
