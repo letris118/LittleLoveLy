@@ -49,8 +49,8 @@ public class AuthController {
         }
     }
 
-    @Operation(summary = "Change password", description = "Validates the token and save the new password")
-    @PostMapping("/change-password")
+    @Operation(summary = "Reset password", description = "Validates the token from forgot-password and save the new password")
+    @PostMapping("/reset-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
         try {
             return ResponseEntity.ok(userService.changePassword(changePasswordDTO));

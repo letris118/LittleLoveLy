@@ -24,7 +24,7 @@ const forgotPasswordAPI = (mail) => {
 };
 
 const resetPasswordAPI = (newPassword, token) => {
-  return instance.post("/api/auth/change-password", {
+  return instance.post("/api/auth/reset-password", {
     newPassword,
     token,
   });
@@ -232,27 +232,23 @@ const getUserInfo = (userId) => {
 };
 
 const updateUserInfo = (
-  userId,
-  password,
+  username,
   name,
-  mail,
   phone,
   cityCode,
   districtId,
   wardCode,
   street
 ) => {
-  return instance.put(
-    `/api/users/${userId}`,
-    password,
+  return instance.put(`/api/users/${username}`, {
+    username,
     name,
-    mail,
     phone,
     cityCode,
     districtId,
     wardCode,
-    street
-  );
+    street,
+  });
 };
 
 const createOrder = (order) => {
