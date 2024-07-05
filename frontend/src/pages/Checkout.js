@@ -106,12 +106,19 @@ export default function Checkout() {
 
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    const storedGifts = JSON.parse(localStorage.getItem("gifts")) || [];
     setCartItems(storedCartItems);
     const submitCartItems = storedCartItems.map((item) => ({
       id: item.productId,
       itemType: "product",
       quantity: item.quantity,
     }));
+    const submitGiftItems = storedGifts.map((item) => ({
+      id: item.giftId,
+      itemType: "gift",
+      quantity: item.quantity,
+    }));
+    submitCartItems.push(...submitGiftItems);
     setSubmitCart(submitCartItems);
 
     fetch("http://localhost:8010/api/orders/cities")
@@ -300,7 +307,8 @@ export default function Checkout() {
                         id="city"
                         name="cusCityCode"
                         value={formik.values.cusCityCode}
-                        onChange={handleCityChange}>
+                        onChange={handleCityChange}
+                      >
                         <option value="">Chọn Tỉnh / Thành Phố</option>
                         {cities.map((item) => (
                           <option key={item.CityID} value={item.CityID}>
@@ -320,7 +328,8 @@ export default function Checkout() {
                         id="district"
                         name="cusDistrictId"
                         value={formik.values.cusDistrictId}
-                        onChange={handleDistrictChange}>
+                        onChange={handleDistrictChange}
+                      >
                         <option value="">Chọn Quận / Huyện</option>
                         {districts.map((item) => (
                           <option key={item.DistrictID} value={item.DistrictID}>
@@ -340,7 +349,8 @@ export default function Checkout() {
                         id="ward"
                         name="cusWardCode"
                         value={formik.values.cusWardCode}
-                        onChange={formik.handleChange}>
+                        onChange={formik.handleChange}
+                      >
                         <option value="">Chọn Phường / Xã</option>
                         {wards.map((item) => (
                           <option key={item.WardCode} value={item.WardCode}>
@@ -373,7 +383,8 @@ export default function Checkout() {
                     {cartItems.map((item) => (
                       <div
                         className="content-checkout-product-item"
-                        key={item.productId}>
+                        key={item.productId}
+                      >
                         <div
                           style={{
                             width: "50%",
@@ -385,7 +396,8 @@ export default function Checkout() {
                             borderRadius: "10px",
                             paddingTop: "10px",
                             paddingLeft: "5px",
-                          }}>
+                          }}
+                        >
                           {item.name}
                         </div>
                         <div
@@ -393,7 +405,8 @@ export default function Checkout() {
                             width: "20%",
                             paddingTop: "10px",
                             textAlign: "center",
-                          }}>
+                          }}
+                        >
                           {formatPrice(item.sellingPrice)}đ
                         </div>
                         <span style={{ paddingTop: "10px" }}>x</span>
@@ -402,7 +415,8 @@ export default function Checkout() {
                             width: "7%",
                             paddingTop: "10px",
                             textAlign: "center",
-                          }}>
+                          }}
+                        >
                           {item.quantity}
                         </div>{" "}
                         <span style={{ paddingTop: "10px" }}> = </span>
@@ -411,7 +425,8 @@ export default function Checkout() {
                             width: "20%",
                             paddingTop: "10px",
                             textAlign: "center",
-                          }}>
+                          }}
+                        >
                           {formatPrice(item.sellingPrice * item.quantity)}đ
                         </div>
                       </div>
@@ -426,7 +441,8 @@ export default function Checkout() {
                           alignItems: "center",
                           height: "35px",
                           width: "100%",
-                        }}>
+                        }}
+                      >
                         <b>Tổng tiền hàng:</b>
                         <span>{formatPrice(evaluateResult.basePrice)}đ</span>
                       </div>
@@ -437,7 +453,8 @@ export default function Checkout() {
                           alignItems: "center",
                           height: "35px",
                           width: "100%",
-                        }}>
+                        }}
+                      >
                         <b>Tổng phí giao hàng:</b>
                         <span>{formatPrice(evaluateResult.shippingFee)}đ</span>
                       </div>
@@ -449,7 +466,8 @@ export default function Checkout() {
                           height: "35px",
                           width: "100%",
                           borderBottom: "1px solid #7c7c7caa",
-                        }}>
+                        }}
+                      >
                         <b>Giảm giá:</b>
                         <span>
                           -
@@ -468,7 +486,8 @@ export default function Checkout() {
                           alignItems: "center",
                           height: "35px",
                           width: "100%",
-                        }}>
+                        }}
+                      >
                         <b>Tổng thanh toán:</b>
                         <span>
                           {formatPrice(evaluateResult.postDiscountPrice)}đ
@@ -490,7 +509,8 @@ export default function Checkout() {
                             fontSize: "17px",
                             fontWeight: "550",
                             marginRight: "12px",
-                          }}>
+                          }}
+                        >
                           Voucher
                         </button>
                       ) : (
@@ -509,7 +529,8 @@ export default function Checkout() {
                           fontSize: "17px",
                           fontWeight: "550",
                           float: "right",
-                        }}>
+                        }}
+                      >
                         Mua ngay
                       </button>
                     </div>
