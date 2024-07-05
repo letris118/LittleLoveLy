@@ -151,9 +151,9 @@ export default function StaffChat() {
 
           {tab === "" ? (
             <div className="standing-by">
-              <h2>Đang chờ...</h2>
+              <h3>Hiện không có tin nhắn</h3>
               <p>Vui lòng chờ khách hàng bắt đầu trò chuyện.</p>
-              <p>Khi một khách hàng gửi tin nhắn, tên của họ sẽ xuất hiện trong danh sách bên trái.</p>
+              <p>Khi một khách hàng gửi tin nhắn, tên của họ sẽ xuất hiện trong danh sách bên phải.</p>
             </div>
           ) : (
             <div className="staff-chat">
@@ -186,26 +186,27 @@ export default function StaffChat() {
               </div>
             </div>
           )}
+          <div className="customer-list">
+            <ul>
+              {[...conversations.keys()]
+                .filter(name => name !== userData.username)
+                .map((username, index) => (
+                  <li
+                    onClick={() => { setTab(username) }}
+                    className={`member ${tab === username && "active"}`}
+                    key={index}
+                  >
+                    {userNames.get(username) || username}
+                  </li>
+                ))}
+            </ul>
+          </div>
         </div>
       ) : (
         <p>Đang kết nối</p>
       )}
 
-      <div className="customer-list">
-        <ul>
-          {[...conversations.keys()]
-            .filter(name => name !== userData.username)
-            .map((username, index) => (
-              <li
-                onClick={() => { setTab(username) }}
-                className={`member ${tab === username && "active"}`}
-                key={index}
-              >
-                {userNames.get(username) || username}
-              </li>
-            ))}
-        </ul>
-      </div>
+
     </div>
   );
 }
