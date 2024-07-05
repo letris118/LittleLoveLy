@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AdminHeader from "../components/AdminHeader";
+import StaffHeader from "../components/StaffHeader";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import Footer from "../components/Footer";
@@ -27,7 +27,7 @@ export default function Statistics() {
 
   return (
     <div>
-      <AdminHeader />
+      <StaffHeader />
 
       <div className="manage-content">
         <AdminSideBar />
