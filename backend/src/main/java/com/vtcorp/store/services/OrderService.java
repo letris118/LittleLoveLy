@@ -67,6 +67,15 @@ public class OrderService {
                     .orderId(CodeGenerator.generateOrderID())
                     .user(user)
                     .status("CART")
+                    .orderDetails(new ArrayList<>())
+                    .giftIncludings(new ArrayList<>())
+                    .cusName(user.getName())
+                    .cusPhone(user.getPhone())
+                    .cusMail(user.getMail())
+                    .cusCityCode(user.getCityCode())
+                    .cusDistrictId(user.getDistrictId())
+                    .cusWardCode(user.getWardCode())
+                    .cusStreet(user.getStreet())
                     .build();
             cart = orderRepository.save(cart);
         }
@@ -133,10 +142,10 @@ public class OrderService {
             for (GiftIncluding item : cart.getGiftIncludings()) {
                 if (item.getGift().getGiftId() == cartItemDTO.getId()) {
                     int quantityLeft = item.getQuantity() - cartItemDTO.getQuantity();
-                    if(quantityLeft <= 0){
+                    if (quantityLeft <= 0) {
                         user.setPoint(user.getPoint() + item.getPoint() * item.getQuantity());
                         cart.getGiftIncludings().remove(item);
-                    }else{
+                    } else {
                         user.setPoint(user.getPoint() + item.getPoint() * cartItemDTO.getQuantity());
                         item.setQuantity(quantityLeft);
                     }
@@ -163,6 +172,13 @@ public class OrderService {
                     .status("CART")
                     .orderDetails(new ArrayList<>())
                     .giftIncludings(new ArrayList<>())
+                    .cusName(user.getName())
+                    .cusPhone(user.getPhone())
+                    .cusMail(user.getMail())
+                    .cusCityCode(user.getCityCode())
+                    .cusDistrictId(user.getDistrictId())
+                    .cusWardCode(user.getWardCode())
+                    .cusStreet(user.getStreet())
                     .build();
         }
 
@@ -303,7 +319,6 @@ public class OrderService {
         if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.VN_PAY)) {
             order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING);
             order = orderRepository.save(order);
-            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             double finalPrice = evaluateOrder.getPostDiscountPrice();
             return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress, order.getCreatedDate());
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD)) {
@@ -316,6 +331,7 @@ public class OrderService {
         }
     }
 
+    @Transactional
     public String handleVNPayCallback(Map<String, String> fields) {
         String vnpResponseCode = fields.get("vnp_ResponseCode");
         String orderId = fields.get("vnp_TxnRef");
@@ -323,11 +339,34 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         if ("00".equals(vnpResponseCode)) {
             order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_SUCCESS);
+            orderRepository.save(order);
+            return "http://localhost:3000/?status=payment-success";
         } else {
-            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_FAILED);
+            handlePaymentFail(order);
+            return "http://localhost:3000/?status=payment-fail";
         }
-        orderRepository.save(order);
-        return "http://localhost:3000/";
+    }
+
+    public void handlePaymentFail(Order order){
+        Order newCart = orderRepository.findByUserAndStatus(order.getUser(), "CART");
+        if(newCart != null){
+            // in case timeout for pending return back to cart set shorter than payment time
+            if(!newCart.getOrderId().equals(order.getOrderId())){
+                orderRepository.delete(order);
+            }
+        } else {
+            order.setStatus("CART");
+            order.setCreatedDate(null);
+            order.setVoucher(null);
+            order.setTotalPoint(null);
+            order.setTotalQuantity(null);
+            order.setBasePrice(null);
+            order.setFinalBasePrice(null);
+            order.setShippingFee(null);
+            order.setFinalShippingFee(null);
+            order.setPostDiscountPrice(null);
+            orderRepository.save(order);
+        }
     }
 
     private OrderResponseDTO mapOrderToResponse(Order order) {
@@ -391,7 +430,7 @@ public class OrderService {
             futurePointInCart += item.getPoint() * item.getQuantity();  //quantity after update if exist
         }
         // if no update mean add new gift to cart
-        if(currentPointInCart == futurePointInCart){
+        if (currentPointInCart == futurePointInCart) {
             cart.getGiftIncludings().add(GiftIncluding.builder()
                     .giftIncludingId(new GiftIncluding.GiftIncludingId(cart.getOrderId(), gift.getGiftId()))
                     .order(cart)

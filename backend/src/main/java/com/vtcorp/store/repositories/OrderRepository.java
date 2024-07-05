@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -21,4 +22,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     @Query("SELECT o FROM Order o WHERE o.user = :user AND o.status <> 'CART'")
     List<Order> findByUserAndStatusNotCart(User user);
+
+    List<Order> findByStatusAndCreatedDateBefore(String status, Date createdDate);
 }
