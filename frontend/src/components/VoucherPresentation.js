@@ -3,7 +3,10 @@ import { vouchers } from "../services/auth/UsersService";
 import "../assets/css/voucherPresentation.css";
 import { Button, styled } from "@mui/material";
 
-export default function VoucherPresentation() {
+export default function VoucherPresentation({
+  selectedVoucher,
+  onSelectVoucher,
+}) {
   const [voucherList, setVoucherList] = useState([]);
 
   const CustomButton = styled(Button)({
@@ -22,7 +25,7 @@ export default function VoucherPresentation() {
   useEffect(() => {
     const fetchVouchers = async () => {
       try {
-        let response = await vouchers();
+        const response = await vouchers();
         if (response) {
           setVoucherList(response);
         } else {
@@ -35,6 +38,11 @@ export default function VoucherPresentation() {
     };
     fetchVouchers();
   }, []);
+
+  const handleApply = (voucherId) => {
+    onSelectVoucher(voucherId === selectedVoucher ? null : voucherId);
+  };
+
   return (
     <div className="voucher-container">
       {voucherList.map((voucher) => (
@@ -54,7 +62,9 @@ export default function VoucherPresentation() {
             </div>
           </div>
           <div className="voucher-item-right">
-            <CustomButton>Áp dụng</CustomButton>
+            <CustomButton onClick={() => handleApply(voucher.voucherId)}>
+              {selectedVoucher === voucher.voucherId ? "Hủy" : "Áp dụng"}
+            </CustomButton>
           </div>
         </div>
       ))}

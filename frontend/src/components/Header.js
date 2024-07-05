@@ -51,16 +51,15 @@ export default function Header({ handleLogoutSuccess }) {
         {/* logo + store name to return home page */}
         <div className="store-name">
           <Link to={routes.homePage} style={{ color: "#ff469e" }}>
-            <img
-              src="../assets/images/logo.png"
-              alt="page logo"
-            />
+            <img src="../assets/images/logo.png" alt="page logo" />
           </Link>
         </div>
 
         {/* search bar + button*/}
         <div className="search-bar" style={{ position: "relative" }}>
-          <form onSubmit={handleSearchSubmit}>
+          <form
+            onSubmit={handleSearchSubmit}
+            style={{ display: "flex", alignItems: "center" }}>
             <div style={{ display: "flex", width: "70%" }}>
               <input
                 type="text"
@@ -87,15 +86,13 @@ export default function Header({ handleLogoutSuccess }) {
                 right: 0,
                 zIndex: 10,
                 width: 600,
-              }}
-            >
+              }}>
               <MenuList>
                 {searchResults.slice(0, 5).map((result) => (
                   <MenuItem
                     key={result.productId}
                     component={Link}
-                    to={`${routes.products}/${result.name}`}
-                  >
+                    to={`${routes.products}/${result.name}`}>
                     <ListItemAvatar>
                       {result.productImages.slice(0, 1).map((image) => (
                         <Avatar
@@ -117,8 +114,7 @@ export default function Header({ handleLogoutSuccess }) {
                 {searchResults.length > 5 && (
                   <MenuItem
                     component={Link}
-                    to={`${routes.searchProduct}?search_term=${searchTerm}`}
-                  >
+                    to={`${routes.searchProduct}?search_term=${searchTerm}`}>
                     <ListItemText
                       primary={
                         <>
@@ -138,8 +134,7 @@ export default function Header({ handleLogoutSuccess }) {
               display: "flex",
               justifyContent: "end",
               width: "50%",
-            }}
-          >
+            }}>
             {localStorage.getItem("token") ? (
               <DropdownMenu
                 handleLogoutSuccess={handleLogoutSuccess}

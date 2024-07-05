@@ -267,8 +267,7 @@ export default function ProfileCus() {
             onChange={handleCityChange}
             fullWidth
             SelectProps={{ native: true }}
-            margin="normal"
-          >
+            margin="normal">
             <option value="">Chọn Tỉnh / Thành Phố</option>
             {cities.map((item) => (
               <option key={item.CityID} value={item.CityID}>
@@ -285,8 +284,7 @@ export default function ProfileCus() {
             onChange={handleDistrictChange}
             fullWidth
             SelectProps={{ native: true }}
-            margin="normal"
-          >
+            margin="normal">
             <option value="">Chọn Quận / Huyện</option>
             {localDistricts.map((item) => (
               <option key={item.DistrictID} value={item.DistrictID}>
@@ -303,8 +301,7 @@ export default function ProfileCus() {
             onChange={formik.handleChange}
             fullWidth
             SelectProps={{ native: true }}
-            margin="normal"
-          >
+            margin="normal">
             <option value="">Chọn Phường / Xã</option>
             {localWards.map((item) => (
               <option key={item.WardCode} value={item.WardCode}>
@@ -365,7 +362,7 @@ export default function ProfileCus() {
       <form onSubmit={formik.handleSubmit}>
         <div>
           <CustomTextField
-            label="Mật khẩu hiện tại "
+            label="Mật khẩu hiện tại *"
             name="currentPassword"
             onChange={formik.handleChange}
             fullWidth
@@ -374,7 +371,7 @@ export default function ProfileCus() {
         </div>
         <div>
           <CustomTextField
-            label="Mật khẩu mới"
+            label="Mật khẩu mới *"
             name="newPassword"
             onChange={formik.handleChange}
             fullWidth
@@ -383,7 +380,7 @@ export default function ProfileCus() {
         </div>
         <div>
           <CustomTextField
-            label="Xác nhận mật khẩu mới"
+            label="Xác nhận mật khẩu mới *"
             name="confirmNewPassword"
             onChange={formik.handleChange}
             fullWidth
@@ -528,8 +525,7 @@ export default function ProfileCus() {
       </CustomDialog>
       <CustomDialog
         open={openChangePasswordDialog}
-        onClose={handleCloseChangePassword}
-      >
+        onClose={handleCloseChangePassword}>
         <CustomDialogTitle>Đổi mật khẩu</CustomDialogTitle>
         <DialogContent>
           <PasswordForm handleClose={handleCloseChangePassword} />
@@ -537,8 +533,7 @@ export default function ProfileCus() {
       </CustomDialog>
       <CustomDialog
         open={openChangeGmailDialog}
-        onClose={handleCloseChangeGmail}
-      >
+        onClose={handleCloseChangeGmail}>
         <CustomDialogTitle>Đổi gmail</CustomDialogTitle>
         <DialogContent>
           <MailForm handleClose={handleCloseChangeGmail} />

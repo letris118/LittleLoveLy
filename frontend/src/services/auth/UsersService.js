@@ -295,6 +295,9 @@ const getOrdersByUsername = (username) => {
   return instance.get(`/api/orders/user/${username}`);
 };
 
+const getProductByBrandId = (brandId) => {
+  return instance.get(`/api/products/brand/${brandId}`);
+};
 const getUsersByRoleAll = (role) => {
   return instance.get(`/api/users/role/${role}`);
 };
@@ -357,6 +360,7 @@ export {
   forgotPasswordAPI,
   resetPasswordAPI,
   getOrdersByUsername,
+  getProductByBrandId,
   getUsersByRoleAll,
   changePasswordAPI,
   changeMailAPI,
