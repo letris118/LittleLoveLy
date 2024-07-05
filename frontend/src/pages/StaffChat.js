@@ -19,22 +19,30 @@ export default function StaffChat() {
     connected: false,
     message: ''
   });
+  const [userNames, setUserNames] = useState(new Map());
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const userInfo = await getUserInfo("customer01");
-        if (userInfo != null) {
-          console.log(userInfo.name);
+    const fetchUserNames = async () => {
+      const names = new Map();
+      for (const username of conversations.keys()) {
+        if (username !== userData.username) {
+          try {
+            const userInfo = await getUserInfo(username);
+            if (userInfo && userInfo.name) {
+              names.set(username, userInfo.name);
+            }
+          } catch (error) {
+            console.error(`Error fetching user info for ${username}:`, error);
+          }
         }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
       }
+      setUserNames(names);
     };
 
-    fetchUserInfo();
+    fetchUserNames();
+  }, [conversations, userData.username]);
 
-  }, [])
+
 
   useEffect(() => {
     const checkAuthentication = () => {
@@ -72,7 +80,6 @@ export default function StaffChat() {
   }
 
   const onPrivateMessage = (payload) => {
-    console.log(payload);
     var payloadData = JSON.parse(payload.body);
     if (conversations.get(payloadData.senderName)) {
       conversations.get(payloadData.senderName).push(payloadData);
@@ -125,6 +132,14 @@ export default function StaffChat() {
     }
   }
 
+  const displayName = (username) => {
+    if (username.toLowerCase().includes('staff')) {
+      return 'LittleLoveLy';
+    } else {
+      return userNames.get(username);
+    }
+  }
+
 
   return (
     <div>
@@ -147,9 +162,9 @@ export default function StaffChat() {
                   <ul className="chat-messages">
                     {[...conversations.get(tab)].map((chat, index) => (
                       <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
-                        {chat.senderName !== userData.username && <div className="avatar">{chat.senderName}</div>}
+                        {chat.senderName !== userData.username && <div className="avatar">{displayName(chat.senderName)}</div>}
                         <div className="message-data">{chat.message}</div>
-                        {chat.senderName === userData.username && <div className="avatar self">{chat.senderName}</div>}
+                        {chat.senderName === userData.username && <div className="avatar self">{displayName(chat.senderName)}</div>}
                       </li>
                     ))}
                   </ul>
@@ -180,13 +195,13 @@ export default function StaffChat() {
         <ul>
           {[...conversations.keys()]
             .filter(name => name !== userData.username)
-            .map((name, index) => (
+            .map((username, index) => (
               <li
-                onClick={() => { setTab(name) }}
-                className={`member ${tab === name && "active"}`}
+                onClick={() => { setTab(username) }}
+                className={`member ${tab === username && "active"}`}
                 key={index}
               >
-                {name}
+                {userNames.get(username) || username}
               </li>
             ))}
         </ul>
