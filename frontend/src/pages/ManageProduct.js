@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate,useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { ToastContainer, toast } from "react-toastify";
@@ -43,7 +43,7 @@ export default function ManageProduct() {
       toast.success(location.state.success);
       // Clear the state to prevent the message from showing again on page reload
       navigate(location.pathname, { replace: true, state: {} });
-  }
+    }
 
     const fetchProducts = async () => {
       try {
@@ -162,7 +162,7 @@ export default function ManageProduct() {
 
   return (
     <div>
-      
+
       <StaffHeader />
 
       <div className="manage-content">
@@ -242,52 +242,61 @@ export default function ManageProduct() {
             </thead>
 
             <tbody>
-              {currentProducts.map((product, index) => (
-                <tr key={product.productId}>
-                  <td className="index-body">{indexOfFirstProduct + index + 1}</td>
-                  <td className="name-body">{product.name}</td>
-                  <td className="img-body">
-                    {product.productImages.slice(0, 1).map((image) => (
+              {currentProducts.length > 0 ? (
+                currentProducts.map((product, index) => (
+                  <tr key={product.productId}>
+                    <td className="index-body">{indexOfFirstProduct + index + 1}</td>
+                    <td className="name-body">{product.name}</td>
+                    <td className="img-body">
+                      {product.productImages.slice(0, 1).map((image) => (
+                        <img
+                          key={image.imageId}
+                          src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
+                          alt={product.name}
+                          style={{ width: "30%", height: "30%" }}
+                        />
+                      ))}
+                    </td>
+
+                    <td className="brand-body">
                       <img
-                        key={image.imageId}
-                        src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
-                        alt={product.name}
-                        style={{ width: "30%", height: "30%" }}
+                        src={`${instance.defaults.baseURL}/images/brands/${product.brand.logo}`}
+                        alt={product.brand.name}
+                        style={{ width: "50%", height: "50%" }}
                       />
-                    ))}
-                  </td>
+                    </td>
 
-                  <td className="brand-body">
-                    <img
-                      src={`${instance.defaults.baseURL}/images/brands/${product.brand.logo}`}
-                      alt={product.brand.name}
-                      style={{ width: "50%", height: "50%" }}
-                    />
-                  </td>
+                    <td className="stock-body">{product.stock}</td>
+                    <td className="sellingPrice-body">{product.sellingPrice}</td>
+                    <td className="active-body">
+                      <Switch
+                        onChange={() =>
+                          handleToggle(product.productId, product.active)
+                        }
+                        checked={product.active}
+                        offColor="#ff0000"
+                        onColor="#27ae60"
+                      />
+                    </td>
 
-                  <td className="stock-body">{product.stock}</td>
-                  <td className="sellingPrice-body">{product.sellingPrice}</td>
-                  <td className="active-body">
-                    <Switch
-                      onChange={() =>
-                        handleToggle(product.productId, product.active)
-                      }
-                      checked={product.active}
-                      offColor="#ff0000"
-                      onColor="#27ae60"
-                    />
-                  </td>
+                    <td className="update-body">
+                      <Link
+                        to={`${routes.updateProduct}/${product.name}?id=${product.productId}`}
+                        className="update-link">
+                        Chi tiết
+                      </Link>
+                    </td>
+                    <td className="lastModified-body">{product.lastModifiedDate}</td>
+                  </tr>
 
-                  <td className="update-body">
-                    <Link
-                      to={`${routes.updateProduct}/${product.name}?id=${product.productId}`}
-                      className="update-link">
-                      Chi tiết
-                    </Link>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" style={{ textAlign: "center" }}>
+                    Không có sản phẩm nào phù hợp
                   </td>
-                  <td className="lastModified-body">{product.lastModifiedDate}</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
 
@@ -295,7 +304,7 @@ export default function ManageProduct() {
           {/* Pagination */}
           <div className="manage-pagination">
             {Array.from({ length: totalPages }, (_, i) => (
-              <button 
+              <button
                 key={i + 1}
                 onClick={() => handleClick(i + 1)}
                 className={currentPage === i + 1 ? 'active' : ''}
