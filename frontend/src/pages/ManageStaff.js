@@ -9,6 +9,7 @@ import StaffBackToTop from "../components/StaffBackToTop";
 
 export default function ManageStaff() {
   const [staffList, setStaffList] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,6 +45,14 @@ export default function ManageStaff() {
     fetchStaffs();
   }, [navigate, location]);
 
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const filteredStaffList = staffList.filter((staff) =>
+    staff.username.toLowerCase().includes(searchInput.toLowerCase())
+  );
+
   return (
     <div>
       <StaffHeader />
@@ -57,13 +66,19 @@ export default function ManageStaff() {
               <input
                 type="text"
                 placeholder="Tìm kiếm nhân viên..."
-                value=""
-                onChange=""
+                value={searchInput}
+                onChange={handleSearchInputChange}
               />
+            </div>
+
+            <div className="add-product-btn">
+              <Link to="#" className="add-product-link">
+                Thêm nhân viên mới
+              </Link>
             </div>
           </div>
 
-          <table className="manage-table-none">
+          <table className="manage-table">
             <thead className="manage-table-head">
               <tr>
                 <th className="index-head" style={{ width: "5%" }}>STT</th>
@@ -77,8 +92,8 @@ export default function ManageStaff() {
             </thead>
 
             <tbody className="manage-table-body">
-              {staffList.length > 0 ? (
-                staffList.map((staff, index) => (
+              {filteredStaffList.length > 0 ? (
+                filteredStaffList.map((staff, index) => (
                   <tr key={index}>
                     <td className="index-body">{index + 1}</td>
                     <td className="username-body">{staff.username}</td>
@@ -90,7 +105,8 @@ export default function ManageStaff() {
                       <Link
                         to="#"
                         className="update-link">
-                        Chi tiết</Link>
+                        Chi tiết
+                      </Link>
                     </td>
                   </tr>
                 ))

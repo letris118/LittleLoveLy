@@ -16,10 +16,10 @@ import StaffBackToTop from "../components/StaffBackToTop"
 export default function ManageGift() {
   const [giftList, setGiftList] = useState([]);
   const [filteredGifts, setFilteredGifts] = useState([]);
-  const [sortBy, setSortBy] = useState(null); 
-  const [sortOrder, setSortOrder] = useState('asc'); 
-  const [sortByActive, setSortByActive] = useState(null); 
-  const [sortOrderActive, setSortOrderActive] = useState('asc'); 
+  const [sortBy, setSortBy] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortByActive, setSortByActive] = useState(null);
+  const [sortOrderActive, setSortOrderActive] = useState('asc');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const giftsPerPage = 20;
@@ -38,7 +38,7 @@ export default function ManageGift() {
       toast.success(location.state.success);
       // Clear the state to prevent the message from showing again on page reload
       navigate(location.pathname, { replace: true, state: {} });
-  }
+    }
 
     const fetchGifts = async () => {
       try {
@@ -137,7 +137,7 @@ export default function ManageGift() {
 
   return (
     <div>
-      
+
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />
@@ -190,35 +190,44 @@ export default function ManageGift() {
               </tr>
             </thead>
             <tbody className="manage-table-body">
-              {currentGifts.map((gift, index) => (
-                <tr key={gift.giftId}>
-                  <td className="index-body">{indexOfFirstGift + index + 1}</td>
-                  <td className="name-body">{gift.name}</td>
-                  <td className="img-body">
-                    <img
-                      src={`${instance.defaults.baseURL}/images/gifts/${gift.imagePath}`}
-                      alt={gift.name}
-                      style={{ width: '50%', height: '50%' }}
-                    />
-                  </td>
-                  <td className="point-body">{gift.point}</td>
-                  <td className="stock-body">{gift.stock}</td>
-                  <td className="active-body">
-                    <Switch
-                      onChange={() => handleToggle(gift.giftId, gift.active)}
-                      checked={gift.active}
-                      offColor="#ff0000"
-                      onColor="#27ae60"
-                    />
-                  </td>
-                  <td className="update-body">
-                    <Link
-                     to={`${routes.updateGift}/${gift.name}?id=${gift.giftId}`} className="update-link">
-                      Chi tiết
-                    </Link>
+              {currentGifts.length > 0 ? (
+                currentGifts.map((gift, index) => (
+                  <tr key={gift.giftId}>
+                    <td className="index-body">{indexOfFirstGift + index + 1}</td>
+                    <td className="name-body">{gift.name}</td>
+                    <td className="img-body">
+                      <img
+                        src={`${instance.defaults.baseURL}/images/gifts/${gift.imagePath}`}
+                        alt={gift.name}
+                        style={{ width: '50%', height: '50%' }}
+                      />
+                    </td>
+                    <td className="point-body">{gift.point}</td>
+                    <td className="stock-body">{gift.stock}</td>
+                    <td className="active-body">
+                      <Switch
+                        onChange={() => handleToggle(gift.giftId, gift.active)}
+                        checked={gift.active}
+                        offColor="#ff0000"
+                        onColor="#27ae60"
+                      />
+                    </td>
+                    <td className="update-body">
+                      <Link
+                        to={`${routes.updateGift}/${gift.name}?id=${gift.giftId}`} className="update-link">
+                        Chi tiết
+                      </Link>
+                    </td>
+                  </tr>
+
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" style={{ textAlign: "center" }}>
+                    Không có quà tặng nào phù hợp
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
 

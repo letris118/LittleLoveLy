@@ -35,7 +35,7 @@ export default function ManageVoucher() {
       toast.success(location.state.success);
       // Clear the state to prevent the message from showing again on page reload
       navigate(location.pathname, { replace: true, state: {} });
-  }
+    }
 
     const fetchVouchers = async () => {
       try {
@@ -90,12 +90,12 @@ export default function ManageVoucher() {
     const sorted = [...filteredVouchers].sort((a, b) => {
       let valueA = a[field] ?? '';
       let valueB = b[field] ?? '';
-      
+
       if (field === 'startDate' || field === 'endDate') {
         valueA = new Date(valueA);
         valueB = new Date(valueB);
       }
-      
+
       if (valueA < valueB) return sortOrder === 'asc' ? -1 : 1;
       if (valueA > valueB) return sortOrder === 'asc' ? 1 : -1;
       return 0;
@@ -115,7 +115,7 @@ export default function ManageVoucher() {
 
   return (
     <div>
-      
+
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />
@@ -170,30 +170,40 @@ export default function ManageVoucher() {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((voucher, index) => (
-                <tr key={voucher.voucherId}>
-                  <td className="index-body">{indexOfFirstItem + index + 1}</td>
-                  <td className="name-body">{voucher.title ?? 'N/A'}</td>
-                  <td className="limit-body">{voucher.limit ?? 'N/A'}</td>
-                  <td className="type-body">{voucher.type ?? 'N/A'}</td>
-                  <td className="description-body">{voucher.description ?? 'N/A'}</td>
-                  <td className="startDate-body">{voucher.startDate ?? 'N/A'}</td>
-                  <td className="endDate-body">{voucher.endDate ?? 'N/A'}</td>
-                  <td className="active-body">
-                    <Switch
-                      onChange={() => handleToggle(voucher.voucherId, voucher.active)}
-                      checked={voucher.active ?? false}
-                      offColor="#ff0000"
-                      onColor="#27ae60"
-                    />
-                  </td>
-                  <td className="update-body">
-                    <Link to={`${routes.updateVoucher}/${voucher.title}?id=${voucher.voucherId}`} style={{ color: "#7f8c8d" }}>
-                      Chi tiết
-                    </Link>
+              {currentItems.length > 0 ? (
+                currentItems.map((voucher, index) => (
+                  <tr key={voucher.voucherId}>
+                    <td className="index-body">{indexOfFirstItem + index + 1}</td>
+                    <td className="name-body">{voucher.title ?? 'N/A'}</td>
+                    <td className="limit-body">{voucher.limit ?? 'N/A'}</td>
+                    <td className="type-body">{voucher.type ?? 'N/A'}</td>
+                    <td className="description-body">{voucher.description ?? 'N/A'}</td>
+                    <td className="startDate-body">{voucher.startDate ?? 'N/A'}</td>
+                    <td className="endDate-body">{voucher.endDate ?? 'N/A'}</td>
+                    <td className="active-body">
+                      <Switch
+                        onChange={() => handleToggle(voucher.voucherId, voucher.active)}
+                        checked={voucher.active ?? false}
+                        offColor="#ff0000"
+                        onColor="#27ae60"
+                      />
+                    </td>
+                    <td className="update-body">
+                      <Link to={`${routes.updateVoucher}/${voucher.title}?id=${voucher.voucherId}`}
+                        className="update-link">
+                        Chi tiết
+                      </Link>
+                    </td>
+                  </tr>
+
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" style={{ textAlign: "center" }}>
+                    Không có voucher nào phù hợp
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
           <div className="manage-pagination">

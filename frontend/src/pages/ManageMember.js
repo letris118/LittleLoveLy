@@ -4,11 +4,12 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { routes } from "../routes";
 import "../assets/css/homePage.css";
-import { 
-  getUsersByRoleAll, 
+import {
+  getUsersByRoleAll,
   getCities,
   getDistrictByCityId,
-  getWardByDistrictId, } from "../services/auth/UsersService";
+  getWardByDistrictId,
+} from "../services/auth/UsersService";
 import AdminSideBar from "../components/AdminSideBar";
 import StaffBackToTop from "../components/StaffBackToTop";
 import {
@@ -24,11 +25,14 @@ import { useFormik } from "formik";
 
 export default function ManageMember() {
   const [customerList, setCustomerList] = useState([]);
+  const [filteredCustomerList, setFilteredCustomerList] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [cusInfo, setCusInfo] = useState({});
   const [openInfoDialog, setOpenInfoDialog] = useState(false);
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
+  
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -52,13 +56,16 @@ export default function ManageMember() {
         let response = await getUsersByRoleAll("ROLE_CUSTOMER"); // Pass the role parameter here
         if (response) {
           setCustomerList(response);
+          setFilteredCustomerList(response);
         } else {
           setCustomerList([]);
+          setFilteredCustomerList([]);
         }
       } catch (error) {
         console.error("Error fetching customers:", error);
         toast.error("Không thể tải khách hàng");
         setCustomerList([]);
+        setFilteredCustomerList([]);
       }
     };
 
@@ -129,8 +136,7 @@ export default function ManageMember() {
     padding: "10px 20px",
     textTransform: "none",
     "&:hover": {
-      background:
-        "linear-gradient(90deg, #2d3436 0%, #2d3436 100%)",
+      background: "linear-gradient(90deg, #2d3436 0%, #2d3436 100%)",
     },
   });
 
@@ -158,7 +164,7 @@ export default function ManageMember() {
     });
 
     return (
-      <form>        
+      <form>
         <div>
           <TextField
             select
@@ -238,6 +244,21 @@ export default function ManageMember() {
     );
   };
 
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query === "") {
+      setFilteredCustomerList(customerList);
+    } else {
+      setFilteredCustomerList(
+        customerList.filter((customer) =>
+          customer.username.toLowerCase().includes(query.toLowerCase())
+        )
+      );
+    }
+  };
+
   return (
     <div>
       <StaffHeader />
@@ -251,8 +272,8 @@ export default function ManageMember() {
               <input
                 type="text"
                 placeholder="Tìm kiếm người dùng..."
-                value=""
-                onChange=""
+                value={searchQuery}
+                onChange={handleSearchChange}
               />
             </div>
           </div>
@@ -271,8 +292,8 @@ export default function ManageMember() {
             </thead>
 
             <tbody className="manage-table-body">
-              {customerList.length > 0 ? (
-                customerList.map((customer, index) => (
+              {filteredCustomerList.length > 0 ? (
+                filteredCustomerList.map((customer, index) => (
                   <tr key={index}>
                     <td className="index-body">{index + 1}</td>
                     <td className="username-body">{customer.username}</td>
@@ -282,7 +303,7 @@ export default function ManageMember() {
                     <td className="point-body">{customer.point}</td>
                     <td className="regisDate-body">{customer.registeredDate}</td>
                     <td className="update-body">
-                      <Link                        
+                      <Link
                         className="update-link"
                         onClick={() => handleOpenInfoDialog(customer)}
                       >
@@ -293,7 +314,7 @@ export default function ManageMember() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: "center" }}>
+                  <td colSpan="8" style={{ textAlign: "center" }}>
                     Không có khách hàng
                   </td>
                 </tr>
@@ -304,7 +325,9 @@ export default function ManageMember() {
       </div>
       <StaffBackToTop />
 
-      <CustomDialog open={openInfoDialog} onClose={handleCloseInfoDialog}>
+      <CustomDialog
+        open={openInfoDialog}
+        onClose={handleCloseInfoDialog}>
         <DialogTitle className="manage-dialog-title">Địa Chỉ Mặc Định</DialogTitle>
         <DialogContent>
           <InfoForm handleClose={handleCloseInfoDialog} />

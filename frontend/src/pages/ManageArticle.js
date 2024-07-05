@@ -35,7 +35,7 @@ export default function ManageArticle() {
       toast.success(location.state.success);
       // Clear the state to prevent the message from showing again on page reload
       navigate(location.pathname, { replace: true, state: {} });
-  }
+    }
 
     const fetchArticles = async () => {
       try {
@@ -131,7 +131,7 @@ export default function ManageArticle() {
 
   return (
     <div>
-      
+
       <StaffHeader />
 
       <div className="manage-content">
@@ -187,52 +187,61 @@ export default function ManageArticle() {
             </thead>
 
             <tbody>
-              {currentArticles.map((article, index) => (
-                <tr key={article.articleId}>
-                  <td className="index-body">{indexOfFirstArticle + index + 1}</td>
-                  <td className="name-body">{article.title}</td>
-                  <td className="img-body">
-                    {article.articleImages &&
-                      article.articleImages
-                        .slice(0, 1)
-                        .map((image) => (
-                          <img
-                            key={image.imageId}
-                            src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
-                            alt={article.title}
-                            style={{ width: "50%", height: "50%" }}
-                          />
-                        ))}
-                  </td>
-                  <td className="date-body">{article.uploadedDate}</td>
-                  <td className="content-body">
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          article.content.length > 170
-                            ? `${article.content.slice(0, 170)}...`
-                            : article.content,
-                      }}
-                    />
-                  </td>
-                  <td className="active-body">
-                    <Switch
-                      onChange={() => handleToggle(article.articleId, article.active)}
-                      checked={article.active}
-                      offColor="#ff0000"
-                      onColor="#27ae60"
-                    />
-                  </td>
-                  <td className="update-body">
-                    <Link
-                      to={`${routes.updateArticle}/${article.articleId}`}
-                      style={{ color: "#7f8c8d" }}
-                    >
-                      Chi tiết
-                    </Link>
+              {currentArticles.length > 0 ? (
+                currentArticles.map((article, index) => (
+                  <tr key={article.articleId}>
+                    <td className="index-body">{indexOfFirstArticle + index + 1}</td>
+                    <td className="name-body">{article.title}</td>
+                    <td className="img-body">
+                      {article.articleImages &&
+                        article.articleImages
+                          .slice(0, 1)
+                          .map((image) => (
+                            <img
+                              key={image.imageId}
+                              src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
+                              alt={article.title}
+                              style={{ width: "50%", height: "50%" }}
+                            />
+                          ))}
+                    </td>
+                    <td className="date-body">{article.uploadedDate}</td>
+                    <td className="content-body">
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            article.content.length > 170
+                              ? `${article.content.slice(0, 170)}...`
+                              : article.content,
+                        }}
+                      />
+                    </td>
+                    <td className="active-body">
+                      <Switch
+                        onChange={() => handleToggle(article.articleId, article.active)}
+                        checked={article.active}
+                        offColor="#ff0000"
+                        onColor="#27ae60"
+                      />
+                    </td>
+                    <td className="update-body">
+                      <Link
+                        to={`${routes.updateArticle}/${article.articleId}`}
+                        className="update-link"
+                      >
+                        Chi tiết
+                      </Link>
+                    </td>
+                  </tr>
+
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" style={{ textAlign: "center" }}>
+                    Không có bài viết nào phù hợp
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
 

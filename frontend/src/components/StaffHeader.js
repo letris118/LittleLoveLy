@@ -49,11 +49,11 @@ export default function StaffHeader() {
     <>
       <header className="manage-header">
         {/* logo + store name to return home page */}
-        
-            <img
-              src="../assets/images/logo02.png"
-              alt="search logo"
-            />
+        <div className="manage-store-name">
+          <Link to={routes.homePage} style={{ color: "#ff469e" }}>
+            <img src="../assets/images/logo02.png" alt="page logo" />
+          </Link>
+        </div>
         
     
 
