@@ -48,6 +48,7 @@ export default function Checkout() {
   const [evaluateResult, setEvaluateResult] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false);
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -76,7 +77,7 @@ export default function Checkout() {
       cusWardCode: userInfo.wardCode || "",
       cusStreet: userInfo.street || "",
       paymentMethod: "",
-      voucherId: "",
+      voucherId: selectedVoucher || "",
       cartItems: submitCart,
     },
     enableReinitialize: true,
@@ -156,7 +157,8 @@ export default function Checkout() {
         formik.values.cartItems,
         formik.values.cusDistrictId,
         formik.values.cusWardCode,
-        formik.values.voucherId
+        formik.values.voucherId,
+        selectedVoucher
       );
       setEvaluateResult(response);
     };
@@ -166,6 +168,7 @@ export default function Checkout() {
     formik.values.cusDistrictId,
     formik.values.cusWardCode,
     formik.values.voucherId,
+    selectedVoucher,
   ]);
 
   const handleCityChange = (e) => {
@@ -524,10 +527,16 @@ export default function Checkout() {
       <CustomDialog open={openVoucherDialog} onClose={handleCloseVoucherDialog}>
         <CustomDialogTitle>Mã giảm giá</CustomDialogTitle>
         <DialogContent>
-          <VoucherPresentation />
+          <VoucherPresentation
+            selectedVoucher={selectedVoucher}
+            onSelectVoucher={(voucherId) => {
+              setSelectedVoucher(voucherId);
+              formik.setFieldValue("voucherId", voucherId);
+            }}
+          />
         </DialogContent>
         <DialogActions>
-          <CustomButton onClick={handleCloseVoucherDialog}>Close</CustomButton>
+          <CustomButton onClick={handleCloseVoucherDialog}>Đóng</CustomButton>
         </DialogActions>
       </CustomDialog>
     </div>

@@ -26,6 +26,8 @@ export default function ProductDetailPresentation() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [selectedRating, setSelectedRating] = useState(null);
+  const [filteredReviews, setFilteredReviews] = useState([]);
+  const [selectedButton, setSelectedButton] = useState("newest");
 
   const fetchProduct = useCallback(async () => {
     try {
@@ -40,6 +42,7 @@ export default function ProductDetailPresentation() {
       if (product) {
         setProductInfo(product);
         setSelectedImage(product.productImages[0].imageId);
+        setFilteredReviews(product.productReviews);
       } else {
         setProductInfo(null);
       }
@@ -183,6 +186,22 @@ export default function ProductDetailPresentation() {
     [productInfo, nav1]
   );
 
+  const handleRatingFilter = (star) => {
+    setSelectedRating(star);
+    setSelectedButton(star);
+    const filtered = productInfo.productReviews.filter(
+      (review) => review.star >= star && review.star < star + 1
+    );
+    setFilteredReviews(filtered);
+  };
+
+  const handleNewestFilter = () => {
+    setSelectedButton("newest");
+    const sortedReviews = [...productInfo.productReviews].sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+    setFilteredReviews(sortedReviews);
+  };
   return (
     <>
       <div className="product-detail-container">
@@ -291,7 +310,12 @@ export default function ProductDetailPresentation() {
                     readOnly
                   />
                 </div>
-                <div className="product-detail-amount-rate">Lượt đánh giá</div>
+                <div className="product-detail-amount-rate">
+                  <b>
+                    <u>{productInfo?.productReviews.length}</u>
+                  </b>{" "}
+                  đánh giá
+                </div>
                 <div className="product-detail-amount-selling">
                   <span
                     style={{
@@ -376,7 +400,7 @@ export default function ProductDetailPresentation() {
             />
           </div>
 
-          <div className="product-detail-reviews">
+          <div className="product-detail-reviews" style={{ minHeight: "50vh" }}>
             <h5>Đánh giá</h5>
             <div className="product-detail-reviews-stars">
               <div className="product-detail-reviews-stars-left">
@@ -397,12 +421,33 @@ export default function ProductDetailPresentation() {
                   size="large"
                   readOnly
                 />
-                <p>Có ... lượt đánh giá</p>
+                <p>
+                  Có{" "}
+                  <b style={{ color: "#FF469E" }}>
+                    {productInfo?.productReviews.length}
+                  </b>{" "}
+                  lượt đánh giá
+                </p>
               </div>
               <div className="product-detail-reviews-stars-right">
-                {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  onClick={handleNewestFilter}
+                  style={{
+                    border:
+                      selectedButton === "newest" ? "1px solid #FF469E" : "",
+                    color: selectedButton === "newest" ? "#FF469E" : "",
+                  }}>
+                  Mới nhất
+                </button>
+                {[5, 4, 3, 2, 1].map((star) => (
                   <div key={star}>
-                    <button onClick={() => setSelectedRating(star)}>
+                    <button
+                      onClick={() => handleRatingFilter(star)}
+                      style={{
+                        border:
+                          selectedButton === star ? "1px solid #FF469E" : "",
+                        color: selectedButton === star ? "#FF469E" : "",
+                      }}>
                       {star} <i className="fa-solid fa-star"></i>
                     </button>
                   </div>
@@ -410,42 +455,45 @@ export default function ProductDetailPresentation() {
               </div>
             </div>
             <div className="product-detail-reviews-comments">
-              {productInfo?.productReviews
-                ?.slice(
-                  0,
-                  showAllReviews ? productInfo.productReviews.length : 5
-                )
-                .map((review) => (
-                  <div
-                    className="product-detail-reviews-comments-user"
-                    key={review.reviewId}>
-                    <span
-                      style={{
-                        width: "10%",
-                        height: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}>
-                      <i
-                        className="fa-solid fa-user"
-                        style={{ fontSize: "30px" }}></i>
-                    </span>
-                    <div>
-                      <div
+              {filteredReviews && filteredReviews.length > 0 ? (
+                filteredReviews
+                  .slice(0, showAllReviews ? filteredReviews.length : 5)
+                  .map((review) => (
+                    <div
+                      className="product-detail-reviews-comments-user"
+                      key={review.reviewId}>
+                      <span
                         style={{
-                          fontWeight: "bold",
-                          fontSize: "15px",
+                          width: "10%",
+                          height: "100%",
+                          display: "flex",
+                          justifyContent: "center",
                         }}>
-                        {review.userName}
-                      </div>
+                        <i
+                          className="fa-solid fa-user"
+                          style={{ fontSize: "30px" }}></i>
+                      </span>
                       <div>
-                        <Rating value={review.star} size="medium" readOnly />
+                        <div
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: "15px",
+                          }}>
+                          {review.userName}
+                        </div>
+                        <div>
+                          <Rating value={review.star} size="medium" readOnly />
+                        </div>
+                        <div>{review.feedback}</div>
                       </div>
-                      <div>{review.feedback}</div>
                     </div>
-                  </div>
-                ))}
-              {productInfo?.productReviews?.length > 5 && !showAllReviews && (
+                  ))
+              ) : (
+                <div style={{ textAlign: "center", paddingTop: "30px" }}>
+                  Chưa có lượt đánh giá nào
+                </div>
+              )}
+              {filteredReviews.length > 5 && !showAllReviews && (
                 <div
                   style={{
                     display: "flex",
@@ -464,7 +512,7 @@ export default function ProductDetailPresentation() {
                     }}>
                     Xem thêm{" "}
                     <b>
-                      <i>{productInfo.productReviews.length - 1}</i>
+                      <i>{filteredReviews.length - 1}</i>
                     </b>{" "}
                     đánh giá khác
                   </button>
