@@ -13,18 +13,17 @@ import {
   Pagination,
   styled,
 } from "@mui/material";
-import { gifts, updateCart, users } from "../services/auth/UsersService";
+import { gifts, updateCart, getUserInfo } from "../services/auth/UsersService";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 
 export default function Gift() {
   const [giftstList, setGiftsList] = useState([]);
-  const [userPoint, setUserPoint] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedGift, setSelectedGift] = useState(null);
   const [confirmPopup, setConfirmPopup] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [userPoint, setUserPoint] = useState(localStorage.getItem("point"));
   const navigate = useNavigate();
   const itemsPerPage = 10;
 
@@ -97,70 +96,90 @@ export default function Gift() {
         console.error("Error fetching gifts:", error);
       }
     };
+    fetchGifts();
+  }, []);
 
+  const handleExchange = async (gift) => {
+    setSelectedGift(gift);
+    setConfirmPopup(true);
+  };
+
+  const refreshUserPoints = async () => {
     const fetchUserPoints = async () => {
       try {
-        let response = await users();
-        const userInfo = response.find(
-          (user) => user.username === localStorage.getItem("username")
-        );
-        if (userInfo) {
-          setUserPoint(userInfo.point);
+        let res = await getUserInfo(localStorage.getItem("username"));
+        if (res) {
+          localStorage.removeItem("point");
+          localStorage.setItem("point", res.point);
+          setUserPoint(res.point);
         }
       } catch (error) {
         console.error("Error fetching user points:", error);
       }
     };
-
     fetchUserPoints();
-    fetchGifts();
-  }, []);
-
-  const handleExchange = async (gift) => {
-    // nếu điểm lớn hơn quà thì đổi
-
-    // if (userPoint >= gift.point) {
-    //   setSelectedGift(gift);
-    //   setConfirmPopup(true);
-    // } else {
-    //   toast.error("Không đủ điểm để đổi quà.");
-    // }
-    setSelectedGift(gift);
-    setConfirmPopup(true);
   };
 
-  const handleConfirmExchange = async () => {
-    if (isProcessing) return;
+  const PopupDialog = ({ handleClose, refreshUserPoints }) => {
+    const [isProcessing, setIsProcessing] = useState(false);
 
-    setIsProcessing(true);
-    const giftCartItems = JSON.parse(localStorage.getItem("gifts")) || [];
-    const existingProductIndex = giftCartItems.findIndex(
-      (item) => item.giftId === selectedGift.giftId
+    const handleConfirmExchange = async () => {
+      setIsProcessing(true);
+      const giftCartItems = JSON.parse(localStorage.getItem("gifts")) || [];
+      const existingProductIndex = giftCartItems.findIndex(
+        (item) => item.giftId === selectedGift.giftId
+      );
+
+      if (existingProductIndex !== -1) {
+        toast.error("Mỗi phần quà chỉ đổi được 1 lần !", {
+          autoClose: 1500,
+        });
+        handleClose();
+        return;
+      }
+
+      try {
+        const res = await updateCart(selectedGift.giftId, "gift", 1);
+        if (res) {
+          giftCartItems.push({ ...selectedGift, quantity: 1 });
+          localStorage.setItem("gifts", JSON.stringify(giftCartItems));
+          toast.success("Đổi quà thành công!", {
+            autoClose: 1500,
+          });
+          handleClose();
+          refreshUserPoints();
+        }
+      } catch (error) {
+        console.error("Error exchanging gift:", error);
+        if (
+          error.response &&
+          error.response.data === "Insufficient point for gift"
+        ) {
+          toast.error("Không đủ điểm để đổi quà!");
+        } else {
+          toast.error("Đổi quà thất bại!");
+        }
+      } finally {
+        handleClose();
+        setIsProcessing(false);
+      }
+    };
+
+    return (
+      <>
+        Bạn có chắc chắn muốn đổi <b>"{selectedGift?.name}"</b> không?
+        <DialogActions>
+          <CustomButton
+            onClick={handleConfirmExchange}
+            color="primary"
+            disabled={isProcessing}
+          >
+            Đồng ý
+          </CustomButton>
+          <CustomButton onClick={handleCloseDialog}>Hủy</CustomButton>
+        </DialogActions>
+      </>
     );
-
-    if (existingProductIndex !== -1) {
-      setConfirmPopup(false);
-      setIsProcessing(false);
-      toast.error("Mỗi phần quà chỉ đổi được 1 lần !", {
-        autoClose: 1500,
-      });
-      return;
-    }
-
-    try {
-      giftCartItems.push(selectedGift);
-      localStorage.setItem("gifts", JSON.stringify(giftCartItems));
-      // setUserPoint(userPoint - selectedGift.point);
-      // localStorage.setItem("point", userPoint - selectedGift.point);
-      toast.success("Đổi quà thành công!", {
-        autoClose: 1500,
-      });
-      setConfirmPopup(false);
-    } catch (error) {
-      console.error("Error exchanging gift:", error);
-    } finally {
-      setIsProcessing(false);
-    }
   };
 
   const handleCloseDialog = () => {
@@ -175,7 +194,7 @@ export default function Gift() {
         <Sidebar
           role={localStorage.getItem("userRole")}
           customerName={localStorage.getItem("name")}
-          customerPoint={localStorage.getItem("point")}
+          customerPoint={userPoint}
         />
         <div className="content-detail">
           <Breadcrumb value="Tất cả phần quà" />
@@ -184,7 +203,8 @@ export default function Gift() {
             style={{
               backgroundColor: "white",
               borderRadius: "20px",
-            }}>
+            }}
+          >
             <div className="row-top">
               <h4>Tất cả phần quà</h4>
             </div>
@@ -192,7 +212,8 @@ export default function Gift() {
               className="content-gift-row"
               style={{
                 minHeight: "100vh",
-              }}>
+              }}
+            >
               <GiftPresentation
                 giftstList={currentItems}
                 onExchange={handleExchange}
@@ -203,7 +224,8 @@ export default function Gift() {
               style={{
                 textAlign: "center",
                 padding: "20px 0",
-              }}>
+              }}
+            >
               <CustomPagination
                 count={totalPages}
                 page={currentPage}
@@ -218,17 +240,11 @@ export default function Gift() {
       <CustomDialog open={confirmPopup} onClose={handleCloseDialog}>
         <CustomDialogTitle>Xác nhận đổi quà</CustomDialogTitle>
         <CustomDialogContent>
-          Bạn có chắc chắn muốn đổi <b>"{selectedGift?.name}"</b> không?
+          <PopupDialog
+            handleClose={handleCloseDialog}
+            refreshUserPoints={refreshUserPoints}
+          />
         </CustomDialogContent>
-        <DialogActions>
-          <CustomButton
-            onClick={handleConfirmExchange}
-            color="primary"
-            disabled={isProcessing}>
-            Đồng ý
-          </CustomButton>
-          <CustomButton onClick={handleCloseDialog}>Hủy</CustomButton>
-        </DialogActions>
       </CustomDialog>
     </div>
   );

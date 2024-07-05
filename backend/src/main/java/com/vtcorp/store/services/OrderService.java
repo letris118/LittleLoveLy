@@ -73,32 +73,32 @@ public class OrderService {
         return orderMapper.toCartResponseDTO(cart);
     }
 
-    @Transactional
-    public CartResponseDTO addItemToCart(String username, CartItemDTO cartItemDTO) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Order cart = orderRepository.findByUserAndStatus(user, "CART");
-        if (cart == null) {
-            cart = Order.builder()
-                    .orderId(CodeGenerator.generateOrderID())
-                    .user(user)
-                    .status("CART")
-                    .orderDetails(new ArrayList<>())
-                    .giftIncludings(new ArrayList<>())
-                    .build();
-        }
-
-        if (cartItemDTO.getItemType().equals("product")) {
-            updateOrderDetail(cart, cartItemDTO, false);
-        } else if (cartItemDTO.getItemType().equals("gift")) {
-            updateGiftIncluding(cart, cartItemDTO, user, false);
-        } else {
-            throw new IllegalArgumentException("Item type not found");
-        }
-
-        return orderMapper.toCartResponseDTO(orderRepository.save(cart));
-    }
+//    @Transactional
+//    public CartResponseDTO addItemToCart(String username, CartItemDTO cartItemDTO) {
+//        User user = userRepository.findById(username)
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        Order cart = orderRepository.findByUserAndStatus(user, "CART");
+//        if (cart == null) {
+//            cart = Order.builder()
+//                    .orderId(CodeGenerator.generateOrderID())
+//                    .user(user)
+//                    .status("CART")
+//                    .orderDetails(new ArrayList<>())
+//                    .giftIncludings(new ArrayList<>())
+//                    .build();
+//        }
+//
+//        if (cartItemDTO.getItemType().equals("product")) {
+//            updateOrderDetail(cart, cartItemDTO, false);
+//        } else if (cartItemDTO.getItemType().equals("gift")) {
+//            updateGiftIncluding(cart, cartItemDTO, user, false);
+//        } else {
+//            throw new IllegalArgumentException("Item type not found");
+//        }
+//
+//        return orderMapper.toCartResponseDTO(orderRepository.save(cart));
+//    }
 
     @Transactional
     public CartResponseDTO removeItemFromCart(String username, CartItemDTO cartItemDTO) {
@@ -109,7 +109,7 @@ public class OrderService {
         if (cart == null) {
             throw new RuntimeException("Cart not found");
         }
-        if (cart.getOrderDetails().isEmpty()) {
+        if (cart.getOrderDetails().isEmpty() && cart.getGiftIncludings().isEmpty()) {
             throw new RuntimeException("Cart is empty");
         }
 
@@ -132,9 +132,13 @@ public class OrderService {
 
             for (GiftIncluding item : cart.getGiftIncludings()) {
                 if (item.getGift().getGiftId() == cartItemDTO.getId()) {
-                    item.setQuantity(item.getQuantity() - cartItemDTO.getQuantity());
-                    if (item.getQuantity() <= 0) {
+                    int quantityLeft = item.getQuantity() - cartItemDTO.getQuantity();
+                    if(quantityLeft <= 0){
+                        user.setPoint(user.getPoint() + item.getPoint() * item.getQuantity());
                         cart.getGiftIncludings().remove(item);
+                    }else{
+                        user.setPoint(user.getPoint() + item.getPoint() * cartItemDTO.getQuantity());
+                        item.setQuantity(quantityLeft);
                     }
                     break;
                 }
@@ -370,8 +374,11 @@ public class OrderService {
         if (gift.getPoint() == null || user.getPoint() == null || gift.getPoint() * cartItemDTO.getQuantity() > user.getPoint()) {
             throw new IllegalArgumentException("Insufficient point for gift");
         }
-
+        int currentUserPoint = user.getPoint();
+        int currentPointInCart = 0;
+        int futurePointInCart = 0;
         for (GiftIncluding item : cart.getGiftIncludings()) {
+            currentPointInCart += item.getPoint() * item.getQuantity();
             if (item.getGift().getGiftId() == cartItemDTO.getId()) {
                 if (isReplaceQuantity) {
                     item.setQuantity(cartItemDTO.getQuantity());
@@ -379,16 +386,23 @@ public class OrderService {
                     item.setQuantity(item.getQuantity() + cartItemDTO.getQuantity());
                 }
                 item.setPoint(item.getGift().getPoint());
-                return;
+                //return;
             }
+            futurePointInCart += item.getPoint() * item.getQuantity();  //quantity after update if exist
         }
-        cart.getGiftIncludings().add(GiftIncluding.builder()
-                .giftIncludingId(new GiftIncluding.GiftIncludingId(cart.getOrderId(), gift.getGiftId()))
-                .order(cart)
-                .gift(gift)
-                .quantity(cartItemDTO.getQuantity())
-                .point(gift.getPoint())
-                .build());
+        // if no update mean add new gift to cart
+        if(currentPointInCart == futurePointInCart){
+            cart.getGiftIncludings().add(GiftIncluding.builder()
+                    .giftIncludingId(new GiftIncluding.GiftIncludingId(cart.getOrderId(), gift.getGiftId()))
+                    .order(cart)
+                    .gift(gift)
+                    .quantity(cartItemDTO.getQuantity())
+                    .point(gift.getPoint())
+                    .build());
+            futurePointInCart += gift.getPoint() * cartItemDTO.getQuantity();
+        }
+        int futureUserPoint = currentUserPoint + currentPointInCart - futurePointInCart;
+        cart.getUser().setPoint(futureUserPoint);
     }
 
     @Transactional
