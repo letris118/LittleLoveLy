@@ -24,9 +24,22 @@ const forgotPasswordAPI = (mail) => {
 };
 
 const resetPasswordAPI = (newPassword, token) => {
-  return instance.post("/api/auth/change-password", {
+  return instance.post("/api/auth/reset-password", {
     newPassword,
     token,
+  });
+};
+
+const changePasswordAPI = (currentPassword, newPassword) => {
+  return instance.post("/api/auth/change-password", {
+    currentPassword,
+    newPassword,
+  });
+};
+
+const changeMailAPI = (mail) => {
+  return instance.put("/api/auth/change-mail", {
+    mail,
   });
 };
 
@@ -232,27 +245,23 @@ const getUserInfo = (username) => {
 };
 
 const updateUserInfo = (
-  userId,
-  password,
+  username,
   name,
-  mail,
   phone,
   cityCode,
   districtId,
   wardCode,
   street
 ) => {
-  return instance.put(
-    `/api/users/${userId}`,
-    password,
+  return instance.put(`/api/users/${username}`, {
+    username,
     name,
-    mail,
     phone,
     cityCode,
     districtId,
     wardCode,
-    street
-  );
+    street,
+  });
 };
 
 const createOrder = (order) => {
@@ -286,7 +295,10 @@ const getOrdersByUsername = (username) => {
   return instance.get(`/api/orders/user/${username}`);
 };
 
-const getUsersByRoleAll = (role) =>{
+const getProductByBrandId = (brandId) => {
+  return instance.get(`/api/products/brand/${brandId}`);
+};
+const getUsersByRoleAll = (role) => {
   return instance.get(`/api/users/role/${role}`);
 };
 
@@ -342,5 +354,8 @@ export {
   forgotPasswordAPI,
   resetPasswordAPI,
   getOrdersByUsername,
+  getProductByBrandId,
   getUsersByRoleAll,
+  changePasswordAPI,
+  changeMailAPI,
 };

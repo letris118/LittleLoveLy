@@ -20,7 +20,7 @@ import { styled } from "@mui/material/styles";
 import instance from "../services/auth/customize-axios";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
-import { min } from "date-fns";
+import { min, set } from "date-fns";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
 
@@ -85,7 +85,6 @@ export default function Order() {
         } else {
           const response = await getOrderById(formik.values.search);
           if (response) {
-            console.log(response);
             setOrdersList([response]);
           } else {
             setOrdersList([]);
@@ -99,14 +98,20 @@ export default function Order() {
       }
     },
   });
-
   const paginatedOrders = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return ordersList.slice(startIndex, startIndex + itemsPerPage);
   }, [currentPage, ordersList]);
 
-  const handleOrderClick = (order) => {
-    setSelectedOrder(order);
+  const handleOrderClick = async (order) => {
+    const { orderId } = order;
+    try {
+      const response = await getOrderById(orderId);
+      console.log(response);
+      setSelectedOrder(response);
+    } catch (error) {
+      console.error("Error fetching order details:", error);
+    }
   };
 
   const handleClose = () => {
@@ -323,10 +328,23 @@ export default function Order() {
                 <b>Mã đơn hàng:</b> {selectedOrder.orderId}
               </p>
               <p>
+                <b>Địa chỉ giao hàng: </b>
+                {selectedOrder.cusStreet +
+                  ", " +
+                  selectedOrder.cusWard +
+                  ", " +
+                  selectedOrder.cusDistrict +
+                  ", " +
+                  selectedOrder.cusCity}
+              </p>
+              <p>
                 <b>Tổng số sản phẩm:</b> {selectedOrder.orderDetails.length}
               </p>
               <p>
                 <b>Tình trạng:</b> {selectedOrder.status}
+              </p>
+              <p>
+                <b>Mã vận đơn:</b> {selectedOrder.trackingCode}
               </p>
 
               <div>
