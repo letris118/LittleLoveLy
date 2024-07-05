@@ -10,6 +10,10 @@ export default function DropdownMenu({ handleLogoutSuccess }) {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
 
+  const handleProfileClick = () => {
+    navigate(routes.profileCustomer);
+  };
+
   return (
     <Dropdown
       onToggle={() => setShowMenu((prevShowMenu) => !prevShowMenu)}
@@ -24,17 +28,15 @@ export default function DropdownMenu({ handleLogoutSuccess }) {
         classNames="dropdown-menu"
         unmountOnExit>
         <Dropdown.Menu className="dropdown-menu">
-          <Dropdown.Item>
-            <Link
-              to={routes.profileCustomer}
-              style={{
-                textDecoration: "none",
-                width: "inherit",
-                color: "black",
-              }}>
-              Tài khoản
-            </Link>
-          </Dropdown.Item>
+          <Link
+            onClick={handleProfileClick}
+            style={{
+              textDecoration: "none",
+              width: "inherit",
+              color: "black",
+            }}>
+            <Dropdown.Item> Tài khoản</Dropdown.Item>
+          </Link>
 
           <Link
             onClick={handleLogout(navigate, handleLogoutSuccess)}

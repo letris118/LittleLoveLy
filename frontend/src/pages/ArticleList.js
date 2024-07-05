@@ -19,7 +19,11 @@ export default function ArticleList() {
           ).map((id) => {
             return response.find((article) => article.articleId === id);
           });
-          setArticleList(uniqueArticles);
+          const sortedArticles = uniqueArticles.sort((a, b) => {
+            return new Date(b.publishedAt) - new Date(a.publishedAt);
+          });
+
+          setArticleList(sortedArticles);
         } else {
           setArticleList([]);
         }
@@ -29,7 +33,7 @@ export default function ArticleList() {
       }
     };
     fetchArticles();
-  });
+  }, []);
   return (
     <div className="article-list-container">
       <Header />

@@ -26,7 +26,7 @@ export const routes = {
   cart: "/cart",
   staffHomePage: "/staff",
   staffChat: "/chatWithCustomer",
-  chat: "chat",
+  chat: "/chat",
 
   manageGift: "/manageGift",
   updateGift: "/updateGift",

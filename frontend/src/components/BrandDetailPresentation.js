@@ -32,7 +32,13 @@ export default function BrandDetailPresentation() {
       }
     };
 
+    fetchBrand();
+  }, [brandName]);
+
+  useEffect(() => {
     const fetchProductByBrandID = async () => {
+      if (!brandInfo.brandId) return;
+
       try {
         const response = await getProductByBrandId(brandInfo.brandId);
         if (response) {
@@ -50,7 +56,7 @@ export default function BrandDetailPresentation() {
               } else if (sortOrder === "bestSeller") {
                 return b.noSold - a.noSold;
               } else if (sortOrder === "newest") {
-                return b.addedDate - a.addedDate;
+                return new Date(b.addedDate) - new Date(a.addedDate);
               }
             });
           }
@@ -59,14 +65,13 @@ export default function BrandDetailPresentation() {
           setProducts([]);
         }
       } catch (error) {
-        console.error("Error fetching brands:", error);
+        console.error("Error fetching products:", error);
         setProducts([]);
       }
     };
 
     fetchProductByBrandID();
-    fetchBrand();
-  }, [brandName, sortOrder]);
+  }, [brandInfo, sortOrder]);
 
   const CustomPagination = styled(Pagination)({
     "& .MuiPaginationItem-root": {
