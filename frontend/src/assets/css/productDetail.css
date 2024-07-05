@@ -163,11 +163,11 @@
 }
 
 .product-detail-reviews-stars-right {
-  width: 60%;
+  width: 67%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 50px;
+  gap: 40px;
 }
 
 .product-detail-reviews-stars-right button {
@@ -176,6 +176,7 @@
   border: 1px solid black;
   padding: 10px 0;
   border-radius: 20px;
+  text-align: center;
 }
 
 .product-detail-reviews-stars-right i {
@@ -191,6 +192,13 @@
   margin: 20px 0;
   padding: 10px 0;
   border-bottom: 1px solid rgb(208, 208, 208);
+}
+
+.product-detail-reviews-inp {
+  background-color: white;
+  margin-top: 20px;
+  border-radius: 20px;
+  padding: 20px;
 }
 
 /* ===============================Staff====================================== */
@@ -364,7 +372,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 50px;
+  gap: 10px;
 }
 
 .manage-product-detail-reviews-stars-right button {

@@ -46,6 +46,8 @@ import StaffProductDetail from "../pages/StaffProductDetail";
 import StaffProductList from "../pages/StaffProductList";
 import StaffSearchProduct from "../pages/StaffSearchProduct";
 import ProfileCus from "../pages/ProfileCus";
+import UpdateOrder from "../pages/UpdateOrder"
+import StaffProfile from "../pages/StaffProfile";
 
 import { ToastContainer } from "react-toastify";
 
@@ -132,6 +134,8 @@ export default function AppRoute() {
 
         <Route path={routes.profileCustomer} element={<ProfileCus />} />
         <Route path={routes.chat} element={<Chat />} />  
+        <Route path={routes.updateOrder} element={<UpdateOrder />} />  
+        <Route path={routes.staffProfile} element={<StaffProfile />} />
       </Routes>
     </>
   );

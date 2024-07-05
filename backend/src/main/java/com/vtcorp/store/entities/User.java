@@ -22,6 +22,8 @@ public class User {
     @JsonView(Views.Order.class)
     private String username;
     private String password;
+
+    @JsonView(Views.Product.class)
     private String name;
     private String mail;
     private String phone;

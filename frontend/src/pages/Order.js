@@ -50,8 +50,11 @@ export default function Order() {
   const fetchOrders = async (username) => {
     try {
       const response = await getOrdersByUsername(username);
-      if (response) {
-        setOrdersList(response);
+      const sortedResponse = response.sort(
+        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+      );
+      if (sortedResponse) {
+        setOrdersList(sortedResponse);
       } else {
         setOrdersList([]);
       }
@@ -107,7 +110,6 @@ export default function Order() {
     const { orderId } = order;
     try {
       const response = await getOrderById(orderId);
-      console.log(response);
       setSelectedOrder(response);
     } catch (error) {
       console.error("Error fetching order details:", error);
@@ -213,7 +215,6 @@ export default function Order() {
                             style={{ cursor: "pointer" }}>
                             <div
                               className="order-product-img"
-                              onClick={() => handleOrderClick(order)}
                               style={{ cursor: "pointer" }}>
                               <img
                                 src={`${instance.defaults.baseURL}/images/products/${orderDetail.product.productImages[0].imagePath}`}
@@ -222,7 +223,6 @@ export default function Order() {
                             </div>
                             <div
                               className="order-product-center"
-                              onClick={() => handleOrderClick(order)}
                               style={{
                                 borderRight: "1px solid #9fa0a0b0",
                                 cursor: "pointer",
@@ -233,7 +233,14 @@ export default function Order() {
                                   fontSize: "17px",
                                   color: "black",
                                 }}>
-                                {orderDetail.product.name}
+                                <Link
+                                  to={`${routes.products}/${orderDetail.product.name}`}
+                                  style={{
+                                    textDecoration: "none",
+                                    color: "black",
+                                  }}>
+                                  {orderDetail.product.name}
+                                </Link>
                               </div>
                               <div>x{orderDetail.quantity}</div>
                               <div style={{ color: "black" }}>
@@ -244,7 +251,6 @@ export default function Order() {
                               className="order-product-right"
                               style={{ width: "35%" }}>
                               <div
-                                onClick={() => handleOrderClick(order)}
                                 style={{
                                   display: "flex",
                                   justifyContent: "space-between",
@@ -282,7 +288,9 @@ export default function Order() {
                                     Đang giao
                                   </span>
                                 </div>
-                                <button>Đánh giá</button>
+                                <button onClick={() => handleOrderClick(order)}>
+                                  Chi tiết
+                                </button>
                               </div>
                             </div>
                           </div>

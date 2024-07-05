@@ -1,11 +1,12 @@
 package com.vtcorp.store.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.vtcorp.store.entities.Brand;
 import com.vtcorp.store.entities.Category;
 import com.vtcorp.store.entities.ProductImage;
 import com.vtcorp.store.entities.ProductReview;
+import com.vtcorp.store.jsonview.Views;
 import lombok.*;
 
 import java.util.Date;
@@ -16,29 +17,50 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductResponseDTO {
 
+    @JsonView(Views.Product.class)
     private long productId;
+
+    @JsonView(Views.Product.class)
     private String name;
+
+    @JsonView(Views.Product.class)
     private Double listedPrice;
+
+    @JsonView(Views.Product.class)
     private Double sellingPrice;
+
+    @JsonView(Views.Product.class)
     private String description;
+
+    @JsonView(Views.Product.class)
     private Integer noSold;
+
+    @JsonView(Views.Product.class)
     private Integer stock;
+
+    @JsonView(Views.Product.class)
     private boolean active;
+
+    @JsonView(Views.Product.class)
     private double averageRating;
+
+    @JsonView(Views.Product.class)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date addedDate;
+
+    @JsonView(Views.Product.class)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date lastModifiedDate;
 
-    @JsonIgnoreProperties("products")
+    @JsonView(Views.Product.class)
     private Brand brand;
 
-    @JsonIgnoreProperties({"products", "subCategories", "parentCategory"})
+    @JsonView(Views.Product.class)
     private List<Category> categories;
 
-    @JsonIgnoreProperties("product")
+    @JsonView(Views.Product.class)
     private List<ProductImage> productImages;
 
-    @JsonIgnoreProperties({"product", "user"})
+    @JsonView(Views.Product.class)
     private List<ProductReview> productReviews;
 }

@@ -45,4 +45,6 @@ export const routes = {
   staffSearchProduct: "/search-product",
 
   profileCustomer: "/profile",
+  updateOrder: "/updateOrder",
+  staffProfile: "/account"
 };
