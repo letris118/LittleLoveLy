@@ -34,7 +34,7 @@ export default function Login() {
         if (decodedToken.roles === "ROLE_ADMIN") {
           navigate(routes.statistics);
         } else if (decodedToken.roles === "ROLE_STAFF") {
-          navigate(routes.manageProduct);
+          navigate(routes.manageOrder);
         } else if (decodedToken.roles === "ROLE_CUSTOMER") {
           navigate(routes.homePage);
           const resCart = await getCart();
@@ -77,7 +77,7 @@ export default function Login() {
     } else if (userRole === "ROLE_ADMIN" && token) {
       navigate(routes.statistics);
     } else if (userRole === "ROLE_STAFF" && token) {
-      navigate(routes.manageProduct);
+      navigate(routes.manageOrder);
     }
     return () => {
       document.body.classList.remove("img");

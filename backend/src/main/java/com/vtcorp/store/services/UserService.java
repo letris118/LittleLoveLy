@@ -117,10 +117,15 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDTO updateUser(UserRequestDTO userRequestDTO) {
+    public UserResponseDTO updateUser(UserRequestDTO userRequestDTO, String usernameAuth) {
         User user = userRepository.findById(userRequestDTO.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userMapper.updateEntity(userRequestDTO, user);
+        User userAuth = (usernameAuth != null) ? userRepository.findById(usernameAuth).orElse(null) : null;
+        if (userAuth != null && userAuth.getRole().equals(Role.ROLE_ADMIN) && (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_STAFF))) {
+            user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+            user.setMail(userRequestDTO.getMail());
+        }
         userRepository.save(user);
         return userMapper.toResponseDTO(user);
     }
@@ -130,7 +135,7 @@ public class UserService {
             throw new IllegalArgumentException("User not found");
         }
         String newMail = mailDTO.getMail();
-        if(newMail == null || newMail.isEmpty()) {
+        if (newMail == null || newMail.isEmpty()) {
             throw new IllegalArgumentException("No mail provided");
         }
         if (userRepository.existsByMail(newMail)) {
