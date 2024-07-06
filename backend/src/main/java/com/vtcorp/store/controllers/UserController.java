@@ -3,6 +3,7 @@ package com.vtcorp.store.controllers;
 import com.vtcorp.store.dtos.MailDTO;
 import com.vtcorp.store.dtos.UserRequestDTO;
 import com.vtcorp.store.constants.Role;
+import com.vtcorp.store.services.OrderService;
 import com.vtcorp.store.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final OrderService orderService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, OrderService orderService) {
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @Operation(summary = "Get all users")
@@ -74,6 +77,15 @@ public class UserController {
         }
         try {
             return ResponseEntity.ok(userService.updateUser(userRequestDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/hasBoughtProduct")
+    public ResponseEntity<?> hasUserBoughtProduct(@RequestParam String username, @RequestParam Long productId){
+        try {
+            return ResponseEntity.ok(orderService.hasUserBoughtProduct(username, productId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

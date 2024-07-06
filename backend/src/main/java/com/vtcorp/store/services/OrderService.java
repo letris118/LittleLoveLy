@@ -30,9 +30,10 @@ public class OrderService {
     private final PaymentService paymentService;
     private final VoucherRepository voucherRepository;
     private final EmailSenderService emailSenderService;
+    private final OrderDetailRepository orderDetailRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService, PaymentService paymentService, VoucherRepository voucherRepository, EmailSenderService emailSenderService) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService, PaymentService paymentService, VoucherRepository voucherRepository, EmailSenderService emailSenderService, OrderDetailRepository orderDetailRepository) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.userRepository = userRepository;
@@ -42,6 +43,7 @@ public class OrderService {
         this.paymentService = paymentService;
         this.voucherRepository = voucherRepository;
         this.emailSenderService = emailSenderService;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     public List<OrderResponseDTO> getAllOrders() {
@@ -477,7 +479,7 @@ public class OrderService {
     }
 
     @Transactional
-    public String cancelOrder(String id) {
+    public OrderResponseDTO cancelOrder(String id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 //        User staff = userRepository.findById(staffUsername)
@@ -490,7 +492,7 @@ public class OrderService {
             order.setStatus(CODPaymentStatus.COD_DENIED);
             orderRepository.save(order);
             emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã bị hủy. Bạn có thể tra thông tin đơn hàng tại ....");
-            return "Order canceled";
+            return mapOrderToResponse(order);
         } else if (status.equals(OnlinePaymentStatus.ONLINE_PENDING)) {
             order.setStatus(OnlinePaymentStatus.ONLINE_DENIED);
 //            String staffName = (staff.getName() == null) ? staffUsername : staff.getName();
@@ -498,26 +500,35 @@ public class OrderService {
 //            String response = paymentService.refundPayment(order.getOrderId(), true, order.getPostDiscountPrice(), ipAddress, order.getCreatedDate(), staffName);
             orderRepository.save(order);
             emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã bị hủy. Bạn có thể tra thông tin đơn hàng tại ....");
-            return "Order canceled";
+            return mapOrderToResponse(order);
         } else {
             throw new IllegalArgumentException("Cannot denied order from status: " + order.getStatus());
         }
     }
 
-    public String confirmReceived(String id) {
+    public OrderResponseDTO confirmReceived(String id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+        if (order.getUser() != null && order.getUser().getPoint() != null) {
+            int bonusPoint = (int) (order.getFinalBasePrice() / 1000);
+            order.getUser().setPoint(order.getUser().getPoint() + bonusPoint);
+        }
         String status = order.getStatus();
         if (status.equals(CODPaymentStatus.COD_CONFIRMED)) {
             order.setStatus(CODPaymentStatus.COD_RECEIVED);
             orderRepository.save(order);
-            return "Order received";
+            return mapOrderToResponse(order);
         } else if (status.equals(OnlinePaymentStatus.ONLINE_CONFIRMED)) {
             order.setStatus(OnlinePaymentStatus.ONLINE_RECEIVED);
             orderRepository.save(order);
-            return "Order received";
+            return mapOrderToResponse(order);
         } else {
             throw new IllegalArgumentException("Cannot confirm received order from status: " + order.getStatus());
         }
+    }
+
+    public boolean hasUserBoughtProduct(String username, Long productId) {
+        List<String> statuses = List.of(CODPaymentStatus.COD_RECEIVED, OnlinePaymentStatus.ONLINE_RECEIVED);
+        return orderDetailRepository.existsByUserAndProductAndStatus(username, productId, statuses);
     }
 }
