@@ -127,18 +127,19 @@ export default function UpdateVoucher() {
 
     return (
         <div>
-            
+
             <StaffHeader />
 
             <div className="manage-content">
                 <StaffSideBar />
 
                 <div className="add-update-content-detail">
+                    
                     {voucherInfo ? (
                         <form onSubmit={handleSubmit}>
 
                             <div className="manage-form-input">
-
+                            
                                 {/* TITLE */}
                                 <div className="manage-form-group">
                                     <label>Tên voucher</label>
@@ -326,7 +327,7 @@ export default function UpdateVoucher() {
                             {/*  BUTTON */}
                             <div className="manage-form-btn">
                                 <button className="save-manage-btn save-manage-link" type="submit">
-                                    Cập nhật voucher
+                                    Lưu
                                 </button>
 
                                 <div className="cancel-manage-btn">

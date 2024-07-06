@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import StaffHeader from "../components/StaffHeader";
+import AdminHeader from "../components/AdminHeader";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { routes } from "../routes";
@@ -261,7 +261,7 @@ export default function ManageMember() {
 
   return (
     <div>
-      <StaffHeader />
+      <AdminHeader />
 
       <div className="manage-content">
         <AdminSideBar />
@@ -283,7 +283,7 @@ export default function ManageMember() {
                 <th className="index-head" style={{ width: "5%" }}>STT</th>
                 <th className="usernam-head" style={{ width: "15%" }}>Tên tài khoản</th>
                 <th className="name-head" style={{ width: "19%" }}>Họ và tên</th>
-                <th className="mail-head" style={{ width: "18%" }}>Mail</th>
+                <th className="mail-head" style={{ width: "18%" }}>Gmail</th>
                 <th className="phone-head" style={{ width: "12%" }}>Số điện thoại</th>
                 <th className="point-head" style={{ width: "8%" }}>Điểm</th>
                 <th className="regisDate-head" style={{ width: "12%" }}>Ngày đăng kí</th>

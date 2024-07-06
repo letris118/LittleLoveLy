@@ -276,10 +276,13 @@ export default function UpdateProduct() {
       <div className="manage-content">
         <StaffSideBar />
 
+        
         <div className="add-update-content-detail">
+          
           {productInfo ? (
             <form onSubmit={handleSubmit}>
               <div className="manage-form-input">
+              
                 {/* Product NAME */}
                 <div className="manage-form-group">
                   <label>Tên sản phẩm</label>
@@ -457,7 +460,7 @@ export default function UpdateProduct() {
                 <button
                   className="save-manage-btn save-manage-link"
                   type="submit">
-                  Cập nhật sản phẩm
+                  Lưu
                 </button>
 
                 <div className="cancel-manage-btn">

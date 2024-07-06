@@ -45,7 +45,7 @@ export default function AddVoucher() {
             toast.error(`Error adding voucher: ${error.message}`);
         }
     };
-    
+
     const formatDate = (dateString) => {
         // Split the date string into day, month, and year
         const [day, month, year] = dateString.split('/');
@@ -83,13 +83,15 @@ export default function AddVoucher() {
 
     return (
         <div>
-            
+
             <StaffHeader />
             <div className="manage-content">
                 <StaffSideBar />
                 <div className="add-update-content-detail">
+                    
                     <form onSubmit={handleSubmit}>
                         <div className="manage-form-input">
+                        
                             {/* 1 TITLE */}
                             <div className="manage-form-group">
                                 <label>Tiêu đề</label>
@@ -228,7 +230,7 @@ export default function AddVoucher() {
                         {/*BUTTON */}
                         <div className="manage-form-btn">
                             <button className="save-manage-btn save-manage-link" type="submit">
-                                Thêm voucher
+                                Thêm
                             </button>
                             <div className="cancel-manage-btn">
                                 <button onClick={handleReload} className="cancel-manage-link">

@@ -114,7 +114,7 @@ export default function AddArticle() {
 
   return (
     <div>
-      
+
       <StaffHeader />
 
       <div className="manage-content">
@@ -123,6 +123,7 @@ export default function AddArticle() {
         <div className="add-update-content-detail">
           <form onSubmit={handleSubmit}>
             <div className="manage-form-input">
+            
               <div className="manage-form-group">
                 <label>Tiêu đề:</label>
                 <div className="manage-form-control">
@@ -134,7 +135,7 @@ export default function AddArticle() {
                 <label>Nội dung:</label>
                 <div className="manage-form-control">
                   <ReactQuill
-                    style={{backgroundColor: 'white'}}
+                    style={{ backgroundColor: 'white' }}
                     ref={quillRef}
                     value={content}
                     modules={modules}
@@ -148,14 +149,14 @@ export default function AddArticle() {
             <div className="manage-form-btn">
 
               <button className="save-manage-btn save-manage-link" type="submit" disabled={isSubmitting}>
-                Thêm bài viết
+              Thêm
               </button>
 
               <div className="cancel-manage-btn">
-                  <button onClick={handleReload} className="cancel-manage-link">
-                    Đặt lại
-                  </button>
-                </div>
+                <button onClick={handleReload} className="cancel-manage-link">
+                  Đặt lại
+                </button>
+              </div>
 
             </div>
           </form>

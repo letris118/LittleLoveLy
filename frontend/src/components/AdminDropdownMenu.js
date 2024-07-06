@@ -6,13 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { handleLogout } from "../services/auth/UsersService";
 import { routes } from "../routes";
 
-export default function StaffDropdownMenu() {
+export default function AdminDropdownMenu() {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
-
-  const handleProfileClick = () => {
-    navigate(routes.staffProfile);
-  };
 
   return (
       <Dropdown className="staff-dropdown"
@@ -27,17 +23,6 @@ export default function StaffDropdownMenu() {
           classNames="staff-dropdown-menu"
           unmountOnExit>
           <Dropdown.Menu className="staff-dropdown-menu">
-
-            <Link
-              onClick={handleProfileClick}
-              style={{
-                textDecoration: "none",
-                width: "inherit",
-                color: "black",
-              }}>
-              <Dropdown.Item>Tài khoản</Dropdown.Item>
-            </Link>
-
             <Link
               onClick={handleLogout(navigate)}
               style={{

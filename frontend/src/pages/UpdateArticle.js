@@ -137,11 +137,12 @@ export default function UpdateArticle() {
 
   return (
     <div>
-      
+
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />
         <div className="add-update-content-detail">
+          
           <form onSubmit={handleSubmit}>
             <div className="manage-form-input">
               <div className="manage-form-group">
@@ -158,7 +159,7 @@ export default function UpdateArticle() {
                 <label>Nội dung:</label>
                 <div className="manage-form-control">
                   <ReactQuill
-                    style={{backgroundColor: 'white'}}
+                    style={{ backgroundColor: 'white' }}
                     ref={quillRef}
                     value={content}
                     modules={modules}
@@ -170,7 +171,7 @@ export default function UpdateArticle() {
             </div>
             <div className="manage-form-btn">
               <button className="save-manage-btn save-manage-link" type="submit" disabled={isSubmitting}>
-                Cập nhật bài viết
+                Lưu
               </button>
 
               <div className="cancel-manage-btn">

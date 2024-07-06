@@ -127,14 +127,7 @@ export default function ManageOrder() {
                     <td className="name-body">{order.cusName}</td>
                     <td className="phone-body">{order.cusPhone}</td>
                     <td className="detail-body">{order.orderId}</td>
-                    <td className="update-body">
-                      <Link
-                        to={`${routes.updateOrder}/${order.orderId}`}
-                        className="update-link"
-                      >
-                        Xem thêm
-                      </Link>
-                    </td>
+                    <td className="update-body">Xem thêm</td>
                   </tr>
                 ))
               ) : (
