@@ -30,9 +30,10 @@ public class OrderService {
     private final PaymentService paymentService;
     private final VoucherRepository voucherRepository;
     private final EmailSenderService emailSenderService;
+    private final OrderDetailRepository orderDetailRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService, PaymentService paymentService, VoucherRepository voucherRepository, EmailSenderService emailSenderService) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService, PaymentService paymentService, VoucherRepository voucherRepository, EmailSenderService emailSenderService, OrderDetailRepository orderDetailRepository) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.userRepository = userRepository;
@@ -42,6 +43,7 @@ public class OrderService {
         this.paymentService = paymentService;
         this.voucherRepository = voucherRepository;
         this.emailSenderService = emailSenderService;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     public List<OrderResponseDTO> getAllOrders() {
@@ -67,6 +69,15 @@ public class OrderService {
                     .orderId(CodeGenerator.generateOrderID())
                     .user(user)
                     .status("CART")
+                    .orderDetails(new ArrayList<>())
+                    .giftIncludings(new ArrayList<>())
+                    .cusName(user.getName())
+                    .cusPhone(user.getPhone())
+                    .cusMail(user.getMail())
+                    .cusCityCode(user.getCityCode())
+                    .cusDistrictId(user.getDistrictId())
+                    .cusWardCode(user.getWardCode())
+                    .cusStreet(user.getStreet())
                     .build();
             cart = orderRepository.save(cart);
         }
@@ -133,10 +144,10 @@ public class OrderService {
             for (GiftIncluding item : cart.getGiftIncludings()) {
                 if (item.getGift().getGiftId() == cartItemDTO.getId()) {
                     int quantityLeft = item.getQuantity() - cartItemDTO.getQuantity();
-                    if(quantityLeft <= 0){
+                    if (quantityLeft <= 0) {
                         user.setPoint(user.getPoint() + item.getPoint() * item.getQuantity());
                         cart.getGiftIncludings().remove(item);
-                    }else{
+                    } else {
                         user.setPoint(user.getPoint() + item.getPoint() * cartItemDTO.getQuantity());
                         item.setQuantity(quantityLeft);
                     }
@@ -163,6 +174,13 @@ public class OrderService {
                     .status("CART")
                     .orderDetails(new ArrayList<>())
                     .giftIncludings(new ArrayList<>())
+                    .cusName(user.getName())
+                    .cusPhone(user.getPhone())
+                    .cusMail(user.getMail())
+                    .cusCityCode(user.getCityCode())
+                    .cusDistrictId(user.getDistrictId())
+                    .cusWardCode(user.getWardCode())
+                    .cusStreet(user.getStreet())
                     .build();
         }
 
@@ -224,7 +242,7 @@ public class OrderService {
             }
         }
         double postDiscountPrice = finalBasePrice + ((finalShippingFee == null) ? 0 : finalShippingFee);
-        int bonusPoint = (int) (basePrice / 1000);
+        int bonusPoint = (int) (finalBasePrice / 1000);
         return new OrderEvaluationDTO(totalProductQuantity, totalPoints, basePrice, finalBasePrice, shippingFee, finalShippingFee, postDiscountPrice, bonusPoint);
     }
 
@@ -243,6 +261,7 @@ public class OrderService {
         if (order == null) {
             order = new Order();
             order.setOrderId(CodeGenerator.generateOrderID());
+            order.setStatus("CART");
             order.setOrderDetails(new ArrayList<>());
             order.setGiftIncludings(new ArrayList<>());
         }
@@ -301,13 +320,11 @@ public class OrderService {
         order.getGiftIncludings().addAll(giftIncludings);
 
         if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.VN_PAY)) {
-            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING);
             order = orderRepository.save(order);
-            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             double finalPrice = evaluateOrder.getPostDiscountPrice();
             return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress, order.getCreatedDate());
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD)) {
-            order.setStatus(CODPaymentStatus.COD_PENDING_CONFIRMATION);
+            order.setStatus(CODPaymentStatus.COD_PENDING);
             order = orderRepository.save(order);
             emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             return mapOrderToResponse(order);
@@ -316,18 +333,38 @@ public class OrderService {
         }
     }
 
+    @Transactional
     public String handleVNPayCallback(Map<String, String> fields) {
         String vnpResponseCode = fields.get("vnp_ResponseCode");
         String orderId = fields.get("vnp_TxnRef");
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         if ("00".equals(vnpResponseCode)) {
-            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_SUCCESS);
+            order.setStatus(OnlinePaymentStatus.ONLINE_PENDING);
+            orderRepository.save(order);
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
+            return "http://localhost:3000/?status=payment-success";
         } else {
-            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_FAILED);
+            handlePaymentFail(order);
+            return "http://localhost:3000/?status=payment-fail";
         }
-        orderRepository.save(order);
-        return "http://localhost:3000/";
+    }
+
+    public void handlePaymentFail(Order order) {
+        if (order.getUser() == null) {
+            orderRepository.delete(order);
+        } else {
+            order.setCreatedDate(null);
+            order.setVoucher(null);
+            order.setTotalPoint(null);
+            order.setTotalQuantity(null);
+            order.setBasePrice(null);
+            order.setFinalBasePrice(null);
+            order.setShippingFee(null);
+            order.setFinalShippingFee(null);
+            order.setPostDiscountPrice(null);
+            orderRepository.save(order);
+        }
     }
 
     private OrderResponseDTO mapOrderToResponse(Order order) {
@@ -391,7 +428,7 @@ public class OrderService {
             futurePointInCart += item.getPoint() * item.getQuantity();  //quantity after update if exist
         }
         // if no update mean add new gift to cart
-        if(currentPointInCart == futurePointInCart){
+        if (currentPointInCart == futurePointInCart) {
             cart.getGiftIncludings().add(GiftIncluding.builder()
                     .giftIncludingId(new GiftIncluding.GiftIncludingId(cart.getOrderId(), gift.getGiftId()))
                     .order(cart)
@@ -409,8 +446,8 @@ public class OrderService {
     public ShippingResponseDTO confirmOrder(String id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-        if (order.getStatus().equals(CODPaymentStatus.COD_PENDING_CONFIRMATION)) {
-            order.setStatus(CODPaymentStatus.COD_ORDER_CONFIRMED);
+        if (order.getStatus().equals(CODPaymentStatus.COD_PENDING)) {
+            order.setStatus(CODPaymentStatus.COD_CONFIRMED);
             // neu km ship -> shop tra ship -> phan ship con lai + vao cod
             // neu km base -> cus tra ship -> cod chi co base
             boolean isShopPayShip = true;
@@ -425,19 +462,73 @@ public class OrderService {
                 throw new RuntimeException("Cannot create shipping order");
             }
             order.setTrackingCode(response.getData().getTrackingCode());
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được xác nhận và đang được vận chuyển với mã vận đơn: " + order.getTrackingCode() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             return response;
-        } else if (order.getStatus().equals(OnlinePaymentStatus.ONLINE_PAYMENT_SUCCESS)) {
-            order.setStatus(OnlinePaymentStatus.ONLINE_ORDER_CONFIRMED);
+        } else if (order.getStatus().equals(OnlinePaymentStatus.ONLINE_PENDING)) {
+            order.setStatus(OnlinePaymentStatus.ONLINE_CONFIRMED);
             ShippingResponseDTO response = ghnService.createShipping(order, 0, true);
             if (response.getCode() != 200) {
                 throw new RuntimeException("Cannot create shipping order");
             }
             order.setTrackingCode(response.getData().getTrackingCode());
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được xác nhận và đang được vận chuyển với mã vận đơn: " + order.getTrackingCode() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             return response;
         } else {
             throw new IllegalArgumentException("Cannot confirm order from status: " + order.getStatus());
         }
     }
 
+    @Transactional
+    public OrderResponseDTO cancelOrder(String id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+//        User staff = userRepository.findById(staffUsername)
+//                .orElseThrow(() -> new RuntimeException("Staff not found"));
+        if (order.getUser() != null && order.getUser().getPoint() != null) {
+            order.getUser().setPoint(order.getUser().getPoint() + order.getTotalPoint());
+        }
+        String status = order.getStatus();
+        if (status.equals(CODPaymentStatus.COD_PENDING)) {
+            order.setStatus(CODPaymentStatus.COD_DENIED);
+            orderRepository.save(order);
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã bị hủy. Bạn có thể tra thông tin đơn hàng tại ....");
+            return mapOrderToResponse(order);
+        } else if (status.equals(OnlinePaymentStatus.ONLINE_PENDING)) {
+            order.setStatus(OnlinePaymentStatus.ONLINE_DENIED);
+//            String staffName = (staff.getName() == null) ? staffUsername : staff.getName();
+//            // VNPay ngung ho tro test refund?
+//            String response = paymentService.refundPayment(order.getOrderId(), true, order.getPostDiscountPrice(), ipAddress, order.getCreatedDate(), staffName);
+            orderRepository.save(order);
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã bị hủy. Bạn có thể tra thông tin đơn hàng tại ....");
+            return mapOrderToResponse(order);
+        } else {
+            throw new IllegalArgumentException("Cannot denied order from status: " + order.getStatus());
+        }
+    }
 
+    public OrderResponseDTO confirmReceived(String id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        if (order.getUser() != null && order.getUser().getPoint() != null) {
+            int bonusPoint = (int) (order.getFinalBasePrice() / 1000);
+            order.getUser().setPoint(order.getUser().getPoint() + bonusPoint);
+        }
+        String status = order.getStatus();
+        if (status.equals(CODPaymentStatus.COD_CONFIRMED)) {
+            order.setStatus(CODPaymentStatus.COD_RECEIVED);
+            orderRepository.save(order);
+            return mapOrderToResponse(order);
+        } else if (status.equals(OnlinePaymentStatus.ONLINE_CONFIRMED)) {
+            order.setStatus(OnlinePaymentStatus.ONLINE_RECEIVED);
+            orderRepository.save(order);
+            return mapOrderToResponse(order);
+        } else {
+            throw new IllegalArgumentException("Cannot confirm received order from status: " + order.getStatus());
+        }
+    }
+
+    public boolean hasUserBoughtProduct(String username, Long productId) {
+        List<String> statuses = List.of(CODPaymentStatus.COD_RECEIVED, OnlinePaymentStatus.ONLINE_RECEIVED);
+        return orderDetailRepository.existsByUserAndProductAndStatus(username, productId, statuses);
+    }
 }
