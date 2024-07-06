@@ -1,10 +1,11 @@
 package com.vtcorp.store.constants;
 
 public final class OnlinePaymentStatus {
-    public static final String ONLINE_PAYMENT_PENDING = "ONLINE_PAYMENT_PENDING";
-    public static final String ONLINE_PAYMENT_SUCCESS = "ONLINE_PAYMENT_SUCCESS";
-    public static final String ONLINE_ORDER_CONFIRMED = "ONLINE_ORDER_CONFIRMED";
-    public static final String ONLINE_ORDER_CANCELLED = "ONLINE_ORDER_CANCELLED";
+    public static final String ONLINE_PENDING = "ONLINE_PENDING";
+    public static final String ONLINE_CONFIRMED = "ONLINE_CONFIRMED";
+    public static final String ONLINE_CANCELLED = "ONLINE_CANCELLED";
+    public static final String ONLINE_DENIED = "ONLINE_DENIED";
+    public static final String ONLINE_RECEIVED = "ONLINE_RECEIVED";
 
     private OnlinePaymentStatus() {
     }

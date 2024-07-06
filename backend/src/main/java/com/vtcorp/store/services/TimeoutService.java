@@ -3,6 +3,7 @@ package com.vtcorp.store.services;
 import com.vtcorp.store.constants.OnlinePaymentStatus;
 import com.vtcorp.store.entities.Order;
 import com.vtcorp.store.repositories.OrderRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,9 @@ import java.util.List;
 
 @Service
 public class TimeoutService {
+
+    @Value("${vnpay.timeOutInMinutes}")
+    private long paymentTimeoutInMinutes;
 
     private final OrderService orderService;
     private final OrderRepository orderRepository;
@@ -23,9 +27,9 @@ public class TimeoutService {
     // Scheduled task to run every minute
     @Scheduled(fixedRate = 60000)
     public void handlePaymentTimeouts(){
-        long timeoutDurationMillis = 2 * 60 * 1000;
+        long timeoutDurationMillis = paymentTimeoutInMinutes * 60 * 1000;
         Date timeoutThreshold = new Date(System.currentTimeMillis() - timeoutDurationMillis);
-        List<Order> timedOutOrders = orderRepository.findByStatusAndCreatedDateBefore(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING, timeoutThreshold);
+        List<Order> timedOutOrders = orderRepository.findByStatusAndCreatedDateBefore("CART", timeoutThreshold);
         for (Order order : timedOutOrders) {
             orderService.handlePaymentFail(order);
         }

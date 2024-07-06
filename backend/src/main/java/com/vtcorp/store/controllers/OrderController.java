@@ -1,12 +1,12 @@
 package com.vtcorp.store.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.vtcorp.store.config.VNPayConfig;
 import com.vtcorp.store.dtos.OrderRequestDTO;
 import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.services.GHNService;
 import com.vtcorp.store.services.OrderService;
+import com.vtcorp.store.utils.VNPayUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -113,7 +113,7 @@ public class OrderController {
     public ResponseEntity<?> createOrder(@RequestBody OrderRequestDTO orderRequestDTO, Authentication authentication, HttpServletRequest request) {
         try {
             String username = (authentication == null) ? null : authentication.getName();
-            String ipAddress = VNPayConfig.getIpAddress(request);
+            String ipAddress = VNPayUtils.getIpAddress(request);
             return ResponseEntity.ok(orderService.createOrder(orderRequestDTO, username, ipAddress));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -135,7 +135,7 @@ public class OrderController {
             String vnp_SecureHash = request.getParameter("vnp_SecureHash");
             fields.remove("vnp_SecureHashType");
             fields.remove("vnp_SecureHash");
-            String signValue = VNPayConfig.hashAllFields(fields);
+            String signValue = VNPayUtils.hashAllFields(fields);
             if (!signValue.equals(vnp_SecureHash)) {
                 throw new Exception("Checksum mismatch");
             }
@@ -157,4 +157,34 @@ public class OrderController {
         }
     }
 
+    @Operation(summary = "Cancel order")
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<?> cancelOrder(@PathVariable String id) {
+        try {
+            return ResponseEntity.ok(orderService.cancelOrder(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Customer confirm order received")
+    @PutMapping("/received/{id}")
+    public ResponseEntity<?> confirmReceived(@PathVariable String id) {
+        try {
+            return ResponseEntity.ok(orderService.confirmReceived(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // test refund
+//    @GetMapping("/test/{orderId}")
+//    public String test(@PathVariable String orderId, HttpServletRequest request){
+//        Order order = orderRepository.findById(orderId).orElse(null);
+//        String ipAddress = VNPayUtils.getIpAddress(request);
+//        if(order != null){
+//            return paymentService.refundPayment(order.getOrderId(), true, order.getPostDiscountPrice(), ipAddress, order.getCreatedDate(), "staffName");
+//        }
+//        return "Order not found";
+//    }
 }

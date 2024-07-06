@@ -240,7 +240,7 @@ public class OrderService {
             }
         }
         double postDiscountPrice = finalBasePrice + ((finalShippingFee == null) ? 0 : finalShippingFee);
-        int bonusPoint = (int) (basePrice / 1000);
+        int bonusPoint = (int) (finalBasePrice / 1000);
         return new OrderEvaluationDTO(totalProductQuantity, totalPoints, basePrice, finalBasePrice, shippingFee, finalShippingFee, postDiscountPrice, bonusPoint);
     }
 
@@ -259,6 +259,7 @@ public class OrderService {
         if (order == null) {
             order = new Order();
             order.setOrderId(CodeGenerator.generateOrderID());
+            order.setStatus("CART");
             order.setOrderDetails(new ArrayList<>());
             order.setGiftIncludings(new ArrayList<>());
         }
@@ -317,12 +318,11 @@ public class OrderService {
         order.getGiftIncludings().addAll(giftIncludings);
 
         if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.VN_PAY)) {
-            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_PENDING);
             order = orderRepository.save(order);
             double finalPrice = evaluateOrder.getPostDiscountPrice();
             return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress, order.getCreatedDate());
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD)) {
-            order.setStatus(CODPaymentStatus.COD_PENDING_CONFIRMATION);
+            order.setStatus(CODPaymentStatus.COD_PENDING);
             order = orderRepository.save(order);
             emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             return mapOrderToResponse(order);
@@ -338,8 +338,9 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         if ("00".equals(vnpResponseCode)) {
-            order.setStatus(OnlinePaymentStatus.ONLINE_PAYMENT_SUCCESS);
+            order.setStatus(OnlinePaymentStatus.ONLINE_PENDING);
             orderRepository.save(order);
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             return "http://localhost:3000/?status=payment-success";
         } else {
             handlePaymentFail(order);
@@ -347,15 +348,10 @@ public class OrderService {
         }
     }
 
-    public void handlePaymentFail(Order order){
-        Order newCart = orderRepository.findByUserAndStatus(order.getUser(), "CART");
-        if(newCart != null){
-            // in case timeout for pending return back to cart set shorter than payment time
-            if(!newCart.getOrderId().equals(order.getOrderId())){
-                orderRepository.delete(order);
-            }
+    public void handlePaymentFail(Order order) {
+        if (order.getUser() == null) {
+            orderRepository.delete(order);
         } else {
-            order.setStatus("CART");
             order.setCreatedDate(null);
             order.setVoucher(null);
             order.setTotalPoint(null);
@@ -448,8 +444,8 @@ public class OrderService {
     public ShippingResponseDTO confirmOrder(String id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-        if (order.getStatus().equals(CODPaymentStatus.COD_PENDING_CONFIRMATION)) {
-            order.setStatus(CODPaymentStatus.COD_ORDER_CONFIRMED);
+        if (order.getStatus().equals(CODPaymentStatus.COD_PENDING)) {
+            order.setStatus(CODPaymentStatus.COD_CONFIRMED);
             // neu km ship -> shop tra ship -> phan ship con lai + vao cod
             // neu km base -> cus tra ship -> cod chi co base
             boolean isShopPayShip = true;
@@ -464,19 +460,64 @@ public class OrderService {
                 throw new RuntimeException("Cannot create shipping order");
             }
             order.setTrackingCode(response.getData().getTrackingCode());
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được xác nhận và đang được vận chuyển với mã vận đơn: " + order.getTrackingCode() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             return response;
-        } else if (order.getStatus().equals(OnlinePaymentStatus.ONLINE_PAYMENT_SUCCESS)) {
-            order.setStatus(OnlinePaymentStatus.ONLINE_ORDER_CONFIRMED);
+        } else if (order.getStatus().equals(OnlinePaymentStatus.ONLINE_PENDING)) {
+            order.setStatus(OnlinePaymentStatus.ONLINE_CONFIRMED);
             ShippingResponseDTO response = ghnService.createShipping(order, 0, true);
             if (response.getCode() != 200) {
                 throw new RuntimeException("Cannot create shipping order");
             }
             order.setTrackingCode(response.getData().getTrackingCode());
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được xác nhận và đang được vận chuyển với mã vận đơn: " + order.getTrackingCode() + ". Bạn có thể tra thông tin đơn hàng tại ....");
             return response;
         } else {
             throw new IllegalArgumentException("Cannot confirm order from status: " + order.getStatus());
         }
     }
 
+    @Transactional
+    public String cancelOrder(String id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+//        User staff = userRepository.findById(staffUsername)
+//                .orElseThrow(() -> new RuntimeException("Staff not found"));
+        if (order.getUser() != null && order.getUser().getPoint() != null) {
+            order.getUser().setPoint(order.getUser().getPoint() + order.getTotalPoint());
+        }
+        String status = order.getStatus();
+        if (status.equals(CODPaymentStatus.COD_PENDING)) {
+            order.setStatus(CODPaymentStatus.COD_DENIED);
+            orderRepository.save(order);
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã bị hủy. Bạn có thể tra thông tin đơn hàng tại ....");
+            return "Order canceled";
+        } else if (status.equals(OnlinePaymentStatus.ONLINE_PENDING)) {
+            order.setStatus(OnlinePaymentStatus.ONLINE_DENIED);
+//            String staffName = (staff.getName() == null) ? staffUsername : staff.getName();
+//            // VNPay ngung ho tro test refund?
+//            String response = paymentService.refundPayment(order.getOrderId(), true, order.getPostDiscountPrice(), ipAddress, order.getCreatedDate(), staffName);
+            orderRepository.save(order);
+            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã bị hủy. Bạn có thể tra thông tin đơn hàng tại ....");
+            return "Order canceled";
+        } else {
+            throw new IllegalArgumentException("Cannot denied order from status: " + order.getStatus());
+        }
+    }
 
+    public String confirmReceived(String id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        String status = order.getStatus();
+        if (status.equals(CODPaymentStatus.COD_CONFIRMED)) {
+            order.setStatus(CODPaymentStatus.COD_RECEIVED);
+            orderRepository.save(order);
+            return "Order received";
+        } else if (status.equals(OnlinePaymentStatus.ONLINE_CONFIRMED)) {
+            order.setStatus(OnlinePaymentStatus.ONLINE_RECEIVED);
+            orderRepository.save(order);
+            return "Order received";
+        } else {
+            throw new IllegalArgumentException("Cannot confirm received order from status: " + order.getStatus());
+        }
+    }
 }

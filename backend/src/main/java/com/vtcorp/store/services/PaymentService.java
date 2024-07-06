@@ -1,9 +1,10 @@
 package com.vtcorp.store.services;
 
 import com.nimbusds.jose.shaded.gson.JsonObject;
-import com.vtcorp.store.config.VNPayConfig;
 import com.vtcorp.store.dtos.PaymentResponseDTO;
 import com.vtcorp.store.utils.CodeGenerator;
+import com.vtcorp.store.utils.VNPayUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -20,13 +21,34 @@ import java.util.*;
 @Service
 public class PaymentService {
 
+    @Value("${vnpay.version}")
+    private String vnp_Version;
+
+    @Value("${vnpay.tmnCode}")
+    private String vnp_TmnCode;
+
+    @Value("${vnpay.payUrl}")
+    private String vnp_PayUrl;
+
+    @Value("${vnpay.returnUrl}")
+    private String vnp_ReturnUrl;
+
+    @Value("${vnpay.apiUrl}")
+    private String vnp_ApiUrl;
+
+    @Value("${vnpay.secretKey}")
+    private String vnp_SecretKey;
+
+    @Value("${vnpay.timeOutInMinutes}")
+    private int timeout;
+
     public PaymentResponseDTO createPayment(String orderId, double price, String ipAddress, Date CreatedDate) {
         long amount = Math.round(price * 100.0);
 
         Map<String, String> vnp_Params = new HashMap<>();
-        vnp_Params.put("vnp_Version", VNPayConfig.vnp_Version);
+        vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", "pay");
-        vnp_Params.put("vnp_TmnCode", VNPayConfig.vnp_TmnCode);
+        vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_IpAddr", ipAddress);
@@ -34,7 +56,7 @@ public class PaymentService {
         vnp_Params.put("vnp_OrderInfo", "ThanhToanDonHang_" + orderId);
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", vnp_ReturnUrl);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(CreatedDate);
@@ -42,7 +64,7 @@ public class PaymentService {
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         cld.setTime(CreatedDate);
-        cld.add(Calendar.MINUTE, 15);
+        cld.add(Calendar.MINUTE, timeout);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
@@ -70,20 +92,18 @@ public class PaymentService {
             }
         }
         String queryUrl = query.toString();
-        String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
+        String vnp_SecureHash = VNPayUtils.hmacSHA512(vnp_SecretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
+        String paymentUrl = vnp_PayUrl + "?" + queryUrl;
         return new PaymentResponseDTO("00", "success", paymentUrl);
     }
 
-    public String refundPayment(String orderId, boolean isFullRefund, double amountRefund, String ipAddress, Date CreatedDate, String createdBy) {
+    public String refundPayment(String orderId, boolean isFullRefund, double amountRefund, String ipAddress, Date TransactionDate, String createdBy) {
         String vnp_TransactionType = isFullRefund ? "02" : "03";
         long amount = Math.round(amountRefund * 100.0);
 
         String vnp_RequestId = CodeGenerator.generateRandomCode(8);
-        String vnp_Version = VNPayConfig.vnp_Version;
         String vnp_Command = "refund";
-        String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
         String vnp_TxnRef = orderId;
         String vnp_Amount = String.valueOf(amount);
         String vnp_OrderInfo = "HoantienGDOrderId_" + vnp_TxnRef;
@@ -94,7 +114,7 @@ public class PaymentService {
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
-        String vnp_TransactionDate = formatter.format(CreatedDate);
+        String vnp_TransactionDate = formatter.format(TransactionDate);
 
         JsonObject vnp_Params = new JsonObject();
         vnp_Params.addProperty("vnp_RequestId", vnp_RequestId);
@@ -105,7 +125,7 @@ public class PaymentService {
         vnp_Params.addProperty("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.addProperty("vnp_Amount", vnp_Amount);
         vnp_Params.addProperty("vnp_OrderInfo", vnp_OrderInfo);
-        vnp_Params.addProperty("vnp_TransactionNo", "{get value of vnp_TransactionNo}");
+//        vnp_Params.addProperty("vnp_TransactionNo", "");
         vnp_Params.addProperty("vnp_TransactionDate", vnp_TransactionDate);
         vnp_Params.addProperty("vnp_CreateBy", vnp_CreateBy);
         vnp_Params.addProperty("vnp_CreateDate", vnp_CreateDate);
@@ -115,12 +135,12 @@ public class PaymentService {
                 vnp_TransactionType, vnp_TxnRef, vnp_Amount, vnp_TransactionNo, vnp_TransactionDate,
                 vnp_CreateBy, vnp_CreateDate, vnp_IpAddr, vnp_OrderInfo);
 
-        String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hash_Data);
+        String vnp_SecureHash = VNPayUtils.hmacSHA512(vnp_SecretKey, hash_Data);
 
         vnp_Params.addProperty("vnp_SecureHash", vnp_SecureHash);
 
         try {
-            URL url = new URL(VNPayConfig.vnp_ApiUrl);
+            URL url = new URL(vnp_ApiUrl);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");
