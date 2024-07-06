@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { vouchers } from "../services/auth/UsersService";
 import "../assets/css/voucherPresentation.css";
-import { Button, styled } from "@mui/material";
+import { Button, styled, DialogActions } from "@mui/material";
+import { toast } from "react-toastify";
 
-export default function VoucherPresentation({
-  selectedVoucher,
-  onSelectVoucher,
-}) {
+const CustomButton = styled(Button)({
+  background:
+    "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)",
+  color: "white",
+  borderRadius: "20px",
+  fontWeight: "bold",
+  padding: "5px 10px",
+  textTransform: "none",
+  "&:hover": {
+    background:
+      "linear-gradient(90deg, rgba(255,0,132,0.8) 0%, rgba(255,99,132,0.8) 100%)",
+  },
+});
+
+const VoucherPresentation = ({ selectedVoucher, onSelectVoucher }) => {
   const [voucherList, setVoucherList] = useState([]);
 
-  const CustomButton = styled(Button)({
-    background:
-      "linear-gradient(90deg, rgba(255,0,132,1) 0%, rgba(255,99,132,1) 100%)",
-    color: "white",
-    borderRadius: "20px",
-    fontWeight: "bold",
-    padding: "5px 10px",
-    textTransform: "none",
-    "&:hover": {
-      background:
-        "linear-gradient(90deg, rgba(255,0,132,0.8) 0%, rgba(255,99,132,0.8) 100%)",
-    },
-  });
   useEffect(() => {
     const fetchVouchers = async () => {
       try {
@@ -41,6 +40,11 @@ export default function VoucherPresentation({
 
   const handleApply = (voucherId) => {
     onSelectVoucher(voucherId === selectedVoucher ? null : voucherId);
+    if (voucherId === selectedVoucher) {
+      toast.info("Voucher đã bị huỷ", { autoClose: 1000 });
+    } else {
+      toast.success("Voucher đã được áp dụng", { autoClose: 1000 });
+    }
   };
 
   return (
@@ -70,4 +74,6 @@ export default function VoucherPresentation({
       ))}
     </div>
   );
-}
+};
+
+export default VoucherPresentation;

@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
-import backgroundImage from "../assets/images/backgroundDemo.jpg";
-import "../assets/css/loginAndRegister.css";
-import { Link, useNavigate } from "react-router-dom";
-import { routes } from "../routes";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { registerAPI } from "../services/auth/UsersService";
-import { FaExclamationCircle } from "react-icons/fa";
 import Tooltip from "@mui/material/Tooltip";
-import { Button, Container, Icon, IconButton, Typography } from "@mui/material";
+import { useFormik } from "formik";
+import { useEffect, useState } from "react";
+import { FaExclamationCircle } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import * as Yup from "yup";
+import "../assets/css/loginAndRegister.css";
+import backgroundImage from "../assets/images/backgroundDemo.jpg";
+import { routes } from "../routes";
+import { registerAPI } from "../services/auth/UsersService";
 
 const checkChema = Yup.object({
   mail: Yup.string()

@@ -91,6 +91,12 @@ const updateProduct = (productId, productRequestDTO) => {
   });
 };
 
+const getProductByCategory = (categoryIdList) => {
+  return instance.get(`/api/products/category`, { categoryIdList });
+};
+
+
+
 // =========================================GIFT===========================================
 
 const giftsAll = () => {
@@ -382,4 +388,5 @@ export {
   changeMailAPI,
   addReview,
   ordersAll,
+  getProductByCategory,
 };
