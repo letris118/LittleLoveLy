@@ -313,7 +313,7 @@ export default function Checkout() {
                         onChange={handleCityChange}
                       >
                         <option value="">Chọn Tỉnh / Thành Phố</option>
-                        {cities.map((item) => (
+                        {cities?.map((item) => (
                           <option key={item.CityID} value={item.CityID}>
                             {item.CityName}
                           </option>
@@ -334,7 +334,7 @@ export default function Checkout() {
                         onChange={handleDistrictChange}
                       >
                         <option value="">Chọn Quận / Huyện</option>
-                        {districts.map((item) => (
+                        {districts?.map((item) => (
                           <option key={item.DistrictID} value={item.DistrictID}>
                             {item.DistrictName}
                           </option>
@@ -355,7 +355,7 @@ export default function Checkout() {
                         onChange={formik.handleChange}
                       >
                         <option value="">Chọn Phường / Xã</option>
-                        {wards.map((item) => (
+                        {wards?.map((item) => (
                           <option key={item.WardCode} value={item.WardCode}>
                             {item.WardName}
                           </option>
