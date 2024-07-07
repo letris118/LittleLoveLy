@@ -1,6 +1,7 @@
 package com.vtcorp.store.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vtcorp.store.dtos.DistrictResponseDTO;
 import com.vtcorp.store.dtos.CityResponseDTO;
 import com.vtcorp.store.dtos.ShippingResponseDTO;
@@ -11,6 +12,8 @@ import com.vtcorp.store.entities.OrderDetail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -170,8 +173,20 @@ public class GHNService {
         params.put("items", items);
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(params, headers);
-        ResponseEntity<ShippingResponseDTO> response = restTemplate.postForEntity(createOrderUrl, entity, ShippingResponseDTO.class);
-        return response.getBody();
+        try {
+            ResponseEntity<ShippingResponseDTO> response = restTemplate.postForEntity(createOrderUrl, entity, ShippingResponseDTO.class);
+            return response.getBody();
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.readValue(e.getResponseBodyAsString(), ShippingResponseDTO.class);
+            } catch (Exception ex) {
+                ShippingResponseDTO responseDTO = new ShippingResponseDTO();
+                responseDTO.setCode(400);
+                responseDTO.setMessage(e.getMessage());
+                return responseDTO;
+            }
+        }
     }
 
     public ShippingResponseDTO createShipping(Order order, int codAmount, boolean isShopPayShip) {

@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import instance from "./customize-axios";
 import { routes } from "../../routes";
-import axios from "axios";
 const loginAPI = (username, password) => {
   return instance.post("/api/auth/login", {
     username,
@@ -248,6 +247,13 @@ const evaluateCart = (cartItems, cusDistrictId, cusWardCode, voucherId) => {
   });
 };
 
+const previewOrder = (cusWardCode, cusPhone) => {
+  return instance.post(`/api/orders/preview`, {
+    cusWardCode,
+    cusPhone,
+  });
+};
+
 const getUserInfo = (username) => {
   return instance.get(`/api/users/${username}`);
 };
@@ -431,4 +437,5 @@ export {
   orderReceived,
   addStaff,
   updateStaff,
+  previewOrder,
 };
