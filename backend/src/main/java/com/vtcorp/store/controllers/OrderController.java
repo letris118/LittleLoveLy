@@ -178,7 +178,7 @@ public class OrderController {
     }
 
     @Operation(summary = "Preview if order is valid to create shipping order")
-    @GetMapping("/preview")
+    @PostMapping("/preview")
     public ResponseEntity<?> reviewOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
         try {
             return ResponseEntity.ok(orderService.previewOrder(orderRequestDTO));

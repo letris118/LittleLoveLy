@@ -8,21 +8,40 @@ import {
   evaluateCart,
   formatPrice,
   getUserInfo,
+  previewOrder,
 } from "../services/auth/UsersService";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { routes } from "../routes";
 import * as Yup from "yup";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  styled,
-} from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, styled } from "@mui/material";
 import VoucherPresentation from "../components/VoucherPresentation";
 import { toast } from "react-toastify";
+
+Yup.addMethod(Yup.object, "validatePhoneAndAddress", function (message) {
+  return this.test("validatePhoneAndAddress", message, async function (value) {
+    const { cusWardCode, cusPhone } = value;
+    const { createError } = this;
+    try {
+      const response = await previewOrder(cusWardCode, cusPhone);
+      console.log(response);
+      if (response.code_message && response.code_message === "PHONE_INVALID") {
+        return createError({
+          path: "cusPhone",
+          message: "Số điện thoại không hợp lệ",
+        });
+      }
+      if (response.code_message && response.code_message === "ERR_OVERLOAD") {
+        return createError({
+          path: "cusWardCode",
+          message: "Chưa hỗ trợ giao hàng ở quận/huyện này",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
+});
 
 const checkoutSchema = Yup.object({
   cusName: Yup.string().required("Vui lòng nhập tên người nhận hàng"),
@@ -36,7 +55,7 @@ const checkoutSchema = Yup.object({
   cusStreet: Yup.string().required("Vui lòng nhập địa chỉ"),
   paymentMethod: Yup.string().required("Vui lòng chọn phương thức thanh toán"),
   cartItems: Yup.array().min(1, "Vui lòng chọn sản phẩm"),
-});
+}).validatePhoneAndAddress("Custom validation failed");
 
 export default function Checkout() {
   const [cartItems, setCartItems] = useState([]);
@@ -48,7 +67,6 @@ export default function Checkout() {
   const [evaluateResult, setEvaluateResult] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false);
-  const [selectedVoucher, setSelectedVoucher] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -77,7 +95,7 @@ export default function Checkout() {
       cusWardCode: userInfo.wardCode || "",
       cusStreet: userInfo.street || "",
       paymentMethod: "",
-      voucherId: selectedVoucher || "",
+      voucherId: "",
       cartItems: submitCart,
     },
     enableReinitialize: true,
@@ -164,8 +182,7 @@ export default function Checkout() {
         formik.values.cartItems,
         formik.values.cusDistrictId,
         formik.values.cusWardCode,
-        formik.values.voucherId,
-        selectedVoucher
+        formik.values.voucherId
       );
       setEvaluateResult(response);
     };
@@ -175,7 +192,6 @@ export default function Checkout() {
     formik.values.cusDistrictId,
     formik.values.cusWardCode,
     formik.values.voucherId,
-    selectedVoucher,
   ]);
 
   const handleCityChange = (e) => {
@@ -199,8 +215,9 @@ export default function Checkout() {
     setOpenVoucherDialog(true);
   };
 
-  const handleCloseVoucherDialog = () => {
+  const handleCloseVoucherDialog = (voucherId) => {
     setOpenVoucherDialog(false);
+    formik.setFieldValue("voucherId", voucherId);
   };
 
   const CustomDialogTitle = styled(DialogTitle)({
@@ -218,18 +235,6 @@ export default function Checkout() {
     "& .MuiPaper-root": {
       borderRadius: "20px",
     },
-  });
-
-  const CustomButton = styled(Button)({
-    backgroundColor: "hotpink",
-    color: "white",
-    "&:hover": {
-      background:
-        "linear-gradient(90deg, rgba(255,0,132,0.8) 0%, rgba(255,99,132,0.8) 100%)",
-    },
-    marginBottom: "20px",
-    marginRight: "20px",
-    borderRadius: "10px",
   });
 
   return (
@@ -290,7 +295,6 @@ export default function Checkout() {
                         name="paymentMethod"
                         value={formik.values.paymentMethod}
                         onChange={formik.handleChange}
-                        // onChange={handlePaymentMethodChange}
                       >
                         <option value="">Chọn phương thức thanh toán</option>
                         <option value="VN_PAY">VNPay</option>
@@ -545,20 +549,17 @@ export default function Checkout() {
         </div>
       </div>
       <Footer />
-      <CustomDialog open={openVoucherDialog} onClose={handleCloseVoucherDialog}>
+      <CustomDialog
+        open={openVoucherDialog}
+        onClose={() => handleCloseVoucherDialog(formik.values.voucherId)}
+      >
         <CustomDialogTitle>Mã giảm giá</CustomDialogTitle>
         <DialogContent>
           <VoucherPresentation
-            selectedVoucher={selectedVoucher}
-            onSelectVoucher={(voucherId) => {
-              setSelectedVoucher(voucherId);
-              formik.setFieldValue("voucherId", voucherId);
-            }}
+            initialVoucherId={formik.values.voucherId}
+            handleClose={handleCloseVoucherDialog}
           />
         </DialogContent>
-        <DialogActions>
-          <CustomButton onClick={handleCloseVoucherDialog}>Đóng</CustomButton>
-        </DialogActions>
       </CustomDialog>
     </div>
   );
