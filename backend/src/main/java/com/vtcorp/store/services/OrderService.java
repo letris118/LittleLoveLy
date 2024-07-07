@@ -531,4 +531,14 @@ public class OrderService {
         List<String> statuses = List.of(CODPaymentStatus.COD_RECEIVED, OnlinePaymentStatus.ONLINE_RECEIVED);
         return orderDetailRepository.existsByUserAndProductAndStatus(username, productId, statuses);
     }
+
+    public ShippingResponseDTO previewOrder(OrderRequestDTO orderRequestDTO) {
+        Long wardCode = orderRequestDTO.getCusWardCode();
+        if (wardCode != null) {
+            String phoneNumber = orderRequestDTO.getCusPhone();
+            phoneNumber = (phoneNumber == null || phoneNumber.isEmpty()) ? "0598482100" : phoneNumber;
+            return ghnService.previewShipping(String.valueOf(wardCode), phoneNumber);
+        }
+        return null;
+    }
 }

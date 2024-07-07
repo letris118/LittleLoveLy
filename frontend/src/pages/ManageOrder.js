@@ -87,8 +87,6 @@ export default function ManageOrder() {
   };
 
 
-
-
   const CustomDialog = styled(Dialog)({
     "& .MuiDialog-paper": {
       width: "70%",
@@ -102,15 +100,15 @@ export default function ManageOrder() {
   const CustomDialogTitle = styled(DialogTitle)({
     fontWeight: "bold",
     backgroundColor: "#c0bfbf",
-    color: "white",
+    color: "#2d3436",
     marginBottom: "20px",
   });
 
   const CustomButton = styled(Button)({
     backgroundColor: "#c0bfbf",
-    color: "white",
+    color: "#2d3436",
     "&:hover": {
-      background:"#656464",
+      background:"#979797",
     },
     marginBottom: "20px",
     marginRight: "5px",
@@ -335,7 +333,7 @@ export default function ManageOrder() {
         <CustomDialogTitle>Xác nhận đơn hàng</CustomDialogTitle>
         <DialogContent>
           <span style={{ fontSize: "18px" }}>
-            Bạn có chắc chắn muốn xác nhận đơn hàng này?
+            Bạn có chắc chắn muốn xác nhận đơn hàng?
           </span>
         </DialogContent>
         <DialogActions>

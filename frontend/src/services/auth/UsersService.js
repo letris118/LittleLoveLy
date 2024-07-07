@@ -339,6 +339,34 @@ const confirmOrder = (orderId) => {
 const orderReceived = (orderId) => {
   return instance.put(`/api/orders/received/${orderId}`);
 };
+const addStaff = (username, name, mail, phone, password) => {
+  return instance.post("/api/users", {
+    username,
+    name,
+    mail,
+    phone,
+    password,
+    role: "ROLE_STAFF",
+  });
+};
+
+const updateStaff = (
+  username,
+  name,
+  mail,
+  phone,
+  currentPassword,
+  newPassword
+) => {
+  return instance.put(`/users/${username}`, {
+    username, // This will ensure the username is included in the request body
+    name,
+    mail,
+    phone,
+    currentPassword,
+    newPassword,
+  });
+};
 
 export {
   loginAPI,
@@ -401,4 +429,6 @@ export {
   checkBoughtProduct,
   confirmOrder,
   orderReceived,
+  addStaff,
+  updateStaff,
 };

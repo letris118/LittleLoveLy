@@ -187,16 +187,11 @@ export default function AddProduct() {
 
   return (
     <div>
-
       <StaffHeader />
-
       <div className="manage-content">
         <StaffSideBar />
-
         <div className="add-update-content-detail">
-          
-          {
-            <form onSubmit={handleSubmit}>
+          {<form onSubmit={handleSubmit}>
               <div className="manage-form-input">
               
                 {/* Product NAME */}
