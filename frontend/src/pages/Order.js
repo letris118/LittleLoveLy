@@ -408,9 +408,9 @@ export default function Order() {
           )}
         </DialogContent>
         <DialogActions>
-          <CustomButton onClick={() => handleCancelOrder(selectedOrder)}>
+          {/* <CustomButton onClick={() => handleCancelOrder(selectedOrder)}>
             Hủy đơn
-          </CustomButton>
+          </CustomButton> */}
           <CustomButton onClick={handleClose}>Đóng</CustomButton>
         </DialogActions>
       </CustomDialog>
