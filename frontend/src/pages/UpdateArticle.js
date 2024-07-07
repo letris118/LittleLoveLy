@@ -171,7 +171,7 @@ export default function UpdateArticle() {
             </div>
             <div className="manage-form-btn">
               <button className="save-manage-btn save-manage-link" type="submit" disabled={isSubmitting}>
-                Lưu
+                Lưu bài viết
               </button>
 
               <div className="cancel-manage-btn">

@@ -460,7 +460,7 @@ export default function UpdateProduct() {
                 <button
                   className="save-manage-btn save-manage-link"
                   type="submit">
-                  Lưu
+                  Lưu sản phẩm
                 </button>
 
                 <div className="cancel-manage-btn">

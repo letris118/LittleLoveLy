@@ -230,7 +230,7 @@ export default function AddVoucher() {
                         {/*BUTTON */}
                         <div className="manage-form-btn">
                             <button className="save-manage-btn save-manage-link" type="submit">
-                                Thêm
+                                Thêm voucher
                             </button>
                             <div className="cancel-manage-btn">
                                 <button onClick={handleReload} className="cancel-manage-link">

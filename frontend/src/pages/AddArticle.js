@@ -149,7 +149,7 @@ export default function AddArticle() {
             <div className="manage-form-btn">
 
               <button className="save-manage-btn save-manage-link" type="submit" disabled={isSubmitting}>
-              Thêm
+              Thêm bài viết
               </button>
 
               <div className="cancel-manage-btn">

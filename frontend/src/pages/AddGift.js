@@ -58,7 +58,7 @@ export default function AddGift() {
           {
             <form onSubmit={handleSubmit}>
               <div className="manage-form-input">
-              
+               
                 {/* NAME */}
                 <div className="manage-form-group">
                   <label>Tên quà tặng</label>
@@ -96,7 +96,7 @@ export default function AddGift() {
               {/* BUTTON */}
               <div className="manage-form-btn">
                 <button className="save-manage-btn save-manage-link" type="submit">
-                  Thêm
+                  Thêm quà tặng
                 </button>
 
                 <div className="cancel-manage-btn">

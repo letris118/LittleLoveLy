@@ -45,6 +45,7 @@ export const routes = {
   staffSearchProduct: "/search-product",
 
   profileCustomer: "/profile",
-  updateStaff: "updateStaff",
-  staffProfile: "/account"
+  staffProfile: "/account",
+  updateStaff: "/updateStaff",
+  addStaff: "/addStaff"
 };

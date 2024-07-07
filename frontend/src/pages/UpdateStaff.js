@@ -1,31 +1,49 @@
-import AdminHeader from "../components/AdminHeader";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
+import { routes } from "../routes";
+import { useNavigate, useParams } from "react-router-dom";
+import AdminHeader from "../components/AdminHeader";
+import { ToastContainer, toast } from "react-toastify";
+import {
+  getUserInfo,
+} from "../services/auth/UsersService";
 import AdminSideBar from "../components/AdminSideBar";
+import "../assets/css/manage.css";
+import StaffBackToTop from "../components/StaffBackToTop";
 
 export default function UpdateStaff() {
+  const [staffInfo, setStaffInfo] = useState(null);
+  const navigate = useNavigate();
+  const { username } = useParams();
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    useEffect(() => {
-        const checkAuthentication = () => {
-            const userRole = localStorage.getItem("userRole");
-            if (!userRole || userRole !== "ROLE_ADMIN") {
-                navigate("/");
-            }
-        };
-        checkAuthentication();
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (!userRole || userRole !== "ROLE_ADMIN") {
+        navigate('/');
+      }
+    }
+    checkAuthentication();
 
-       
-       
-    }, [navigate, location]);
-    return (
-        <div>
-            <AdminHeader/>
-            <div className="manage-content">
+    
+  }, [navigate]);
+
+
+  const handleReload = (e) => {
+    e.preventDefault();
+    window.location.reload();
+  };
+
+
+  return (
+    <div>
+      <AdminHeader />
+      <div className="manage-content">
         <AdminSideBar />
+        <div className="add-update-content-detail">
+          
         </div>
-        </div>
-    );
+      </div>
+      <StaffBackToTop />
+    </div>
+  );
 }

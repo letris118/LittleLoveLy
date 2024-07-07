@@ -246,6 +246,7 @@
     color: #3c3e3e;
 }
 
+
 .manage-form-group label {
     display: block;
     margin-bottom: 5px;
@@ -315,7 +316,7 @@
 }
 
 .cancel-manage-link {
-    width: 150px;
+    width: 120px;
     height: 50px;
     margin-left: 30px;
 }

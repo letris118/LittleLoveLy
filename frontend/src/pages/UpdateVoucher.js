@@ -8,7 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import {
     getVoucherById,
-    updateVoucher
+    updateVoucher 
 } from "../services/auth/UsersService"
 import StaffSideBar from "../components/StaffSideBar"
 import "../assets/css/manage.css"
@@ -327,7 +327,7 @@ export default function UpdateVoucher() {
                             {/*  BUTTON */}
                             <div className="manage-form-btn">
                                 <button className="save-manage-btn save-manage-link" type="submit">
-                                    Lưu
+                                    Lưu voucher
                                 </button>
 
                                 <div className="cancel-manage-btn">
