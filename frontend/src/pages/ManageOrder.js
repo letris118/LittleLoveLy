@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import StaffHeader from "../components/StaffHeader";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import instance from "../services/auth/customize-axios";
 import {
   formatPrice,
@@ -44,17 +44,12 @@ export default function ManageOrder() {
     };
     checkAuthentication();
 
-    if (location.state && location.state.success) {
-      toast.success(location.state.success);
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-
     const fetchOrders = async () => {
       try {
         let response = await ordersAll();
         if (response) {
           setOrderList(response);
-          setFilteredOrders(response); // Initially set filteredOrders to all orders
+          setFilteredOrders(response); 
         } else {
           setOrderList([]);
           setFilteredOrders([]);
@@ -70,9 +65,9 @@ export default function ManageOrder() {
   }, [refresh]);
 
   useEffect(() => {
-    // Filter orders based on searchQuery whenever it changes
+ 
     if (searchQuery.trim() === "") {
-      setFilteredOrders(orderList); // Reset to show all orders if searchQuery is empty
+      setFilteredOrders(orderList); 
     } else {
       const filtered = orderList.filter(
         (order) =>

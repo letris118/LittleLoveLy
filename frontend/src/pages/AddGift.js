@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { routes } from "../routes"
+import { useNavigate } from "react-router-dom"
 import StaffHeader from "../components/StaffHeader"
 import { toast } from "react-toastify"
 import {
@@ -17,7 +16,8 @@ export default function AddGift() {
       e.preventDefault()
       const giftRequestDTO = new FormData(e.target)
       await addGift(giftRequestDTO)
-      navigate(routes.manageGift, { state: { success: 'Thêm quà tặng thành công!' } });
+      toast.success("Thêm quà tặng thành công!");
+      navigate('/manageGift');
     } catch (error) {
       toast.error(`Error adding gift: ${error.message}`)
     }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import Switch from "react-switch";
 import instance from "../services/auth/customize-axios";
 import {
@@ -39,24 +39,18 @@ export default function ManageProduct() {
     };
     checkAuthentication();
 
-    if (location.state && location.state.success) {
-      toast.success(location.state.success);
-      // Clear the state to prevent the message from showing again on page reload
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-
     const fetchProducts = async () => {
       try {
         let response = await productsAll();
         if (response) {
-          // Filter out products with any null attributes
+ 
           const validProducts = response.filter(product =>
             product.name && product.stock !== null && product.sellingPrice !== null &&
             product.productImages && product.productImages.length > 0 &&
             product.brand && product.brand.logo
           );
           setProductList(validProducts);
-          setFilteredProducts(validProducts); // Initialize filtered list with all products
+          setFilteredProducts(validProducts); 
         } else {
           setProductList([]);
           setFilteredProducts([]);
@@ -145,15 +139,13 @@ export default function ManageProduct() {
       product.name.toLowerCase().includes(query)
     );
     setFilteredProducts(filtered);
-    setCurrentPage(1); // Reset to the first page when search is performed
+    setCurrentPage(1); 
   };
 
-  // Calculate current products to display based on current page
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  // Determine the total number of pages
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   const handleClick = (pageNumber) => {

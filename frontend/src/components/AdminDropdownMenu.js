@@ -4,7 +4,6 @@ import { CSSTransition } from "react-transition-group";
 import "../assets/css/dropdown.css";
 import { Link, useNavigate } from "react-router-dom";
 import { handleLogout } from "../services/auth/UsersService";
-import { routes } from "../routes";
 
 export default function AdminDropdownMenu() {
   const [showMenu, setShowMenu] = useState(false);

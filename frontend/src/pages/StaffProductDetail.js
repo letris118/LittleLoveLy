@@ -4,7 +4,6 @@ import StaffSideBar from "../components/StaffSideBar";
 import Footer from "../components/Footer";
 import ProductDetailPresentation from "../components/ProductDetailPresentation";
 import "../assets/css/productDetail.css";
-import Breadcrumb from "../components/Breadcrum";
 import { useParams } from "react-router-dom";
 import StaffBackToTop from "../components/StaffBackToTop"
 export default function StaffProductDetail() {

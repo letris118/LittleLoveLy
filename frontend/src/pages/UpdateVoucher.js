@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from "react"
-import { routes } from "../routes"
 import { useNavigate, useLocation } from "react-router-dom"
 import StaffHeader from "../components/StaffHeader"
-import { ToastContainer, toast } from "react-toastify"
+import { toast } from "react-toastify"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -87,7 +86,8 @@ export default function UpdateVoucher() {
 
 
             await updateVoucher(voucherRequestDTO.get('voucherId'), voucherRequestDTO);
-            navigate(routes.manageVoucher, { state: { success: 'Cập nhập voucher thành công!' } });
+            toast.success("Cập nhập voucher thành công!");
+        navigate('/manageVoucher');
 
         } catch (error) {
             console.error("Error updating voucher:", error);

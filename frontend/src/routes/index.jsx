@@ -9,34 +9,34 @@ export const routes = {
   articles: "/articles",
   // customer: "/customer",
 
-  manageProduct: "/manageProduct",
-  updateProduct: "/updateProduct",
-  addProduct: "/addProduct",
+  manageProduct: "/manage-product",
+  updateProduct: "/update-product",
+  addProduct: "/add-product",
 
-  manageOrder: "/manageOrder",
-  manageArticle: "/manageArticle",
-  addArticle: "/addArticle",
-  updateArticle: "/updateArticle",
+  manageOrder: "/manage-order",
+  manageArticle: "/manage-article",
+  addArticle: "/add-article",
+  updateArticle: "/update-article",
 
-  manageVoucher: "/manageVoucher",
-  addVoucher: "/addVoucher",
-  updateVoucher: "/updateVoucher",
+  manageVoucher: "/manage-voucher",
+  addVoucher: "/add-voucher",
+  updateVoucher: "/update-voucher",
 
-  manageAccount: "/manageAccount",
+  manageAccount: "/manage-account",
   cart: "/cart",
   staffHomePage: "/staff",
-  staffChat: "/chatWithCustomer",
+  staffChat: "/chat-with-customer",
   chat: "/chat",
 
-  manageGift: "/manageGift",
-  updateGift: "/updateGift",
-  addGift: "/addGift",
+  manageGift: "/manage-gift",
+  updateGift: "/update-gift",
+  addGift: "/add-gift",
 
   staffBrandList: "/brand-list",
   checkout: "/checkout",
   statistics: "/statistics",
-  manageMember: "/manageMember",
-  manageStaff: "/manageStaff",
+  manageMember: "/manage-member",
+  manageStaff: "/manage-staff",
   searchProduct: "/search",
   gift: "/gift",
   order: "/order",
@@ -46,6 +46,8 @@ export const routes = {
 
   profileCustomer: "/profile",
   staffProfile: "/account",
-  updateStaff: "/updateStaff",
-  addStaff: "/addStaff",
+
+  updateStaff: "/update-staff",
+  addStaff: "/add-staff"
+
 };

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react"
-import { Link, useNavigate, useLocation } from "react-router-dom"
-import { routes } from "../routes"
+import { useNavigate, useLocation } from "react-router-dom"
 import StaffHeader from "../components/StaffHeader"
-import { ToastContainer, toast } from "react-toastify"
+import { toast } from "react-toastify"
 import {
     updateGift,
     getGiftById,
@@ -57,7 +56,8 @@ export default function UpdateGift() {
                     return
             }
             await updateGift(giftRequestDTO.get('giftId'), giftRequestDTO)
-            navigate(routes.manageGift, { state: { success: 'Cập nhập quà tặng thành công!' } });
+            toast.success("Thêm quà tặng thành công!");
+        navigate('/manageGift');
         } catch (error) {
             toast.error(`Error adding gift: ${error.message}`)
         }

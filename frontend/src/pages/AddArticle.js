@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { routes } from "../routes"
 import ImageResize from "quill-image-resize-module-react";
 import { addArticle } from "../services/auth/UsersService";
 import { toast } from "react-toastify";
@@ -46,7 +45,8 @@ export default function AddArticle() {
 
       const response = await addArticle(formData);
       if (response) {
-        navigate(routes.manageArticle, { state: { success: 'Thêm bài viết thành công!' } });
+        toast.success("Thêm bài viết thành công!");
+        navigate('/manageArticle');
       } else {
         toast.error("Không thể thêm bài viết");
       }

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { addVoucher } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
@@ -40,7 +39,8 @@ export default function AddVoucher() {
 
         try {
             await addVoucher(voucherRequestDTO);
-            navigate(routes.manageVoucher, { state: { success: 'Thêm voucher thành công!' } });
+            toast.success("Thêm voucher thành công!");
+      navigate('/manageVoucher');
         } catch (error) {
             toast.error(`Error adding voucher: ${error.message}`);
         }
