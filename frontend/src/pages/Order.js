@@ -125,12 +125,12 @@ export default function Order() {
     setIsCancelDialogOpen(true);
   };
 
-  const handleConfirmCancel = () => {
-    // Add the logic to cancel the order here
-    console.log(`Đơn hàng <b>${orderToCancel.orderId}</b> của bạn đã hủy`);
-    setIsCancelDialogOpen(false);
-    setSelectedOrder(null);
-  };
+  // const handleConfirmCancel = () => {
+  //   //
+  //   console.log(`Đơn hàng <b>${orderToCancel.orderId}</b> của bạn đã hủy`);
+  //   setIsCancelDialogOpen(false);
+  //   setSelectedOrder(null);
+  // };
 
   const handleCloseCancelDialog = () => {
     setIsCancelDialogOpen(false);
@@ -165,6 +165,24 @@ export default function Order() {
     borderRadius: "10px",
     width: "100px",
   });
+
+  const getStatusNotification = (status) => {
+    if (status === "COD_PENDING" || status === "ONLINE_DENIED") {
+      return "Đang xử lí";
+    } else if (status === "COD_CONFIRMED" || status === "ONLINE_CONFIRMED") {
+      return "Đang giao hàng";
+    } else if (status === "COD_RECEIVED" || status === "ONLINE_RECEIVED") {
+      return "Đã giao hàng";
+    }
+  };
+
+  const getPayMentMethod = (status) => {
+    if (status.includes("COD")) {
+      return "Thanh toán khi nhận hàng";
+    } else if (status.includes("ONLINE")) {
+      return "Thanh toán bằng VnPay";
+    }
+  };
 
   return (
     <div>
@@ -249,7 +267,7 @@ export default function Order() {
                             </div>
                             <div
                               className="order-product-right"
-                              style={{ width: "35%" }}>
+                              style={{ width: "45%" }}>
                               <div
                                 style={{
                                   display: "flex",
@@ -285,12 +303,42 @@ export default function Order() {
                                       color: "#ff469e",
                                       fontWeight: "bold",
                                     }}>
-                                    Đang giao
+                                    {getStatusNotification(order.status)}
                                   </span>
                                 </div>
-                                <button onClick={() => handleOrderClick(order)}>
-                                  Chi tiết
-                                </button>
+                                <div>
+                                  {order.status === "COD_CONFIRMED" ||
+                                  order.status === "ONLINE_CONFIRMED" ? (
+                                    <button
+                                      style={{
+                                        width: "150px",
+                                        height: "40px",
+                                        borderRadius: "10px",
+                                        border: "none",
+                                        backgroundColor: "#ff469e",
+                                        color: "white",
+                                        fontWeight: "bold",
+                                        marginRight: "10px",
+                                      }}>
+                                      Đã nhận hàng
+                                    </button>
+                                  ) : (
+                                    ""
+                                  )}
+                                  <button
+                                    onClick={() => handleOrderClick(order)}
+                                    style={{
+                                      width: "100px",
+                                      height: "40px",
+                                      borderRadius: "10px",
+                                      border: "none",
+                                      backgroundColor: "#ff469e",
+                                      color: "white",
+                                      fontWeight: "bold",
+                                    }}>
+                                    Chi tiết
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -349,12 +397,15 @@ export default function Order() {
                 <b>Tổng số sản phẩm:</b> {selectedOrder.orderDetails.length}
               </p>
               <p>
-                <b>Tình trạng:</b> {selectedOrder.status}
+                <b>Tình trạng:</b> {getStatusNotification(selectedOrder.status)}
               </p>
               <p>
                 <b>Mã vận đơn:</b> {selectedOrder.trackingCode}
               </p>
-
+              <p>
+                <b>Phương thức thanh toán:</b>{" "}
+                {getPayMentMethod(selectedOrder.status)}
+              </p>
               <div>
                 {selectedOrder.orderDetails.map((orderDetail) => (
                   <div
@@ -408,13 +459,13 @@ export default function Order() {
           )}
         </DialogContent>
         <DialogActions>
-          <CustomButton onClick={() => handleCancelOrder(selectedOrder)}>
+          {/* <CustomButton onClick={() => handleCancelOrder(selectedOrder)}>
             Hủy đơn
-          </CustomButton>
+          </CustomButton> */}
           <CustomButton onClick={handleClose}>Đóng</CustomButton>
         </DialogActions>
       </CustomDialog>
-      <CustomDialog
+      {/* <CustomDialog
         open={isCancelDialogOpen}
         onClose={handleCloseCancelDialog}
         fullWidth
@@ -433,7 +484,7 @@ export default function Order() {
             Có
           </CustomButton>
         </DialogActions>
-      </CustomDialog>
+      </CustomDialog> */}
     </div>
   );
 }

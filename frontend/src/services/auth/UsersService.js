@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import instance from "./customize-axios";
 import { routes } from "../../routes";
-import axios from 'axios';
+import axios from "axios";
 const loginAPI = (username, password) => {
   return instance.post("/api/auth/login", {
     username,
@@ -46,6 +46,13 @@ const changeMailAPI = (mail) => {
 
 const users = () => {
   return instance.get("/api/users");
+};
+
+// check comment
+const checkBoughtProduct = (username, productId) => {
+  return instance.get(
+    `/api/users/hasBoughtProduct?username=${username}&productId=${productId}`
+  );
 };
 
 // =========================================PRODUCT===========================================
@@ -265,8 +272,6 @@ const updateUserInfo = (
   });
 };
 
-
-
 const createOrder = (order) => {
   return instance.post(`/api/orders`, order);
 };
@@ -385,4 +390,5 @@ export {
   changeMailAPI,
   addReview,
   ordersAll,
+  checkBoughtProduct,
 };

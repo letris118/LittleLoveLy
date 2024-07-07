@@ -4,6 +4,7 @@ import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
+import Footer from "../components/Footer";
 
 let stompClient = null;
 

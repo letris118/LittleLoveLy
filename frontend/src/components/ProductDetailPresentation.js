@@ -6,6 +6,7 @@ import {
   products,
   getOrdersByUsername,
   addReview,
+  checkBoughtProduct,
 } from "../services/auth/UsersService";
 import { routes } from "../routes";
 import Rating from "@mui/material/Rating";
@@ -34,8 +35,6 @@ export default function ProductDetailPresentation() {
   const [selectedButton, setSelectedButton] = useState("newest");
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
-  const [boughtProducts, setBoughtProducts] = useState([]);
-  const [submittedReview, setSubmittedReview] = useState(false);
   const [activateSubmit, setActivateSubmit] = useState(false);
 
   const fetchProduct = useCallback(async () => {
@@ -62,37 +61,27 @@ export default function ProductDetailPresentation() {
   }, [productName]);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const username = localStorage.getItem("username");
-        if (username) {
-          let response = await getOrdersByUsername(username);
-
-          response.sort(
-            (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-          );
-
-          const newestOrder = response[0];
-          if (newestOrder) {
-            const boughtProductIds = newestOrder.orderDetails.map(
-              (detail) => detail.product.productId
+    const fetchCheckBought = async () => {
+      await fetchProduct();
+      if (productInfo?.productId) {
+        try {
+          const username = localStorage.getItem("username");
+          if (username) {
+            const hasBought = await checkBoughtProduct(
+              username,
+              productInfo.productId
             );
-            setBoughtProducts(boughtProductIds);
-            const hasNewOrder = boughtProductIds.includes(
-              productInfo?.productId
-            );
-            setActivateSubmit(hasNewOrder && !submittedReview);
+            console.log("hasBought", hasBought);
+            setActivateSubmit(hasBought);
           }
+        } catch (error) {
+          toast.error("Không thể lấy thông tin đơn hàng");
+          console.error("Error checking purchase status:", error);
         }
-      } catch (error) {
-        toast.error("Không thể lấy thông tin đơn hàng");
-        console.error("Error fetching orders:", error);
       }
     };
-
-    fetchOrders();
-    fetchProduct();
-  }, [fetchProduct, productInfo?.productId, submittedReview]);
+    fetchCheckBought();
+  }, [fetchProduct, productInfo?.productId]);
 
   const handleIncrease = useCallback(() => {
     setQuantity((prevQuantity) =>
@@ -257,7 +246,6 @@ export default function ProductDetailPresentation() {
       );
       setComment("");
       setRating(0);
-      setSubmittedReview(true);
       setActivateSubmit(false);
       toast.success("Đánh giá của bạn đã được gửi.", { autoClose: 2000 });
       console.log("Review submitted successfully");
@@ -641,7 +629,7 @@ export default function ProductDetailPresentation() {
                       backgroundColor: activateSubmit ? "#FF469E" : "gray",
                       color: "white",
                     }}
-                    disabled={submittedReview}>
+                    disabled={!activateSubmit}>
                     Gửi đánh giá
                   </Button>
                 </div>
