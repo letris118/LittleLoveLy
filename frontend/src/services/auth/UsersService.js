@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import instance from "./customize-axios";
 import { routes } from "../../routes";
+import axios from 'axios';
 const loginAPI = (username, password) => {
   return instance.post("/api/auth/login", {
     username,
@@ -263,6 +264,8 @@ const updateUserInfo = (
     street,
   });
 };
+
+
 
 const createOrder = (order) => {
   return instance.post(`/api/orders`, order);

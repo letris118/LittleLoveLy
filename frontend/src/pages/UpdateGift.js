@@ -135,7 +135,7 @@ export default function UpdateGift() {
                             {/* BUTTON */}
                             <div className="manage-form-btn">
                                 <button className="save-manage-btn save-manage-link" type="submit">
-                                    Lưu
+                                    Lưu quà tặng
                                 </button>
 
                                 <div className="cancel-manage-btn">

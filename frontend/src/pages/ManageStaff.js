@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AdminHeader from "../components/AdminHeader";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import "../assets/css/homePage.css";
+import "../assets/css/manage.css";
 import { getUsersByRoleAll } from "../services/auth/UsersService";
 import AdminSideBar from "../components/AdminSideBar";
 import StaffBackToTop from "../components/StaffBackToTop";
@@ -73,7 +73,7 @@ export default function ManageStaff() {
             </div>
 
             <div className="add-product-btn">
-              <Link to="#" className="add-product-link">
+              <Link to={routes.addStaff} className="add-product-link">
                 Thêm nhân viên mới
               </Link>
             </div>
@@ -104,7 +104,7 @@ export default function ManageStaff() {
                     <td className="regisDate-body">{staff.registeredDate}</td>
                     <td className="update-body">
                       <Link
-                        to="#"
+                        to={`${routes.updateStaff}/${staff.username}`}
                         className="update-link">
                         Chi tiết
                       </Link>

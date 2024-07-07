@@ -358,7 +358,7 @@ export default function AddProduct() {
                   className="save-manage-btn save-manage-link"
                   type="submit"
                 >
-                  Thêm
+                  Thêm sản phẩm
                 </button>
 
                 <div className="cancel-manage-btn">
