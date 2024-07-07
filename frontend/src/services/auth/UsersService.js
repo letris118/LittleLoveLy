@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import instance from "./customize-axios";
 import { routes } from "../../routes";
-import axios from 'axios';
 const loginAPI = (username, password) => {
   return instance.post("/api/auth/login", {
     username,
@@ -241,6 +240,13 @@ const evaluateCart = (cartItems, cusDistrictId, cusWardCode, voucherId) => {
   });
 };
 
+const previewOrder = (cusWardCode, cusPhone) => {
+  return instance.post(`/api/orders/preview`, {
+    cusWardCode,
+    cusPhone,
+  });
+};
+
 const getUserInfo = (username) => {
   return instance.get(`/api/users/${username}`);
 };
@@ -264,8 +270,6 @@ const updateUserInfo = (
     street,
   });
 };
-
-
 
 const createOrder = (order) => {
   return instance.post(`/api/orders`, order);
@@ -327,7 +331,7 @@ const ordersAll = () => {
   return instance.get("/api/orders");
 };
 
-const confirmOrder = (orderId)=>{
+const confirmOrder = (orderId) => {
   return instance.put(`/api/orders/confirm/${orderId}`);
 };
 
@@ -338,11 +342,18 @@ const addStaff = (username, name, mail, phone, password) => {
     mail,
     phone,
     password,
-    role: 'ROLE_STAFF' 
+    role: "ROLE_STAFF",
   });
 };
 
-const updateStaff = (username, name, mail, phone, currentPassword, newPassword) => {
+const updateStaff = (
+  username,
+  name,
+  mail,
+  phone,
+  currentPassword,
+  newPassword
+) => {
   return instance.put(`/users/${username}`, {
     username, // This will ensure the username is included in the request body
     name,
@@ -414,4 +425,5 @@ export {
   confirmOrder,
   addStaff,
   updateStaff,
+  previewOrder,
 };

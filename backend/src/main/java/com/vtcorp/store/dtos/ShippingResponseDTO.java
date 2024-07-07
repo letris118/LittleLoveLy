@@ -1,9 +1,9 @@
 package com.vtcorp.store.dtos;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,10 +11,15 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Data
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ShippingResponseDTO {
 
     private int code;
     private String message;
+
+    @JsonProperty("code_message")
+    private String codeMessage;
 
     @JsonProperty("data")
     private OrderData data;
@@ -41,6 +46,5 @@ public class ShippingResponseDTO {
             SimpleDateFormat desiredFormat = new SimpleDateFormat("dd/MM/yyyy, hh:mm a");
             return desiredFormat.format(this.expectedDeliveryTime);
         }
-
     }
 }
