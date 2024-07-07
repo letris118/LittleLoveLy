@@ -7,6 +7,7 @@ import {
   formatPrice,
   getOrderById,
   getOrdersByUsername,
+  orderReceived,
 } from "../services/auth/UsersService";
 import {
   Pagination,
@@ -31,6 +32,7 @@ export default function Order() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [orderToCancel, setOrderToCancel] = useState(null);
+  const [refresh, setRefresh] = useState(false);
   const itemsPerPage = 5;
 
   const CustomPagination = styled(Pagination)({
@@ -70,7 +72,7 @@ export default function Order() {
     if (username) {
       fetchOrders(username);
     }
-  }, []);
+  }, [refresh]);
 
   const formik = useFormik({
     initialValues: {
@@ -101,6 +103,7 @@ export default function Order() {
       }
     },
   });
+
   const paginatedOrders = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return ordersList.slice(startIndex, startIndex + itemsPerPage);
@@ -181,6 +184,20 @@ export default function Order() {
       return "Thanh toán khi nhận hàng";
     } else if (status.includes("ONLINE")) {
       return "Thanh toán bằng VnPay";
+    }
+  };
+
+  const checkConfirm = async (orderId) => {
+    try {
+      const response = await orderReceived(orderId);
+      if (response) {
+        toast.success("Đã xác nhận nhận hàng");
+        setRefresh(!refresh);
+      } else {
+        toast.error("Không thể xác nhận nhận hàng !");
+      }
+    } catch (error) {
+      console.error("Error fetching orders:", error);
     }
   };
 
@@ -310,6 +327,9 @@ export default function Order() {
                                   {order.status === "COD_CONFIRMED" ||
                                   order.status === "ONLINE_CONFIRMED" ? (
                                     <button
+                                      onClick={() =>
+                                        checkConfirm(order.orderId)
+                                      }
                                       style={{
                                         width: "150px",
                                         height: "40px",

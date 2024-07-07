@@ -109,15 +109,15 @@ export default function Chat() {
       <Header />
 
       {userData.connected ? (
-        <div className="manage-content">
+        <div className="content">
           <Sidebar
             role={localStorage.getItem("userRole")}
             customerName={localStorage.getItem("name")}
             customerPoint={localStorage.getItem("point")}
           />
 
-          <div className="staff-chat">
-            <div className="staff-chatbox" ref={chatBoxRef}>
+          <div className="cus-chat">
+            <div className="cus-chatbox" ref={chatBoxRef}>
               <ul className="chat-messages">
                 {messages.map((chat, index) => (
                   <li
@@ -130,7 +130,7 @@ export default function Chat() {
                         {displayName(chat.senderName)}
                       </div>
                     )}
-                    <div className="message-data">{chat.message}</div>
+                    <div className="cus-message-data">{chat.message}</div>
                     {chat.senderName === userData.username && (
                       <div className="avatar self">
                         {displayName(chat.senderName)}
@@ -140,7 +140,7 @@ export default function Chat() {
                 ))}
               </ul>
             </div>
-            <div className="staff-input">
+            <div className="cus-input">
               <input
                 type="text"
                 placeholder="Type your message"
@@ -159,6 +159,7 @@ export default function Chat() {
       ) : (
         <p>Connecting...</p>
       )}
+      <Footer />
     </div>
   );
 }

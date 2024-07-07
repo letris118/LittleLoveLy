@@ -336,6 +336,10 @@ const confirmOrder = (orderId) => {
   return instance.put(`/api/orders/confirm/${orderId}`);
 };
 
+const orderReceived = (orderId) => {
+  return instance.put(`/api/orders/received/${orderId}`);
+};
+
 export {
   loginAPI,
   users,
@@ -396,4 +400,5 @@ export {
   ordersAll,
   checkBoughtProduct,
   confirmOrder,
+  orderReceived,
 };

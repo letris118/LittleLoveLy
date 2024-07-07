@@ -7,7 +7,7 @@ export const routes = {
   products: "/products",
   brands: "/brands",
   articles: "/articles",
-  customer: "/customer",
+  // customer: "/customer",
 
   manageProduct: "/manageProduct",
   updateProduct: "/updateProduct",
@@ -47,5 +47,5 @@ export const routes = {
   profileCustomer: "/profile",
   staffProfile: "/account",
   updateStaff: "/updateStaff",
-  addStaff: "/addStaff"
+  addStaff: "/addStaff",
 };
