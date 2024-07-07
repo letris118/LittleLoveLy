@@ -327,6 +327,10 @@ const ordersAll = () => {
   return instance.get("/api/orders");
 };
 
+const confirmOrder = (orderId)=>{
+  return instance.put(`/api/orders/confirm/${orderId}`);
+};
+
 export {
   loginAPI,
   users,
@@ -385,4 +389,5 @@ export {
   changeMailAPI,
   addReview,
   ordersAll,
+  confirmOrder,
 };
