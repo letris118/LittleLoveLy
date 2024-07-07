@@ -4,6 +4,7 @@ import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
+import Footer from "../components/Footer";
 
 let stompClient = null;
 
@@ -108,15 +109,15 @@ export default function Chat() {
       <Header />
 
       {userData.connected ? (
-        <div className="manage-content">
+        <div className="content">
           <Sidebar
             role={localStorage.getItem("userRole")}
             customerName={localStorage.getItem("name")}
             customerPoint={localStorage.getItem("point")}
           />
 
-          <div className="staff-chat">
-            <div className="staff-chatbox" ref={chatBoxRef}>
+          <div className="cus-chat">
+            <div className="cus-chatbox" ref={chatBoxRef}>
               <ul className="chat-messages">
                 {messages.map((chat, index) => (
                   <li
@@ -129,7 +130,7 @@ export default function Chat() {
                         {displayName(chat.senderName)}
                       </div>
                     )}
-                    <div className="message-data">{chat.message}</div>
+                    <div className="cus-message-data">{chat.message}</div>
                     {chat.senderName === userData.username && (
                       <div className="avatar self">
                         {displayName(chat.senderName)}
@@ -139,10 +140,10 @@ export default function Chat() {
                 ))}
               </ul>
             </div>
-            <div className="staff-input">
+            <div className="cus-input">
               <input
                 type="text"
-                placeholder="Type your message"
+                placeholder="Nhập tin nhắn của bạn..."
                 value={userData.message}
                 onChange={handleMessage}
                 onKeyDown={(event) => {
@@ -151,13 +152,14 @@ export default function Chat() {
                   }
                 }}
               />
-              <button onClick={sendMessage}>Send</button>
+              <button onClick={sendMessage}>Gửi</button>
             </div>
           </div>
         </div>
       ) : (
         <p>Connecting...</p>
       )}
+      <Footer />
     </div>
   );
 }

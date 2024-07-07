@@ -2,12 +2,12 @@ export const routes = {
   homePage: "/",
   login: "/login",
   register: "/register",
-  forgotPassword: "/forgotPassword",
-  resetPassword: "/resetPassword",
+  forgotPassword: "/forgot-password",
+  resetPassword: "/reset-password",
   products: "/products",
   brands: "/brands",
   articles: "/articles",
-  customer: "/customer",
+  // customer: "/customer",
 
   manageProduct: "/manageProduct",
   updateProduct: "/updateProduct",
@@ -47,5 +47,5 @@ export const routes = {
   profileCustomer: "/profile",
   staffProfile: "/account",
   updateStaff: "/updateStaff",
-  addStaff: "/addStaff"
+  addStaff: "/addStaff",
 };
