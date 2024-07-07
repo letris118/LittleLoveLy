@@ -177,6 +177,16 @@ public class OrderController {
         }
     }
 
+    @Operation(summary = "Preview if order is valid to create shipping order")
+    @GetMapping("/preview")
+    public ResponseEntity<?> reviewOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
+        try {
+            return ResponseEntity.ok(orderService.previewOrder(orderRequestDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     // test refund
 //    @GetMapping("/test/{orderId}")
 //    public String test(@PathVariable String orderId, HttpServletRequest request){

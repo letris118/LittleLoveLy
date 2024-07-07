@@ -142,6 +142,38 @@ public class GHNService {
         throw new IllegalArgumentException("Invalid wardCode of districtId");
     }
 
+    public ShippingResponseDTO previewShipping(String wardCode, String phoneNumber){
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Token", apiStagingToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        List<Map<String, Object>> items = new ArrayList<>();
+        Map<String, Object> item = new HashMap<>();
+        item.put("name", "Sản phẩm mẫu");
+        item.put("quantity", 1);
+        items.add(item);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("shop_id", shopId);
+        params.put("service_type_id", serviceTypeId);
+        params.put("payment_type_id", 1);
+        params.put("required_note", "CHOXEMHANGKHONGTHU");
+        params.put("to_name", "Nguyễn Văn A");
+        params.put("to_phone", phoneNumber);
+        params.put("to_address", "Số 1, Đường 1, Phường 1");
+        params.put("to_ward_code", wardCode);
+        params.put("from_ward_name", fromWardName);
+        params.put("from_district_name", fromDistrictName);
+        params.put("from_province_name", fromProvinceName);
+        params.put("weight", weight);
+        params.put("items", items);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(params, headers);
+        ResponseEntity<ShippingResponseDTO> response = restTemplate.postForEntity(createOrderUrl, entity, ShippingResponseDTO.class);
+        return response.getBody();
+    }
+
     public ShippingResponseDTO createShipping(Order order, int codAmount, boolean isShopPayShip) {
         // Choose who pay shipping fee (1: Shop/Seller; 2: Buyer/Consignee)
         int paymentTypeId = isShopPayShip ? 1 : 2;
@@ -159,8 +191,7 @@ public class GHNService {
         params.put("payment_type_id", paymentTypeId);
         params.put("required_note", "CHOXEMHANGKHONGTHU");
         params.put("to_name", order.getCusName());
-        //params.put("to_phone", order.getCusPhone());
-        params.put("to_phone", "0598482100");
+        params.put("to_phone", order.getCusPhone());
         params.put("to_address", order.getCusStreet());
         params.put("to_ward_code", order.getCusWardCode().toString());
         params.put("from_ward_name", fromWardName);
