@@ -3,7 +3,12 @@ import Header from "../components/Header";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import Footer from "../components/Footer";
-import { articles, brands, products } from "../services/auth/UsersService";
+import {
+  articles,
+  brands,
+  products,
+  getCart,
+} from "../services/auth/UsersService";
 import BrandPresentation from "../components/BrandPresentation";
 import "../assets/css/homePage.css";
 import ProductPresentation from "../components/ProductPresentation";
@@ -61,34 +66,33 @@ export default function HomePage() {
       }
     };
 
-    // chỗ này để vô trang tài khoản
+    const fetchCartData = async () => {
+      try {
+        const resCart = await getCart();
+        const cart = [];
+        resCart.orderDetails?.forEach((item) =>
+          cart.push({ ...item.product, quantity: item.quantity })
+        );
+        localStorage.removeItem("cart");
+        localStorage.setItem("cart", JSON.stringify(cart));
 
-    // if (localStorage.getItem("token")) {
-    //   const fetchCustomerInfo = async () => {
-    //     try {
-    //       const token = localStorage.getItem("token");
-    //       const decoded = jwtDecode(token);
-    //       let response = await users();
-    //       if (response) {
-    //         const userInfo = response.find(
-    //           (user) => user.username === decoded.sub
-    //         );
-    //         setCustomerInfo(userInfo);
-    //       } else {
-    //         setCustomerInfo([]);
-    //       }
-    //     } catch (error) {
-    //       console.error("Error fetching customer info:", error);
-    //       toast.error("Không thể tải thông tin khách hang");
-    //     }
-    //   };
-
-    //   fetchCustomerInfo();
-    // }
+        const gifts = [];
+        resCart.giftIncludings?.forEach((item) =>
+          gifts.push({ ...item.gift, quantity: item.quantity })
+        );
+        localStorage.removeItem("gifts");
+        localStorage.setItem("gifts", JSON.stringify(gifts));
+      } catch (error) {
+        console.error("Error fetching cart:", error);
+      }
+    };
 
     fetchBrands();
     fetchProducts();
     fetchArticles();
+    if (localStorage.getItem("userRole") === "ROLE_CUSTOMER") {
+      fetchCartData();
+    }
   }, []);
 
   const handleLogoutSuccess = () => {
