@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AdminHeader from "../components/AdminHeader";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "../assets/css/manage.css";
 import { getUsersByRoleAll } from "../services/auth/UsersService";
 import AdminSideBar from "../components/AdminSideBar";
@@ -23,15 +23,9 @@ export default function ManageStaff() {
     };
     checkAuthentication();
 
-    if (location.state && location.state.success) {
-      toast.success(location.state.success);
-      // Clear the state to prevent the message from showing again on page reload
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-
     const fetchStaffs = async () => {
       try {
-        let response = await getUsersByRoleAll("ROLE_STAFF"); // Pass the role parameter here
+        let response = await getUsersByRoleAll("ROLE_STAFF"); 
         if (response) {
           setStaffList(response);
         } else {

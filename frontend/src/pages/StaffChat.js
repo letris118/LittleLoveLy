@@ -12,7 +12,7 @@ export default function StaffChat() {
   const navigate = useNavigate();
   const chatBoxRef = useRef(null);
   const [conversations, setConversations] = useState(new Map());
-  const [tab, setTab] = useState(""); // Start with an empty string for "standing" state
+  const [tab, setTab] = useState("");
   const [userData, setUserData] = useState({
     username: localStorage.getItem('username'),
     receivername: '',

@@ -342,15 +342,8 @@ const addStaff = (username, name, mail, phone, password) => {
   });
 };
 
-const updateStaff = (username, name, mail, phone, currentPassword, newPassword) => {
-  return instance.put(`/users/${username}`, {
-    username, // This will ensure the username is included in the request body
-    name,
-    mail,
-    phone,
-    currentPassword,
-    newPassword,
-  });
+const updateStaff = (username) => {
+  return instance.put(`/api/users/${username}`);
 };
 
 export {

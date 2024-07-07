@@ -3,11 +3,10 @@ import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
 import { getArticleById, updateArticle } from "../services/auth/UsersService";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import { useNavigate, useParams } from "react-router-dom";
-import { routes } from "../routes";
 import StaffBackToTop from "../components/StaffBackToTop";
 Quill.register("modules/imageResize", ImageResize);
 window.Quill = Quill;
@@ -69,7 +68,8 @@ export default function UpdateArticle() {
 
       const response = await updateArticle(id, formData);
       if (response) {
-        navigate(routes.manageArticle, { state: { success: 'Cập nhập bài viết thành công!' } });
+        toast.success("Cập nhập bài viết thành công!");
+        navigate('/manageArticle');
 
       } else {
         toast.error("Không thể lưu bài viết");

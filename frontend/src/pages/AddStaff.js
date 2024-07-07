@@ -45,6 +45,7 @@ export default function AddStaff() {
       console.error("Error adding staff:", error);
     }
   };
+  
 
   return (
     <div>

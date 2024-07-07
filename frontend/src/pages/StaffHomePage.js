@@ -3,7 +3,7 @@ import StaffHeader from "../components/StaffHeader";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import Footer from "../components/Footer";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import { articles, brands, products } from "../services/auth/UsersService";
 import BrandPresentation from "../components/BrandPresentation";
 import "../assets/css/homePage.css";
@@ -70,31 +70,6 @@ export default function StaffHomePage() {
         setBrandList([]);
       }
     };
-
-    // chỗ này để vô trang tài khoản
-
-    // if (localStorage.getItem("token")) {
-    //   const fetchCustomerInfo = async () => {
-    //     try {
-    //       const token = localStorage.getItem("token");
-    //       const decoded = jwtDecode(token);
-    //       let response = await users();
-    //       if (response) {
-    //         const userInfo = response.find(
-    //           (user) => user.username === decoded.sub
-    //         );
-    //         setCustomerInfo(userInfo);
-    //       } else {
-    //         setCustomerInfo([]);
-    //       }
-    //     } catch (error) {
-    //       console.error("Error fetching customer info:", error);
-    //       toast.error("Không thể tải thông tin khách hang");
-    //     }
-    //   };
-
-    //   fetchCustomerInfo();
-    // }
 
     fetchBrands();
     fetchProducts();

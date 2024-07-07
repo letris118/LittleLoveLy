@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AdminHeader from "../components/AdminHeader";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import { routes } from "../routes";
+import {  toast } from "react-toastify";
 import "../assets/css/homePage.css";
 import {
   getUsersByRoleAll,
@@ -44,15 +43,9 @@ export default function ManageMember() {
     };
     checkAuthentication();
 
-    if (location.state && location.state.success) {
-      toast.success(location.state.success);
-      // Clear the state to prevent the message from showing again on page reload
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-
     const fetchCustomers = async () => {
       try {
-        let response = await getUsersByRoleAll("ROLE_CUSTOMER"); // Pass the role parameter here
+        let response = await getUsersByRoleAll("ROLE_CUSTOMER"); 
         if (response) {
           setCustomerList(response);
           setFilteredCustomerList(response);
