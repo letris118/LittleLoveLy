@@ -69,7 +69,7 @@ export default function UpdateArticle() {
       const response = await updateArticle(id, formData);
       if (response) {
         toast.success("Cập nhập bài viết thành công!");
-        navigate('/manageArticle');
+        navigate('/manage-article');
 
       } else {
         toast.error("Không thể lưu bài viết");

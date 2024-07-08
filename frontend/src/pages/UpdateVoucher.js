@@ -87,7 +87,7 @@ export default function UpdateVoucher() {
 
             await updateVoucher(voucherRequestDTO.get('voucherId'), voucherRequestDTO);
             toast.success("Cập nhập voucher thành công!");
-        navigate('/manageVoucher');
+        navigate('/manage-voucher');
 
         } catch (error) {
             console.error("Error updating voucher:", error);

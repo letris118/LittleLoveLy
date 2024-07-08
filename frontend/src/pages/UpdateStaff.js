@@ -11,14 +11,7 @@ export default function UpdateStaff() {
   const { username } = useParams();
   const navigate = useNavigate();
 
-  const [staff, setStaff] = useState({
-    username: "",
-    name: "",
-    mail: "",
-    phone: "",
-    password: "",
-    confirmPassword: ""
-  });
+  const [staff, setStaff] = useState({});
 
   useEffect(() => {
     const checkAuthentication = () => {
@@ -48,28 +41,28 @@ export default function UpdateStaff() {
     fetchStaff();
   }, [username, navigate]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setStaff((prevStaff) => ({
-      ...prevStaff,
-      [name]: value
-    }));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const updatedStaff = {
+      name: formData.get('name'),
+      mail: formData.get('mail'),
+      phone: formData.get('phone'),
+    };
+
+    try {
+      await updateStaff(updatedStaff.username, updatedStaff);
+      toast.success("Cập nhật thông tin nhân viên thành công!");
+      navigate('/manage-staff');
+    } catch (error) {
+      console.error("Error updating staff:", error);
+      toast.error(`Lỗi khi cập nhật thông tin nhân viên: ${error.message}`);
+    }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (staff.password !== staff.confirmPassword) {
-      toast.error("Xác nhận mật khẩu thất bại!");
-      return;
-    }
-    try {
-      await updateStaff(staff);
-      toast.success("Cập nhật thông tin nhân viên thành công!");
-      navigate('/manageStaff');
-    } catch (error) {
-      toast.error("Lỗi khi cập nhật thông tin nhân viên.");
-      console.error("Error updating staff:", error);
-    }
+  const handleReload = (e) => {
+    e.preventDefault();
+    window.location.reload();
   };
 
   return (
@@ -101,8 +94,7 @@ export default function UpdateStaff() {
                   <input
                     type="text"
                     name="name"
-                    value={staff.name}
-                    onChange={handleChange}
+                    defaultValue={staff.name}
                     required
                   />
                 </div>
@@ -115,8 +107,7 @@ export default function UpdateStaff() {
                   <input
                     type="email"
                     name="mail"
-                    value={staff.mail}
-                    onChange={handleChange}
+                    defaultValue={staff.mail}
                     required
                   />
                 </div>
@@ -129,36 +120,7 @@ export default function UpdateStaff() {
                   <input
                     type="tel"
                     name="phone"
-                    value={staff.phone}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* PASSWORD */}
-              <div className="manage-form-group">
-                <label>Mật khẩu</label>
-                <div className="manage-form-control">
-                  <input
-                    type="password"
-                    name="password"
-                    value={staff.password}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* CONFIRM PASSWORD */}
-              <div className="manage-form-group">
-                <label>Xác nhận mật khẩu</label>
-                <div className="manage-form-control">
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={staff.confirmPassword}
-                    onChange={handleChange}
+                    defaultValue={staff.phone}
                     required
                   />
                 </div>
@@ -168,15 +130,11 @@ export default function UpdateStaff() {
             {/* BUTTON */}
             <div className="manage-form-btn">
               <button className="save-manage-btn save-manage-link" type="submit">
-                Cập nhật thông tin nhân viên
+                Lưu thông tin
               </button>
               <div className="cancel-manage-btn">
-                <button
-                  type="button"
-                  className="cancel-manage-link"
-                  
-                >
-                  Hủy bỏ
+                <button onClick={handleReload} className="cancel-manage-link">
+                  Đặt lại
                 </button>
               </div>
             </div>

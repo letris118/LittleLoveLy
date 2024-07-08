@@ -40,7 +40,7 @@ export default function AddVoucher() {
         try {
             await addVoucher(voucherRequestDTO);
             toast.success("Thêm voucher thành công!");
-      navigate('/manageVoucher');
+      navigate('/manage-voucher');
         } catch (error) {
             toast.error(`Error adding voucher: ${error.message}`);
         }

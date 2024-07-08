@@ -364,9 +364,17 @@ const addStaff = (username, name, mail, phone, password) => {
   });
 };
 
-
-const updateStaff = (username) => {
-  return instance.put(`/api/users/${username}`);
+const updateStaff = (
+  username,
+  name,
+  mail,
+  phone,
+) => {
+  return instance.put(`/api/users/${username}`, {
+    name,
+    mail,
+    phone,
+  });
 };
 
 export {

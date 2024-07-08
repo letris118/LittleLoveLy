@@ -134,21 +134,21 @@ export default function ManageVoucher() {
               <tr>
                 <th className="index-head" style={{ width: '5%' }}>STT</th>
                 <th className="name-head" style={{ width: '15%' }}>Tiêu đề</th>
-                <th className="limit-head" style={{ width: '5%' }} onClick={() => handleSort('limit')}>
-                  Limit
+                <th className="limit-head" style={{ width: '12%' }} onClick={() => handleSort('limit')}>
+                  Số lượng
                   {sortBy === 'limit' && (
                     <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
                   )}
                 </th>
                 <th className="type-head" style={{ width: '9%' }}>Phân loại</th>
                 <th className="description-head" style={{ width: '15%' }}>Miêu tả</th>
-                <th className="startDate-head" style={{ width: '15%' }} onClick={() => handleSort('startDate')}>
+                <th className="startDate-head" style={{ width: '12%' }} onClick={() => handleSort('startDate')}>
                   Ngày bắt đầu
                   {sortBy === 'startDate' && (
                     <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
                   )}
                 </th>
-                <th className="endDate-head" style={{ width: '15%' }} onClick={() => handleSort('endDate')}>
+                <th className="endDate-head" style={{ width: '12%' }} onClick={() => handleSort('endDate')}>
                   Ngày hết hạn
                   {sortBy === 'endDate' && (
                     <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
@@ -160,7 +160,7 @@ export default function ManageVoucher() {
                     <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
                   )}
                 </th>
-                <th className="update-head" style={{ width: '9%' }}>Chỉnh sửa</th>
+                <th className="update-head" style={{ width: '10%' }}>Chỉnh sửa</th>
               </tr>
             </thead>
             <tbody>

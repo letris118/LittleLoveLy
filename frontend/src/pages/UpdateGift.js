@@ -57,7 +57,7 @@ export default function UpdateGift() {
             }
             await updateGift(giftRequestDTO.get('giftId'), giftRequestDTO)
             toast.success("Thêm quà tặng thành công!");
-        navigate('/manageGift');
+        navigate('/manage-gift');
         } catch (error) {
             toast.error(`Error adding gift: ${error.message}`)
         }

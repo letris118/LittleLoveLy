@@ -210,7 +210,7 @@ export default function UpdateProduct() {
         productRequestDTO
       );
       toast.success("Cập nhập sản phẩm thành công!");
-        navigate('/manageProduct');
+        navigate('/manage-product');
     } catch (error) {
       console.error(error);
     }

@@ -46,7 +46,7 @@ export default function AddArticle() {
       const response = await addArticle(formData);
       if (response) {
         toast.success("Thêm bài viết thành công!");
-        navigate('/manageArticle');
+        navigate('/manage-article');
       } else {
         toast.error("Không thể thêm bài viết");
       }
