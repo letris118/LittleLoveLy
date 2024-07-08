@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import StaffHeader from "../components/StaffHeader";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import instance from "../services/auth/customize-axios";
 import {
   formatPrice,
@@ -29,8 +29,9 @@ export default function ManageOrder() {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orderToConfirm, setOrderToConfirm] = useState(null);
-  const [isConfirmOrderDialogOpen, setIsConfirmOrderDialogOpen] = useState(false);
-  const [refresh, setRefresh] =useState(false);
+  const [isConfirmOrderDialogOpen, setIsConfirmOrderDialogOpen] =
+    useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,7 +50,7 @@ export default function ManageOrder() {
         let response = await ordersAll();
         if (response) {
           setOrderList(response);
-          setFilteredOrders(response); 
+          setFilteredOrders(response);
         } else {
           setOrderList([]);
           setFilteredOrders([]);
@@ -65,13 +66,11 @@ export default function ManageOrder() {
   }, [refresh]);
 
   useEffect(() => {
- 
     if (searchQuery.trim() === "") {
-      setFilteredOrders(orderList); 
+      setFilteredOrders(orderList);
     } else {
-      const filtered = orderList.filter(
-        (order) =>
-          order.orderId.toLowerCase().includes(searchQuery.toLowerCase())
+      const filtered = orderList.filter((order) =>
+        order.orderId.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredOrders(filtered);
     }
@@ -80,7 +79,6 @@ export default function ManageOrder() {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-
 
   const CustomDialog = styled(Dialog)({
     "& .MuiDialog-paper": {
@@ -103,7 +101,7 @@ export default function ManageOrder() {
     backgroundColor: "#c0bfbf",
     color: "#2d3436",
     "&:hover": {
-      background:"#979797",
+      background: "#979797",
     },
     marginBottom: "20px",
     marginRight: "5px",
@@ -125,7 +123,6 @@ export default function ManageOrder() {
     setSelectedOrder(null);
   };
 
-
   const handleConfirmOrder = (order) => {
     setOrderToConfirm(order);
     setIsConfirmOrderDialogOpen(true);
@@ -135,14 +132,17 @@ export default function ManageOrder() {
     try {
       const response = await confirmOrder(orderToConfirm.orderId);
       if (response) {
-        setRefresh (!refresh);
-        toast.success(`Đơn hàng ${orderToConfirm.orderId} đã được xác nhận`);      
+        setRefresh(!refresh);
+        toast.success(`Đơn hàng ${orderToConfirm.orderId} đã được xác nhận`);
       } else {
         toast.error(`Không thể xác nhận đơn hàng ${orderToConfirm.orderId}`);
       }
     } catch (error) {
-      toast.error(`Không thể xác nhận đơn hàng ${orderToConfirm.orderId}: ${error.message || error}`);
-      
+      toast.error(
+        `Không thể xác nhận đơn hàng ${orderToConfirm.orderId}: ${
+          error.message || error
+        }`
+      );
     }
     setIsConfirmOrderDialogOpen(false);
     setSelectedOrder(null);
@@ -233,7 +233,8 @@ export default function ManageOrder() {
           open={!!selectedOrder}
           onClose={handleClose}
           fullWidth
-          maxWidth="sm">
+          maxWidth="sm"
+        >
           <CustomDialogTitle>Chi tiết đơn hàng</CustomDialogTitle>
           <DialogContent>
             {selectedOrder && (
@@ -265,7 +266,8 @@ export default function ManageOrder() {
                   {selectedOrder.orderDetails.map((orderDetail) => (
                     <div
                       style={{ display: "flex", margin: "20px 0" }}
-                      key={orderDetail.product.productId}>
+                      key={orderDetail.product.productId}
+                    >
                       <div className="popup-detail-left">
                         <img
                           src={`${instance.defaults.baseURL}/images/products/${orderDetail.product.productImages[0].imagePath}`}
@@ -276,7 +278,8 @@ export default function ManageOrder() {
                       <div className="popup-detail-right">
                         <Link
                           to={`${routes.products}/${orderDetail.product.name}`}
-                          style={{ textDecoration: "none" }}>
+                          style={{ textDecoration: "none" }}
+                        >
                           <div style={{ fontWeight: "bold", color: "black" }}>
                             {orderDetail.product.name}
                           </div>
@@ -296,7 +299,13 @@ export default function ManageOrder() {
                   {formatPrice(selectedOrder.shippingFee)}đ
                 </p>
                 <p style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>Giảm giá:</span> - {formatPrice(selectedOrder.voucher)}đ
+                  <span>Giảm giá:</span> -{" "}
+                  {formatPrice(
+                    selectedOrder.basePrice +
+                      selectedOrder.shippingFee -
+                      selectedOrder.postDiscountPrice
+                  )}
+                  đ
                 </p>
                 <p
                   style={{
@@ -304,7 +313,8 @@ export default function ManageOrder() {
                     justifyContent: "space-between",
                     borderTop: "1px solid #9fa0a0b0",
                     padding: "10px 0",
-                  }}>
+                  }}
+                >
                   <span>
                     <b>Thành tiền:</b>{" "}
                   </span>
@@ -321,26 +331,26 @@ export default function ManageOrder() {
           </DialogActions>
         </CustomDialog>
         <CustomDialog
-        open={isConfirmOrderDialogOpen}
-        onClose={handleCloseConfirmDialog}
-        fullWidth
-        maxWidth="xs">
-        <CustomDialogTitle>Xác nhận đơn hàng</CustomDialogTitle>
-        <DialogContent>
-          <span style={{ fontSize: "18px" }}>
-            Bạn có chắc chắn muốn xác nhận đơn hàng?
-          </span>
-        </DialogContent>
-        <DialogActions>
-         
-          <CustomButton onClick={handleConfirmed} color="secondary">
-            Có
-          </CustomButton>
-          <CustomButton onClick={handleCloseConfirmDialog} color="primary">
-            Không
-          </CustomButton>
-        </DialogActions>
-      </CustomDialog>
+          open={isConfirmOrderDialogOpen}
+          onClose={handleCloseConfirmDialog}
+          fullWidth
+          maxWidth="xs"
+        >
+          <CustomDialogTitle>Xác nhận đơn hàng</CustomDialogTitle>
+          <DialogContent>
+            <span style={{ fontSize: "18px" }}>
+              Bạn có chắc chắn muốn xác nhận đơn hàng?
+            </span>
+          </DialogContent>
+          <DialogActions>
+            <CustomButton onClick={handleConfirmed} color="secondary">
+              Có
+            </CustomButton>
+            <CustomButton onClick={handleCloseConfirmDialog} color="primary">
+              Không
+            </CustomButton>
+          </DialogActions>
+        </CustomDialog>
         <StaffBackToTop />
       </div>
     </div>

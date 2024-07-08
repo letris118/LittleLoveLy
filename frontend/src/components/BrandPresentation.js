@@ -41,67 +41,61 @@ export default function BrandPresentation({ brands }) {
     ],
   };
 
-return (
-  <>
- 
-  <div className="slider-container">
-    <Slider {...settings}>
-      {brands.map((brand) => (
-        <div className="brand-card" id={brand.brandId}>
-          <Link to={`${routes.brands}/${brand.name}`}>
-            <div className="brand-card-img">
-              <img
-                src={`${instance.defaults.baseURL}/images/brands/${brand.logo}`}
-                alt={brand.name}
-              />
+  return (
+    <>
+      <div className="slider-container">
+        <Slider {...settings}>
+          {brands.map((brand) => (
+            <div className="brand-card" id={brand.brandId} key={brand.brandId}>
+              <Link to={`${routes.brands}/${brand.name}`}>
+                <div className="brand-card-img">
+                  <img
+                    src={`${instance.defaults.baseURL}/images/brands/${brand.logo}`}
+                    alt={brand.name}
+                  />
+                </div>
+              </Link>
+              <div className="brand-card-btn">
+                <Link
+                  to={`${routes.brands}/${brand.name}`}
+                  className="brand-btn"
+                  style={{ textDecoration: "none" }}
+                >
+                  {brand.name}
+                </Link>
+              </div>
             </div>
-          </Link>
-          <div className="brand-card-btn">
-            <Link
-              to={`${routes.brands}/${brand.name}`}
-              className="brand-btn"
-              style={{ textDecoration: "none" }}>
-              {brand.name}
-            </Link>
-          </div>
-        </div>
-      ))}
-    </Slider>
-  </div>
-  
+          ))}
+        </Slider>
+      </div>
 
-{(window.location.pathname === routes.staffHomePage) &&(
-  <div className="manage-slider-container">
-    <Slider {...settings}>
-      {brands.map((brand) => (
-        <div className="manage-brand-card" id={brand.brandId}>
-          <Link to={`${routes.staffBrandList}/${brand.name}`}>
-            <div className="manage-brand-card-img">
-              <img
-                src={`${instance.defaults.baseURL}/images/brands/${brand.logo}`}
-                alt={brand.name}
-              />
-            </div>
-          </Link>
-          <div className="manage-brand-card-btn">
-            <Link
-              to={`${routes.staffBrandList}/${brand.name}`}
-              className="manage-brand-btn"
-              style={{ textDecoration: "none" }}>
-              {brand.name}
-            </Link>
-          </div>
+      {window.location.pathname === routes.staffHomePage && (
+        <div className="manage-slider-container">
+          <Slider {...settings}>
+            {brands.map((brand) => (
+              <div className="manage-brand-card" id={brand.brandId}>
+                <Link to={`${routes.staffBrandList}/${brand.name}`}>
+                  <div className="manage-brand-card-img">
+                    <img
+                      src={`${instance.defaults.baseURL}/images/brands/${brand.logo}`}
+                      alt={brand.name}
+                    />
+                  </div>
+                </Link>
+                <div className="manage-brand-card-btn">
+                  <Link
+                    to={`${routes.staffBrandList}/${brand.name}`}
+                    className="manage-brand-btn"
+                    style={{ textDecoration: "none" }}
+                  >
+                    {brand.name}
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </Slider>
         </div>
-      ))}
-    </Slider>
-  </div>
-  )}
-
-  </>
-);
+      )}
+    </>
+  );
 }
-
-
-
-
-
