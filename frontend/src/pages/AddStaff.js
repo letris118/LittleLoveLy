@@ -39,7 +39,7 @@ export default function AddStaff() {
     try {
       await addStaff(username, name, mail, phone, password);
       toast.success("Thêm nhân viên thành công!");
-      navigate('/manageStaff'); 
+      navigate('/manage-staff'); 
     } catch (error) {
       toast.error("Tài khoản đã tồn tại!");
       console.error("Error adding staff:", error);
