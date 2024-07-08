@@ -371,6 +371,7 @@ const updateStaff = (
   phone,
 ) => {
   return instance.put(`/api/users/${username}`, {
+    username,
     name,
     mail,
     phone,

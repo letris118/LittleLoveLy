@@ -8,8 +8,8 @@ import "../assets/css/manage.css";
 import StaffBackToTop from "../components/StaffBackToTop";
 
 export default function UpdateStaff() {
-  const { username } = useParams();
   const navigate = useNavigate();
+  const { username } = useParams();  // Use useParams to get the username from the URL
 
   const [staff, setStaff] = useState({});
 
@@ -21,7 +21,9 @@ export default function UpdateStaff() {
       }
     };
     checkAuthentication();
+  }, [navigate]);
 
+  useEffect(() => {
     const fetchStaff = async () => {
       try {
         const response = await getUserInfo(username);
@@ -29,22 +31,21 @@ export default function UpdateStaff() {
           setStaff(response);
         } else {
           toast.error("Không tìm thấy thông tin nhân viên.");
-          navigate('/manageStaff');
         }
       } catch (error) {
         console.error("Error fetching staff:", error);
         toast.error("Không thể tải thông tin nhân viên.");
-        navigate('/manageStaff');
       }
     };
 
     fetchStaff();
-  }, [username, navigate]);
+  }, [username]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const updatedStaff = {
+      username: formData.get('username'),
       name: formData.get('name'),
       mail: formData.get('mail'),
       phone: formData.get('phone'),
@@ -52,11 +53,11 @@ export default function UpdateStaff() {
 
     try {
       await updateStaff(updatedStaff.username, updatedStaff);
-      toast.success("Cập nhật thông tin nhân viên thành công!");
+      toast.success("Cập nhật thông tin thành công!");
       navigate('/manage-staff');
     } catch (error) {
       console.error("Error updating staff:", error);
-      toast.error(`Lỗi khi cập nhật thông tin nhân viên: ${error.message}`);
+      toast.error(`Lỗi khi cập nhật thông tin: ${error.message}`);
     }
   };
 
@@ -81,7 +82,7 @@ export default function UpdateStaff() {
                   <input
                     type="text"
                     name="username"
-                    value={staff.username}
+                    value={staff.username || ""}
                     disabled
                   />
                 </div>
@@ -94,7 +95,7 @@ export default function UpdateStaff() {
                   <input
                     type="text"
                     name="name"
-                    defaultValue={staff.name}
+                    defaultValue={staff.name || ""}
                     required
                   />
                 </div>
@@ -107,7 +108,7 @@ export default function UpdateStaff() {
                   <input
                     type="email"
                     name="mail"
-                    defaultValue={staff.mail}
+                    defaultValue={staff.mail || ""}
                     required
                   />
                 </div>
@@ -120,7 +121,7 @@ export default function UpdateStaff() {
                   <input
                     type="tel"
                     name="phone"
-                    defaultValue={staff.phone}
+                    defaultValue={staff.phone || ""}
                     required
                   />
                 </div>
