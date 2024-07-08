@@ -527,9 +527,10 @@ public class OrderService {
         }
     }
 
-    public boolean hasUserBoughtProduct(String username, Long productId) {
+    public Map<String, Boolean> hasUserBoughtProduct(String username, Long productId) {
         List<String> statuses = List.of(CODPaymentStatus.COD_RECEIVED, OnlinePaymentStatus.ONLINE_RECEIVED);
-        return orderDetailRepository.existsByUserAndProductAndStatus(username, productId, statuses);
+        boolean hasBought = orderDetailRepository.existsByUserAndProductAndStatus(username, productId, statuses);
+        return Map.of("hasBought", hasBought);
     }
 
     public ShippingResponseDTO previewOrder(OrderRequestDTO orderRequestDTO) {

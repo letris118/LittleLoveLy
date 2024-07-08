@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { routes } from "../routes";
 import Footer from "../components/Footer";
 import {
@@ -14,6 +14,7 @@ import "../assets/css/homePage.css";
 import ProductPresentation from "../components/ProductPresentation";
 import Sidebar from "../components/SideBar";
 import ArticlePresentation from "../components/ArticlePresentation";
+import { toast } from "react-toastify";
 
 export default function HomePage() {
   const [productList, setProductList] = useState([]);
@@ -22,8 +23,17 @@ export default function HomePage() {
   const [loggedIn, setLoggedIn] = useState(
     localStorage.getItem("token") ? true : false
   );
+  const location = useLocation();
 
   useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const status = queryParams.get("status");
+    if (status === "payment-fail") {
+      toast.error("Thanh toán thất bại");
+    } else if (status === "payment-success") {
+      toast.success("Thanh toán thành công");
+    }
+
     const fetchProducts = async () => {
       try {
         let response = await products();
