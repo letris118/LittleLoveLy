@@ -47,6 +47,13 @@ const users = () => {
   return instance.get("/api/users");
 };
 
+// check comment
+const checkBoughtProduct = (username, productId) => {
+  return instance.get(
+    `/api/users/hasBoughtProduct?username=${username}&productId=${productId}`
+  );
+};
+
 // =========================================PRODUCT===========================================
 //get active products
 const products = () => {
@@ -240,6 +247,13 @@ const evaluateCart = (cartItems, cusDistrictId, cusWardCode, voucherId) => {
   });
 };
 
+const previewOrder = (cusWardCode, cusPhone) => {
+  return instance.post(`/api/orders/preview`, {
+    cusWardCode,
+    cusPhone,
+  });
+};
+
 const getUserInfo = (username) => {
   return instance.get(`/api/users/${username}`);
 };
@@ -332,6 +346,29 @@ const increaseSiteVisits = () => {
   return instance.patch("api/dashboard/site-visits")
 }
 
+const confirmOrder = (orderId) => {
+  return instance.put(`/api/orders/confirm/${orderId}`);
+};
+
+const orderReceived = (orderId) => {
+  return instance.put(`/api/orders/received/${orderId}`);
+};
+const addStaff = (username, name, mail, phone, password) => {
+  return instance.post("/api/users", {
+    username,
+    name,
+    mail,
+    phone,
+    password,
+    role: "ROLE_STAFF",
+  });
+};
+
+
+const updateStaff = (username) => {
+  return instance.put(`/api/users/${username}`);
+};
+
 export {
   loginAPI,
   users,
@@ -392,4 +429,10 @@ export {
   changeMailAPI,
   addReview,
   ordersAll,
+  checkBoughtProduct,
+  confirmOrder,
+  orderReceived,
+  addStaff,
+  updateStaff,
+  previewOrder,
 };

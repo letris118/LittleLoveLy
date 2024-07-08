@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import Switch from "react-switch";
 import instance from "../services/auth/customize-axios";
 import { articlesAll, deactivateArticle, activateArticle } from "../services/auth/UsersService";
@@ -30,12 +30,6 @@ export default function ManageArticle() {
       }
     };
     checkAuthentication();
-
-    if (location.state && location.state.success) {
-      toast.success(location.state.success);
-      // Clear the state to prevent the message from showing again on page reload
-      navigate(location.pathname, { replace: true, state: {} });
-    }
 
     const fetchArticles = async () => {
       try {
@@ -117,7 +111,7 @@ export default function ManageArticle() {
       (article) => article.title && article.title.toLowerCase().includes(query)
     );
     setFilteredArticles(filtered);
-    setCurrentPage(1); // Reset to first page on new search
+    setCurrentPage(1); 
   };
 
   const indexOfLastArticle = currentPage * articlesPerPage;

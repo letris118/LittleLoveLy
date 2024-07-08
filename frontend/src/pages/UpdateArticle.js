@@ -3,11 +3,10 @@ import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
 import { getArticleById, updateArticle } from "../services/auth/UsersService";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import { useNavigate, useParams } from "react-router-dom";
-import { routes } from "../routes";
 import StaffBackToTop from "../components/StaffBackToTop";
 Quill.register("modules/imageResize", ImageResize);
 window.Quill = Quill;
@@ -69,7 +68,8 @@ export default function UpdateArticle() {
 
       const response = await updateArticle(id, formData);
       if (response) {
-        navigate(routes.manageArticle, { state: { success: 'Cập nhập bài viết thành công!' } });
+        toast.success("Cập nhập bài viết thành công!");
+        navigate('/manageArticle');
 
       } else {
         toast.error("Không thể lưu bài viết");
@@ -137,11 +137,12 @@ export default function UpdateArticle() {
 
   return (
     <div>
-      
+
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />
         <div className="add-update-content-detail">
+          
           <form onSubmit={handleSubmit}>
             <div className="manage-form-input">
               <div className="manage-form-group">
@@ -158,7 +159,7 @@ export default function UpdateArticle() {
                 <label>Nội dung:</label>
                 <div className="manage-form-control">
                   <ReactQuill
-                    style={{backgroundColor: 'white'}}
+                    style={{ backgroundColor: 'white' }}
                     ref={quillRef}
                     value={content}
                     modules={modules}
@@ -170,7 +171,7 @@ export default function UpdateArticle() {
             </div>
             <div className="manage-form-btn">
               <button className="save-manage-btn save-manage-link" type="submit" disabled={isSubmitting}>
-                Cập nhật bài viết
+                Lưu bài viết
               </button>
 
               <div className="cancel-manage-btn">

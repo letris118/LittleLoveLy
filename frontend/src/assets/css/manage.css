@@ -4,13 +4,9 @@
     background-color: #f5f6fa;
 }
 
-
-
 .manage-content-detail {
     background-color: #f5f6fa;
     padding: 20px 20px 20px 0;
-
-
 }
 
 .manage-content-detail {
@@ -54,9 +50,6 @@
     padding: 8px 12px;
     border: 1px solid #ddd;
 }
-
-
-
 
 .active-head,
 .active-body,
@@ -246,6 +239,7 @@
     color: #3c3e3e;
 }
 
+
 .manage-form-group label {
     display: block;
     margin-bottom: 5px;
@@ -270,7 +264,6 @@
     box-sizing: border-box;
 }
 
-
 .manage-form-type-control select {
     width: 85%;
     padding: 8px;
@@ -285,7 +278,6 @@
     height: 20%;
     margin-right: 15px;
 }
-
 
 .manage-form-type-voucher-control {
     display: flex;
@@ -315,13 +307,13 @@
 }
 
 .cancel-manage-link {
-    width: 100px;
+    width: 120px;
     height: 50px;
     margin-left: 30px;
 }
 
 .save-manage-link {
-    width: 200px;
+    width: 150px;
     height: 50px;
     background-color: #a7c9e5;
     border: 2px solid #5a95c6;
@@ -349,4 +341,4 @@
 
 .hidden-select {
     display: none;
-  }
+}

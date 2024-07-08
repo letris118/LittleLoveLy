@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import { routes } from "../routes";
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import {useNavigate, useLocation } from "react-router-dom";
 import StaffHeader from "../components/StaffHeader";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import {
   getProductById,
   brands,
@@ -126,7 +125,7 @@ export default function UpdateProduct() {
 
   useEffect(() => {
     if (!productInfo || !allCategories || !allBrands) {
-      return; // Return early if info is not yet available
+      return; 
     }
 
     const initialCategoryElements = productInfo.categories.map(
@@ -134,7 +133,7 @@ export default function UpdateProduct() {
         const categorySelect = (
           <select name="categoryIds" required>
             <option value={category.categoryId}>{category.name}</option>{" "}
-            {/* First option based on productInfo.categories */}
+            
             {allCategories
               .filter((c) => c.categoryId !== category.categoryId)
               .map((c, idx) => (
@@ -144,7 +143,7 @@ export default function UpdateProduct() {
               ))}
           </select>
         );
-        return { id: index + 1, content: categorySelect }; // Use index + 1 as id for each select
+        return { id: index + 1, content: categorySelect }; 
       }
     );
 
@@ -211,9 +210,8 @@ export default function UpdateProduct() {
         productRequestDTO.get("productId"),
         productRequestDTO
       );
-      navigate(routes.manageProduct, {
-        state: { success: "Cập nhập sản phẩm thành công!" },
-      });
+      toast.success("Cập nhập sản phẩm thành công!");
+        navigate('/manageProduct');
     } catch (error) {
       console.error(error);
     }
@@ -275,10 +273,13 @@ export default function UpdateProduct() {
       <div className="manage-content">
         <StaffSideBar />
 
+        
         <div className="add-update-content-detail">
+          
           {productInfo ? (
             <form onSubmit={handleSubmit}>
               <div className="manage-form-input">
+              
                 {/* Product NAME */}
                 <div className="manage-form-group">
                   <label>Tên sản phẩm</label>
@@ -456,7 +457,7 @@ export default function UpdateProduct() {
                 <button
                   className="save-manage-btn save-manage-link"
                   type="submit">
-                  Cập nhật sản phẩm
+                  Lưu sản phẩm
                 </button>
 
                 <div className="cancel-manage-btn">

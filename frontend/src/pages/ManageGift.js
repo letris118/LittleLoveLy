@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import Switch from 'react-switch';
 import instance from "../services/auth/customize-axios";
 import {
@@ -34,18 +34,13 @@ export default function ManageGift() {
       }
     };
     checkAuthentication();
-    if (location.state && location.state.success) {
-      toast.success(location.state.success);
-      // Clear the state to prevent the message from showing again on page reload
-      navigate(location.pathname, { replace: true, state: {} });
-    }
 
     const fetchGifts = async () => {
       try {
         let response = await giftsAll();
         if (response) {
           setGiftList(response);
-          setFilteredGifts(response); // Initialize filtered list
+          setFilteredGifts(response); 
         } else {
           setGiftList([]);
           setFilteredGifts([]);
@@ -123,7 +118,7 @@ export default function ManageGift() {
       gift.name.toLowerCase().includes(query)
     );
     setFilteredGifts(filtered);
-    setCurrentPage(1); // Reset to first page on new search
+    setCurrentPage(1); 
   };
 
   const indexOfLastGift = currentPage * giftsPerPage;

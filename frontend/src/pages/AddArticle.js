@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { routes } from "../routes"
 import ImageResize from "quill-image-resize-module-react";
 import { addArticle } from "../services/auth/UsersService";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +26,6 @@ export default function AddArticle() {
         navigate("/");
       }
     };
-
     checkAuthentication();
   }, [navigate]);
 
@@ -47,7 +45,8 @@ export default function AddArticle() {
 
       const response = await addArticle(formData);
       if (response) {
-        navigate(routes.manageArticle, { state: { success: 'Thêm bài viết thành công!' } });
+        toast.success("Thêm bài viết thành công!");
+        navigate('/manageArticle');
       } else {
         toast.error("Không thể thêm bài viết");
       }
@@ -114,15 +113,14 @@ export default function AddArticle() {
 
   return (
     <div>
-      
       <StaffHeader />
-
       <div className="manage-content">
         <StaffSideBar />
-
         <div className="add-update-content-detail">
           <form onSubmit={handleSubmit}>
             <div className="manage-form-input">
+
+              {/* TITLE */}
               <div className="manage-form-group">
                 <label>Tiêu đề:</label>
                 <div className="manage-form-control">
@@ -130,11 +128,12 @@ export default function AddArticle() {
                 </div>
               </div>
 
+              {/* CONTENT */}
               <div className="manage-form-group">
                 <label>Nội dung:</label>
                 <div className="manage-form-control">
                   <ReactQuill
-                    style={{backgroundColor: 'white'}}
+                    style={{ backgroundColor: 'white' }}
                     ref={quillRef}
                     value={content}
                     modules={modules}
@@ -143,20 +142,19 @@ export default function AddArticle() {
                   />
                 </div>
               </div>
+
             </div>
 
+            {/* BUTTON */}
             <div className="manage-form-btn">
-
               <button className="save-manage-btn save-manage-link" type="submit" disabled={isSubmitting}>
                 Thêm bài viết
               </button>
-
               <div className="cancel-manage-btn">
-                  <button onClick={handleReload} className="cancel-manage-link">
-                    Đặt lại
-                  </button>
-                </div>
-
+                <button onClick={handleReload} className="cancel-manage-link">
+                  Đặt lại
+                </button>
+              </div>
             </div>
           </form>
         </div>

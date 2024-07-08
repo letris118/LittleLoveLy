@@ -1,23 +1,27 @@
-package com.vtcorp.store.config;
+package com.vtcorp.store.utils;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class VNPayConfig {
+@Component
+public class VNPayUtils {
 
-    public static String vnp_Version = "2.1.0";
+    @Value("${vnpay.secretKey}")
+    private String secretKey;
+    private static String key;
 
-    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8010/api/orders/vn-pay-callback";
-    public static String vnp_TmnCode = "EJ76PM1I";
-    public static String secretKey = "1WU13ITBPWCEQHEDNSY47GZ7MNZLFVAN";
-    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+    @PostConstruct
+    public void init() {
+        key = secretKey;
+    }
 
-    //Util for VNPAY
     public static String hashAllFields(Map fields) {
         List fieldNames = new ArrayList(fields.keySet());
         Collections.sort(fieldNames);
@@ -35,7 +39,7 @@ public class VNPayConfig {
                 sb.append("&");
             }
         }
-        return hmacSHA512(secretKey, sb.toString());
+        return hmacSHA512(key, sb.toString());
     }
 
     public static String hmacSHA512(final String key, final String data) {
@@ -57,7 +61,7 @@ public class VNPayConfig {
             return sb.toString();
 
         } catch (Exception ex) {
-            return "";
+            return ex.getMessage();
         }
     }
 

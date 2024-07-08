@@ -43,7 +43,7 @@
 }
 
 .order-product-center {
-  width: 45%;
+  width: 35%;
   margin-left: 20px;
   margin-right: 5%;
 }
@@ -58,15 +58,6 @@
   margin-top: 20px;
 }
 
-.order-product-right-below button {
-  width: 100px;
-  height: 40px;
-  border-radius: 10px;
-  border: none;
-  background-color: #ff469e;
-  color: white;
-  font-weight: bold;
-}
 
 .popup-detail-left {
   width: 20%;

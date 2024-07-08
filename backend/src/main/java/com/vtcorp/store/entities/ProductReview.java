@@ -33,7 +33,7 @@ public class ProductReview {
     private String imagePath;
 
     @JsonView(Views.Product.class)
-    @JsonFormat(pattern = "dd-MM-yyyy", timezone = "Asia/Ho_Chi_Minh")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date uploadedDate;
 
     @ManyToOne

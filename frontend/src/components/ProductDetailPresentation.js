@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback, act } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   updateCart,
   formatPrice,
   products,
-  getOrdersByUsername,
+  getProductById,
   addReview,
+  checkBoughtProduct,
 } from "../services/auth/UsersService";
 import { routes } from "../routes";
 import Rating from "@mui/material/Rating";
@@ -34,65 +35,64 @@ export default function ProductDetailPresentation() {
   const [selectedButton, setSelectedButton] = useState("newest");
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
-  const [boughtProducts, setBoughtProducts] = useState([]);
-  const [submittedReview, setSubmittedReview] = useState(false);
   const [activateSubmit, setActivateSubmit] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
-  const fetchProduct = useCallback(async () => {
-    try {
-      let response = await products();
-      const decodedProductName = decodeURIComponent(productName).replace(
-        /\n/g,
-        ""
-      );
-      const product = response.find(
-        (product) => product.name.replace(/\n/g, "") === decodedProductName
-      );
-      if (product) {
-        setProductInfo(product);
-        setSelectedImage(product.productImages[0].imageId);
-        setFilteredReviews(product.productReviews);
-      } else {
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        let response = await products();
+        const decodedProductName = decodeURIComponent(productName).replace(
+          /\n/g,
+          ""
+        );
+        const product = response.find(
+          (product) => product.name.replace(/\n/g, "") === decodedProductName
+        );
+        if (product) {
+          setProductInfo(product);
+          setSelectedImage(product.productImages[0].imageId);
+          setFilteredReviews(product.productReviews);
+
+          const username = localStorage.getItem("username");
+          if (username) {
+            try {
+              const hasBought = await checkBoughtProduct(
+                username,
+                product.productId
+              );
+              if (hasBought) {
+                setActivateSubmit(hasBought.hasBought);
+              }
+            } catch (error) {
+              console.error("Error checking purchase status:", error);
+            }
+          }
+        } else {
+          setProductInfo(null);
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
         setProductInfo(null);
       }
-    } catch (error) {
-      console.error("Error fetching product:", error);
-      setProductInfo(null);
-    }
+    };
+    fetchProduct();
   }, [productName]);
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const refreshReviews = async () => {
       try {
-        const username = localStorage.getItem("username");
-        if (username) {
-          let response = await getOrdersByUsername(username);
-
-          response.sort(
-            (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-          );
-
-          const newestOrder = response[0];
-          if (newestOrder) {
-            const boughtProductIds = newestOrder.orderDetails.map(
-              (detail) => detail.product.productId
-            );
-            setBoughtProducts(boughtProductIds);
-            const hasNewOrder = boughtProductIds.includes(
-              productInfo?.productId
-            );
-            setActivateSubmit(hasNewOrder && !submittedReview);
-          }
+        const response = await getProductById(productInfo.productId);
+        if (response) {
+          setProductInfo(response);
+          handleNewestFilter();
         }
       } catch (error) {
-        toast.error("Không thể lấy thông tin đơn hàng");
-        console.error("Error fetching orders:", error);
+        console.error("Error refreshing reviews:", error);
       }
     };
-
-    fetchOrders();
-    fetchProduct();
-  }, [fetchProduct, productInfo?.productId, submittedReview]);
+    refreshReviews();
+  }, [refresh, productInfo?.productId]);
 
   const handleIncrease = useCallback(() => {
     setQuantity((prevQuantity) =>
@@ -257,8 +257,8 @@ export default function ProductDetailPresentation() {
       );
       setComment("");
       setRating(0);
-      setSubmittedReview(true);
       setActivateSubmit(false);
+      setRefresh(!refresh);
       toast.success("Đánh giá của bạn đã được gửi.", { autoClose: 2000 });
       console.log("Review submitted successfully");
     } catch (error) {
@@ -277,7 +277,8 @@ export default function ProductDetailPresentation() {
                   {productInfo.productImages.map((proImg) => (
                     <div
                       className="product-detail-top-img"
-                      key={proImg.imageId}>
+                      key={proImg.imageId}
+                    >
                       <img
                         src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
                         alt=""
@@ -289,11 +290,13 @@ export default function ProductDetailPresentation() {
                 <Slider
                   {...settingsImgBottom}
                   ref={(slider2) => setNav2(slider2)}
-                  style={{ margin: "10px" }}>
+                  style={{ margin: "10px" }}
+                >
                   {productInfo.productImages.map((proImg) => (
                     <div
                       className="product-detail-bottom-img"
-                      key={proImg.imageId}>
+                      key={proImg.imageId}
+                    >
                       <img
                         onClick={() => setSelectedImage(proImg.imageId)}
                         src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
@@ -316,7 +319,8 @@ export default function ProductDetailPresentation() {
                 <>
                   <div
                     className="product-detail-top-img"
-                    key={productInfo.productImages[0].imageId}>
+                    key={productInfo.productImages[0].imageId}
+                  >
                     <img
                       src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
                       alt=""
@@ -325,7 +329,8 @@ export default function ProductDetailPresentation() {
                   </div>
                   <div
                     className="product-detail-bottom-img"
-                    style={{ margin: "10px", textAlign: "center" }}>
+                    style={{ margin: "10px", textAlign: "center" }}
+                  >
                     <img
                       src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
                       alt=""
@@ -348,7 +353,8 @@ export default function ProductDetailPresentation() {
                 {productInfo?.brand ? (
                   <Link
                     to={`${routes.brands}/${productInfo.brand.name}`}
-                    style={{ textDecoration: "none" }}>
+                    style={{ textDecoration: "none" }}
+                  >
                     {productInfo.brand.name}
                   </Link>
                 ) : (
@@ -364,7 +370,8 @@ export default function ProductDetailPresentation() {
                       margin: "0 5px",
                       textDecoration: "underline",
                       fontWeight: "bold",
-                    }}>
+                    }}
+                  >
                     {productInfo?.averageRating}
                   </div>
                   <Rating
@@ -385,7 +392,8 @@ export default function ProductDetailPresentation() {
                     style={{
                       fontWeight: "bold",
                       textDecoration: "underline",
-                    }}>
+                    }}
+                  >
                     {productInfo?.noSold}
                   </span>
                   &nbsp;đã bán
@@ -409,7 +417,8 @@ export default function ProductDetailPresentation() {
                         alignItems: "center",
                         marginRight: "10px",
                         fontWeight: "lighter",
-                      }}>
+                      }}
+                    >
                       {formatPrice(productInfo?.listedPrice) + "đ"}
                     </div>
                     <div style={{ color: "#FF469E", fontSize: "30px" }}>
@@ -438,7 +447,8 @@ export default function ProductDetailPresentation() {
                   />
                   <button
                     onClick={handleIncrease}
-                    style={{ paddingTop: "2px", paddingLeft: "1px" }}>
+                    style={{ paddingTop: "2px", paddingLeft: "1px" }}
+                  >
                     +
                   </button>
                 </Box>
@@ -466,7 +476,8 @@ export default function ProductDetailPresentation() {
 
           <div
             className="product-detail-reviews"
-            style={{ minHeight: "50vh", minWidth: "1100px" }}>
+            style={{ minHeight: "50vh", minWidth: "1100px" }}
+          >
             <h5>Đánh giá</h5>
             <div className="product-detail-reviews-stars">
               <div className="product-detail-reviews-stars-left">
@@ -475,7 +486,8 @@ export default function ProductDetailPresentation() {
                     fontWeight: "bold",
                     fontFamily: "MuseoModerno",
                     fontSize: "20px",
-                  }}>
+                  }}
+                >
                   <span style={{ color: "#FF469E", fontSize: "30px" }}>
                     {productInfo?.averageRating.toFixed(1)}
                   </span>
@@ -502,7 +514,8 @@ export default function ProductDetailPresentation() {
                     border:
                       selectedButton === "newest" ? "1px solid #FF469E" : "",
                     color: selectedButton === "newest" ? "#FF469E" : "",
-                  }}>
+                  }}
+                >
                   Mới nhất
                 </button>
                 {[5, 4, 3, 2, 1].map((star) => (
@@ -513,7 +526,8 @@ export default function ProductDetailPresentation() {
                         border:
                           selectedButton === star ? "1px solid #FF469E" : "",
                         color: selectedButton === star ? "#FF469E" : "",
-                      }}>
+                      }}
+                    >
                       {star} <i className="fa-solid fa-star"></i>
                     </button>
                   </div>
@@ -527,24 +541,28 @@ export default function ProductDetailPresentation() {
                   .map((review) => (
                     <div
                       className="product-detail-reviews-comments-user"
-                      key={review.reviewId}>
+                      key={review.reviewId}
+                    >
                       <span
                         style={{
                           width: "10%",
                           height: "100%",
                           display: "flex",
                           justifyContent: "center",
-                        }}>
+                        }}
+                      >
                         <i
                           className="fa-solid fa-user"
-                          style={{ fontSize: "30px" }}></i>
+                          style={{ fontSize: "30px" }}
+                        ></i>
                       </span>
                       <div>
                         <div
                           style={{
                             fontWeight: "bold",
                             fontSize: "15px",
-                          }}>
+                          }}
+                        >
                           {review.userName}
                         </div>
                         <div>
@@ -568,7 +586,8 @@ export default function ProductDetailPresentation() {
                     display: "flex",
                     justifyContent: "center",
                     marginTop: "10px",
-                  }}>
+                  }}
+                >
                   <button
                     onClick={() => setShowAllReviews(true)}
                     style={{
@@ -578,7 +597,8 @@ export default function ProductDetailPresentation() {
                       borderRadius: "20px",
                       cursor: "pointer",
                       border: "none",
-                    }}>
+                    }}
+                  >
                     Xem thêm{" "}
                     <b>
                       <i>{filteredReviews.length - 5}</i>
@@ -595,7 +615,8 @@ export default function ProductDetailPresentation() {
                 marginBottom: "10px",
                 fontWeight: "bold",
                 fontFamily: "MuseoModerno",
-              }}>
+              }}
+            >
               Nhận xét
             </h5>
             {localStorage.getItem("userRole") === "ROLE_CUSTOMER" ? (
@@ -605,7 +626,8 @@ export default function ProductDetailPresentation() {
                     display: "flex",
                     justifyContent: "center",
                     margin: "5px 0",
-                  }}>
+                  }}
+                >
                   <Rating
                     value={rating}
                     onChange={(event, newValue) => setRating(newValue)}
@@ -632,7 +654,8 @@ export default function ProductDetailPresentation() {
                     justifyContent: "flex-end",
                     alignItems: "center",
                     marginTop: "10px",
-                  }}>
+                  }}
+                >
                   <Button
                     type="submit"
                     variant="contained"
@@ -641,7 +664,8 @@ export default function ProductDetailPresentation() {
                       backgroundColor: activateSubmit ? "#FF469E" : "gray",
                       color: "white",
                     }}
-                    disabled={submittedReview}>
+                    disabled={!activateSubmit}
+                  >
                     Gửi đánh giá
                   </Button>
                 </div>
@@ -655,7 +679,7 @@ export default function ProductDetailPresentation() {
         </div>
       </div>
 
-      {window.location.pathname.startsWith(`${routes.staffProductList}/`) && (
+      {/* {window.location.pathname.startsWith(`${routes.staffProductList}/`) && (
         <div className="product-detail-container">
           <div className="product-detail-top">
             <div className="product-detail-left">
@@ -849,7 +873,7 @@ export default function ProductDetailPresentation() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

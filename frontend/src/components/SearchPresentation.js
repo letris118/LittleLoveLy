@@ -89,7 +89,14 @@ export default function SearchPresentation() {
     <div>
       <span>
         <p style={{ color: "#4b4a4a" }}>
-          <i className="fa-solid fa-circle-check" style={{ color: "green" }} />{" "}
+          {currentItems.length > 0 ? (
+            <i
+              className="fa-solid fa-circle-check"
+              style={{ color: "green" }}
+            />
+          ) : (
+            <i className="fa-solid fa-circle-xmark" style={{ color: "red" }} />
+          )}
           &nbsp; Kết quả tìm kiếm với từ khóa <b>'{searchTerm}'</b>
         </p>
       </span>
@@ -153,7 +160,18 @@ export default function SearchPresentation() {
       </div>
 
       <div className="search-product-container">
-        <ProductPresentation products={currentItems} />
+        {currentItems.length > 0 ? (
+          <ProductPresentation products={currentItems} />
+        ) : (
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: "30px",
+              fontSize: "20px",
+            }}>
+            Không tìm thấy sản phẩm
+          </p>
+        )}
       </div>
       <div className="pagination-container" style={{ textAlign: "center" }}>
         <CustomPagination
