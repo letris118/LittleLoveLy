@@ -1,6 +1,7 @@
 package com.vtcorp.store.controllers;
 
 import com.vtcorp.store.dtos.MailDTO;
+import com.vtcorp.store.dtos.PasswordDTO;
 import com.vtcorp.store.dtos.UserRequestDTO;
 import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.services.OrderService;
@@ -87,6 +88,16 @@ public class UserController {
     public ResponseEntity<?> hasUserBoughtProduct(@RequestParam String username, @RequestParam Long productId){
         try {
             return ResponseEntity.ok(orderService.hasUserBoughtProduct(username, productId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Change password of user by username")
+    @PutMapping("/change-password/{username}")
+    public ResponseEntity<?> changePassword(@PathVariable String username, @RequestBody PasswordDTO passwordDTO) {
+        try {
+            return ResponseEntity.ok(userService.changePassword(username, passwordDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
