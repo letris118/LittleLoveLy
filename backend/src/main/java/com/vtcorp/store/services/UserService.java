@@ -65,7 +65,7 @@ public class UserService {
         user.setPoint(0);
         user.setRegisteredDate(new Date());
         user = userRepository.save(user);
-        emailSenderService.sendEmailAsync(user.getMail(), "Welcome to our store", "Welcome to our store, " + user.getName());
+        emailSenderService.sendWelcomeEmailAsync(user.getMail(), user.getName());
         return "User registered successfully";
     }
 
