@@ -14,7 +14,6 @@ import "../assets/css/manage.css";
 import StaffBackToTop from "../components/StaffBackToTop";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { set, parse } from "date-fns";
 
 export default function UpdateProduct() {
   const [productInfo, setProductInfo] = useState(null);
