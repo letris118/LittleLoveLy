@@ -326,7 +326,7 @@ public class OrderService {
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD)) {
             order.setStatus(CODPaymentStatus.COD_PENDING);
             order = orderRepository.save(order);
-            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
+            emailSenderService.sendOrderPlacedEmailAsync(order.getCusMail(), order.getOrderId());
             return mapOrderToResponse(order);
         } else {
             throw new IllegalArgumentException("Invalid payment method");
@@ -342,7 +342,7 @@ public class OrderService {
         if ("00".equals(vnpResponseCode)) {
             order.setStatus(OnlinePaymentStatus.ONLINE_PENDING);
             orderRepository.save(order);
-            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được lưu vào hệ thống với mã đơn hàng: " + order.getOrderId() + ". Bạn có thể tra thông tin đơn hàng tại ....");
+            emailSenderService.sendOrderPlacedEmailAsync(order.getCusMail(), order.getOrderId());
             return "http://localhost:3000/?status=payment-success";
         } else {
             handlePaymentFail(order);
@@ -462,7 +462,7 @@ public class OrderService {
                 throw new RuntimeException("Cannot create shipping order");
             }
             order.setTrackingCode(response.getData().getTrackingCode());
-            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được xác nhận và đang được vận chuyển với mã vận đơn: " + order.getTrackingCode() + ". Bạn có thể tra thông tin đơn hàng tại ....");
+            emailSenderService.sendOrderConfirmedEmailAsync(order.getCusMail(), order.getOrderId(), order.getTrackingCode());
             return response;
         } else if (order.getStatus().equals(OnlinePaymentStatus.ONLINE_PENDING)) {
             order.setStatus(OnlinePaymentStatus.ONLINE_CONFIRMED);
@@ -471,7 +471,7 @@ public class OrderService {
                 throw new RuntimeException("Cannot create shipping order");
             }
             order.setTrackingCode(response.getData().getTrackingCode());
-            emailSenderService.sendEmailAsync(order.getCusMail(), "Tình trạng đơn hàng", "Đơn hàng của bạn đã được xác nhận và đang được vận chuyển với mã vận đơn: " + order.getTrackingCode() + ". Bạn có thể tra thông tin đơn hàng tại ....");
+            emailSenderService.sendOrderConfirmedEmailAsync(order.getCusMail(), order.getOrderId(), order.getTrackingCode());
             return response;
         } else {
             throw new IllegalArgumentException("Cannot confirm order from status: " + order.getStatus());
