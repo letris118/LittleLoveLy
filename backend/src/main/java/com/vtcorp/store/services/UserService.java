@@ -122,9 +122,9 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userMapper.updateEntity(userRequestDTO, user);
         User userAuth = (usernameAuth != null) ? userRepository.findById(usernameAuth).orElse(null) : null;
-        if (userAuth != null && userAuth.getRole().equals(Role.ROLE_ADMIN) && (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_STAFF))) {
-            user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
-            user.setMail(userRequestDTO.getMail());
+        String mail = userRequestDTO.getMail();
+        if (mail != null && userAuth != null && userAuth.getRole().equals(Role.ROLE_ADMIN) && (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_STAFF))) {
+            user.setMail(mail);
         }
         userRepository.save(user);
         return userMapper.toResponseDTO(user);

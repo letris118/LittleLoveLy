@@ -366,16 +366,9 @@ const addStaff = (username, name, mail, phone, password) => {
 
 const updateStaff = (
   username,
-  name,
-  mail,
-  phone,
+  userDTO,
 ) => {
-  return instance.put(`/api/users/${username}`, {
-    username,
-    name,
-    mail,
-    phone,
-  });
+  return instance.put(`/api/users/${username}`, userDTO);
 };
 
 export {

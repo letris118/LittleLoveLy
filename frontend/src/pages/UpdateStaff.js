@@ -9,7 +9,7 @@ import StaffBackToTop from "../components/StaffBackToTop";
 
 export default function UpdateStaff() {
   const navigate = useNavigate();
-  const { username } = useParams();  // Use useParams to get the username from the URL
+  const { username } = useParams();  
 
   const [staff, setStaff] = useState({});
 
@@ -44,15 +44,17 @@ export default function UpdateStaff() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    // formData.append('username', staff.username);
     const updatedStaff = {
-      username: formData.get('username'),
+      username: staff.username,
       name: formData.get('name'),
       mail: formData.get('mail'),
       phone: formData.get('phone'),
     };
 
     try {
-      await updateStaff(updatedStaff.username, updatedStaff);
+      await updateStaff(staff.username, updatedStaff);
+      
       toast.success("Cập nhật thông tin thành công!");
       navigate('/manage-staff');
     } catch (error) {
@@ -146,3 +148,4 @@ export default function UpdateStaff() {
     </div>
   );
 }
+
