@@ -32,7 +32,7 @@ export default function Login() {
         localStorage.setItem("username", decodedToken.sub);
         localStorage.setItem("point", decodedToken.point);
         if (decodedToken.roles === "ROLE_ADMIN") {
-          navigate(routes.statistics);
+          navigate(routes.dashboard);
         } else if (decodedToken.roles === "ROLE_STAFF") {
           navigate(routes.manageOrder);
         } else if (decodedToken.roles === "ROLE_CUSTOMER") {
@@ -75,7 +75,7 @@ export default function Login() {
     if (userRole === "ROLE_CUSTOMER" && token) {
       navigate(routes.homePage);
     } else if (userRole === "ROLE_ADMIN" && token) {
-      navigate(routes.statistics);
+      navigate(routes.dashboard);
     } else if (userRole === "ROLE_STAFF" && token) {
       navigate(routes.manageOrder);
     }

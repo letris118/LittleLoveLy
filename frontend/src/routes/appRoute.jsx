@@ -27,7 +27,7 @@ import UpdateArticle from "../pages/UpdateArticle";
 import Checkout from "../pages/Checkout";
 import ArticleList from "../pages/ArticleList";
 import ArticleDetail from "../pages/ArticleDetail";
-import Statistics from "../pages/Statistics";
+import Dashboard from "../pages/Dashboard";
 import ManageStaff from "../pages/ManageStaff";
 import ManageMember from "../pages/ManageMember";
 
@@ -107,7 +107,7 @@ export default function AppRoute() {
         <Route path={routes.addGift} element={<AddGift />} />
         <Route path={`${routes.updateGift}/:name`} element={<UpdateGift />} />
 
-        <Route path={routes.statistics} element={<Statistics />} />
+        <Route path={routes.dashboard} element={<Dashboard />} />
         <Route path={routes.manageMember} element={<ManageMember />} />
         <Route path={routes.manageStaff} element={<ManageStaff />} />
         <Route path={routes.searchProduct} element={<SearchProduct />} />

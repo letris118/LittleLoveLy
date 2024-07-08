@@ -338,6 +338,14 @@ const ordersAll = () => {
   return instance.get("/api/orders");
 };
 
+const dashboard = () => {
+  return instance.get("/api/dashboard");
+}
+
+const increaseSiteVisits = () => {
+  return instance.patch("api/dashboard/site-visits")
+}
+
 const confirmOrder = (orderId) => {
   return instance.put(`/api/orders/confirm/${orderId}`);
 };
@@ -367,6 +375,8 @@ export {
   handleLogout,
   brands,
   categories,
+  dashboard,
+  increaseSiteVisits,
   products,
   productsAll,
   deactivateProduct,

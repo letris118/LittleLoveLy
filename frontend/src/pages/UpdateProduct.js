@@ -14,7 +14,6 @@ import "../assets/css/manage.css";
 import StaffBackToTop from "../components/StaffBackToTop";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { set } from "date-fns";
 
 export default function UpdateProduct() {
   const [productInfo, setProductInfo] = useState(null);
@@ -200,8 +199,7 @@ export default function UpdateProduct() {
 
       if (
         !window.confirm(
-          `Bạn đang sử dụng ${
-            productRequestDTO.getAll("imageIds").length
+          `Bạn đang sử dụng ${productRequestDTO.getAll("imageIds").length
           } hình ảnh có sẵn`
         )
       )

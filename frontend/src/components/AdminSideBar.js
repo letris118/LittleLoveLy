@@ -8,7 +8,7 @@ export default function AdminSideBar() {
   
     <div className="manage-side-bar">
         <div className="manage-nav-bar">
-            <Link to={routes.statistics} style={{color: 'black'}}>
+            <Link to={routes.dashboard} style={{color: 'black'}}>
                 Thống kê doanh thu
             </Link>
 
