@@ -34,7 +34,7 @@ export const routes = {
 
   staffBrandList: "/brand-list",
   checkout: "/checkout",
-  statistics: "/statistics",
+  dashboard: "/dashboard",
   manageMember: "/manageMember",
   manageStaff: "/manageStaff",
   searchProduct: "/search",

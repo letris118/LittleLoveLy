@@ -324,12 +324,22 @@ const ordersAll = () => {
   return instance.get("/api/orders");
 };
 
+const dashboard = () => {
+  return instance.get("/api/dashboard");
+}
+
+const increaseSiteVisits = () => {
+  return instance.patch("api/dashboard/site-visits")
+}
+
 export {
   loginAPI,
   users,
   handleLogout,
   brands,
   categories,
+  dashboard,
+  increaseSiteVisits,
   products,
   productsAll,
   deactivateProduct,

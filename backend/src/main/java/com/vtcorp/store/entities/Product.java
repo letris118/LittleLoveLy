@@ -39,8 +39,8 @@ public class Product {
     private Integer stock;
     private boolean active;
     private Date addedDate;
-
     private Date lastModifiedDate;
+    private Long visits;
 
     @ManyToOne
     @JoinColumn(name = "fk_brand_id")
