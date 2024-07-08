@@ -30,7 +30,7 @@ export const routes = {
 
   manageGift: "/manage-gift",
   updateGift: "/update-gift",
-  addGift: "/add-gift"
+  addGift: "/add-gift",
 
   staffBrandList: "/brand-list",
   checkout: "/checkout",
