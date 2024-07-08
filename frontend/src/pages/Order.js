@@ -170,7 +170,7 @@ export default function Order() {
   });
 
   const getStatusNotification = (status) => {
-    if (status === "COD_PENDING" || status === "ONLINE_DENIED") {
+    if (status === "COD_PENDING" || status === "ONLINE_PENDING") {
       return "Đang xử lí";
     } else if (status === "COD_CONFIRMED" || status === "ONLINE_CONFIRMED") {
       return "Đang giao hàng";
