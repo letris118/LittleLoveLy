@@ -45,11 +45,13 @@ export default function AddGift() {
   return (
     <div>
       <StaffHeader />
+
       <div className="manage-content">
         <StaffSideBar />
+
         <div className="add-update-content-detail">
 
-          {<form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <div className="manage-form-input">
 
               {/* NAME */}
@@ -59,9 +61,10 @@ export default function AddGift() {
                   <input
                     type="text"
                     name="name"
-                    required></input>
-
+                    required>
+                  </input>
                 </div>
+              </div>
 
               {/* POINT */}
               <div className="manage-form-group">
@@ -71,9 +74,10 @@ export default function AddGift() {
                     type="number"
                     name="point"
                     step="1" min="0"
-                    required></input>
-
+                    required>
+                  </input>
                 </div>
+              </div>
 
               {/* STOCK */}
               <div className="manage-form-group">
@@ -83,9 +87,10 @@ export default function AddGift() {
                     type="number"
                     name="stock"
                     step="1" min="1"
-                    defaultValue="1"></input>
-
+                    defaultValue="1">
+                  </input>
                 </div>
+              </div>
 
               {/* IMAGE */}
               <div className="manage-form-group">
@@ -94,14 +99,15 @@ export default function AddGift() {
                   <input
                     name="newImageFile"
                     type="file"
-                    required 
+                    required
                     accept=".png, .jpg">
-                   </input>
+                  </input>
 
                 </div>
               </div>
 
               {/* BUTTON */}
+
               <div className="manage-form-btn">
                 <button
                   className="save-manage-btn save-manage-link"
@@ -116,8 +122,8 @@ export default function AddGift() {
                   </button>
                 </div>
               </div>
-            </form>
-          }
+            </div>
+          </form>
         </div>
       </div>
       <StaffBackToTop />
