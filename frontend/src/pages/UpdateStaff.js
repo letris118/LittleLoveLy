@@ -2,28 +2,32 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminHeader from "../components/AdminHeader";
 import { toast } from "react-toastify";
-import { getUserInfo, updateStaff, udateStaffPassword } from "../services/auth/UsersService";
+import {
+  getUserInfo,
+  updateStaff,
+  udateStaffPassword,
+} from "../services/auth/UsersService";
 import AdminSideBar from "../components/AdminSideBar";
 import "../assets/css/manage.css";
 import StaffBackToTop from "../components/StaffBackToTop";
 
 export default function UpdateStaff() {
   const navigate = useNavigate();
-  const { username } = useParams();  
+  const { username } = useParams();
 
   const [staff, setStaff] = useState({});
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
-    confirmNewPassword: ""
+    confirmNewPassword: "",
   });
 
   useEffect(() => {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
       if (!userRole || userRole !== "ROLE_ADMIN") {
-        navigate('/');
+        navigate("/");
       }
     };
     checkAuthentication();
@@ -52,9 +56,9 @@ export default function UpdateStaff() {
     const formData = new FormData(e.target);
     const updatedStaff = {
       username: staff.username,
-      name: formData.get('name'),
-      mail: formData.get('mail'),
-      phone: formData.get('phone'),
+      name: formData.get("name"),
+      mail: formData.get("mail"),
+      phone: formData.get("phone"),
     };
 
     try {
@@ -74,7 +78,7 @@ export default function UpdateStaff() {
       }
 
       toast.success("Cập nhật thông tin thành công!");
-      navigate('/manage-staff');
+      navigate("/manage-staff");
     } catch (error) {
       console.error("Error updating staff:", error);
       toast.error(`Lỗi khi cập nhật thông tin: ${error.message}`);
@@ -94,7 +98,7 @@ export default function UpdateStaff() {
     const { name, value } = e.target;
     setPasswords((prevPasswords) => ({
       ...prevPasswords,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -106,7 +110,6 @@ export default function UpdateStaff() {
         <div className="add-update-content-detail">
           <form onSubmit={handleSubmit}>
             <div className="manage-form-input">
-
               {/* USERNAME */}
               <div className="manage-form-group">
                 <label>Tên tài khoản</label>
@@ -161,8 +164,15 @@ export default function UpdateStaff() {
 
               {/* CHANGE PASSWORD TOGGLE */}
               <div className="manage-form-group">
-                <button type="button" onClick={togglePasswordFields}
-                style={{borderRadius: '10px', border: '1px solid #ccc', fontWeight:'bold'}}>
+                <button
+                  type="button"
+                  onClick={togglePasswordFields}
+                  style={{
+                    borderRadius: "10px",
+                    border: "1px solid #ccc",
+                    fontWeight: "bold",
+                    width: "200px",
+                  }}>
                   Thay đổi mật khẩu
                 </button>
               </div>
@@ -214,7 +224,9 @@ export default function UpdateStaff() {
 
             {/* BUTTON */}
             <div className="manage-form-btn">
-              <button className="save-manage-btn save-manage-link" type="submit">
+              <button
+                className="save-manage-btn save-manage-link"
+                type="submit">
                 Lưu thông tin
               </button>
               <div className="cancel-manage-btn">
