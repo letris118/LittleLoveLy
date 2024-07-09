@@ -3,8 +3,10 @@ package com.vtcorp.store.services;
 import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.dtos.*;
 import com.vtcorp.store.entities.User;
+import com.vtcorp.store.entities.Voucher;
 import com.vtcorp.store.mappers.UserMapper;
 import com.vtcorp.store.repositories.UserRepository;
+import com.vtcorp.store.repositories.VoucherRepository;
 import com.vtcorp.store.utils.CodeGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +30,18 @@ public class UserService {
     private final TokenService tokenService;
     private final UserMapper userMapper;
     private final EmailSenderService emailSenderService;
+    private final VoucherRepository voucherRepository;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                       AuthenticationManager authenticationManager, TokenService tokenService, UserMapper userMapper, EmailSenderService emailSenderService) {
+                       AuthenticationManager authenticationManager, TokenService tokenService, UserMapper userMapper, EmailSenderService emailSenderService, VoucherRepository voucherRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
         this.userMapper = userMapper;
         this.emailSenderService = emailSenderService;
+        this.voucherRepository = voucherRepository;
     }
 
     public String login(LoginDTO loginDTO) {
@@ -58,12 +62,17 @@ public class UserService {
         if (userRepository.existsByPhone(userRequestDTO.getPhone())) {
             throw new IllegalArgumentException("Phone already used");
         }
+        List<Voucher> vouchers = voucherRepository.findAll();
         User user = userMapper.toEntity(userRequestDTO);
         user.setUsername(CodeGenerator.generateUsername());
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
-        user.setRole("ROLE_CUSTOMER");
+        user.setRole(Role.ROLE_CUSTOMER);
         user.setPoint(0);
         user.setRegisteredDate(new Date());
+        for (Voucher voucher : vouchers) {
+            voucher.getUsers().add(user);
+        }
+        user.setVouchers(vouchers);
         user = userRepository.save(user);
         emailSenderService.sendWelcomeEmailAsync(user.getMail(), user.getName());
         return "User registered successfully";

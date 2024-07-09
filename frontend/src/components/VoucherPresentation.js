@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { vouchers } from "../services/auth/UsersService";
+import { getVouchersByUsername } from "../services/auth/UsersService";
 import "../assets/css/voucherPresentation.css";
 import { Button, styled, DialogActions } from "@mui/material";
 
@@ -34,9 +34,9 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
   });
 
   useEffect(() => {
-    const fetchVouchers = async () => {
+    const fetchVouchers = async (username) => {
       try {
-        const response = await vouchers();
+        const response = await getVouchersByUsername(username);
         if (response) {
           setVoucherList(response);
         } else {
@@ -47,7 +47,11 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
         setVoucherList([]);
       }
     };
-    fetchVouchers();
+
+    const username = localStorage.getItem("username");
+    if (username) {
+      fetchVouchers(username);
+    }
   }, []);
 
   const handleApply = (voucherId) => {
@@ -66,7 +70,8 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
                   fontSize: "18px",
                   fontWeight: "bold",
                   color: "#AE0258",
-                }}>
+                }}
+              >
                 {voucher.title}
               </div>
               <div className="voucher-description" style={{ fontSize: "12px" }}>
