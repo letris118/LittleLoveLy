@@ -134,15 +134,7 @@ export default function AddVoucher() {
                                         className={selectedType === 'FLAT' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('FLAT')}
                                     >
-                                        FLAT
-                                    </button>
-                                    <button
-                                        style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
-                                        type="button"
-                                        className={selectedType === 'FREE_SHIPPING' ? 'selected' : ''}
-                                        onClick={() => handleButtonClick('FREE_SHIPPING')}
-                                    >
-                                        FREE_SHIPPING
+                                        Giảm tiền hàng
                                     </button>
                                     <button
                                         style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
@@ -150,7 +142,7 @@ export default function AddVoucher() {
                                         className={selectedType === 'PERCENTAGE' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('PERCENTAGE')}
                                     >
-                                        PERCENTAGE
+                                        Giảm phần trăm tiền hàng
                                     </button>
                                     <button
                                         style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
@@ -158,7 +150,15 @@ export default function AddVoucher() {
                                         className={selectedType === 'DISCOUNT_SHIPPING' ? 'selected' : ''}
                                         onClick={() => handleButtonClick('DISCOUNT_SHIPPING')}
                                     >
-                                        DISCOUNT_SHIPPING
+                                        Giảm phí giao hàng
+                                    </button>
+                                    <button
+                                        style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
+                                        type="button"
+                                        className={selectedType === 'FREE_SHIPPING' ? 'selected' : ''}
+                                        onClick={() => handleButtonClick('FREE_SHIPPING')}
+                                    >
+                                        Miễn phí giao hàng
                                     </button>
                                 </div>
                             </div>
