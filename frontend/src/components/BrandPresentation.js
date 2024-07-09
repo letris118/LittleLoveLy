@@ -42,7 +42,6 @@ export default function BrandPresentation({ brands }) {
   };
 
   return (
-    <>
       <div className="slider-container">
         <Slider {...settings}>
           {brands.map((brand) => (
@@ -69,33 +68,5 @@ export default function BrandPresentation({ brands }) {
         </Slider>
       </div>
 
-      {window.location.pathname === routes.staffHomePage && (
-        <div className="manage-slider-container">
-          <Slider {...settings}>
-            {brands.map((brand) => (
-              <div className="manage-brand-card" id={brand.brandId}>
-                <Link to={`${routes.staffBrandList}/${brand.name}`}>
-                  <div className="manage-brand-card-img">
-                    <img
-                      src={`${instance.defaults.baseURL}/images/brands/${brand.logo}`}
-                      alt={brand.name}
-                    />
-                  </div>
-                </Link>
-                <div className="manage-brand-card-btn">
-                  <Link
-                    to={`${routes.staffBrandList}/${brand.name}`}
-                    className="manage-brand-btn"
-                    style={{ textDecoration: "none" }}
-                  >
-                    {brand.name}
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </Slider>
-        </div>
-      )}
-    </>
   );
 }

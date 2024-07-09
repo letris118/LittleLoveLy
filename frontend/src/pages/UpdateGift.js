@@ -26,11 +26,11 @@ export default function UpdateGift() {
                 if (giftResponse) {
                     setGiftInfo(giftResponse)
                 } else {
-                    toast.error("Không thể tải thông tin quà tặng")
+                    toast.error("Không thể tải thông tin quà tặng!")
                 }
             } catch (error) {
-                console.error("Error fetching gift details:", error)
-                toast.error("Không thể tải thông tin quà tặng")
+                console.error(error)
+                toast.error("Không thể tải thông tin quà tặng!")
             }
         }
         fetchGiftDetails()
@@ -57,9 +57,10 @@ export default function UpdateGift() {
             }
             await updateGift(giftRequestDTO.get('giftId'), giftRequestDTO)
             toast.success("Thêm quà tặng thành công!");
-        navigate('/manage-gift');
+            navigate('/manage-gift');
         } catch (error) {
-            toast.error(`Error adding gift: ${error.message}`)
+            console.error(error);
+            toast.error(`Đã xảy ra lỗi, vui lòng thử lại sau!`)
         }
     }
 
@@ -68,7 +69,6 @@ export default function UpdateGift() {
         window.location.reload()
     }
 
-
     useEffect(() => {
         const checkAuthentication = () => {
             const userRole = localStorage.getItem("userRole")
@@ -76,41 +76,41 @@ export default function UpdateGift() {
                 navigate('/')
             }
         }
-
-
         checkAuthentication()
-
     }, [navigate])
-
-
-
 
     return (
         <div>
-
             <StaffHeader />
-
             <div className="manage-content">
                 <StaffSideBar />
                 <div className="add-update-content-detail">
-                    
                     {giftInfo ? (
                         <form onSubmit={handleSubmit}>
                             <div className="manage-form-input">
-                            
+
                                 {/* NAME */}
                                 <div className="manage-form-group">
                                     <label>Tên quà tặng</label>
                                     <div className="manage-form-control">
-                                        <input type="text" name="name" required defaultValue={giftInfo.name}></input>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            required
+                                            defaultValue={giftInfo.name}></input>
                                     </div>
                                 </div>
 
-                                {/* PRICE */}
+                                {/* POINT */}
                                 <div className="manage-form-group">
                                     <label>Điểm đổi quà</label>
                                     <div className="manage-form-control">
-                                        <input type="number" name="point" step="1" min="0" required defaultValue={giftInfo.point}></input>
+                                        <input
+                                            type="number"
+                                            name="point"
+                                            step="1" min="0"
+                                            required
+                                            defaultValue={giftInfo.point}></input>
                                     </div>
                                 </div>
 
@@ -118,7 +118,11 @@ export default function UpdateGift() {
                                 <div className="manage-form-group">
                                     <label>Tồn kho</label>
                                     <div className="manage-form-control">
-                                        <input type="number" name="stock" step="1" min="1" defaultValue={giftInfo.stock}></input>
+                                        <input
+                                            type="number"
+                                            name="stock"
+                                            step="1" min="1"
+                                            defaultValue={giftInfo.stock}></input>
                                     </div>
                                 </div>
 
@@ -126,7 +130,9 @@ export default function UpdateGift() {
                                 <div className="manage-form-group">
                                     <label>Hình minh họa quà tặng</label>
                                     <div className="manage-form-control-img">
-                                        <input name="newImageFile" type="file" accept=".png, .jpg"></input>
+                                        <input name="newImageFile"
+                                            type="file"
+                                            accept=".png, .jpg"></input>
                                     </div>
                                 </div>
 
@@ -143,9 +149,7 @@ export default function UpdateGift() {
                                         Đặt lại
                                     </button>
                                 </div>
-
                             </div>
-
                         </form>
                     ) : (
                         <p>Đang tải thông tin quà tặng...</p>

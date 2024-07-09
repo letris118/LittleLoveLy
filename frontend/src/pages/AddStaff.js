@@ -42,10 +42,9 @@ export default function AddStaff() {
       navigate("/manage-staff");
     } catch (error) {
       toast.error("Tài khoản đã tồn tại!");
-      console.error("Error adding staff:", error);
+      console.error(error);
     }
   };
-
   return (
     <div>
       <AdminHeader />

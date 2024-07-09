@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {useNavigate, useLocation } from "react-router-dom";
 import StaffHeader from "../components/StaffHeader";
 import { toast } from "react-toastify";
@@ -99,11 +99,11 @@ export default function UpdateProduct() {
           setProductInfo(productResponse);
           setDescription(productResponse.description);
         } else {
-          toast.error("Không thể tải thông tin sản phẩm");
+          toast.error("Không thể tải thông tin sản phẩm!");
         }
       } catch (error) {
-        console.error("Error fetching product details:", error);
-        toast.error("Không thể tải thông tin sản phẩm");
+        console.error(error);
+        toast.error("Không thể tải thông tin sản phẩm!");
       }
     };
 
@@ -114,7 +114,8 @@ export default function UpdateProduct() {
         setAllBrands(brandResponse);
         setAllCategories(categoryResponse);
       } catch (error) {
-        console.error("Error fetching brands or categories:", error);
+        console.error(error);
+        toast.error("Không thể lấy thông tin thương hiệu và phân loại!");
       }
     };
 
@@ -213,6 +214,7 @@ export default function UpdateProduct() {
         navigate('/manage-product');
     } catch (error) {
       console.error(error);
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!");
     }
   };
 
@@ -268,13 +270,10 @@ export default function UpdateProduct() {
   return (
     <div>
       <StaffHeader />
-
       <div className="manage-content">
         <StaffSideBar />
-
-        
         <div className="add-update-content-detail">
-          
+
           {productInfo ? (
             <form onSubmit={handleSubmit}>
               <div className="manage-form-input">
