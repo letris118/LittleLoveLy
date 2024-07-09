@@ -107,59 +107,60 @@ export default function Chat() {
   return (
     <div>
       <Header />
+      <div className="content">
+        <Sidebar
+          role={localStorage.getItem("userRole")}
+          customerName={localStorage.getItem("name")}
+          customerPoint={localStorage.getItem("point")}
+        />
 
-      {userData.connected ? (
-        <div className="content">
-          <Sidebar
-            role={localStorage.getItem("userRole")}
-            customerName={localStorage.getItem("name")}
-            customerPoint={localStorage.getItem("point")}
-          />
-
-          <div className="cus-chat">
-            <div className="cus-chatbox" ref={chatBoxRef}>
-              <ul className="chat-messages">
-                {messages.map((chat, index) => (
-                  <li
-                    key={index}
-                    className={`message ${
-                      chat.senderName === userData.username && "self"
-                    }`}>
-                    {chat.senderName !== userData.username && (
-                      <div className="avatar">
-                        {displayName(chat.senderName)}
-                      </div>
-                    )}
-                    <div className="cus-message-data">{chat.message}</div>
-                    {chat.senderName === userData.username && (
-                      <div className="avatar self">
-                        {displayName(chat.senderName)}
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
+        {userData.connected ?
+          <>
+            <div className="cus-chat">
+              <div className="cus-chatbox" ref={chatBoxRef}>
+                <ul className="chat-messages">
+                  {messages.map((chat, index) => (
+                    <li
+                      key={index}
+                      className={`message ${chat.senderName === userData.username && "self"
+                        }`}>
+                      {chat.senderName !== userData.username && (
+                        <div className="avatar">
+                          {displayName(chat.senderName)}
+                        </div>
+                      )}
+                      <div className="cus-message-data">{chat.message}</div>
+                      {chat.senderName === userData.username && (
+                        <div className="avatar self">
+                          {displayName(chat.senderName)}
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="cus-input">
+                <input
+                  type="text"
+                  placeholder="Nhập tin nhắn của bạn..."
+                  value={userData.message}
+                  onChange={handleMessage}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      sendMessage();
+                    }
+                  }}
+                />
+                <button onClick={sendMessage}>Gửi</button>
+              </div>
             </div>
-            <div className="cus-input">
-              <input
-                type="text"
-                placeholder="Nhập tin nhắn của bạn..."
-                value={userData.message}
-                onChange={handleMessage}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    sendMessage();
-                  }
-                }}
-              />
-              <button onClick={sendMessage}>Gửi</button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <p>Connecting...</p>
-      )}
+          </>
+          :
+          <h4 className="standing-by">Tính năng tạm thời không khả dụng. Vui lòng thử lại sau.</h4>
+        }
+      </div>
       <Footer />
+
     </div>
   );
 }

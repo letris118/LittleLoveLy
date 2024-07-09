@@ -303,7 +303,7 @@ export default function Dashboard() {
 
                   </ResponsiveContainer>
                 </div>
-              )}
+              }
             </main>
           </div>
         )}

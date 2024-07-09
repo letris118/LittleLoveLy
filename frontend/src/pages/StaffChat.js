@@ -144,69 +144,70 @@ export default function StaffChat() {
   return (
     <div>
       <StaffHeader />
+      <div className="content">
+        <StaffSideBar />
 
-      {userData.connected ? (
-        <div className="manage-content">
-          <StaffSideBar />
+        {userData.connected ? (
+          <>
 
-          {tab === "" ? (
-            <div className="standing-by">
-              <h3>Hiện không có tin nhắn</h3>
-              <p>Vui lòng chờ khách hàng bắt đầu trò chuyện.</p>
-              <p>Khi một khách hàng gửi tin nhắn, tên của họ sẽ xuất hiện trong danh sách bên phải.</p>
-            </div>
-          ) : (
-            <div className="staff-chat">
-              <div className="staff-chatbox" ref={chatBoxRef}>
-                <div>
-                  <ul className="chat-messages">
-                    {[...conversations.get(tab)].map((chat, index) => (
-                      <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
-                        {chat.senderName !== userData.username && <div className="avatar">{displayName(chat.senderName)}</div>}
-                        <div className="message-data">{chat.message}</div>
-                        {chat.senderName === userData.username && <div className="avatar self">{displayName(chat.senderName)}</div>}
-                      </li>
-                    ))}
-                  </ul>
+            {tab === "" ? (
+              <div className="standing-by">
+                <h3>Hiện không có tin nhắn</h3>
+                <p>Vui lòng chờ khách hàng bắt đầu trò chuyện.</p>
+                <p>Khi một khách hàng gửi tin nhắn, tên của họ sẽ xuất hiện trong danh sách bên phải.</p>
+              </div>
+            ) : (
+              <div className="staff-chat">
+                <div className="staff-chatbox" ref={chatBoxRef}>
+                  <div>
+                    <ul className="chat-messages">
+                      {[...conversations.get(tab)].map((chat, index) => (
+                        <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
+                          {chat.senderName !== userData.username && <div className="avatar">{displayName(chat.senderName)}</div>}
+                          <div className="message-data">{chat.message}</div>
+                          {chat.senderName === userData.username && <div className="avatar self">{displayName(chat.senderName)}</div>}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="staff-input">
+                  <input
+                    type="text"
+                    placeholder="Nhập tin nhắn"
+                    value={userData.message}
+                    onChange={handleMessage}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        sendMessage();
+                      }
+                    }}
+                  />
+                  <button type="button" onClick={sendMessage}>Gửi</button>
                 </div>
               </div>
-              <div className="staff-input">
-                <input
-                  type="text"
-                  placeholder="Nhập tin nhắn"
-                  value={userData.message}
-                  onChange={handleMessage}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      sendMessage();
-                    }
-                  }}
-                />
-                <button type="button" onClick={sendMessage}>Gửi</button>
-              </div>
+            )}
+            <div className="customer-list">
+              <ul>
+                {[...conversations.keys()]
+                  .filter(name => name !== userData.username)
+                  .map((username, index) => (
+                    <li
+                      onClick={() => { setTab(username) }}
+                      className={`member ${tab === username && "active"}`}
+                      key={index}
+                    >
+                      {userNames.get(username) || username}
+                    </li>
+                  ))}
+              </ul>
             </div>
-          )}
-          <div className="customer-list">
-            <ul>
-              {[...conversations.keys()]
-                .filter(name => name !== userData.username)
-                .map((username, index) => (
-                  <li
-                    onClick={() => { setTab(username) }}
-                    className={`member ${tab === username && "active"}`}
-                    key={index}
-                  >
-                    {userNames.get(username) || username}
-                  </li>
-                ))}
-            </ul>
-          </div>
-        </div>
-      ) : (
-        <p>Đang kết nối</p>
-      )}
+          </>
+        ) : (
+          <h4 className="standing-by">Tính năng tạm thời không khả dụng. Vui lòng thử lại sau.</h4>
+        )}
 
-
+      </div>
     </div>
   );
 }
