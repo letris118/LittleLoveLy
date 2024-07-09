@@ -70,7 +70,6 @@
 .limit-head,
 .limit-body,
 .type-head,
-.type-body,
 .description-head,
 .startDate-head,
 .startDate-body,
@@ -91,11 +90,7 @@
 .trackingCode-head,
 .createdDate-body,
 .status-body,
-.name-body,
-.phone-body,
 .detail-body,
-.username-body,
-.mail-,
 .regisDate-body,
 .username-head,
 .point-head,
@@ -145,12 +140,20 @@
 .manage-pagination button {
     margin-right: 15px;
     width: 30px;
-    border-radius: 10px;
-    border: 1px solid #a8adae;
-    box-shadow: 0 0px 5px 0px #8f8f8faf;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
     background-color: white;
-}
-
+    cursor: pointer;
+  }
+  
+  .manage-pagination button:hover {
+    background-color: rgb(220, 220, 220);
+  }
+  
+  .manage-pagination button.active {
+    background-color:  rgb(220, 220, 220); 
+  }
 
 .search-add-table {
     display: flex;

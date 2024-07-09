@@ -322,7 +322,7 @@ export default function ProfileCus() {
         </div>
         <DialogActions>
           <CustomButton type="submit">Cập nhật</CustomButton>
-          <CustomButton onClick={handleClose}>Close</CustomButton>
+          <CustomButton onClick={handleClose}>Đóng</CustomButton>
         </DialogActions>
       </form>
     );
@@ -390,7 +390,7 @@ export default function ProfileCus() {
         </div>
         <DialogActions>
           <CustomButton type="submit">Đổi</CustomButton>
-          <CustomButton onClick={handleClose}>Close</CustomButton>
+          <CustomButton onClick={handleClose}>Đóng</CustomButton>
         </DialogActions>
       </form>
     );
@@ -432,7 +432,7 @@ export default function ProfileCus() {
         </div>
         <DialogActions>
           <CustomButton type="submit">Đổi</CustomButton>
-          <CustomButton onClick={handleClose}>Close</CustomButton>
+          <CustomButton onClick={handleClose}>Đóng</CustomButton>
         </DialogActions>
       </form>
     );
@@ -542,4 +542,3 @@ export default function ProfileCus() {
     </div>
   );
 }
-

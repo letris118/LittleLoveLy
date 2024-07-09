@@ -188,7 +188,7 @@ export default function ManageMember() {
           />
         </div>
         <DialogActions>
-          <CustomButton onClick={handleClose}>Close</CustomButton>
+          <CustomButton onClick={handleClose}>Đóng</CustomButton>
         </DialogActions>
       </form>
     );

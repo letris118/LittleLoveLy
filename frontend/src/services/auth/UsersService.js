@@ -364,9 +364,18 @@ const addStaff = (username, name, mail, phone, password) => {
   });
 };
 
+const updateStaff = (
+  username,
+  userDTO,
+) => {
+  return instance.put(`/api/users/${username}`, userDTO);
+};
 
-const updateStaff = (username) => {
-  return instance.put(`/api/users/${username}`);
+const udateStaffPassword =(username, currentPassword, newPassword) => {
+  return instance.put(`/api/users/change-password/${username}`, {
+    currentPassword,
+    newPassword,
+  });
 };
 
 export {
@@ -435,4 +444,5 @@ export {
   addStaff,
   updateStaff,
   previewOrder,
+  udateStaffPassword
 };

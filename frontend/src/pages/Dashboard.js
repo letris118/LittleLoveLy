@@ -4,116 +4,144 @@ import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import Footer from "../components/Footer";
 import { ToastContainer, toast } from "react-toastify";
-import { articlesAll, brands, categories, dashboard, ordersAll, productsAll, users, vouchersAll } from "../services/auth/UsersService";
+import {
+  articlesAll,
+  brands,
+  categories,
+  dashboard,
+  formatPrice,
+  ordersAll,
+  productsAll,
+  users,
+  vouchersAll,
+} from "../services/auth/UsersService";
 import BrandPresentation from "../components/BrandPresentation";
 import "../assets/css/homePage.css";
 import ProductPresentation from "../components/ProductPresentation";
 import AdminSideBar from "../components/AdminSideBar";
-import StaffBackToTop from "../components/StaffBackToTop"
-import { BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle, BsSearch, BsJustify, BsFillGrid3X3GapFill, BsFillArchiveFill, BsPeopleFill }
-  from 'react-icons/bs'
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line }
-  from 'recharts';
+import StaffBackToTop from "../components/StaffBackToTop";
+import {
+  BsFillBellFill,
+  BsFillEnvelopeFill,
+  BsPersonCircle,
+  BsSearch,
+  BsJustify,
+  BsFillGrid3X3GapFill,
+  BsFillArchiveFill,
+  BsPeopleFill,
+} from "react-icons/bs";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+} from "recharts";
 import { FcGlobe, FcMoneyTransfer, FcShipped } from "react-icons/fc";
 import { parse } from 'date-fns'
 import "../assets/css/dashboard.css"
-export default function Dashboard() {
-  const navigate = useNavigate()
-  const [articleList, setArticleList] = useState([])
-  const [brandList, setBrandList] = useState([])
-  const [categoryList, setCategoryList] = useState([])
-  const [customerList, setCustomerList] = useState([])
-  const [siteDashboard, setSiteDashboard] = useState(null)
-  const [orderList, setOrderList] = useState([])
-  const [productList, setProductList] = useState([])
-  const [product, setProduct] = useState([])
-  const [staffList, setStaffList] = useState([])
-  const [voucherList, setVoucherList] = useState([])
 
-  const [selectedTab, setSelectedTab] = useState('REVENUE');
+export default function Dashboard() {
+  const navigate = useNavigate();
+  const [articleList, setArticleList] = useState([]);
+  const [brandList, setBrandList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+  const [customerList, setCustomerList] = useState([]);
+  const [siteDashboard, setSiteDashboard] = useState(null);
+  const [orderList, setOrderList] = useState([]);
+  const [productList, setProductList] = useState([]);
+  const [product, setProduct] = useState([]);
+  const [staffList, setStaffList] = useState([]);
+  const [voucherList, setVoucherList] = useState([]);
+
+  const [selectedTab, setSelectedTab] = useState("REVENUE");
   const handleTabClick = (tab) => {
     setSelectedTab(tab);
   };
 
   useEffect(() => {
-
-
-
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
       if (!userRole || userRole !== "ROLE_ADMIN") {
-        navigate('/');
+        navigate("/");
       }
     };
     checkAuthentication();
-
   }, []);
 
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        setArticleList(await articlesAll())
-        setBrandList(await brands())
-        setCategoryList(await categories())
-        setCustomerList((await users()).filter(user => user.role === "ROLE_CUSTOMER"))
-        setSiteDashboard(await dashboard())
-        setOrderList(await ordersAll())
-        setProductList(await productsAll())
-        setStaffList((await users()).filter(user => user.role === "ROLE_STAFF"))
-        setVoucherList(await vouchersAll())
+        setArticleList(await articlesAll());
+        setBrandList(await brands());
+        setCategoryList(await categories());
+        setCustomerList(
+          (await users()).filter((user) => user.role === "ROLE_CUSTOMER")
+        );
+        setSiteDashboard(await dashboard());
+        setOrderList(await ordersAll());
+        setProductList(await productsAll());
+        setStaffList(
+          (await users()).filter((user) => user.role === "ROLE_STAFF")
+        );
+        setVoucherList(await vouchersAll());
       } catch (error) {
-        console.error("Error fetching data:", error)
-        toast.error("Không thể tải dữ liệu")
+        console.error("Error fetching data:", error);
+        toast.error("Không thể tải dữ liệu");
       }
-
-    }
-    fetchAllData()
-  }, [])
-
+    };
+    fetchAllData();
+  }, []);
 
   useEffect(() => {
-    setProduct(productList.slice(0, 5))
-  }, [productList])
+    setProduct(productList.slice(0, 5));
+  }, [productList]);
 
   const data = [
     {
-      name: 'Page A',
+      name: "Page A",
       uv: 4000,
       pv: 2400,
       amt: 2400,
     },
     {
-      name: 'Page B',
+      name: "Page B",
       uv: 3000,
       pv: 1398,
       amt: 2210,
     },
     {
-      name: 'Page C',
+      name: "Page C",
       uv: 2000,
       pv: 9800,
       amt: 2290,
     },
     {
-      name: 'Page D',
+      name: "Page D",
       uv: 2780,
       pv: 3908,
       amt: 2000,
     },
     {
-      name: 'Page E',
+      name: "Page E",
       uv: 1890,
       pv: 4800,
       amt: 2181,
     },
     {
-      name: 'Page F',
+      name: "Page F",
       uv: 2390,
       pv: 3800,
       amt: 2500,
     },
     {
-      name: 'Page G',
+      name: "Page G",
       uv: 3490,
       pv: 4300,
       amt: 2100,
@@ -149,40 +177,47 @@ export default function Dashboard() {
 
       <div className="manage-content">
         <AdminSideBar />
-        {siteDashboard &&
+        {siteDashboard && (
           <div className="manage-content-detail">
-
             <main>
               <div className='main-title'>
                 <h5>BẢNG THỐNG KÊ</h5>
               </div>
 
               <div className="main-cards">
-                <div className='card'>
-                  <div className='card-inner'>
+                <div className="card">
+                  <div className="card-inner">
                     <h5>TỔNG DOANH THU</h5>
-                    <FcMoneyTransfer className='card-icon' />
+                    <FcMoneyTransfer className="card-icon" />
                   </div>
-                  <h4>{orderList.reduce((total, order) => total + order.postDiscountPrice, 0)}</h4>
+                  <h4>
+                    {formatPrice(
+                      orderList.reduce(
+                        (total, order) => total + order.postDiscountPrice,
+                        0
+                      )
+                    )}
+                    đ
+                  </h4>
                 </div>
-                <div className='card'>
-                  <div className='card-inner'>
+                <div className="card">
+                  <div className="card-inner">
                     <h5>TỔNG LỢI NHUẬN</h5>
-                    <FcMoneyTransfer className='card-icon' />
+                    <FcMoneyTransfer className="card-icon" />
                   </div>
                   <h4>{productList.length}</h4>
                 </div>
-                <div className='card'>
-                  <div className='card-inner'>
+                <div className="card">
+                  <div className="card-inner">
                     <h5>TỔNG ĐƠN HÀNG</h5>
-                    <FcShipped className='card-icon' />
+                    <FcShipped className="card-icon" />
                   </div>
                   <h4>{orderList.length}</h4>
                 </div>
-                <div className='card'>
-                  <div className='card-inner'>
+                <div className="card">
+                  <div className="card-inner">
                     <h5>LƯỢT TRUY CẬP</h5>
-                    <FcGlobe className='card-icon' />
+                    <FcGlobe className="card-icon" />
                   </div>
                   <h4>{siteDashboard.siteVisits}</h4>
                 </div>
@@ -190,30 +225,38 @@ export default function Dashboard() {
 
               <div>
                 <button
-                  style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
+                  style={{
+                    marginRight: "15px",
+                    borderRadius: "10px",
+                    border: "1px solid rgb(67, 65, 65)",
+                  }}
                   type="button"
-                  className={selectedTab === 'REVENUE' ? 'selected' : ''}
-                  onClick={() => handleTabClick('REVENUE')}
-                >
+                  className={selectedTab === "REVENUE" ? "selected" : ""}
+                  onClick={() => handleTabClick("REVENUE")}>
                   DOANH THU
                 </button>
                 <button
-                  style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
+                  style={{
+                    marginRight: "15px",
+                    borderRadius: "10px",
+                    border: "1px solid rgb(67, 65, 65)",
+                  }}
                   type="button"
-                  className={selectedTab === 'FLAT' ? 'selected' : ''}
-                  onClick={() => handleTabClick('ORDER')}
-                >
+                  className={selectedTab === "FLAT" ? "selected" : ""}
+                  onClick={() => handleTabClick("ORDER")}>
                   ĐƠN HÀNG
                 </button>
                 <button
-                  style={{ marginRight: '15px', borderRadius: '10px', border: '1px solid rgb(67, 65, 65)' }}
+                  style={{
+                    marginRight: "15px",
+                    borderRadius: "10px",
+                    border: "1px solid rgb(67, 65, 65)",
+                  }}
                   type="button"
-                  className={selectedTab === 'FLAT' ? 'selected' : ''}
-                  onClick={() => handleTabClick('VISIT')}
-                >
+                  className={selectedTab === "FLAT" ? "selected" : ""}
+                  onClick={() => handleTabClick("VISIT")}>
                   LƯỢT TRUY CẬP
                 </button>
-
               </div>
 
               {selectedTab === 'REVENUE' &&
@@ -228,8 +271,7 @@ export default function Dashboard() {
                         right: 30,
                         left: 20,
                         bottom: 5,
-                      }}
-                    >
+                      }}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="productId" />
                       <YAxis />
@@ -248,8 +290,7 @@ export default function Dashboard() {
                         right: 30,
                         left: 20,
                         bottom: 5,
-                      }}
-                    >
+                      }}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="month" interval={0} />
                       <YAxis />
@@ -261,11 +302,11 @@ export default function Dashboard() {
                     <h3>Monthly Revenue for 2024</h3> {/* Add your title here */}
 
                   </ResponsiveContainer>
-
-                </div>}
+                </div>
+              )}
             </main>
-
-          </div>}
+          </div>
+        )}
       </div>
     </div>
   );

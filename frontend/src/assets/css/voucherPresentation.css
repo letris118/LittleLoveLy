@@ -16,4 +16,6 @@
 
 .voucher-container {
   height: 450px;
+  overflow: scroll;
+  overflow-x: hidden;
 }

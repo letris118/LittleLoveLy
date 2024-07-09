@@ -11,7 +11,8 @@ import {
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
-import StaffBackToTop from "../components/StaffBackToTop"
+import StaffBackToTop from "../components/StaffBackToTop";
+
 export default function ManageVoucher() {
   const [voucherList, setVoucherList] = useState([]);
   const [filteredVouchers, setFilteredVouchers] = useState([]);
@@ -22,6 +23,7 @@ export default function ManageVoucher() {
   const [sortOrder, setSortOrder] = useState('asc');
   const navigate = useNavigate();
   const location = useLocation();
+
   useEffect(() => {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
@@ -102,6 +104,21 @@ export default function ManageVoucher() {
     setCurrentPage(pageNumber);
   };
 
+  const getVoucherTypeDisplay = (type) => {
+    switch (type) {
+      case 'FLAT':
+        return 'Giảm tiền hàng';
+      case 'FREE_SHIPPING':
+        return 'Miễn phí giao hàng';
+      case 'PERCENTAGE':
+        return 'Giảm phần trăm tiền hàng';
+      case 'DISCOUNT_SHIPPING':
+        return 'Giảm phí giao hàng';
+      default:
+        return 'Không xác định';
+    }
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredVouchers.slice(indexOfFirstItem, indexOfLastItem);
@@ -109,7 +126,6 @@ export default function ManageVoucher() {
 
   return (
     <div>
-
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />
@@ -133,22 +149,22 @@ export default function ManageVoucher() {
             <thead>
               <tr>
                 <th className="index-head" style={{ width: '5%' }}>STT</th>
-                <th className="name-head" style={{ width: '15%' }}>Tiêu đề</th>
-                <th className="limit-head" style={{ width: '5%' }} onClick={() => handleSort('limit')}>
-                  Limit
+                <th className="name-head" style={{ width: '12%' }}>Tiêu đề</th>
+                <th className="limit-head" style={{ width: '10%' }} onClick={() => handleSort('limit')}>
+                  Số lượng
                   {sortBy === 'limit' && (
                     <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
                   )}
                 </th>
-                <th className="type-head" style={{ width: '9%' }}>Phân loại</th>
+                <th className="type-head" style={{ width: '12%' }}>Phân loại</th>
                 <th className="description-head" style={{ width: '15%' }}>Miêu tả</th>
-                <th className="startDate-head" style={{ width: '15%' }} onClick={() => handleSort('startDate')}>
+                <th className="startDate-head" style={{ width: '12%' }} onClick={() => handleSort('startDate')}>
                   Ngày bắt đầu
                   {sortBy === 'startDate' && (
                     <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
                   )}
                 </th>
-                <th className="endDate-head" style={{ width: '15%' }} onClick={() => handleSort('endDate')}>
+                <th className="endDate-head" style={{ width: '12%' }} onClick={() => handleSort('endDate')}>
                   Ngày hết hạn
                   {sortBy === 'endDate' && (
                     <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
@@ -160,7 +176,7 @@ export default function ManageVoucher() {
                     <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
                   )}
                 </th>
-                <th className="update-head" style={{ width: '9%' }}>Chỉnh sửa</th>
+                <th className="update-head" style={{ width: '10%' }}>Chỉnh sửa</th>
               </tr>
             </thead>
             <tbody>
@@ -168,12 +184,12 @@ export default function ManageVoucher() {
                 currentItems.map((voucher, index) => (
                   <tr key={voucher.voucherId}>
                     <td className="index-body">{indexOfFirstItem + index + 1}</td>
-                    <td className="name-body">{voucher.title ?? 'N/A'}</td>
-                    <td className="limit-body">{voucher.limit ?? 'N/A'}</td>
-                    <td className="type-body">{voucher.type ?? 'N/A'}</td>
-                    <td className="description-body">{voucher.description ?? 'N/A'}</td>
-                    <td className="startDate-body">{voucher.startDate ?? 'N/A'}</td>
-                    <td className="endDate-body">{voucher.endDate ?? 'N/A'}</td>
+                    <td className="name-body">{voucher.title}</td>
+                    <td className="limit-body">{voucher.limit}</td>
+                    <td className="type-body">{getVoucherTypeDisplay(voucher.type)}</td>
+                    <td className="description-body">{voucher.description}</td>
+                    <td className="startDate-body">{voucher.startDate}</td>
+                    <td className="endDate-body">{voucher.endDate}</td>
                     <td className="active-body">
                       <Switch
                         onChange={() => handleToggle(voucher.voucherId, voucher.active)}
@@ -189,7 +205,6 @@ export default function ManageVoucher() {
                       </Link>
                     </td>
                   </tr>
-
                 ))
               ) : (
                 <tr>

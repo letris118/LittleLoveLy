@@ -93,7 +93,7 @@ export default function AddProduct() {
 
       await addProduct(productRequestDTO);
       toast.success("Thêm sản phẩm thành công!");
-      navigate('/manageProduct');
+      navigate('/manage-product');
     } catch (error) {
       console.error(error);
       toast.error(`Error adding product: ${error.message}`);

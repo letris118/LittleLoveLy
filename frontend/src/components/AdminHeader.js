@@ -1,5 +1,5 @@
 import React from "react";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { routes } from "../routes";
 import AdminDropdownMenu from "./AdminDropdownMenu";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -9,7 +9,7 @@ export default function AdminHeader() {
       <header className="manage-header">
         {/* logo + store name to return home page */}
         <div className="manage-store-name">
-          <Link to="#" style={{ color: "#ff469e" }}>
+          <Link to={routes.dashboard} style={{ color: "#ff469e" }}>
             <img src="../assets/images/logo02.png" alt="page logo" />
           </Link>
         </div>
@@ -18,8 +18,7 @@ export default function AdminHeader() {
             display: "flex",
             justifyContent: "end",
             width: "100%",
-          }}
-        >
+          }}>
           {localStorage.getItem("token") ? (
             <AdminDropdownMenu style={{ marginLeft: "10px" }} />
           ) : (

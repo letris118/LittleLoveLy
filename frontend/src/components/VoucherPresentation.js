@@ -28,7 +28,7 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
       background:
         "linear-gradient(90deg, rgba(255,0,132,0.8) 0%, rgba(255,99,132,0.8) 100%)",
     },
-    marginBottom: "20px",
+    margin: "10px 0 5px 0",
     marginRight: "20px",
     borderRadius: "10px",
   });
@@ -66,8 +66,7 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
                   fontSize: "18px",
                   fontWeight: "bold",
                   color: "#AE0258",
-                }}
-              >
+                }}>
                 {voucher.title}
               </div>
               <div className="voucher-description" style={{ fontSize: "12px" }}>

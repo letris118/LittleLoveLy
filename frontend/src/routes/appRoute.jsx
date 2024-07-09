@@ -1,5 +1,5 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { routes } from ".";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -52,24 +52,36 @@ import AddStaff from "../pages/AddStaff";
 
 import { ToastContainer } from "react-toastify";
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 export default function AppRoute() {
   return (
     <>
       <ToastContainer />
+      <ScrollToTop />
       <Routes>
         <Route path={routes.login} element={<Login />} />
         <Route path={routes.register} element={<Register />} />
         <Route path={routes.forgotPassword} element={<ForgotPassword />} />
         <Route path={routes.resetPassword} element={<ResetPassword />} />
 
+        {/* ============== CUSTOMER ================ */}
         <Route path={routes.homePage} element={<HomePage />} />
-        <Route path={routes.staffHomePage} element={<StaffHomePage />} />
-
         <Route path={routes.brands} element={<BrandList />} />
         <Route path={`${routes.brands}/:name`} element={<BrandDetail />} />
 
         <Route path={routes.products} element={<ProductList />} />
         <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
+
+        <Route path={routes.staffHomePage} element={<StaffHomePage />} />
 
         <Route path={routes.checkout} element={<Checkout />} />
         <Route path={routes.articles} element={<ArticleList />} />
@@ -134,10 +146,13 @@ export default function AppRoute() {
         />
 
         <Route path={routes.profileCustomer} element={<ProfileCus />} />
-        <Route path={routes.chat} element={<Chat />} />  
-        
+        <Route path={routes.chat} element={<Chat />} />
+
         <Route path={routes.staffProfile} element={<StaffProfile />} />
-        <Route path={`${routes.updateStaff}/:username`} element={<UpdateStaff />} />
+        <Route
+          path={`${routes.updateStaff}/:username`}
+          element={<UpdateStaff />}
+        />
         <Route path={routes.addStaff} element={<AddStaff />} />
       </Routes>
     </>

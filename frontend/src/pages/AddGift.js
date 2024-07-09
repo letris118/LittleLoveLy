@@ -17,7 +17,7 @@ export default function AddGift() {
       const giftRequestDTO = new FormData(e.target)
       await addGift(giftRequestDTO)
       toast.success("Thêm quà tặng thành công!");
-      navigate('/manageGift');
+      navigate('/manage-gift');
     } catch (error) {
       toast.error(`Error adding gift: ${error.message}`)
     }
