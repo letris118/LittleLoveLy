@@ -44,8 +44,8 @@ import {
   Line,
 } from "recharts";
 import { FcGlobe, FcMoneyTransfer, FcShipped } from "react-icons/fc";
-import { parse } from 'date-fns'
-import "../assets/css/dashboard.css"
+import { parse } from "date-fns";
+import "../assets/css/dashboard.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -148,28 +148,38 @@ export default function Dashboard() {
     },
   ];
 
-  const dateFormat = "dd-MM-yyyy HH:mm:ss"
+  const dateFormat = "dd-MM-yyyy HH:mm:ss";
 
   const monthlyRevenueData = (year) => {
     const months = [
-      `Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`,
-    ]
+      `Jan`,
+      `Feb`,
+      `Mar`,
+      `Apr`,
+      `May`,
+      `Jun`,
+      `Jul`,
+      `Aug`,
+      `Sep`,
+      `Oct`,
+      `Nov`,
+      `Dec`,
+    ];
 
-    const monthlySummary = months.map(month => ({
+    const monthlySummary = months.map((month) => ({
       month,
-      price: 0
-    }))
-    orderList.forEach(order => {
-      const createdDate = parse(order.createdDate, dateFormat, new Date())
+      price: 0,
+    }));
+    orderList.forEach((order) => {
+      const createdDate = parse(order.createdDate, dateFormat, new Date());
       if (createdDate.getFullYear() == year) {
-        const monthIndex = createdDate.getMonth()
-        monthlySummary[monthIndex].price += order.postDiscountPrice
+        const monthIndex = createdDate.getMonth();
+        monthlySummary[monthIndex].price += order.postDiscountPrice;
       }
-    })
+    });
 
-    return monthlySummary
-  }
-
+    return monthlySummary;
+  };
 
   return (
     <div>
@@ -180,7 +190,7 @@ export default function Dashboard() {
         {siteDashboard && (
           <div className="manage-content-detail">
             <main>
-              <div className='main-title'>
+              <div className="main-title">
                 <h5>BẢNG THỐNG KÊ</h5>
               </div>
 
@@ -232,7 +242,8 @@ export default function Dashboard() {
                   }}
                   type="button"
                   className={selectedTab === "REVENUE" ? "selected" : ""}
-                  onClick={() => handleTabClick("REVENUE")}>
+                  onClick={() => handleTabClick("REVENUE")}
+                >
                   DOANH THU
                 </button>
                 <button
@@ -243,7 +254,8 @@ export default function Dashboard() {
                   }}
                   type="button"
                   className={selectedTab === "FLAT" ? "selected" : ""}
-                  onClick={() => handleTabClick("ORDER")}>
+                  onClick={() => handleTabClick("ORDER")}
+                >
                   ĐƠN HÀNG
                 </button>
                 <button
@@ -254,13 +266,14 @@ export default function Dashboard() {
                   }}
                   type="button"
                   className={selectedTab === "FLAT" ? "selected" : ""}
-                  onClick={() => handleTabClick("VISIT")}>
+                  onClick={() => handleTabClick("VISIT")}
+                >
                   LƯỢT TRUY CẬP
                 </button>
               </div>
 
-              {selectedTab === 'REVENUE' &&
-                <div className='charts'>
+              {selectedTab === "REVENUE" && (
+                <div className="charts">
                   {/* <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       width={500}
@@ -284,23 +297,29 @@ export default function Dashboard() {
 
                   <ResponsiveContainer width="100%" height={400}>
                     <LineChart
-                      data={monthlyRevenueData('2024')}
+                      data={monthlyRevenueData("2024")}
                       margin={{
                         top: 5,
                         right: 30,
                         left: 20,
                         bottom: 5,
-                      }}>
+                      }}
+                    >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="month" interval={0} />
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <Line type="monotone" dataKey="price" stroke="#8884d8" activeDot={{ r: 8 }} />
+                      <Line
+                        type="monotone"
+                        dataKey="price"
+                        stroke="#8884d8"
+                        activeDot={{ r: 8 }}
+                      />
                       <Line type="monotone" dataKey="" stroke="#82ca9d" />
                     </LineChart>
-                    <h3>Monthly Revenue for 2024</h3> {/* Add your title here */}
-
+                    <h3>Monthly Revenue for 2024</h3>{" "}
+                    {/* Add your title here */}
                   </ResponsiveContainer>
                 </div>
               )}

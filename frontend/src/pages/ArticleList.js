@@ -5,9 +5,22 @@ import Sidebar from "../components/SideBar";
 import { articles } from "../services/auth/UsersService";
 import ArticleListPresentation from "../components/ArticleListPresentation";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 export default function ArticleList() {
   const [articleList, setArticleList] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "ROLE_STAFF" || userRole === "ROLE_ADMIN") {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
+
   useEffect(() => {
     const fetchArticles = async () => {
       try {

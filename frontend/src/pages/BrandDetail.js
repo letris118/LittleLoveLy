@@ -11,6 +11,17 @@ export default function BrandDetail() {
   const brandName = useParams();
   const [brandInfo, setBrandInfo] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "ROLE_STAFF" || userRole === "ROLE_ADMIN") {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
+
   useEffect(() => {
     const fetchBrand = async () => {
       try {

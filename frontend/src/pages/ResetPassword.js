@@ -14,6 +14,16 @@ export default function ResetPassword() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole) {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
+
+  useEffect(() => {
     // Set class and background image for the body
     document.body.classList.add("img");
     document.body.classList.add("js-fullheight");

@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import { useNavigate } from "react-router-dom";
-import StaffBackToTop from "../components/StaffBackToTop"
+import StaffBackToTop from "../components/StaffBackToTop";
 
 Quill.register("modules/imageResize", ImageResize);
 window.Quill = Quill;
@@ -46,7 +46,7 @@ export default function AddArticle() {
       const response = await addArticle(formData);
       if (response) {
         toast.success("Thêm bài viết thành công!");
-        navigate('/manage-article');
+        navigate("/manage-article");
       } else {
         toast.error("Không thể thêm bài viết");
       }
@@ -108,8 +108,8 @@ export default function AddArticle() {
 
   const handleReload = (e) => {
     e.preventDefault();
-    window.location.reload()
-  }
+    window.location.reload();
+  };
 
   return (
     <div>
@@ -119,12 +119,15 @@ export default function AddArticle() {
         <div className="add-update-content-detail">
           <form onSubmit={handleSubmit}>
             <div className="manage-form-input">
-
               {/* TITLE */}
               <div className="manage-form-group">
                 <label>Tiêu đề:</label>
                 <div className="manage-form-control">
-                  <input type="text" value={title} onChange={handleTitleChange} />
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={handleTitleChange}
+                  />
                 </div>
               </div>
 
@@ -133,7 +136,7 @@ export default function AddArticle() {
                 <label>Nội dung:</label>
                 <div className="manage-form-control">
                   <ReactQuill
-                    style={{ backgroundColor: 'white' }}
+                    style={{ backgroundColor: "white" }}
                     ref={quillRef}
                     value={content}
                     modules={modules}
@@ -142,12 +145,15 @@ export default function AddArticle() {
                   />
                 </div>
               </div>
-
             </div>
 
             {/* BUTTON */}
             <div className="manage-form-btn">
-              <button className="save-manage-btn save-manage-link" type="submit" disabled={isSubmitting}>
+              <button
+                className="save-manage-btn save-manage-link"
+                type="submit"
+                disabled={isSubmitting}
+              >
                 Thêm bài viết
               </button>
               <div className="cancel-manage-btn">
@@ -158,8 +164,8 @@ export default function AddArticle() {
             </div>
           </form>
         </div>
-      </div >
+      </div>
       <StaffBackToTop />
-    </div >
+    </div>
   );
 }
