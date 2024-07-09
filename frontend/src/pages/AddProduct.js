@@ -94,7 +94,7 @@ export default function AddProduct() {
 
       await addProduct(productRequestDTO);
       toast.success("Thêm sản phẩm thành công!");
-      navigate('/manage-product');
+      navigate("/manage-product");
     } catch (error) {
       console.error(error);
       toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!");
@@ -190,6 +190,7 @@ export default function AddProduct() {
       <div className="manage-content">
         <StaffSideBar />
         <div className="add-update-content-detail">
+
           {<form onSubmit={handleSubmit}>
             <div className="manage-form-input">
 

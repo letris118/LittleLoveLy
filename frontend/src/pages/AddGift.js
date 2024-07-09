@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import StaffHeader from "../components/StaffHeader"
@@ -14,31 +15,32 @@ export default function AddGift() {
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault()
-      const giftRequestDTO = new FormData(e.target)
-      await addGift(giftRequestDTO)
+      e.preventDefault();
+      const giftRequestDTO = new FormData(e.target);
+      await addGift(giftRequestDTO);
       toast.success("Thêm quà tặng thành công!");
-      navigate('/manage-gift');
+      navigate("/manage-gift");
     } catch (error) {
       console.error(error);
       toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!")
+
     }
-  }
+  };
 
   const handleReload = (e) => {
     e.preventDefault();
-    window.location.reload()
-  }
+    window.location.reload();
+  };
 
   useEffect(() => {
     const checkAuthentication = () => {
-      const userRole = localStorage.getItem("userRole")
+      const userRole = localStorage.getItem("userRole");
       if (!userRole || userRole !== "ROLE_STAFF") {
-        navigate('/')
+        navigate("/");
       }
-    }
-    checkAuthentication()
-  }, [navigate])
+    };
+    checkAuthentication();
+  }, [navigate]);
 
   return (
     <div>
@@ -46,6 +48,7 @@ export default function AddGift() {
       <div className="manage-content">
         <StaffSideBar />
         <div className="add-update-content-detail">
+
           {<form onSubmit={handleSubmit}>
             <div className="manage-form-input">
 
@@ -57,8 +60,8 @@ export default function AddGift() {
                     type="text"
                     name="name"
                     required></input>
+
                 </div>
-              </div>
 
               {/* POINT */}
               <div className="manage-form-group">
@@ -69,8 +72,8 @@ export default function AddGift() {
                     name="point"
                     step="1" min="0"
                     required></input>
+
                 </div>
-              </div>
 
               {/* STOCK */}
               <div className="manage-form-group">
@@ -81,8 +84,8 @@ export default function AddGift() {
                     name="stock"
                     step="1" min="1"
                     defaultValue="1"></input>
+
                 </div>
-              </div>
 
               {/* IMAGE */}
               <div className="manage-form-group">
@@ -92,29 +95,32 @@ export default function AddGift() {
                     name="newImageFile"
                     type="file"
                     required 
-                    accept=".png, .jpg"></input>
+                    accept=".png, .jpg">
+                   </input>
+
                 </div>
               </div>
 
-            </div>
-
-            {/* BUTTON */}
-            <div className="manage-form-btn">
-              <button className="save-manage-btn save-manage-link" type="submit">
-                Thêm quà tặng
-              </button>
-
-              <div className="cancel-manage-btn">
-                <button onClick={handleReload} className="cancel-manage-link">
-                  Đặt lại
+              {/* BUTTON */}
+              <div className="manage-form-btn">
+                <button
+                  className="save-manage-btn save-manage-link"
+                  type="submit"
+                >
+                  Thêm quà tặng
                 </button>
+
+                <div className="cancel-manage-btn">
+                  <button onClick={handleReload} className="cancel-manage-link">
+                    Đặt lại
+                  </button>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
           }
         </div>
       </div>
       <StaffBackToTop />
     </div>
-  )
+  );
 }

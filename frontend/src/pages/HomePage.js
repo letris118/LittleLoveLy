@@ -15,6 +15,7 @@ import ProductPresentation from "../components/ProductPresentation";
 import Sidebar from "../components/SideBar";
 import ArticlePresentation from "../components/ArticlePresentation";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const [productList, setProductList] = useState([]);
@@ -24,6 +25,19 @@ export default function HomePage() {
     localStorage.getItem("token") ? true : false
   );
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "ROLE_STAFF") {
+        navigate(routes.manageOrder);
+      } else if (userRole === "ROLE_ADMIN") {
+        navigate(routes.dashboard);
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);

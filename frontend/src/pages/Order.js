@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import { min, set } from "date-fns";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
+import { useNavigate } from "react-router-dom";
 
 export default function Order() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,6 +34,7 @@ export default function Order() {
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [orderToCancel, setOrderToCancel] = useState(null);
   const [refresh, setRefresh] = useState(false);
+  const navigate = useNavigate();
   const itemsPerPage = 5;
 
   // useEffect(() => {
@@ -71,6 +73,16 @@ export default function Order() {
       setOrdersList([]);
     }
   };
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "ROLE_STAFF" || userRole === "ROLE_ADMIN") {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
 
   useEffect(() => {
     const username = localStorage.getItem("username");

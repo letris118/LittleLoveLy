@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import ArticleDetailPresentation from "../components/ArticleDetailPresentation";
 import Sidebar from "../components/SideBar";
 import { useParams } from "react-router-dom";
 import Breadcrumb from "../components/Breadcrum";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 export default function ArticleDetail() {
   const { title: articleTitle } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "ROLE_STAFF" || userRole === "ROLE_ADMIN") {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
+
   return (
     <div>
       <Header />

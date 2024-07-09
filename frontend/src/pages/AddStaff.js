@@ -20,7 +20,7 @@ export default function AddStaff() {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
       if (!userRole || userRole !== "ROLE_ADMIN") {
-        navigate('/');
+        navigate("/");
       }
     };
     checkAuthentication();
@@ -39,13 +39,12 @@ export default function AddStaff() {
     try {
       await addStaff(username, name, mail, phone, password);
       toast.success("Thêm nhân viên thành công!");
-      navigate('/manage-staff'); 
+      navigate("/manage-staff");
     } catch (error) {
       toast.error("Tài khoản đã tồn tại!");
       console.error(error);
     }
   };
-  
   return (
     <div>
       <AdminHeader />
@@ -141,7 +140,10 @@ export default function AddStaff() {
 
             {/* BUTTON */}
             <div className="manage-form-btn">
-              <button className="save-manage-btn save-manage-link" type="submit">
+              <button
+                className="save-manage-btn save-manage-link"
+                type="submit"
+              >
                 Thêm nhân viên
               </button>
               <div className="cancel-manage-btn">
