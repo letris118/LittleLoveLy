@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminHeader from "../components/AdminHeader";
 import { toast } from "react-toastify";
-import { getUserInfo, updateStaff } from "../services/auth/UsersService";
+import { getUserInfo, updateStaff, udateStaffPassword } from "../services/auth/UsersService";
 import AdminSideBar from "../components/AdminSideBar";
 import "../assets/css/manage.css";
 import StaffBackToTop from "../components/StaffBackToTop";
@@ -12,6 +12,12 @@ export default function UpdateStaff() {
   const { username } = useParams();  
 
   const [staff, setStaff] = useState({});
+  const [showPasswordFields, setShowPasswordFields] = useState(false);
+  const [passwords, setPasswords] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: ""
+  });
 
   useEffect(() => {
     const checkAuthentication = () => {
@@ -44,7 +50,6 @@ export default function UpdateStaff() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    // formData.append('username', staff.username);
     const updatedStaff = {
       username: staff.username,
       name: formData.get('name'),
@@ -54,7 +59,20 @@ export default function UpdateStaff() {
 
     try {
       await updateStaff(staff.username, updatedStaff);
-      
+
+      if (showPasswordFields) {
+        if (passwords.newPassword !== passwords.confirmNewPassword) {
+          toast.error("Mật khẩu mới và xác nhận mật khẩu không khớp.");
+          return;
+        }
+
+        await udateStaffPassword(
+          staff.username,
+          passwords.currentPassword,
+          passwords.newPassword
+        );
+      }
+
       toast.success("Cập nhật thông tin thành công!");
       navigate('/manage-staff');
     } catch (error) {
@@ -66,6 +84,18 @@ export default function UpdateStaff() {
   const handleReload = (e) => {
     e.preventDefault();
     window.location.reload();
+  };
+
+  const togglePasswordFields = () => {
+    setShowPasswordFields(!showPasswordFields);
+  };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswords((prevPasswords) => ({
+      ...prevPasswords,
+      [name]: value
+    }));
   };
 
   return (
@@ -128,6 +158,58 @@ export default function UpdateStaff() {
                   />
                 </div>
               </div>
+
+              {/* CHANGE PASSWORD TOGGLE */}
+              <div className="manage-form-group">
+                <button type="button" onClick={togglePasswordFields}
+                style={{borderRadius: '10px', border: '1px solid #ccc', fontWeight:'bold'}}>
+                  Thay đổi mật khẩu
+                </button>
+              </div>
+
+              {/* PASSWORD FIELDS */}
+              {showPasswordFields && (
+                <div className="password-fields">
+                  <div className="manage-form-group">
+                    <label>Mật khẩu hiện tại</label>
+                    <div className="manage-form-control">
+                      <input
+                        type="password"
+                        name="currentPassword"
+                        value={passwords.currentPassword}
+                        onChange={handlePasswordChange}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="manage-form-group">
+                    <label>Mật khẩu mới</label>
+                    <div className="manage-form-control">
+                      <input
+                        type="password"
+                        name="newPassword"
+                        value={passwords.newPassword}
+                        onChange={handlePasswordChange}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="manage-form-group">
+                    <label>Xác nhận mật khẩu mới</label>
+                    <div className="manage-form-control">
+                      <input
+                        type="password"
+                        name="confirmNewPassword"
+                        value={passwords.confirmNewPassword}
+                        onChange={handlePasswordChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* BUTTON */}
@@ -148,4 +230,3 @@ export default function UpdateStaff() {
     </div>
   );
 }
-
