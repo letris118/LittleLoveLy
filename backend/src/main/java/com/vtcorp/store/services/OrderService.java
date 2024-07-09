@@ -446,6 +446,10 @@ public class OrderService {
     public ShippingResponseDTO confirmOrder(String id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+        if (order.getUser() != null && order.getUser().getPoint() != null) {
+            int bonusPoint = (int) (order.getFinalBasePrice() / 1000);
+            order.getUser().setPoint(order.getUser().getPoint() + bonusPoint);
+        }
         if (order.getStatus().equals(CODPaymentStatus.COD_PENDING)) {
             order.setStatus(CODPaymentStatus.COD_CONFIRMED);
             // neu km ship -> shop tra ship -> phan ship con lai + vao cod
@@ -509,10 +513,6 @@ public class OrderService {
     public OrderResponseDTO confirmReceived(String id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-        if (order.getUser() != null && order.getUser().getPoint() != null) {
-            int bonusPoint = (int) (order.getFinalBasePrice() / 1000);
-            order.getUser().setPoint(order.getUser().getPoint() + bonusPoint);
-        }
         String status = order.getStatus();
         if (status.equals(CODPaymentStatus.COD_CONFIRMED)) {
             order.setStatus(CODPaymentStatus.COD_RECEIVED);
