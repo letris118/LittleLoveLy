@@ -322,7 +322,7 @@ export default function Dashboard() {
                     {/* Add your title here */}
                   </ResponsiveContainer>
                 </div>
-              )}
+              }
             </main>
           </div>
         )}
