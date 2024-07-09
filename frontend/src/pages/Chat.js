@@ -124,7 +124,8 @@ export default function Chat() {
                     key={index}
                     className={`message ${
                       chat.senderName === userData.username && "self"
-                    }`}>
+                    }`}
+                  >
                     {chat.senderName !== userData.username && (
                       <div className="avatar">
                         {displayName(chat.senderName)}

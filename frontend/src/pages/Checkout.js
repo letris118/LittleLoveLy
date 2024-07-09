@@ -68,6 +68,17 @@ export default function Checkout() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "ROLE_STAFF" || userRole === "ROLE_ADMIN") {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       const userId = localStorage.getItem("username");

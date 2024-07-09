@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import StaffHeader from "../components/StaffHeader";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { addProduct, brands, categories } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
@@ -93,7 +93,7 @@ export default function AddProduct() {
 
       await addProduct(productRequestDTO);
       toast.success("Thêm sản phẩm thành công!");
-      navigate('/manage-product');
+      navigate("/manage-product");
     } catch (error) {
       console.error(error);
       toast.error(`Error adding product: ${error.message}`);
@@ -189,9 +189,9 @@ export default function AddProduct() {
       <div className="manage-content">
         <StaffSideBar />
         <div className="add-update-content-detail">
-          {<form onSubmit={handleSubmit}>
+          {
+            <form onSubmit={handleSubmit}>
               <div className="manage-form-input">
-              
                 {/* Product NAME */}
                 <div className="manage-form-group">
                   <label>Tên sản phẩm</label>
