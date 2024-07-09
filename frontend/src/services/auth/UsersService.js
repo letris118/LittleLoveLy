@@ -134,8 +134,8 @@ const getGiftById = (giftId) => {
 
 // =========================================VOUCHER===========================================
 
-const vouchers = () => {
-  return instance.get("/api/vouchers");
+const getVouchersByUsername = (username) => {
+  return instance.get(`/api/vouchers/user/${username}`);
 };
 
 const vouchersAll = () => {
@@ -340,11 +340,11 @@ const ordersAll = () => {
 
 const dashboard = () => {
   return instance.get("/api/dashboard");
-}
+};
 
 const increaseSiteVisits = () => {
-  return instance.patch("api/dashboard/site-visits")
-}
+  return instance.patch("api/dashboard/site-visits");
+};
 
 const confirmOrder = (orderId) => {
   return instance.put(`/api/orders/confirm/${orderId}`);
@@ -364,14 +364,11 @@ const addStaff = (username, name, mail, phone, password) => {
   });
 };
 
-const updateStaff = (
-  username,
-  userDTO,
-) => {
+const updateStaff = (username, userDTO) => {
   return instance.put(`/api/users/${username}`, userDTO);
 };
 
-const udateStaffPassword =(username, currentPassword, newPassword) => {
+const udateStaffPassword = (username, currentPassword, newPassword) => {
   return instance.put(`/api/users/change-password/${username}`, {
     currentPassword,
     newPassword,
@@ -423,7 +420,7 @@ export {
   addArticle,
   getArticleById,
   updateArticle,
-  vouchers,
+  getVouchersByUsername,
   forgotPassword,
   getCities,
   getDistrictByCityId,
@@ -444,5 +441,5 @@ export {
   addStaff,
   updateStaff,
   previewOrder,
-  udateStaffPassword
+  udateStaffPassword,
 };
