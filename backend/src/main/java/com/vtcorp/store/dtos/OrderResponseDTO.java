@@ -23,7 +23,7 @@ public class OrderResponseDTO {
     private String orderId;
 
     @JsonView(Views.Order.class)
-    @JsonFormat(pattern = "dd/MM/yyyy, hh:mm a", timezone = "Asia/Ho_Chi_Minh")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date createdDate;
 
     @JsonView(Views.Order.class)
