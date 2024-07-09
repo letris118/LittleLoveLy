@@ -25,6 +25,16 @@ export default function Cart() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "ROLE_STAFF" || userRole === "ROLE_ADMIN") {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
+
+  useEffect(() => {
     const cart = localStorage.getItem("cart");
     const gifts = localStorage.getItem("gifts");
 

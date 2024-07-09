@@ -6,9 +6,22 @@ import Breadcrumb from "../components/Breadcrum";
 import Footer from "../components/Footer";
 import Sidebar from "../components/SideBar";
 import "../assets/css/brandPresentation.css";
+import { useNavigate } from "react-router-dom";
 
 export default function BrandList() {
   const [brandList, setBrandList] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "ROLE_STAFF" || userRole === "ROLE_ADMIN") {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
+
   useEffect(() => {
     const fetchBrands = async () => {
       try {

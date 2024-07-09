@@ -7,13 +7,25 @@ import Breadcrumb from "../components/Breadcrum";
 import Footer from "../components/Footer";
 import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductList() {
   const [productList, setProductList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
+  const navigate = useNavigate();
   const itemsPerPage = 50;
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "ROLE_STAFF" || userRole === "ROLE_ADMIN") {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -104,7 +116,8 @@ export default function ProductList() {
                     color: activeButton === "bestSeller" ? "white" : "",
                   }}
                   onClick={() => handleSort("bestSeller", "bestSeller")}
-                  disabled={currentItems.length === 0}>
+                  disabled={currentItems.length === 0}
+                >
                   Bán chạy
                 </button>
               </div>
@@ -118,7 +131,8 @@ export default function ProductList() {
                     color: activeButton === "newest" ? "white" : "",
                   }}
                   onClick={() => handleSort("newest", "newest")}
-                  disabled={currentItems.length === 0}>
+                  disabled={currentItems.length === 0}
+                >
                   Hàng mới
                 </button>
               </div>
@@ -132,7 +146,8 @@ export default function ProductList() {
                     color: activeButton === "asc" ? "white" : "",
                   }}
                   onClick={() => handleSort("asc", "asc")}
-                  disabled={currentItems.length === 0}>
+                  disabled={currentItems.length === 0}
+                >
                   Giá Thấp - Cao
                 </button>
               </div>
@@ -146,7 +161,8 @@ export default function ProductList() {
                     color: activeButton === "desc" ? "white" : "",
                   }}
                   onClick={() => handleSort("desc", "desc")}
-                  disabled={currentItems.length === 0}>
+                  disabled={currentItems.length === 0}
+                >
                   Giá Cao - Thấp
                 </button>
               </div>
@@ -162,7 +178,8 @@ export default function ProductList() {
 
               <div
                 className="pagination-container"
-                style={{ textAlign: "center" }}>
+                style={{ textAlign: "center" }}
+              >
                 <CustomPagination
                   count={totalPages}
                   page={currentPage}

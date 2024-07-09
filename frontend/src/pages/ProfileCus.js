@@ -39,6 +39,16 @@ export default function ProfileCus() {
   const [openChangeGmailDialog, setOpenChangeGmailDialog] = useState(false);
 
   useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole !== "ROLE_CUSTOMER") {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
+
+  useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const msg = queryParams.get("msg");
     if (msg === "mail-changed") {
@@ -267,7 +277,8 @@ export default function ProfileCus() {
             onChange={handleCityChange}
             fullWidth
             SelectProps={{ native: true }}
-            margin="normal">
+            margin="normal"
+          >
             <option value="">Chọn Tỉnh / Thành Phố</option>
             {cities.map((item) => (
               <option key={item.CityID} value={item.CityID}>
@@ -284,7 +295,8 @@ export default function ProfileCus() {
             onChange={handleDistrictChange}
             fullWidth
             SelectProps={{ native: true }}
-            margin="normal">
+            margin="normal"
+          >
             <option value="">Chọn Quận / Huyện</option>
             {localDistricts.map((item) => (
               <option key={item.DistrictID} value={item.DistrictID}>
@@ -301,7 +313,8 @@ export default function ProfileCus() {
             onChange={formik.handleChange}
             fullWidth
             SelectProps={{ native: true }}
-            margin="normal">
+            margin="normal"
+          >
             <option value="">Chọn Phường / Xã</option>
             {localWards.map((item) => (
               <option key={item.WardCode} value={item.WardCode}>
@@ -525,7 +538,8 @@ export default function ProfileCus() {
       </CustomDialog>
       <CustomDialog
         open={openChangePasswordDialog}
-        onClose={handleCloseChangePassword}>
+        onClose={handleCloseChangePassword}
+      >
         <CustomDialogTitle>Đổi mật khẩu</CustomDialogTitle>
         <DialogContent>
           <PasswordForm handleClose={handleCloseChangePassword} />
@@ -533,7 +547,8 @@ export default function ProfileCus() {
       </CustomDialog>
       <CustomDialog
         open={openChangeGmailDialog}
-        onClose={handleCloseChangeGmail}>
+        onClose={handleCloseChangeGmail}
+      >
         <CustomDialogTitle>Đổi gmail</CustomDialogTitle>
         <DialogContent>
           <MailForm handleClose={handleCloseChangeGmail} />

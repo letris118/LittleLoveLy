@@ -4,9 +4,21 @@ import backgroundImage from "../assets/images/backgroundDemo.jpg";
 import { useFormik } from "formik";
 import { forgotPasswordAPI } from "../services/auth/UsersService";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function ForgotPassword() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole) {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
 
   useEffect(() => {
     // Set class and background image for the body
@@ -74,7 +86,8 @@ export default function ForgotPassword() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="form-control btn btn-primary submit px-3">
+                      className="form-control btn btn-primary submit px-3"
+                    >
                       Xác nhận
                     </button>
                   </div>

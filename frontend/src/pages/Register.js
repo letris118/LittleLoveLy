@@ -29,6 +29,16 @@ export default function Register() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole) {
+        navigate("/");
+      }
+    };
+    checkAuthentication();
+  }, [navigate]);
+
   const formik = useFormik({
     initialValues: {
       mail: "",
@@ -125,7 +135,8 @@ export default function Register() {
                     <Tooltip
                       title={formik.errors.phone}
                       placement="right"
-                      arrow>
+                      arrow
+                    >
                       <span className="tooltip-icon">
                         <FaExclamationCircle />
                       </span>
@@ -170,12 +181,14 @@ export default function Register() {
                     }
                     onClick={() => {
                       setShowPassword((prevState) => !prevState);
-                    }}></span>
+                    }}
+                  ></span>
                   {formik.touched.password && formik.errors.password && (
                     <Tooltip
                       title={formik.errors.password}
                       placement="right"
-                      arrow>
+                      arrow
+                    >
                       <span className="tooltip-icon">
                         <FaExclamationCircle />
                       </span>
@@ -202,13 +215,15 @@ export default function Register() {
                     }
                     onClick={() => {
                       setShowConfirmPassword((prevState) => !prevState);
-                    }}></span>
+                    }}
+                  ></span>
                   {formik.touched.confirmPassword &&
                     formik.errors.confirmPassword && (
                       <Tooltip
                         title={formik.errors.confirmPassword}
                         placement="right"
-                        arrow>
+                        arrow
+                      >
                         <span className="tooltip-icon">
                           <FaExclamationCircle />
                         </span>
@@ -222,7 +237,8 @@ export default function Register() {
                       isSubmitting ||
                       formik.values.password !== formik.values.confirmPassword
                     }
-                    className="form-control btn btn-primary submit px-3">
+                    className="form-control btn btn-primary submit px-3"
+                  >
                     Đăng kí
                   </button>
                 </div>
@@ -233,7 +249,8 @@ export default function Register() {
               <div className="form-group">
                 <button
                   onClick={() => navigate(routes.login)}
-                  className="form-control btn btn-primary submit px-3">
+                  className="form-control btn btn-primary submit px-3"
+                >
                   Đăng nhập
                 </button>
               </div>
@@ -241,7 +258,8 @@ export default function Register() {
                 <div className="forgot-pwd text-center">
                   <Link
                     to={routes.homePage}
-                    style={{ textDecoration: "none", color: "white" }}>
+                    style={{ textDecoration: "none", color: "white" }}
+                  >
                     Quay lại trang chủ
                   </Link>
                 </div>
