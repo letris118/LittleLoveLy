@@ -162,7 +162,7 @@ export default function UpdateStaff() {
               {/* CHANGE PASSWORD TOGGLE */}
               <div className="manage-form-group">
                 <button type="button" onClick={togglePasswordFields}
-                style={{borderRadius: '10px', border: '1px solid #ccc', fontWeight:'bold'}}>
+                style={{borderRadius: '10px', border: '1px solid #ccc', fontWeight:'bold', width:'200px'}}>
                   Thay đổi mật khẩu
                 </button>
               </div>
