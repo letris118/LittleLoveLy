@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AdminHeader from "../components/AdminHeader";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "../assets/css/homePage.css";
 import {
   getUsersByRoleAll,
@@ -45,7 +45,7 @@ export default function ManageMember() {
 
     const fetchCustomers = async () => {
       try {
-        let response = await getUsersByRoleAll("ROLE_CUSTOMER"); 
+        let response = await getUsersByRoleAll("ROLE_CUSTOMER");
         if (response) {
           setCustomerList(response);
           setFilteredCustomerList(response);
@@ -54,8 +54,8 @@ export default function ManageMember() {
           setFilteredCustomerList([]);
         }
       } catch (error) {
-        console.error("Error fetching customers:", error);
-        toast.error("Không thể tải khách hàng");
+        console.error(error);
+        toast.error("Không thể tải khách hàng!");
         setCustomerList([]);
         setFilteredCustomerList([]);
       }
@@ -66,7 +66,8 @@ export default function ManageMember() {
         const res = await getCities();
         setCities(res.data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
+        toast.error("Không thể lấy danh sách thành phố!");
       }
     };
 
@@ -115,7 +116,8 @@ export default function ManageMember() {
         setDistricts(districtRes.data);
         setWards(wardRes.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error(error);
+        toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!");
       }
     };
     fetchData().then(() => {

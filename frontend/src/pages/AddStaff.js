@@ -42,11 +42,10 @@ export default function AddStaff() {
       navigate('/manage-staff'); 
     } catch (error) {
       toast.error("Tài khoản đã tồn tại!");
-      console.error("Error adding staff:", error);
+      console.error(error);
     }
   };
   
-
   return (
     <div>
       <AdminHeader />
@@ -55,7 +54,6 @@ export default function AddStaff() {
         <div className="add-update-content-detail">
           <form onSubmit={handleSubmit}>
             <div className="manage-form-input">
-
               {/* USERNAME */}
               <div className="manage-form-group">
                 <label>Tên tài khoản</label>

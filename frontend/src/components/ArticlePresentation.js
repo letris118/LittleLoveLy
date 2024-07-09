@@ -20,7 +20,7 @@ export default function ArticlePresentation({ articles }) {
   const article1 = articles[1];
   const article2 = articles[2];
   return (
-    <>
+    
       <div className="article-container">
         <div className="article-left">
           <Slider {...settings}>
@@ -111,103 +111,5 @@ export default function ArticlePresentation({ articles }) {
         </div>
       </div>
 
-      {window.location.pathname === routes.staffHomePage && (
-        <div className="manage-article-container">
-          <div className="manage-article-left">
-            <Slider {...settings}>
-              {articles.map((article) => (
-                <Link
-                  to={`${routes.staffArticleList}/${encodeURIComponent(
-                    article.title.replace(/\n/g, "")
-                  )}`}
-                >
-                  <div className="manage-article-card" key={article.articleId}>
-                    <div className="manage-article-card-img">
-                      {article.articleImages.slice(0, 1).map((image) => (
-                        <img
-                          src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
-                          alt={article.title}
-                          key={image.imageId}
-                        />
-                      ))}
-                    </div>
-                    <div
-                      className="manage-article-card-link"
-                      style={{ textDecoration: "none", color: "black" }}
-                    >
-                      {article.title}
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </Slider>
-          </div>
-          <div className="manage-article-right">
-            {article1 && (
-              <div className="manage-article-right-card-container">
-                <Link
-                  to={`${routes.staffArticleList}/${encodeURIComponent(
-                    article1.title.replace(/\n/g, "")
-                  )}`}
-                  sx={{ height: "inherit" }}
-                >
-                  <div
-                    className="manage-article-right-card"
-                    key={article1.articleId}
-                  >
-                    <div className="manage-article-right-card-img">
-                      {article1.articleImages.slice(0, 1).map((image) => (
-                        <img
-                          src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
-                          alt={article1.title}
-                          key={image.imageId}
-                        />
-                      ))}
-                    </div>
-                    <div
-                      className="manage-article-right-card-link"
-                      style={{ textDecoration: "none", color: "black" }}
-                    >
-                      {article1.title}
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            )}
-
-            {article2 && (
-              <div className="manage-article-right-card-container">
-                <Link
-                  to={`${routes.staffArticleList}/${encodeURIComponent(
-                    article2.title.replace(/\n/g, "")
-                  )}`}
-                >
-                  <div
-                    className="manage-article-right-card"
-                    key={article2.articleId}
-                  >
-                    <div className="manage-article-right-card-img">
-                      {article2.articleImages.slice(0, 1).map((image) => (
-                        <img
-                          src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
-                          alt={article2.title}
-                          key={image.imageId}
-                        />
-                      ))}
-                    </div>
-                    <div
-                      className="manage-article-right-card-link"
-                      style={{ textDecoration: "none", color: "black" }}
-                    >
-                      {article2.title}
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-    </>
   );
 }

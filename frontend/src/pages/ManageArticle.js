@@ -42,8 +42,8 @@ export default function ManageArticle() {
           setFilteredArticles([]);
         }
       } catch (error) {
-        console.error("Error fetching articles:", error);
-        toast.error("Không thể tải được tin tức");
+        console.error(error);
+        toast.error("Không thể tải được tin tức!");
         setArticleList([]);
         setFilteredArticles([]);
       }
@@ -65,8 +65,8 @@ export default function ManageArticle() {
         )
       );
     } catch (error) {
-      console.error("Error toggling article status:", error);
-      toast.error("Không thể cập nhật trạng thái bài viết");
+      console.error(error);
+      toast.error("Không thể cập nhật trạng thái bài viết!");
     }
   };
 

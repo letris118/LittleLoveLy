@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import StaffHeader from "../components/StaffHeader"
 import { toast } from "react-toastify"
@@ -10,7 +10,8 @@ import "../assets/css/manage.css"
 import StaffBackToTop from "../components/StaffBackToTop"
 
 export default function AddGift() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault()
@@ -19,7 +20,8 @@ export default function AddGift() {
       toast.success("Thêm quà tặng thành công!");
       navigate('/manage-gift');
     } catch (error) {
-      toast.error(`Error adding gift: ${error.message}`)
+      console.error(error);
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!")
     }
   }
 
@@ -51,15 +53,22 @@ export default function AddGift() {
               <div className="manage-form-group">
                 <label>Tên quà tặng</label>
                 <div className="manage-form-control">
-                  <input type="text" name="name" required></input>
+                  <input
+                    type="text"
+                    name="name"
+                    required></input>
                 </div>
               </div>
 
-              {/* PRICE */}
+              {/* POINT */}
               <div className="manage-form-group">
                 <label>Điểm đổi quà</label>
                 <div className="manage-form-control">
-                  <input type="number" name="point" step="1" min="0" required></input>
+                  <input
+                    type="number"
+                    name="point"
+                    step="1" min="0"
+                    required></input>
                 </div>
               </div>
 
@@ -67,7 +76,11 @@ export default function AddGift() {
               <div className="manage-form-group">
                 <label>Tồn kho</label>
                 <div className="manage-form-control">
-                  <input type="number" name="stock" step="1" min="1" defaultValue="1"></input>
+                  <input
+                    type="number"
+                    name="stock"
+                    step="1" min="1"
+                    defaultValue="1"></input>
                 </div>
               </div>
 
@@ -75,7 +88,11 @@ export default function AddGift() {
               <div className="manage-form-group">
                 <label>Hình minh họa quà tặng</label>
                 <div className="manage-form-control-img">
-                  <input name="newImageFile" type="file" required accept=".png, .jpg"></input>
+                  <input
+                    name="newImageFile"
+                    type="file"
+                    required 
+                    accept=".png, .jpg"></input>
                 </div>
               </div>
 

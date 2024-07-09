@@ -33,7 +33,7 @@ export default function AddArticle() {
     e.preventDefault();
     const cleanedContent = quillRef.current.getEditor().getText().trim();
     if (!title.trim() || !cleanedContent) {
-      toast.error("Tiêu đề và nội dung không được để trống");
+      toast.error("Tiêu đề và nội dung không được để trống!");
       return;
     }
     setIsSubmitting(true);
@@ -48,10 +48,10 @@ export default function AddArticle() {
         toast.success("Thêm bài viết thành công!");
         navigate('/manage-article');
       } else {
-        toast.error("Không thể thêm bài viết");
+        toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!");
       }
     } catch (error) {
-      console.error("Error creating article:", error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -124,7 +124,10 @@ export default function AddArticle() {
               <div className="manage-form-group">
                 <label>Tiêu đề:</label>
                 <div className="manage-form-control">
-                  <input type="text" value={title} onChange={handleTitleChange} />
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={handleTitleChange} />
                 </div>
               </div>
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import StaffHeader from "../components/StaffHeader";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { addProduct, brands, categories } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
@@ -54,7 +54,8 @@ export default function AddProduct() {
       type="file"
       required
       accept=".png, .jpg"
-    ></input>
+    >
+    </input>
   );
 
   const addNewImageElement = (e) => {
@@ -96,7 +97,7 @@ export default function AddProduct() {
       navigate('/manage-product');
     } catch (error) {
       console.error(error);
-      toast.error(`Error adding product: ${error.message}`);
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!");
     }
   };
 
@@ -119,7 +120,7 @@ export default function AddProduct() {
         setAllBrands(brandResponse);
         setAllCategories(categoryResponse);
       } catch (error) {
-        console.error("Error fetching brands or categories:", error);
+        console.error("Đã xảy ra lỗi:", error, ", vui lòng thử lại sau!");
       }
     };
 
@@ -190,177 +191,179 @@ export default function AddProduct() {
         <StaffSideBar />
         <div className="add-update-content-detail">
           {<form onSubmit={handleSubmit}>
-              <div className="manage-form-input">
-              
-                {/* Product NAME */}
-                <div className="manage-form-group">
-                  <label>Tên sản phẩm</label>
-                  <div className="manage-form-control">
-                    <input type="text" name="name" required></input>
-                  </div>
-                </div>
+            <div className="manage-form-input">
 
-                {/* Product list PRICE */}
-                <div className="manage-form-group">
-                  <label>Giá niêm yết</label>
-                  <div className="manage-form-control">
-                    <input
-                      type="number"
-                      name="listedPrice"
-                      step="500"
-                      min="0"
-                      required
-                    ></input>
-                  </div>
-                </div>
-
-                {/* Product sell PRICE */}
-                <div className="manage-form-group">
-                  <label>Giá bán</label>
-                  <div className="manage-form-control">
-                    <input
-                      type="number"
-                      name="sellingPrice"
-                      step="500"
-                      min="0"
-                      required
-                    ></input>
-                  </div>
-                </div>
-
-                {/* Product DESCRIPTION */}
-                <div className="manage-form-group">
-                  <label>Mô tả sản phẩm</label>
-                  <div className="manage-form-control">
-                    <ReactQuill
-                      style={{ backgroundColor: "white" }}
-                      ref={quillRef}
-                      value={description}
-                      modules={modules}
-                      formats={formats}
-                      onChange={setDescription}
-                    />
-                  </div>
-                </div>
-
-                {/* Product STOCK */}
-                <div className="manage-form-group">
-                  <label>Tồn kho</label>
-                  <div className="manage-form-control">
-                    <input
-                      type="number"
-                      name="stock"
-                      step="1"
-                      min="1"
-                      defaultValue="1"
-                    ></input>
-                  </div>
-                </div>
-
-                {/* Product BRAND */}
-                <div className="manage-form-group">
-                  <label>Thương hiệu</label>
-                  <div className="manage-form-control">
-                    <select name="brandId" required>
-                      <option value="">Chọn thương hiệu</option>
-                      {allBrands.map((brand, index) => (
-                        <option key={index} value={brand.brandId}>
-                          {brand.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Product TYPE */}
-                <div className="manage-form-group">
-                  <label>Phân loại</label>
-                  <div className="manage-form-type-control">
-                    {categoryElements.map((e) => (
-                      <div key={e.id}>
-                        {e.content}
-                        {e.id === categoryElements.length && (
-                          <button
-                            style={{
-                              marginLeft: "15px",
-                              borderRadius: "10px",
-                              border: "1px solid rgb(67, 65, 65)",
-                            }}
-                            onClick={addNewCategoryElement}
-                          >
-                            Thêm
-                          </button>
-                        )}
-                        {e.id !== 1 && e.id === categoryElements.length && (
-                          <button
-                            style={{
-                              marginLeft: "15px",
-                              borderRadius: "10px",
-                              border: "1px solid rgb(67, 65, 65)",
-                            }}
-                            onClick={removeCategoryElement}
-                          >
-                            Hủy bỏ
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Product IMAGE */}
-                <div className="manage-form-group">
-                  <label>Hình minh họa sản phẩm</label>
-                  <div className="manage-form-control-img">
-                    {imageElements.map((e) => (
-                      <div key={e.id}>
-                        {e.content}
-                        {e.id === 1 && (
-                          <button
-                            style={{
-                              marginLeft: "15px",
-                              borderRadius: "10px",
-                              border: "1px solid rgb(67, 65, 65)",
-                            }}
-                            onClick={addNewImageElement}
-                          >
-                            Thêm
-                          </button>
-                        )}
-                        {e.id === 1 && imageElements.length > 1 && (
-                          <button
-                            style={{
-                              marginLeft: "15px",
-                              borderRadius: "10px",
-                              border: "1px solid rgb(67, 65, 65)",
-                            }}
-                            onClick={removeImageElement}
-                          >
-                            Hủy bỏ
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+              {/* Product NAME */}
+              <div className="manage-form-group">
+                <label>Tên sản phẩm</label>
+                <div className="manage-form-control">
+                  <input
+                    type="text"
+                    name="name"
+                    required></input>
                 </div>
               </div>
 
-              {/* Product BUTTON */}
-              <div className="manage-form-btn">
-                <button
-                  className="save-manage-btn save-manage-link"
-                  type="submit"
-                >
-                  Thêm sản phẩm
+              {/* Product list PRICE */}
+              <div className="manage-form-group">
+                <label>Giá niêm yết</label>
+                <div className="manage-form-control">
+                  <input
+                    type="number"
+                    name="listedPrice"
+                    step="500"
+                    min="0"
+                    required
+                  ></input>
+                </div>
+              </div>
+
+              {/* Product sell PRICE */}
+              <div className="manage-form-group">
+                <label>Giá bán</label>
+                <div className="manage-form-control">
+                  <input
+                    type="number"
+                    name="sellingPrice"
+                    step="500"
+                    min="0"
+                    required
+                  ></input>
+                </div>
+              </div>
+
+              {/* Product DESCRIPTION */}
+              <div className="manage-form-group">
+                <label>Mô tả sản phẩm</label>
+                <div className="manage-form-control">
+                  <ReactQuill
+                    style={{ backgroundColor: "white" }}
+                    ref={quillRef}
+                    value={description}
+                    modules={modules}
+                    formats={formats}
+                    onChange={setDescription}
+                  />
+                </div>
+              </div>
+
+              {/* Product STOCK */}
+              <div className="manage-form-group">
+                <label>Tồn kho</label>
+                <div className="manage-form-control">
+                  <input
+                    type="number"
+                    name="stock"
+                    step="1" min="1"
+                    defaultValue="1"
+                  ></input>
+                </div>
+              </div>
+
+              {/* Product BRAND */}
+              <div className="manage-form-group">
+                <label>Thương hiệu</label>
+                <div className="manage-form-control">
+                  <select name="brandId" required>
+                    <option value="">Chọn thương hiệu</option>
+                    {allBrands.map((brand, index) => (
+                      <option key={index} value={brand.brandId}>
+                        {brand.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Product TYPE */}
+              <div className="manage-form-group">
+                <label>Phân loại</label>
+                <div className="manage-form-type-control">
+                  {categoryElements.map((e) => (
+                    <div key={e.id}>
+                      {e.content}
+                      {e.id === categoryElements.length && (
+                        <button
+                          style={{
+                            marginLeft: "15px",
+                            borderRadius: "10px",
+                            border: "1px solid rgb(67, 65, 65)",
+                          }}
+                          onClick={addNewCategoryElement}
+                        >
+                          Thêm
+                        </button>
+                      )}
+                      {e.id !== 1 && e.id === categoryElements.length && (
+                        <button
+                          style={{
+                            marginLeft: "15px",
+                            borderRadius: "10px",
+                            border: "1px solid rgb(67, 65, 65)",
+                          }}
+                          onClick={removeCategoryElement}
+                        >
+                          Hủy bỏ
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Product IMAGE */}
+              <div className="manage-form-group">
+                <label>Hình minh họa sản phẩm</label>
+                <div className="manage-form-control-img">
+                  {imageElements.map((e) => (
+                    <div key={e.id}>
+                      {e.content}
+                      {e.id === 1 && (
+                        <button
+                          style={{
+                            marginLeft: "15px",
+                            borderRadius: "10px",
+                            border: "1px solid rgb(67, 65, 65)",
+                          }}
+                          onClick={addNewImageElement}
+                        >
+                          Thêm
+                        </button>
+                      )}
+                      {e.id === 1 && imageElements.length > 1 && (
+                        <button
+                          style={{
+                            marginLeft: "15px",
+                            borderRadius: "10px",
+                            border: "1px solid rgb(67, 65, 65)",
+                          }}
+                          onClick={removeImageElement}
+                        >
+                          Hủy bỏ
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Product BUTTON */}
+            <div className="manage-form-btn">
+              <button
+                className="save-manage-btn save-manage-link"
+                type="submit"
+              >
+                Thêm sản phẩm
+              </button>
+
+              <div className="cancel-manage-btn">
+                <button onClick={handleReload} className="cancel-manage-link">
+                  Đặt lại
                 </button>
-
-                <div className="cancel-manage-btn">
-                  <button onClick={handleReload} className="cancel-manage-link">
-                    Đặt lại
-                  </button>
-                </div>
               </div>
-            </form>
+            </div>
+          </form>
           }
         </div>
       </div>

@@ -26,8 +26,6 @@ export default function ArticleDetailPresentation() {
     fetchArticle();
   }, [articleTitle]);
   return (
-    <>
-    
       <div>
         {articleInfo && (
           <div className="article-detail-container">
@@ -47,26 +45,5 @@ export default function ArticleDetailPresentation() {
         )}
       </div>
     
-    {(window.location.pathname.startsWith(`${routes.staffArticleList}/`)) && (
-      <div>
-        {articleInfo && (
-          <div className="article-detail-container">
-            <div className="article-detail-title">
-              <h4 style={{ fontFamily: "MuseoModerno", fontWeight: "bold" }}>{articleInfo?.title}</h4>
-            </div>
-            <div
-              className="article-detail-uploadDate"
-              style={{ fontSize: "13px", marginBottom: "15px" }}
-            >
-              {articleInfo.uploadedDate}
-            </div>
-            <div className="article-detail-content" style={{ fontSize: "16px", color: "black" }}>
-              <div className="ql-editor" dangerouslySetInnerHTML={{ __html: articleInfo?.content }} />
-            </div>
-          </div>
-        )}
-      </div>
-    )}
-    </>
   );
 }

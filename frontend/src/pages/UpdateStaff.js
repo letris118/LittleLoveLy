@@ -40,11 +40,11 @@ export default function UpdateStaff() {
         if (response) {
           setStaff(response);
         } else {
-          toast.error("Không tìm thấy thông tin nhân viên.");
+          toast.error("Không tìm thấy thông tin nhân viên!");
         }
       } catch (error) {
-        console.error("Error fetching staff:", error);
-        toast.error("Không thể tải thông tin nhân viên.");
+        console.error(error);
+        toast.error("Không thể tải thông tin nhân viên!");
       }
     };
 
@@ -66,7 +66,7 @@ export default function UpdateStaff() {
 
       if (showPasswordFields) {
         if (passwords.newPassword !== passwords.confirmNewPassword) {
-          toast.error("Mật khẩu mới và xác nhận mật khẩu không khớp.");
+          toast.error("Xác nhận mật khẩu thất bại!");
           return;
         }
 
@@ -77,11 +77,11 @@ export default function UpdateStaff() {
         );
       }
 
-      toast.success("Cập nhật thông tin thành công!");
+      toast.success("Cập nhập thông tin thành công!");
       navigate("/manage-staff");
     } catch (error) {
-      console.error("Error updating staff:", error);
-      toast.error(`Lỗi khi cập nhật thông tin: ${error.message}`);
+      console.error(error);
+      toast.error("Lỗi khi cập nhập thông tin, vui lòng thử lại sau!");
     }
   };
 
