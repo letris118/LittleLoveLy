@@ -15,7 +15,7 @@ import { BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle, BsSearch, BsJustify
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line }
   from 'recharts';
 import { FcGlobe, FcMoneyTransfer, FcShipped } from "react-icons/fc";
-
+import { parse } from 'date-fns'
 import "../assets/css/dashboard.css"
 export default function Dashboard() {
   const navigate = useNavigate()
@@ -120,6 +120,29 @@ export default function Dashboard() {
     },
   ];
 
+  const dateFormat = "dd-MM-yyyy HH:mm:ss"
+
+  const monthlyRevenueData = (year) => {
+    const months = [
+      `Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`,
+    ]
+
+    const monthlySummary = months.map(month => ({
+      month,
+      price: 0
+    }))
+    orderList.forEach(order => {
+      const createdDate = parse(order.createdDate, dateFormat, new Date())
+      if (createdDate.getFullYear() == year) {
+        const monthIndex = createdDate.getMonth()
+        monthlySummary[monthIndex].price += order.postDiscountPrice
+      }
+    })
+
+    return monthlySummary
+  }
+
+
   return (
     <div>
       <StaffHeader />
@@ -131,7 +154,7 @@ export default function Dashboard() {
 
             <main>
               <div className='main-title'>
-                <h5>DASHBOARD</h5>
+                <h5>BẢNG THỐNG KÊ</h5>
               </div>
 
               <div className="main-cards">
@@ -195,7 +218,7 @@ export default function Dashboard() {
 
               {selectedTab === 'REVENUE' &&
                 <div className='charts'>
-                  <ResponsiveContainer width="100%" height="100%">
+                  {/* <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       width={500}
                       height={300}
@@ -215,13 +238,11 @@ export default function Dashboard() {
                       <Bar dataKey="listedPrice" fill="#8884d8" />
                       <Bar dataKey="sellingPrice" fill="#82ca9d" />
                     </BarChart>
-                  </ResponsiveContainer>
+                  </ResponsiveContainer> */}
 
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height={400}>
                     <LineChart
-                      width={500}
-                      height={300}
-                      data={data}
+                      data={monthlyRevenueData('2024')}
                       margin={{
                         top: 5,
                         right: 30,
@@ -230,13 +251,15 @@ export default function Dashboard() {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
+                      <XAxis dataKey="month" interval={0} />
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-                      <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                      <Line type="monotone" dataKey="price" stroke="#8884d8" activeDot={{ r: 8 }} />
+                      <Line type="monotone" dataKey="" stroke="#82ca9d" />
                     </LineChart>
+                    <h3>Monthly Revenue for 2024</h3> {/* Add your title here */}
+
                   </ResponsiveContainer>
 
                 </div>}
