@@ -63,12 +63,15 @@ export default function Cart() {
   }, []);
 
   const handleQuantityChange = useCallback((index, value) => {
+    const userRole = localStorage.getItem("userRole");
+    const maxQuantity = userRole === "ROLE_CUSTOMER" ? 50 : 10;
+
     setCartItems((prevItems) => {
       const updatedCartItems = [...prevItems];
-      if (value > 0 && value <= 50) {
+      if (value > 0 && value <= maxQuantity) {
         updatedCartItems[index].quantity = value;
         localStorage.setItem("cart", JSON.stringify(updatedCartItems));
-        if (localStorage.getItem("userRole") === "ROLE_CUSTOMER") {
+        if (userRole === "ROLE_CUSTOMER") {
           updateCart(updatedCartItems[index].productId, "product", value).catch(
             (error) => {
               console.error("Error updating cart item:", error);
@@ -117,8 +120,7 @@ export default function Cart() {
                         borderCollapse: "collapse",
                         height: "100px",
                         padding: "20px",
-                      }}
-                    >
+                      }}>
                       <TableCell sx={{ width: "15%" }}>
                         <img
                           src={`${instance.defaults.baseURL}/images/products/${item.productImages[0].imagePath}`}
@@ -129,8 +131,7 @@ export default function Cart() {
                       <TableCell sx={{ width: "50%" }}>
                         <Link
                           to={`/products/${item.name}`}
-                          style={{ color: "black", textDecoration: "none" }}
-                        >
+                          style={{ color: "black", textDecoration: "none" }}>
                           {item.name}
                         </Link>
                       </TableCell>
@@ -138,14 +139,12 @@ export default function Cart() {
                         <TableCell
                           sx={{
                             width: "18%",
-                          }}
-                        >
+                          }}>
                           <div
                             style={{
                               textAlign: "center",
                               fontWeight: "bold",
-                            }}
-                          >
+                            }}>
                             {formatPrice(item.sellingPrice)}đ
                           </div>
                         </TableCell>
@@ -153,14 +152,12 @@ export default function Cart() {
                         <TableCell
                           sx={{
                             width: "18%",
-                          }}
-                        >
+                          }}>
                           <div
                             style={{
                               textAlign: "center",
                               fontWeight: "bold",
-                            }}
-                          >
+                            }}>
                             {formatPrice(item.sellingPrice)}đ
                           </div>
                           <div
@@ -168,8 +165,7 @@ export default function Cart() {
                               textAlign: "center",
                               textDecoration: "line-through",
                               fontSize: "10px",
-                            }}
-                          >
+                            }}>
                             {formatPrice(item.listedPrice)}đ
                           </div>
                         </TableCell>
@@ -181,14 +177,12 @@ export default function Cart() {
                           display="flex"
                           alignItems="center"
                           m={1}
-                          marginLeft={7}
-                        >
+                          marginLeft={7}>
                           <button
                             onClick={() =>
                               handleQuantityChange(index, item.quantity - 1)
                             }
-                            disabled={item.quantity === 1}
-                          >
+                            disabled={item.quantity === 1}>
                             -
                           </button>
                           <span
@@ -196,16 +190,14 @@ export default function Cart() {
                               margin: "0 10px",
                               width: "30px",
                               textAlign: "center",
-                            }}
-                          >
+                            }}>
                             {item.quantity}
                           </span>
                           <button
                             onClick={() =>
                               handleQuantityChange(index, item.quantity + 1)
                             }
-                            disabled={item.quantity === 50}
-                          >
+                            disabled={item.quantity === 50}>
                             {}+
                           </button>
                         </Box>
@@ -215,16 +207,14 @@ export default function Cart() {
                           width: "17%",
                           textAlign: "right",
                           fontWeight: "bold",
-                        }}
-                      >
+                        }}>
                         {formatPrice(item.sellingPrice * item.quantity)}đ
                       </TableCell>
                       <TableCell sx={{ width: "5%" }}>
                         <Link onClick={() => handleRemoveItem(index)}>
                           <i
                             className="fa-regular fa-trash-can"
-                            style={{ color: "grey" }}
-                          ></i>
+                            style={{ color: "grey" }}></i>
                         </Link>
                       </TableCell>
                     </TableRow>
@@ -237,8 +227,7 @@ export default function Cart() {
                         borderCollapse: "collapse",
                         height: "100px",
                         padding: "20px",
-                      }}
-                    >
+                      }}>
                       <TableCell sx={{ width: "15%" }}>
                         <img
                           src={`${instance.defaults.baseURL}/images/gifts/${item.imagePath}`}
@@ -248,27 +237,23 @@ export default function Cart() {
                       </TableCell>
                       <TableCell sx={{ width: "50%" }}>
                         <span
-                          style={{ color: "black", textDecoration: "none" }}
-                        >
+                          style={{ color: "black", textDecoration: "none" }}>
                           {item.name}
                         </span>
                       </TableCell>
                       <TableCell
                         sx={{
                           width: "18%",
-                        }}
-                      >
+                        }}>
                         <div
                           style={{
                             textAlign: "center",
                             fontWeight: "bold",
-                          }}
-                        >
+                          }}>
                           {/* {""} */}
                           <i
                             className="fa-solid fa-coins"
-                            style={{ color: "rgb(201, 201, 7)" }}
-                          ></i>
+                            style={{ color: "rgb(201, 201, 7)" }}></i>
                           &nbsp;{item.point}
                         </div>
                       </TableCell>
@@ -277,8 +262,7 @@ export default function Cart() {
                           width: "15%",
                           textAlign: "center",
                           paddingRight: 4,
-                        }}
-                      >
+                        }}>
                         <span>1</span>
                       </TableCell>
                       <TableCell
@@ -286,8 +270,7 @@ export default function Cart() {
                           width: "17%",
                           textAlign: "right",
                           fontWeight: "bold",
-                        }}
-                      >
+                        }}>
                         0đ
                       </TableCell>
                       <TableCell sx={{ width: "5%" }}>{""}</TableCell>
@@ -314,8 +297,7 @@ export default function Cart() {
                 style={{
                   borderBottom: "1px solid grey",
                   paddingBottom: "10px",
-                }}
-              >
+                }}>
                 <div style={{ fontSize: "15px" }}>Giảm giá sản phẩm: </div>
                 <div style={{ fontSize: "15px", color: "#FF469E" }}>
                   -
