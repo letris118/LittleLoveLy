@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/chat.css";
-import { over } from 'stompjs';
-import SockJS from 'sockjs-client';
-import { getUserInfo } from "../services/auth/UsersService"
+import { over } from "stompjs";
+import SockJS from "sockjs-client";
+import { getUserInfo } from "../services/auth/UsersService";
 var stompClient = null;
 
 export default function StaffChat() {
@@ -14,10 +14,10 @@ export default function StaffChat() {
   const [conversations, setConversations] = useState(new Map());
   const [tab, setTab] = useState("");
   const [userData, setUserData] = useState({
-    username: localStorage.getItem('username'),
-    receivername: '',
+    username: localStorage.getItem("username"),
+    receivername: "",
     connected: false,
-    message: ''
+    message: "",
   });
   const [userNames, setUserNames] = useState(new Map());
 
@@ -42,13 +42,11 @@ export default function StaffChat() {
     fetchUserNames();
   }, [conversations, userData.username]);
 
-
-
   useEffect(() => {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
       if (!userRole || userRole !== "ROLE_STAFF") {
-        navigate('/');
+        navigate("/");
       } else {
         connect();
       }
@@ -56,28 +54,28 @@ export default function StaffChat() {
     checkAuthentication();
   }, [navigate]);
 
-
-
-
   const connect = () => {
-    let Sock = new SockJS('http://localhost:8000/ws');
+    let Sock = new SockJS("http://localhost:8000/ws");
     stompClient = over(Sock);
     stompClient.connect({}, onConnected, onError);
-  }
+  };
 
   const onConnected = () => {
-    setUserData({ ...userData, "connected": true });
-    stompClient.subscribe('/user/' + userData.username + '/private', onPrivateMessage);
+    setUserData({ ...userData, connected: true });
+    stompClient.subscribe(
+      "/user/" + userData.username + "/private",
+      onPrivateMessage
+    );
     userJoin();
-  }
+  };
 
   const userJoin = () => {
     var chatMessage = {
       senderName: userData.username,
-      status: "JOIN"
+      status: "JOIN",
     };
     stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
-  }
+  };
 
   const onPrivateMessage = (payload) => {
     var payloadData = JSON.parse(payload.body);
@@ -90,28 +88,28 @@ export default function StaffChat() {
       conversations.set(payloadData.senderName, list);
       setConversations(new Map(conversations));
     }
-    scrollToBottom()
-  }
+    scrollToBottom();
+  };
 
   const onError = (err) => {
     console.log(err);
-  }
+  };
 
   const handleMessage = (event) => {
     const { value } = event.target;
-    setUserData({ ...userData, "message": value });
-  }
+    setUserData({ ...userData, message: value });
+  };
 
   const sendMessage = () => {
     if (userData.message.length === 0) {
-      return
+      return;
     }
     if (stompClient) {
       var chatMessage = {
         senderName: userData.username,
         receiverName: tab,
         message: userData.message,
-        status: "MESSAGE"
+        status: "MESSAGE",
       };
 
       if (userData.username !== tab) {
@@ -119,10 +117,10 @@ export default function StaffChat() {
         setConversations(new Map(conversations));
       }
       stompClient.send("/app/private-message", {}, JSON.stringify(chatMessage));
-      setUserData({ ...userData, "message": "" });
+      setUserData({ ...userData, message: "" });
       scrollToBottom();
     }
-  }
+  };
 
   const scrollToBottom = () => {
     if (chatBoxRef.current) {
@@ -130,31 +128,32 @@ export default function StaffChat() {
         chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
       }, 50);
     }
-  }
+  };
 
   const displayName = (username) => {
-    if (username.toLowerCase().includes('staff')) {
-      return 'LittleLoveLy';
+    if (username.toLowerCase().includes("staff")) {
+      return "LittleLoveLy";
     } else {
       return userNames.get(username);
     }
-  }
-
+  };
 
   return (
     <div>
       <StaffHeader />
-      <div className="content">
+      <div className="content" style={{backgroundColor: "#f5f5f5"}}>
         <StaffSideBar />
 
         {userData.connected ? (
           <>
-
             {tab === "" ? (
               <div className="standing-by">
                 <h3>Hiện không có tin nhắn</h3>
                 <p>Vui lòng chờ khách hàng bắt đầu trò chuyện.</p>
-                <p>Khi một khách hàng gửi tin nhắn, tên của họ sẽ xuất hiện trong danh sách bên phải.</p>
+                <p>
+                  Khi một khách hàng gửi tin nhắn, tên của họ sẽ xuất hiện trong
+                  danh sách bên phải.
+                </p>
               </div>
             ) : (
               <div className="staff-chat">
@@ -162,10 +161,22 @@ export default function StaffChat() {
                   <div>
                     <ul className="chat-messages">
                       {[...conversations.get(tab)].map((chat, index) => (
-                        <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
-                          {chat.senderName !== userData.username && <div className="avatar">{displayName(chat.senderName)}</div>}
+                        <li
+                          className={`message ${
+                            chat.senderName === userData.username && "self"
+                          }`}
+                          key={index}>
+                          {chat.senderName !== userData.username && (
+                            <div className="avatar">
+                              {displayName(chat.senderName)}
+                            </div>
+                          )}
                           <div className="message-data">{chat.message}</div>
-                          {chat.senderName === userData.username && <div className="avatar self">{displayName(chat.senderName)}</div>}
+                          {chat.senderName === userData.username && (
+                            <div className="avatar self">
+                              {displayName(chat.senderName)}
+                            </div>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -183,20 +194,23 @@ export default function StaffChat() {
                       }
                     }}
                   />
-                  <button type="button" onClick={sendMessage}>Gửi</button>
+                  <button type="button" onClick={sendMessage}>
+                    Gửi
+                  </button>
                 </div>
               </div>
             )}
             <div className="customer-list">
               <ul>
                 {[...conversations.keys()]
-                  .filter(name => name !== userData.username)
+                  .filter((name) => name !== userData.username)
                   .map((username, index) => (
                     <li
-                      onClick={() => { setTab(username) }}
+                      onClick={() => {
+                        setTab(username);
+                      }}
                       className={`member ${tab === username && "active"}`}
-                      key={index}
-                    >
+                      key={index}>
                       {userNames.get(username) || username}
                     </li>
                   ))}
@@ -204,9 +218,10 @@ export default function StaffChat() {
             </div>
           </>
         ) : (
-          <h4 className="standing-by">Tính năng tạm thời không khả dụng. Vui lòng thử lại sau.</h4>
+          <h4 className="standing-by">
+            Tính năng tạm thời không khả dụng. Vui lòng thử lại sau.
+          </h4>
         )}
-
       </div>
     </div>
   );
