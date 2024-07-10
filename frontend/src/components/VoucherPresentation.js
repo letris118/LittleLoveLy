@@ -3,7 +3,11 @@ import { getVouchersByUsername } from "../services/auth/UsersService";
 import "../assets/css/voucherPresentation.css";
 import { Button, styled, DialogActions } from "@mui/material";
 
-export default function VoucherPresentation({ initialVoucherId, handleClose }) {
+export default function VoucherPresentation({
+  initialVoucherId,
+  basePrice,
+  handleClose,
+}) {
   const [voucherList, setVoucherList] = useState([]);
   const [selectedVoucher, setSelectedVoucher] = useState(initialVoucherId);
 
@@ -79,7 +83,10 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
               </div>
             </div>
             <div className="voucher-item-right">
-              <CustomButton onClick={() => handleApply(voucher.voucherId)}>
+              <CustomButton
+                onClick={() => handleApply(voucher.voucherId)}
+                disabled={basePrice < voucher.minOrderAmount}
+              >
                 {selectedVoucher === voucher.voucherId ? "Hủy" : "Áp dụng"}
               </CustomButton>
             </div>

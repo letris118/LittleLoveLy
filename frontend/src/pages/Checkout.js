@@ -573,6 +573,7 @@ export default function Checkout() {
         <DialogContent>
           <VoucherPresentation
             initialVoucherId={formik.values.voucherId}
+            basePrice={evaluateResult.basePrice}
             handleClose={handleCloseVoucherDialog}
           />
         </DialogContent>
