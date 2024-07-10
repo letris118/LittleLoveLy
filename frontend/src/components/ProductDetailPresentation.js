@@ -120,7 +120,7 @@ export default function ProductDetailPresentation() {
 
   const handleAddToCart = useCallback(() => {
     const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-    const existingProductIndex = cartItems.findIndex(
+    let existingProductIndex = cartItems.findIndex(
       (item) => item.productId === productInfo.productId
     );
 
@@ -152,6 +152,10 @@ export default function ProductDetailPresentation() {
       cartItems.push({ ...productInfo, quantity });
     }
 
+    existingProductIndex = cartItems.findIndex(
+      (item) => item.productId === productInfo.productId
+    );
+
     if (userRole === "ROLE_CUSTOMER") {
       updateCart(productInfo.productId, "product", newQuantity).catch(
         (error) => {
@@ -172,7 +176,7 @@ export default function ProductDetailPresentation() {
     const maxQuantity = userRole === "ROLE_CUSTOMER" ? 50 : 10;
 
     const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-    const existingProductIndex = cartItems.findIndex(
+    let existingProductIndex = cartItems.findIndex(
       (item) => item.productId === productInfo.productId
     );
 
@@ -200,6 +204,10 @@ export default function ProductDetailPresentation() {
     } else {
       cartItems.push({ ...productInfo, quantity });
     }
+
+    existingProductIndex = cartItems.findIndex(
+      (item) => item.productId === productInfo.productId
+    );
 
     if (userRole === "ROLE_CUSTOMER") {
       updateCart(
@@ -306,11 +314,13 @@ export default function ProductDetailPresentation() {
               <Slider
                 {...settingsImgBottom}
                 ref={(slider2) => setNav2(slider2)}
-                style={{ margin: "10px" }}>
+                style={{ margin: "10px" }}
+              >
                 {productInfo.productImages.map((proImg) => (
                   <div
                     className="product-detail-bottom-img"
-                    key={proImg.imageId}>
+                    key={proImg.imageId}
+                  >
                     <img
                       onClick={() => setSelectedImage(proImg.imageId)}
                       src={`${instance.defaults.baseURL}/images/products/${proImg.imagePath}`}
@@ -333,7 +343,8 @@ export default function ProductDetailPresentation() {
               <>
                 <div
                   className="product-detail-top-img"
-                  key={productInfo.productImages[0].imageId}>
+                  key={productInfo.productImages[0].imageId}
+                >
                   <img
                     src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
                     alt=""
@@ -342,7 +353,8 @@ export default function ProductDetailPresentation() {
                 </div>
                 <div
                   className="product-detail-bottom-img"
-                  style={{ margin: "10px", textAlign: "center" }}>
+                  style={{ margin: "10px", textAlign: "center" }}
+                >
                   <img
                     src={`${instance.defaults.baseURL}/images/products/${productInfo.productImages[0].imagePath}`}
                     alt=""
@@ -365,7 +377,8 @@ export default function ProductDetailPresentation() {
               {productInfo?.brand ? (
                 <Link
                   to={`${routes.brands}/${productInfo.brand.name}`}
-                  style={{ textDecoration: "none" }}>
+                  style={{ textDecoration: "none" }}
+                >
                   {productInfo.brand.name}
                 </Link>
               ) : (
@@ -381,7 +394,8 @@ export default function ProductDetailPresentation() {
                     margin: "0 5px",
                     textDecoration: "underline",
                     fontWeight: "bold",
-                  }}>
+                  }}
+                >
                   {productInfo?.averageRating}
                 </div>
                 <Rating
@@ -402,7 +416,8 @@ export default function ProductDetailPresentation() {
                   style={{
                     fontWeight: "bold",
                     textDecoration: "underline",
-                  }}>
+                  }}
+                >
                   {productInfo?.noSold}
                 </span>
                 &nbsp;đã bán
@@ -430,7 +445,8 @@ export default function ProductDetailPresentation() {
                       alignItems: "center",
                       marginRight: "10px",
                       fontWeight: "lighter",
-                    }}>
+                    }}
+                  >
                     {formatPrice(productInfo?.listedPrice) + "đ"}
                   </div>
                   <div style={{ color: "#FF469E", fontSize: "30px" }}>
@@ -460,7 +476,8 @@ export default function ProductDetailPresentation() {
                 />
                 <button
                   onClick={handleIncrease}
-                  style={{ paddingTop: "2px", paddingLeft: "1px" }}>
+                  style={{ paddingTop: "2px", paddingLeft: "1px" }}
+                >
                   +
                 </button>
               </Box>
@@ -488,7 +505,8 @@ export default function ProductDetailPresentation() {
 
         <div
           className="product-detail-reviews"
-          style={{ minHeight: "50vh", minWidth: "1100px" }}>
+          style={{ minHeight: "50vh", minWidth: "1100px" }}
+        >
           <h5>Đánh giá</h5>
           <div className="product-detail-reviews-stars">
             <div className="product-detail-reviews-stars-left">
@@ -497,7 +515,8 @@ export default function ProductDetailPresentation() {
                   fontWeight: "bold",
                   fontFamily: "MuseoModerno",
                   fontSize: "20px",
-                }}>
+                }}
+              >
                 <span style={{ color: "#FF469E", fontSize: "30px" }}>
                   {productInfo?.averageRating.toFixed(1)}
                 </span>
@@ -524,7 +543,8 @@ export default function ProductDetailPresentation() {
                   border:
                     selectedButton === "newest" ? "1px solid #FF469E" : "",
                   color: selectedButton === "newest" ? "#FF469E" : "",
-                }}>
+                }}
+              >
                 Mới nhất
               </button>
               {[5, 4, 3, 2, 1].map((star) => (
@@ -535,7 +555,8 @@ export default function ProductDetailPresentation() {
                       border:
                         selectedButton === star ? "1px solid #FF469E" : "",
                       color: selectedButton === star ? "#FF469E" : "",
-                    }}>
+                    }}
+                  >
                     {star} <i className="fa-solid fa-star"></i>
                   </button>
                 </div>
@@ -549,24 +570,28 @@ export default function ProductDetailPresentation() {
                 .map((review) => (
                   <div
                     className="product-detail-reviews-comments-user"
-                    key={review.reviewId}>
+                    key={review.reviewId}
+                  >
                     <span
                       style={{
                         width: "10%",
                         height: "100%",
                         display: "flex",
                         justifyContent: "center",
-                      }}>
+                      }}
+                    >
                       <i
                         className="fa-solid fa-user"
-                        style={{ fontSize: "30px" }}></i>
+                        style={{ fontSize: "30px" }}
+                      ></i>
                     </span>
                     <div>
                       <div
                         style={{
                           fontWeight: "bold",
                           fontSize: "15px",
-                        }}>
+                        }}
+                      >
                         {review.userName}
                       </div>
                       <div>
@@ -590,7 +615,8 @@ export default function ProductDetailPresentation() {
                   display: "flex",
                   justifyContent: "center",
                   marginTop: "10px",
-                }}>
+                }}
+              >
                 <button
                   onClick={() => setShowAllReviews(true)}
                   style={{
@@ -600,7 +626,8 @@ export default function ProductDetailPresentation() {
                     borderRadius: "20px",
                     cursor: "pointer",
                     border: "none",
-                  }}>
+                  }}
+                >
                   Xem thêm{" "}
                   <b>
                     <i>{filteredReviews.length - 5}</i>
@@ -617,7 +644,8 @@ export default function ProductDetailPresentation() {
               marginBottom: "10px",
               fontWeight: "bold",
               fontFamily: "MuseoModerno",
-            }}>
+            }}
+          >
             Nhận xét
           </h5>
           {localStorage.getItem("userRole") === "ROLE_CUSTOMER" ? (
@@ -627,7 +655,8 @@ export default function ProductDetailPresentation() {
                   display: "flex",
                   justifyContent: "center",
                   margin: "5px 0",
-                }}>
+                }}
+              >
                 <Rating
                   value={rating}
                   onChange={(event, newValue) => setRating(newValue)}
@@ -654,7 +683,8 @@ export default function ProductDetailPresentation() {
                   justifyContent: "flex-end",
                   alignItems: "center",
                   marginTop: "10px",
-                }}>
+                }}
+              >
                 <Button
                   type="submit"
                   variant="contained"
@@ -663,7 +693,8 @@ export default function ProductDetailPresentation() {
                     backgroundColor: activateSubmit ? "#FF469E" : "gray",
                     color: "white",
                   }}
-                  disabled={!activateSubmit}>
+                  disabled={!activateSubmit}
+                >
                   Gửi đánh giá
                 </Button>
               </div>
