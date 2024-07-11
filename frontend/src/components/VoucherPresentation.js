@@ -23,6 +23,10 @@ export default function VoucherPresentation({
       background:
         "linear-gradient(90deg, rgba(255,0,132,0.8) 0%, rgba(255,99,132,0.8) 100%)",
     },
+    "&.Mui-disabled": {
+      background: "rgba(154, 149, 149, 0.817)",
+      color: "white",
+    },
   });
 
   const CustomCloseButton = styled(Button)({
@@ -66,16 +70,19 @@ export default function VoucherPresentation({
     <>
       <div className="voucher-container">
         {voucherList.map((voucher) => (
-          <div className="voucher-item" key={voucher.voucherId}>
+          <div
+            className={`voucher-item ${
+              basePrice < voucher.minOrderAmount ? "voucher-disabled" : ""
+            }`}
+            key={voucher.voucherId}>
             <div className="voucher-item-left">
               <div
                 className="voucher-name"
                 style={{
                   fontSize: "18px",
                   fontWeight: "bold",
-                  color: "#AE0258",
-                }}
-              >
+                  
+                }}>
                 {voucher.title}
               </div>
               <div className="voucher-description" style={{ fontSize: "12px" }}>
@@ -85,8 +92,7 @@ export default function VoucherPresentation({
             <div className="voucher-item-right">
               <CustomButton
                 onClick={() => handleApply(voucher.voucherId)}
-                disabled={basePrice < voucher.minOrderAmount}
-              >
+                disabled={basePrice < voucher.minOrderAmount}>
                 {selectedVoucher === voucher.voucherId ? "Hủy" : "Áp dụng"}
               </CustomButton>
             </div>
