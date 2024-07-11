@@ -1,22 +1,21 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { Table } from "@mui/material";
+import Box from "@mui/material/Box";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "../assets/css/cart.css";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
-import Footer from "../components/Footer";
-import "../assets/css/cart.css";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import { Table, styled } from "@mui/material";
-import { Link, useNavigate, useHistory } from "react-router-dom";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
+import { routes } from "../routes";
 import {
   formatPrice,
   removeItemCard,
   updateCart,
 } from "../services/auth/UsersService";
 import instance from "../services/auth/customize-axios";
-import { routes } from "../routes";
-import { toast } from "react-toastify";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);

@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SockJS from "sockjs-client";
+import { over } from "stompjs";
+import "../assets/css/chat.css";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
-import "../assets/css/chat.css";
-import { over } from "stompjs";
-import SockJS from "sockjs-client";
 import { getUserInfo } from "../services/auth/UsersService";
 var stompClient = null;
 

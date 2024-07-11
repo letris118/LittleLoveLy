@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
-import { Link, useLocation } from "react-router-dom";
-import { routes } from "../routes";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "../assets/css/homePage.css";
+import ArticlePresentation from "../components/ArticlePresentation";
+import BrandPresentation from "../components/BrandPresentation";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
+import ProductPresentation from "../components/ProductPresentation";
+import Sidebar from "../components/SideBar";
+import { routes } from "../routes";
 import {
   articles,
   brands,
-  products,
   getCart,
+  products,
 } from "../services/auth/UsersService";
-import BrandPresentation from "../components/BrandPresentation";
-import "../assets/css/homePage.css";
-import ProductPresentation from "../components/ProductPresentation";
-import Sidebar from "../components/SideBar";
-import ArticlePresentation from "../components/ArticlePresentation";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const [productList, setProductList] = useState([]);

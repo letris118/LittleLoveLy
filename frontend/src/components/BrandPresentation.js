@@ -1,10 +1,10 @@
 import React from "react";
-import { routes } from "../routes";
 import { Link } from "react-router-dom";
-import "../assets/css/brandPresentation.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import "../assets/css/brandPresentation.css";
+import { routes } from "../routes";
 import instance from "../services/auth/customize-axios";
 
 export default function BrandPresentation({ brands }) {

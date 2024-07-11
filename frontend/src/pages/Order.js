@@ -1,46 +1,37 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Pagination,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useFormik } from "formik";
 import React, { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "../assets/css/searchOrder.css";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
-import Footer from "../components/Footer";
-import "../assets/css/searchOrder.css";
+import { routes } from "../routes";
+import instance from "../services/auth/customize-axios";
 import {
   formatPrice,
   getOrderById,
   getOrdersByUsername,
   orderReceived,
 } from "../services/auth/UsersService";
-import {
-  Pagination,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
-import instance from "../services/auth/customize-axios";
-import { useFormik } from "formik";
-import { toast } from "react-toastify";
-import { min, set } from "date-fns";
-import { Link } from "react-router-dom";
-import { routes } from "../routes";
-import { useNavigate } from "react-router-dom";
 
 export default function Order() {
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersList, setOrdersList] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
-  const [orderToCancel, setOrderToCancel] = useState(null);
   const [refresh, setRefresh] = useState(false);
   const navigate = useNavigate();
   const itemsPerPage = 5;
-
-  // useEffect(() => {
-  //   if (localStorage.getItem("userRole") === "ROLE_ADMIN" || localStorage.) {
-
-  //   }
 
   const CustomPagination = styled(Pagination)({
     "& .MuiPaginationItem-root": {
@@ -138,22 +129,6 @@ export default function Order() {
 
   const handleClose = () => {
     setSelectedOrder(null);
-  };
-
-  const handleCancelOrder = (order) => {
-    setOrderToCancel(order);
-    setIsCancelDialogOpen(true);
-  };
-
-  // const handleConfirmCancel = () => {
-  //   //
-  //   console.log(`Đơn hàng <b>${orderToCancel.orderId}</b> của bạn đã hủy`);
-  //   setIsCancelDialogOpen(false);
-  //   setSelectedOrder(null);
-  // };
-
-  const handleCloseCancelDialog = () => {
-    setIsCancelDialogOpen(false);
   };
 
   const CustomDialog = styled(Dialog)({

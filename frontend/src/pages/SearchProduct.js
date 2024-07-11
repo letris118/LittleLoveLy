@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Sidebar from "../components/SideBar";
-import SearchPresentation from "../components/SearchPresentation";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import SearchPresentation from "../components/SearchPresentation";
+import Sidebar from "../components/SideBar";
 
 export default function SearchProduct() {
   const navigate = useNavigate();

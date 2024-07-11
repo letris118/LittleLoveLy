@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
+import { Link, useNavigate } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import "../assets/css/dropdown.css";
-import { Link, useNavigate } from "react-router-dom";
-import { handleLogout } from "../services/auth/UsersService";
 import { routes } from "../routes";
+import { handleLogout } from "../services/auth/UsersService";
 
 export default function DropdownMenu({ handleLogoutSuccess }) {
   const [showMenu, setShowMenu] = useState(false);

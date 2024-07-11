@@ -1,7 +1,7 @@
+import { Button, DialogActions, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getVouchersByUsername } from "../services/auth/UsersService";
 import "../assets/css/voucherPresentation.css";
-import { Button, styled, DialogActions } from "@mui/material";
+import { getVouchersByUsername } from "../services/auth/UsersService";
 
 export default function VoucherPresentation({
   initialVoucherId,
@@ -81,7 +81,6 @@ export default function VoucherPresentation({
                 style={{
                   fontSize: "18px",
                   fontWeight: "bold",
-                  
                 }}>
                 {voucher.title}
               </div>

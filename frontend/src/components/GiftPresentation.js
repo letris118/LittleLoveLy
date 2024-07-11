@@ -1,6 +1,6 @@
 import React from "react";
-import instance from "../services/auth/customize-axios";
 import "../assets/css/giftPresentation.css";
+import instance from "../services/auth/customize-axios";
 
 export default function GiftPresentation({ giftstList, onExchange }) {
   return (

@@ -1,9 +1,3 @@
-import React, { useEffect, useMemo, useState } from "react";
-import Header from "../components/Header";
-import Sidebar from "../components/SideBar";
-import Footer from "../components/Footer";
-import GiftPresentation from "../components/GiftPresentation";
-import Breadcrumb from "../components/Breadcrum";
 import {
   Button,
   Dialog,
@@ -13,10 +7,16 @@ import {
   Pagination,
   styled,
 } from "@mui/material";
-import { gifts, updateCart, getUserInfo } from "../services/auth/UsersService";
-import { toast } from "react-toastify";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Breadcrumb from "../components/Breadcrum";
+import Footer from "../components/Footer";
+import GiftPresentation from "../components/GiftPresentation";
+import Header from "../components/Header";
+import Sidebar from "../components/SideBar";
 import { routes } from "../routes";
+import { getUserInfo, gifts, updateCart } from "../services/auth/UsersService";
 
 export default function Gift() {
   const [giftstList, setGiftsList] = useState([]);

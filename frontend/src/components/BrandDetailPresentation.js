@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { brands, getProductByBrandId } from "../services/auth/UsersService";
-import { useParams } from "react-router-dom";
-import instance from "../services/auth/customize-axios";
 import { Pagination } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import React, { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import instance from "../services/auth/customize-axios";
+import { brands, getProductByBrandId } from "../services/auth/UsersService";
 import ProductPresentation from "./ProductPresentation";
 
 export default function BrandDetailPresentation() {

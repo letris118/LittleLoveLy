@@ -1,11 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import "../assets/css/articlePresentation.css";
 import { routes } from "../routes";
 import instance from "../services/auth/customize-axios";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import "../assets/css/articlePresentation.css";
-import { Link } from "react-router-dom";
 
 export default function ArticlePresentation({ articles }) {
   let settings = {

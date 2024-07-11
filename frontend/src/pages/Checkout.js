@@ -1,8 +1,15 @@
+import { Dialog, DialogContent, DialogTitle, styled } from "@mui/material";
+import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import * as Yup from "yup";
+import "../assets/css/checkout.css";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
-import Footer from "../components/Footer";
-import "../assets/css/checkout.css";
+import VoucherPresentation from "../components/VoucherPresentation";
+import { routes } from "../routes";
 import {
   createOrder,
   evaluateCart,
@@ -10,13 +17,6 @@ import {
   getUserInfo,
   previewOrder,
 } from "../services/auth/UsersService";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import { routes } from "../routes";
-import * as Yup from "yup";
-import { Dialog, DialogContent, DialogTitle, styled } from "@mui/material";
-import VoucherPresentation from "../components/VoucherPresentation";
-import { toast } from "react-toastify";
 
 Yup.addMethod(Yup.object, "validatePhoneAndAddress", function (message) {
   return this.test("validatePhoneAndAddress", message, async function (value) {

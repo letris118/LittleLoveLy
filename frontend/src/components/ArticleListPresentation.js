@@ -1,8 +1,8 @@
+import parse from "html-react-parser";
 import React from "react";
+import { Link } from "react-router-dom";
 import { routes } from "../routes";
 import instance from "../services/auth/customize-axios";
-import { Link } from "react-router-dom";
-import parse from "html-react-parser";
 
 export default function ArticleListPresentation(articles) {
   return (
