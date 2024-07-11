@@ -32,7 +32,6 @@ export const routes = {
   updateGift: "/update-gift",
   addGift: "/add-gift",
 
-  staffBrandList: "/brand-list",
   checkout: "/checkout",
   dashboard: "/dashboard",
   manageMember: "/manage-member",
@@ -40,9 +39,7 @@ export const routes = {
   searchProduct: "/search",
   gift: "/gift",
   order: "/order",
-  staffArticleList: "/article-list",
-  staffProductList: "/product-list",
-  staffSearchProduct: "/search-product",
+  
 
   profileCustomer: "/profile",
   staffProfile: "/account",

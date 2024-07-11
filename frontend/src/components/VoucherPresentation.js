@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { vouchers } from "../services/auth/UsersService";
+import { getVouchersByUsername } from "../services/auth/UsersService";
 import "../assets/css/voucherPresentation.css";
 import { Button, styled, DialogActions } from "@mui/material";
 
-export default function VoucherPresentation({ initialVoucherId, handleClose }) {
+export default function VoucherPresentation({
+  initialVoucherId,
+  basePrice,
+  handleClose,
+}) {
   const [voucherList, setVoucherList] = useState([]);
   const [selectedVoucher, setSelectedVoucher] = useState(initialVoucherId);
 
@@ -18,6 +22,10 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
     "&:hover": {
       background:
         "linear-gradient(90deg, rgba(255,0,132,0.8) 0%, rgba(255,99,132,0.8) 100%)",
+    },
+    "&.Mui-disabled": {
+      background: "rgba(154, 149, 149, 0.817)",
+      color: "white",
     },
   });
 
@@ -34,9 +42,9 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
   });
 
   useEffect(() => {
-    const fetchVouchers = async () => {
+    const fetchVouchers = async (username) => {
       try {
-        const response = await vouchers();
+        const response = await getVouchersByUsername(username);
         if (response) {
           setVoucherList(response);
         } else {
@@ -47,7 +55,11 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
         setVoucherList([]);
       }
     };
-    fetchVouchers();
+
+    const username = localStorage.getItem("username");
+    if (username) {
+      fetchVouchers(username);
+    }
   }, []);
 
   const handleApply = (voucherId) => {
@@ -58,14 +70,18 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
     <>
       <div className="voucher-container">
         {voucherList.map((voucher) => (
-          <div className="voucher-item" key={voucher.voucherId}>
+          <div
+            className={`voucher-item ${
+              basePrice < voucher.minOrderAmount ? "voucher-disabled" : ""
+            }`}
+            key={voucher.voucherId}>
             <div className="voucher-item-left">
               <div
                 className="voucher-name"
                 style={{
                   fontSize: "18px",
                   fontWeight: "bold",
-                  color: "#AE0258",
+                  
                 }}>
                 {voucher.title}
               </div>
@@ -74,7 +90,9 @@ export default function VoucherPresentation({ initialVoucherId, handleClose }) {
               </div>
             </div>
             <div className="voucher-item-right">
-              <CustomButton onClick={() => handleApply(voucher.voucherId)}>
+              <CustomButton
+                onClick={() => handleApply(voucher.voucherId)}
+                disabled={basePrice < voucher.minOrderAmount}>
                 {selectedVoucher === voucher.voucherId ? "Hủy" : "Áp dụng"}
               </CustomButton>
             </div>

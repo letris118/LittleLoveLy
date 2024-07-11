@@ -1,6 +1,5 @@
 package com.vtcorp.store.services;
 
-import com.vtcorp.store.constants.OnlinePaymentStatus;
 import com.vtcorp.store.entities.Order;
 import com.vtcorp.store.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Value;

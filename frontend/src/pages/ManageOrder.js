@@ -56,8 +56,8 @@ export default function ManageOrder() {
           setFilteredOrders([]);
         }
       } catch (error) {
-        console.error("Error fetching orders:", error);
-        toast.error("Không thể tải đơn hàng");
+        console.error(error);
+        toast.error("Không thể tải đơn hàng!");
         setOrderList([]);
         setFilteredOrders([]);
       }
@@ -115,7 +115,8 @@ export default function ManageOrder() {
       const response = await getOrderById(orderId);
       setSelectedOrder(response);
     } catch (error) {
-      console.error("Error fetching order details:", error);
+      console.error(error);
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại!");
     }
   };
 
@@ -138,11 +139,8 @@ export default function ManageOrder() {
         toast.error(`Không thể xác nhận đơn hàng ${orderToConfirm.orderId}`);
       }
     } catch (error) {
-      toast.error(
-        `Không thể xác nhận đơn hàng ${orderToConfirm.orderId}: ${
-          error.message || error
-        }`
-      );
+      toast.error(`Không thể xác nhận đơn hàng ${orderToConfirm.orderId}`);
+      console.error(error);
     }
     setIsConfirmOrderDialogOpen(false);
     setSelectedOrder(null);

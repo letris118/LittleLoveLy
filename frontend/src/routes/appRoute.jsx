@@ -19,7 +19,6 @@ import StaffHomePage from "../pages/StaffHomePage";
 import StaffChat from "../pages/StaffChat";
 import Chat from "../pages/Chat";
 import ManageGift from "../pages/ManageGift";
-import StaffBrandList from "../pages/StaffBrandList";
 import UpdateProduct from "../pages/UpdateProduct";
 import AddProduct from "../pages/AddProduct";
 import AddArticle from "../pages/AddArticle";
@@ -39,12 +38,6 @@ import UpdateVoucher from "../pages/UpdateVoucher";
 import SearchProduct from "../pages/SearchProduct";
 import Gift from "../pages/Gift";
 import Order from "../pages/Order";
-import StaffBrandDetail from "../pages/StaffBrandDetail";
-import StaffArticleDetail from "../pages/StaffArticleDetail";
-import StaffArticleList from "../pages/StaffArticleList";
-import StaffProductDetail from "../pages/StaffProductDetail";
-import StaffProductList from "../pages/StaffProductList";
-import StaffSearchProduct from "../pages/StaffSearchProduct";
 import ProfileCus from "../pages/ProfileCus";
 import StaffProfile from "../pages/StaffProfile";
 import UpdateStaff from "../pages/UpdateStaff";
@@ -90,7 +83,7 @@ export default function AppRoute() {
         <Route path={routes.searchProduct} element={<SearchProduct />} />
         <Route path={routes.gift} element={<Gift />} />
 
-        <Route path={routes.staffBrandList} element={<StaffBrandList />} />
+        
         <Route path={routes.staffChat} element={<StaffChat />} />
 
         <Route path={routes.manageProduct} element={<ManageProduct />} />
@@ -125,26 +118,10 @@ export default function AppRoute() {
         <Route path={routes.searchProduct} element={<SearchProduct />} />
         <Route path={routes.gift} element={<Gift />} />
         <Route path={routes.order} element={<Order />} />
-        <Route
-          path={`${routes.staffBrandList}/:name`}
-          element={<StaffBrandDetail />}
-        />
-        <Route
-          path={`${routes.staffArticleList}/:title`}
-          element={<StaffArticleDetail />}
-        />
-        <Route path={routes.staffArticleList} element={<StaffArticleList />} />
-
-        <Route path={routes.staffProductList} element={<StaffProductList />} />
-        <Route
-          path={`${routes.staffProductList}/:name`}
-          element={<StaffProductDetail />}
-        />
-        <Route
-          path={routes.staffSearchProduct}
-          element={<StaffSearchProduct />}
-        />
-
+       
+       
+       
+ 
         <Route path={routes.profileCustomer} element={<ProfileCus />} />
         <Route path={routes.chat} element={<Chat />} />
 

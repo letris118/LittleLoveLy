@@ -1,35 +1,23 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState} from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import StaffHeader from "../components/StaffHeader"
 import { toast } from "react-toastify"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
 import {
     getVoucherById,
-    updateVoucher 
+    updateVoucher
 } from "../services/auth/UsersService"
 import StaffSideBar from "../components/StaffSideBar"
 import "../assets/css/manage.css"
 import StaffBackToTop from "../components/StaffBackToTop"
 export default function UpdateVoucher() {
     const [voucherInfo, setVoucherInfo] = useState(null)
-    const textareaRef = useRef(null);
-
     const [selectedType, setSelectedType] = useState('');
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-
-
     const location = useLocation()
     const navigate = useNavigate()
-
-    useEffect(() => {
-        if (textareaRef.current) {
-            textareaRef.current.style.height = "auto";
-            textareaRef.current.style.height = '${textareaRef.current.scrollHeight + 1}px';
-        }
-    }, [voucherInfo?.description]);
 
     useEffect(() => {
         const checkAuthentication = () => {
@@ -55,21 +43,19 @@ export default function UpdateVoucher() {
                     const [sday, smonth, syear] = voucherResponse.startDate.split('-');
                     const [eday, emonth, eyear] = voucherResponse.endDate.split('-');
 
-
                     setStartDate(new Date(`${syear}-${smonth}-${sday}`));
                     setEndDate(new Date(`${eyear}-${emonth}-${eday}`));
                 } else {
-                    toast.error("Không thể tải thông tin voucher");
+                    toast.error("Không thể tải thông tin voucher!");
                 }
             } catch (error) {
-                console.error("Error fetching voucher details:", error);
-                toast.error("Không thể tải thông tin voucher");
+                console.error(error);
+                toast.error("Không thể tải thông tin voucher!");
             }
         };
 
         fetchVoucherDetails();
     }, [location.search]);
-
 
     const handleButtonClick = (type) => {
         setSelectedType(type);
@@ -84,14 +70,13 @@ export default function UpdateVoucher() {
             voucherRequestDTO.append('startDate', formatDate(startDate.toLocaleDateString('en-GB')))
             voucherRequestDTO.append('endDate', formatDate(endDate.toLocaleDateString('en-GB')))
 
-
             await updateVoucher(voucherRequestDTO.get('voucherId'), voucherRequestDTO);
             toast.success("Cập nhập voucher thành công!");
-        navigate('/manage-voucher');
+            navigate('/manage-voucher');
 
         } catch (error) {
-            console.error("Error updating voucher:", error);
-            toast.error(`Error updating voucher: ${error.message}`);
+            console.error(error);
+            toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!");
         }
     };
 
@@ -122,24 +107,15 @@ export default function UpdateVoucher() {
         return formattedDate;
     };
 
-
-    // Split the date string into day, month, year
-
     return (
         <div>
-
             <StaffHeader />
-
             <div className="manage-content">
                 <StaffSideBar />
-
                 <div className="add-update-content-detail">
-                    
                     {voucherInfo ? (
                         <form onSubmit={handleSubmit}>
-
                             <div className="manage-form-input">
-                            
                                 {/* TITLE */}
                                 <div className="manage-form-group">
                                     <label>Tên voucher</label>
@@ -174,7 +150,6 @@ export default function UpdateVoucher() {
                                             name="description"
                                             required
                                             defaultValue={voucherInfo.description}
-                                            ref={textareaRef}
                                             style={{ resize: "none" }}>
                                         </textarea>
                                     </div>
@@ -229,7 +204,7 @@ export default function UpdateVoucher() {
                                             onClick={() => handleButtonClick('FREE_SHIPPING')}
                                         >
                                             Miễn phí giao hàng
-                                        </button>                
+                                        </button>
                                     </div>
                                 </div>
 
@@ -321,7 +296,6 @@ export default function UpdateVoucher() {
                                         />
                                     </div>
                                 </div>
-
                             </div>
 
                             {/*  BUTTON */}
@@ -329,14 +303,12 @@ export default function UpdateVoucher() {
                                 <button className="save-manage-btn save-manage-link" type="submit">
                                     Lưu voucher
                                 </button>
-
                                 <div className="cancel-manage-btn">
                                     <button onClick={handleReload} className="cancel-manage-link">
                                         Đặt lại
                                     </button>
                                 </div>
                             </div>
-
                         </form>
                     ) : (
                         <p>Đang tải thông tin sản phẩm...</p>

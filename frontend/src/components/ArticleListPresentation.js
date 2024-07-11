@@ -6,7 +6,6 @@ import parse from "html-react-parser";
 
 export default function ArticleListPresentation(articles) {
   return (
-    <>
       
         <>
           {articles.articles.map((article) => (
@@ -40,41 +39,6 @@ export default function ArticleListPresentation(articles) {
 
           ))}
         </>
-      
-      {(window.location.pathname === routes.staffArticleList) && (
-        <>
-        {articles.articles.map((article) => (
-          <div className="manage-article-card-list col-4" id={article.articleId}>
-            <Link
-              to={`${routes.staffArticleList}/${encodeURIComponent(
-                article.title.replace(/\n/g, "")
-              )}`}
-              style={{ textDecoration: "none" }}>
-              <div className="manage-article-card-list-img">
-                {article.articleImages.slice(0, 1).map((image) => (
-                  <img
-                    src={`${instance.defaults.baseURL}/images/articles/${image.imagePath}`}
-                    alt={article.title}
-                    key={image.imageId}
-                  />
-                ))}
-              </div>
 
-              <div className="manage-article-card-list-title">{article.title}</div>
-              <div
-                className="manage-article-card-list-content"
-                style={{ fontWeight: "400" }}>
-                {parse(article.content)}
-              </div>
-            </Link>
-            <div className="manage-article-card-list-uploadDate">
-              <i>{article.uploadedDate}</i>
-            </div>
-          </div>
-
-        ))}
-      </>
-      )}
-    </>
   );
 }

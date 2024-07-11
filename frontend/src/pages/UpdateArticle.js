@@ -3,7 +3,7 @@ import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
 import { getArticleById, updateArticle } from "../services/auth/UsersService";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -39,11 +39,11 @@ export default function UpdateArticle() {
           setTitle(response.title);
           setContent(response.content);
         } else {
-          toast.error("Không thể tải thông tin bài viết");
+          toast.error("Không thể tải thông tin bài viết!");
         }
       } catch (error) {
-        console.error("Error fetching article:", error);
-        toast.error("Không thể tải thông tin bài viết");
+        console.error(error);
+        toast.error("Không thể tải thông tin bài viết!");
       }
     };
     if (id) {
@@ -55,7 +55,7 @@ export default function UpdateArticle() {
     e.preventDefault();
     const cleanedContent = quillRef.current.getEditor().getText().trim();
     if (!title.trim() || !cleanedContent) {
-      toast.error("Tiêu đề và nội dung không được để trống");
+      toast.error("Tiêu đề và nội dung không được để trống!");
       return;
     }
     setIsSubmitting(true);
@@ -75,7 +75,7 @@ export default function UpdateArticle() {
         toast.error("Không thể lưu bài viết");
       }
     } catch (error) {
-      console.error("Error creating article:", error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -142,7 +142,7 @@ export default function UpdateArticle() {
       <div className="manage-content">
         <StaffSideBar />
         <div className="add-update-content-detail">
-          
+
           <form onSubmit={handleSubmit}>
             <div className="manage-form-input">
               <div className="manage-form-group">
@@ -170,7 +170,9 @@ export default function UpdateArticle() {
               </div>
             </div>
             <div className="manage-form-btn">
-              <button className="save-manage-btn save-manage-link" type="submit" disabled={isSubmitting}>
+              <button className="save-manage-btn save-manage-link"
+                type="submit"
+                disabled={isSubmitting}>
                 Lưu bài viết
               </button>
 

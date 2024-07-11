@@ -40,14 +40,14 @@ export default function ManageGift() {
         let response = await giftsAll();
         if (response) {
           setGiftList(response);
-          setFilteredGifts(response); 
+          setFilteredGifts(response);
         } else {
           setGiftList([]);
           setFilteredGifts([]);
         }
       } catch (error) {
-        console.error("Error fetching gifts:", error);
-        toast.error("Không thể tải quà tặng");
+        console.error(error);
+        toast.error("Không thể tải quà tặng!");
         setGiftList([]);
         setFilteredGifts([]);
       }
@@ -118,7 +118,7 @@ export default function ManageGift() {
       gift.name.toLowerCase().includes(query)
     );
     setFilteredGifts(filtered);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const indexOfLastGift = currentPage * giftsPerPage;

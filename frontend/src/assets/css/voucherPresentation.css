@@ -18,4 +18,30 @@
   height: 450px;
   overflow: scroll;
   overflow-x: hidden;
+  color: rgba(154, 149, 149, 0.817);
+  padding-right: 10px;
+  padding-left: 15px;
+}
+
+.voucher-disabled {
+  background-color: rgba(234, 225, 225, 0.894);
+}
+
+.voucher-description {
+  font-size: 12px;
+}
+
+.voucher-name {
+  color: #ae0258;
+}
+
+.voucher-disabled .voucher-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(91, 88, 88);
+}
+
+.voucher-disabled .voucher-description {
+  font-size: 12px;
+  color: rgb(164, 159, 159);
 }

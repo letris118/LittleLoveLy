@@ -46,6 +46,9 @@ export default function HomePage() {
       toast.error("Thanh toán thất bại");
     } else if (status === "payment-success") {
       toast.success("Thanh toán thành công");
+      localStorage.removeItem("cart");
+      localStorage.removeItem("gifts");
+      localStorage.removeItem("formValues");
     }
 
     const fetchProducts = async () => {

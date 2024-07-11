@@ -24,7 +24,6 @@ Yup.addMethod(Yup.object, "validatePhoneAndAddress", function (message) {
     const { createError } = this;
     try {
       const response = await previewOrder(cusWardCode, cusPhone);
-      console.log(response);
       if (response.code_message && response.code_message === "PHONE_INVALID") {
         return createError({
           path: "cusPhone",
@@ -64,6 +63,7 @@ export default function Checkout() {
   const [wards, setWards] = useState([]);
   const [submitCart, setSubmitCart] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
+  const [savedValues, setSavedValues] = useState({});
   const [evaluateResult, setEvaluateResult] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false);
@@ -85,7 +85,6 @@ export default function Checkout() {
       if (!userId) return;
       try {
         let response = await getUserInfo(userId);
-        console.log(response);
         if (response) {
           setUserInfo(response);
         }
@@ -94,33 +93,39 @@ export default function Checkout() {
       }
     };
 
+    const savedFormValues = localStorage.getItem("formValues");
+    if (savedFormValues) {
+      setSavedValues(JSON.parse(savedFormValues));
+    }
     fetchUserInfo();
   }, []);
   const formik = useFormik({
     initialValues: {
-      cusName: userInfo.name || "",
-      cusMail: userInfo.mail || "",
-      cusPhone: userInfo.phone || "",
-      cusCityCode: userInfo.cityCode || "",
-      cusDistrictId: userInfo.districtId || "",
-      cusWardCode: userInfo.wardCode || "",
-      cusStreet: userInfo.street || "",
-      paymentMethod: "",
-      voucherId: "",
+      cusName: savedValues.cusName || userInfo.name || "",
+      cusMail: savedValues.cusMail || userInfo.mail || "",
+      cusPhone: savedValues.cusPhone || userInfo.phone || "",
+      cusCityCode: savedValues.cusCityCode || userInfo.cityCode || "",
+      cusDistrictId: savedValues.cusDistrictId || userInfo.districtId || "",
+      cusWardCode: savedValues.cusWardCode || userInfo.wardCode || "",
+      cusStreet: savedValues.cusStreet || userInfo.street || "",
+      paymentMethod: savedValues.paymentMethod || "",
+      voucherId: savedValues.voucherId || "",
       cartItems: submitCart,
     },
     enableReinitialize: true,
     validationSchema: checkoutSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
+      localStorage.setItem("formValues", JSON.stringify(values));
       try {
         const response = await createOrder(values);
         if (response) {
-          localStorage.removeItem("cart");
-          localStorage.removeItem("gifts");
           if (formik.values.paymentMethod === "VN_PAY") {
             window.location.href = response.data;
           } else {
+            localStorage.removeItem("cart");
+            localStorage.removeItem("gifts");
+            localStorage.removeItem("formValues");
             toast.success("Đặt hàng thành công");
             navigate(routes.homePage);
           }
@@ -305,7 +310,8 @@ export default function Checkout() {
                         id="paymentMethod"
                         name="paymentMethod"
                         value={formik.values.paymentMethod}
-                        onChange={formik.handleChange}>
+                        onChange={formik.handleChange}
+                      >
                         <option value="">Chọn phương thức thanh toán</option>
                         <option value="VN_PAY">VNPay</option>
                         <option value="COD">Thanh toán khi nhận hàng</option>
@@ -324,7 +330,8 @@ export default function Checkout() {
                         id="city"
                         name="cusCityCode"
                         value={formik.values.cusCityCode}
-                        onChange={handleCityChange}>
+                        onChange={handleCityChange}
+                      >
                         <option value="">Chọn Tỉnh / Thành Phố</option>
                         {cities?.map((item) => (
                           <option key={item.CityID} value={item.CityID}>
@@ -344,7 +351,8 @@ export default function Checkout() {
                         id="district"
                         name="cusDistrictId"
                         value={formik.values.cusDistrictId}
-                        onChange={handleDistrictChange}>
+                        onChange={handleDistrictChange}
+                      >
                         <option value="">Chọn Quận / Huyện</option>
                         {districts?.map((item) => (
                           <option key={item.DistrictID} value={item.DistrictID}>
@@ -364,7 +372,8 @@ export default function Checkout() {
                         id="ward"
                         name="cusWardCode"
                         value={formik.values.cusWardCode}
-                        onChange={formik.handleChange}>
+                        onChange={formik.handleChange}
+                      >
                         <option value="">Chọn Phường / Xã</option>
                         {wards?.map((item) => (
                           <option key={item.WardCode} value={item.WardCode}>
@@ -397,7 +406,8 @@ export default function Checkout() {
                     {cartItems.map((item) => (
                       <div
                         className="content-checkout-product-item"
-                        key={item.productId}>
+                        key={item.productId}
+                      >
                         <div
                           style={{
                             width: "50%",
@@ -409,7 +419,8 @@ export default function Checkout() {
                             borderRadius: "10px",
                             paddingTop: "10px",
                             paddingLeft: "5px",
-                          }}>
+                          }}
+                        >
                           {item.name}
                         </div>
                         <div
@@ -417,7 +428,8 @@ export default function Checkout() {
                             width: "20%",
                             paddingTop: "10px",
                             textAlign: "center",
-                          }}>
+                          }}
+                        >
                           {formatPrice(item.sellingPrice)}đ
                         </div>
                         <span style={{ paddingTop: "10px" }}>x</span>
@@ -426,7 +438,8 @@ export default function Checkout() {
                             width: "7%",
                             paddingTop: "10px",
                             textAlign: "center",
-                          }}>
+                          }}
+                        >
                           {item.quantity}
                         </div>{" "}
                         <span style={{ paddingTop: "10px" }}> = </span>
@@ -435,7 +448,8 @@ export default function Checkout() {
                             width: "20%",
                             paddingTop: "10px",
                             textAlign: "center",
-                          }}>
+                          }}
+                        >
                           {formatPrice(item.sellingPrice * item.quantity)}đ
                         </div>
                       </div>
@@ -450,7 +464,8 @@ export default function Checkout() {
                           alignItems: "center",
                           height: "35px",
                           width: "100%",
-                        }}>
+                        }}
+                      >
                         <b>Tổng tiền hàng:</b>
                         <span>{formatPrice(evaluateResult.basePrice)}đ</span>
                       </div>
@@ -461,7 +476,8 @@ export default function Checkout() {
                           alignItems: "center",
                           height: "35px",
                           width: "100%",
-                        }}>
+                        }}
+                      >
                         <b>Tổng phí giao hàng:</b>
                         <span>{formatPrice(evaluateResult.shippingFee)}đ</span>
                       </div>
@@ -473,7 +489,8 @@ export default function Checkout() {
                           height: "35px",
                           width: "100%",
                           borderBottom: "1px solid #7c7c7caa",
-                        }}>
+                        }}
+                      >
                         <b>Giảm giá:</b>
                         <span>
                           -
@@ -492,7 +509,8 @@ export default function Checkout() {
                           alignItems: "center",
                           height: "35px",
                           width: "100%",
-                        }}>
+                        }}
+                      >
                         <b>Tổng thanh toán:</b>
                         <span>
                           {formatPrice(evaluateResult.postDiscountPrice)}đ
@@ -514,7 +532,8 @@ export default function Checkout() {
                             fontSize: "17px",
                             fontWeight: "550",
                             marginRight: "12px",
-                          }}>
+                          }}
+                        >
                           Voucher
                         </button>
                       ) : (
@@ -533,7 +552,8 @@ export default function Checkout() {
                           fontSize: "17px",
                           fontWeight: "550",
                           float: "right",
-                        }}>
+                        }}
+                      >
                         Mua ngay
                       </button>
                     </div>
@@ -547,11 +567,13 @@ export default function Checkout() {
       <Footer />
       <CustomDialog
         open={openVoucherDialog}
-        onClose={() => handleCloseVoucherDialog(formik.values.voucherId)}>
+        onClose={() => handleCloseVoucherDialog(formik.values.voucherId)}
+      >
         <CustomDialogTitle>Mã giảm giá</CustomDialogTitle>
         <DialogContent>
           <VoucherPresentation
             initialVoucherId={formik.values.voucherId}
+            basePrice={evaluateResult.basePrice}
             handleClose={handleCloseVoucherDialog}
           />
         </DialogContent>

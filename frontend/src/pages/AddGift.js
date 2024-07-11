@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import StaffHeader from "../components/StaffHeader";
-import { toast } from "react-toastify";
-import { addGift } from "../services/auth/UsersService";
-import StaffSideBar from "../components/StaffSideBar";
-import "../assets/css/manage.css";
-import StaffBackToTop from "../components/StaffBackToTop";
+
+import React, { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import StaffHeader from "../components/StaffHeader"
+import { toast } from "react-toastify"
+import {
+  addGift,
+} from "../services/auth/UsersService"
+import StaffSideBar from "../components/StaffSideBar"
+import "../assets/css/manage.css"
+import StaffBackToTop from "../components/StaffBackToTop"
 
 export default function AddGift() {
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -17,7 +21,9 @@ export default function AddGift() {
       toast.success("Thêm quà tặng thành công!");
       navigate("/manage-gift");
     } catch (error) {
-      toast.error(`Error adding gift: ${error.message}`);
+      console.error(error);
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!")
+
     }
   };
 
@@ -39,63 +45,69 @@ export default function AddGift() {
   return (
     <div>
       <StaffHeader />
+
       <div className="manage-content">
         <StaffSideBar />
+
         <div className="add-update-content-detail">
-          {
-            <form onSubmit={handleSubmit}>
-              <div className="manage-form-input">
-                {/* NAME */}
-                <div className="manage-form-group">
-                  <label>Tên quà tặng</label>
-                  <div className="manage-form-control">
-                    <input type="text" name="name" required></input>
-                  </div>
-                </div>
 
-                {/* PRICE */}
-                <div className="manage-form-group">
-                  <label>Điểm đổi quà</label>
-                  <div className="manage-form-control">
-                    <input
-                      type="number"
-                      name="point"
-                      step="1"
-                      min="0"
-                      required
-                    ></input>
-                  </div>
-                </div>
+          <form onSubmit={handleSubmit}>
+            <div className="manage-form-input">
 
-                {/* STOCK */}
-                <div className="manage-form-group">
-                  <label>Tồn kho</label>
-                  <div className="manage-form-control">
-                    <input
-                      type="number"
-                      name="stock"
-                      step="1"
-                      min="1"
-                      defaultValue="1"
-                    ></input>
-                  </div>
+              {/* NAME */}
+              <div className="manage-form-group">
+                <label>Tên quà tặng</label>
+                <div className="manage-form-control">
+                  <input
+                    type="text"
+                    name="name"
+                    required>
+                  </input>
                 </div>
+              </div>
 
-                {/* IMAGE */}
-                <div className="manage-form-group">
-                  <label>Hình minh họa quà tặng</label>
-                  <div className="manage-form-control-img">
-                    <input
-                      name="newImageFile"
-                      type="file"
-                      required
-                      accept=".png, .jpg"
-                    ></input>
-                  </div>
+              {/* POINT */}
+              <div className="manage-form-group">
+                <label>Điểm đổi quà</label>
+                <div className="manage-form-control">
+                  <input
+                    type="number"
+                    name="point"
+                    step="1" min="0"
+                    required>
+                  </input>
+                </div>
+              </div>
+
+              {/* STOCK */}
+              <div className="manage-form-group">
+                <label>Tồn kho</label>
+                <div className="manage-form-control">
+                  <input
+                    type="number"
+                    name="stock"
+                    step="1" min="1"
+                    defaultValue="1">
+                  </input>
+                </div>
+              </div>
+
+              {/* IMAGE */}
+              <div className="manage-form-group">
+                <label>Hình minh họa quà tặng</label>
+                <div className="manage-form-control-img">
+                  <input
+                    name="newImageFile"
+                    type="file"
+                    required
+                    accept=".png, .jpg">
+                  </input>
+
                 </div>
               </div>
 
               {/* BUTTON */}
+
               <div className="manage-form-btn">
                 <button
                   className="save-manage-btn save-manage-link"
@@ -110,8 +122,8 @@ export default function AddGift() {
                   </button>
                 </div>
               </div>
-            </form>
-          }
+            </div>
+          </form>
         </div>
       </div>
       <StaffBackToTop />

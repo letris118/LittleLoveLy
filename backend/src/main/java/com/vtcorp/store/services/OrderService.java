@@ -325,6 +325,7 @@ public class OrderService {
             return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress, order.getCreatedDate());
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD)) {
             order.setStatus(CODPaymentStatus.COD_PENDING);
+            handleStockChange(order);
             order = orderRepository.save(order);
             emailSenderService.sendOrderPlacedEmailAsync(order.getCusMail(), order.getOrderId());
             return mapOrderToResponse(order);
@@ -341,6 +342,7 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         if ("00".equals(vnpResponseCode)) {
             order.setStatus(OnlinePaymentStatus.ONLINE_PENDING);
+            handleStockChange(order);
             orderRepository.save(order);
             emailSenderService.sendOrderPlacedEmailAsync(order.getCusMail(), order.getOrderId());
             return "http://localhost:3000/?status=payment-success";
@@ -364,6 +366,30 @@ public class OrderService {
             order.setFinalShippingFee(null);
             order.setPostDiscountPrice(null);
             orderRepository.save(order);
+        }
+    }
+
+    @Transactional
+    protected void handleStockChange(Order order) {
+        for (OrderDetail item : order.getOrderDetails()) {
+            Product product = item.getProduct();
+            product.setStock(product.getStock() - item.getQuantity());
+            product.setNoSold(product.getNoSold() + item.getQuantity());
+            productRepository.save(product);
+        }
+        for (GiftIncluding item : order.getGiftIncludings()) {
+            Gift gift = item.getGift();
+            gift.setStock(gift.getStock() - item.getQuantity());
+            giftRepository.save(gift);
+        }
+        Voucher voucher = order.getVoucher();
+        User user = order.getUser();
+        if (voucher != null && user != null) {
+            user.getVouchers().remove(voucher);
+            voucher.getUsers().remove(user);
+            voucher.setAppliedCount(voucher.getAppliedCount() + 1);
+            voucherRepository.save(voucher);
+            userRepository.save(user);
         }
     }
 
@@ -446,6 +472,10 @@ public class OrderService {
     public ShippingResponseDTO confirmOrder(String id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+        if (order.getUser() != null && order.getUser().getPoint() != null) {
+            int bonusPoint = (int) (order.getFinalBasePrice() / 1000);
+            order.getUser().setPoint(order.getUser().getPoint() + bonusPoint);
+        }
         if (order.getStatus().equals(CODPaymentStatus.COD_PENDING)) {
             order.setStatus(CODPaymentStatus.COD_CONFIRMED);
             // neu km ship -> shop tra ship -> phan ship con lai + vao cod
@@ -509,10 +539,6 @@ public class OrderService {
     public OrderResponseDTO confirmReceived(String id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-        if (order.getUser() != null && order.getUser().getPoint() != null) {
-            int bonusPoint = (int) (order.getFinalBasePrice() / 1000);
-            order.getUser().setPoint(order.getUser().getPoint() + bonusPoint);
-        }
         String status = order.getStatus();
         if (status.equals(CODPaymentStatus.COD_CONFIRMED)) {
             order.setStatus(CODPaymentStatus.COD_RECEIVED);
