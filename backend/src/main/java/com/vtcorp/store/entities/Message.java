@@ -1,5 +1,6 @@
-package chat;
+package com.vtcorp.store.entities;
 
+import com.vtcorp.store.constants.Status;
 import lombok.*;
 
 @NoArgsConstructor

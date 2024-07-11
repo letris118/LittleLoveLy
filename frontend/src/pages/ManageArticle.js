@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { routes } from "../routes";
-import StaffHeader from "../components/StaffHeader";
-import { toast } from "react-toastify";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Switch from "react-switch";
-import instance from "../services/auth/customize-axios";
-import { articlesAll, deactivateArticle, activateArticle } from "../services/auth/UsersService";
-import StaffSideBar from "../components/StaffSideBar";
+import { toast } from "react-toastify";
 import "../assets/css/manage.css";
-import StaffBackToTop from "../components/StaffBackToTop"
+import StaffBackToTop from "../components/StaffBackToTop";
+import StaffHeader from "../components/StaffHeader";
+import StaffSideBar from "../components/StaffSideBar";
+import { routes } from "../routes";
+import instance from "../services/auth/customize-axios";
+import { activateArticle, articlesAll, deactivateArticle } from "../services/auth/UsersService";
 export default function ManageArticle() {
   const [articleList, setArticleList] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);

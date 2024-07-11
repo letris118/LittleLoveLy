@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from "react";
-import { routes } from "../routes";
+import Rating from "@mui/material/Rating";
+import React from "react";
 import { Link } from "react-router-dom";
 import "../assets/css/productPresentation.css";
+import { routes } from "../routes";
 import instance from "../services/auth/customize-axios";
 import { formatPrice } from "../services/auth/UsersService";
-import Rating from "@mui/material/Rating";
 
 export default function ProductPresentation({ products }) {
   return (

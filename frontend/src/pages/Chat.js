@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
-import Footer from "../components/Footer";
 
 let stompClient = null;
 
 export default function Chat() {
   const navigate = useNavigate();
   const chatBoxRef = useRef(null);
-  const [messages, setMessages] = useState([]); // Array to store messages
-  const [tab, setTab] = useState("staff01"); // Default tab
+  const [messages, setMessages] = useState([]);
+  const [tab, setTab] = useState("staff01");
   const [userData, setUserData] = useState({
     username: localStorage.getItem("username"),
     connected: false,
@@ -32,7 +32,7 @@ export default function Chat() {
   }, []);
 
   const connect = () => {
-    let Sock = new SockJS("http://localhost:8000/ws");
+    let Sock = new SockJS("http://localhost:8010/ws");
     stompClient = over(Sock);
     stompClient.connect({}, onConnected, onError);
   };
@@ -114,7 +114,7 @@ export default function Chat() {
           customerPoint={localStorage.getItem("point")}
         />
 
-        {userData.connected ?
+        {userData.connected ? (
           <>
             <div className="cus-chat">
               <div className="cus-chatbox" ref={chatBoxRef}>
@@ -122,8 +122,10 @@ export default function Chat() {
                   {messages.map((chat, index) => (
                     <li
                       key={index}
-                      className={`message ${chat.senderName === userData.username && "self"
-                        }`}>
+                      className={`message ${
+                        chat.senderName === userData.username && "self"
+                      }`}
+                    >
                       {chat.senderName !== userData.username && (
                         <div className="avatar">
                           {displayName(chat.senderName)}
@@ -155,12 +157,13 @@ export default function Chat() {
               </div>
             </div>
           </>
-          :
-          <h4 className="standing-by">Tính năng tạm thời không khả dụng. Vui lòng thử lại sau.</h4>
-        }
+        ) : (
+          <h4 className="standing-by">
+            Tính năng tạm thời không khả dụng. Vui lòng thử lại sau.
+          </h4>
+        )}
       </div>
       <Footer />
-
     </div>
   );
 }

@@ -1,18 +1,18 @@
+import {
+  Avatar,
+  ListItemAvatar,
+  ListItemText,
+  MenuItem,
+  MenuList,
+  Paper,
+} from "@mui/material";
 import React, { useState } from "react";
+import Dropdown from "react-bootstrap/Dropdown";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
+import instance from "../services/auth/customize-axios";
 import { formatPrice, products } from "../services/auth/UsersService";
 import StaffDropdownMenu from "./StaffDropdownMenu";
-import Dropdown from "react-bootstrap/Dropdown";
-import {
-  Paper,
-  MenuList,
-  MenuItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-} from "@mui/material";
-import instance from "../services/auth/customize-axios";
 
 export default function StaffHeader() {
   const [searchTerm, setSearchTerm] = useState("");

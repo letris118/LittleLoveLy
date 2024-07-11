@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../assets/css/brandDetail.css";
+import BrandDetailPresentation from "../components/BrandDetailPresentation";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
-import { brands } from "../services/auth/UsersService";
-import BrandDetailPresentation from "../components/BrandDetailPresentation";
 
 export default function BrandDetail() {
-  const brandName = useParams();
-  const [brandInfo, setBrandInfo] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,25 +18,6 @@ export default function BrandDetail() {
     };
     checkAuthentication();
   }, [navigate]);
-
-  useEffect(() => {
-    const fetchBrand = async () => {
-      try {
-        let response = await brands();
-        const brand = response.find((brand) => brand.name === brandName.name);
-        console.log(brand);
-        if (response) {
-          setBrandInfo(brand);
-        } else {
-          setBrandInfo([]);
-        }
-      } catch (error) {
-        console.error("Error fetching brands:", error);
-        setBrandInfo([]);
-      }
-    };
-    fetchBrand();
-  }, []);
   return (
     <div>
       <Header />

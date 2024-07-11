@@ -1,11 +1,10 @@
+import { Pagination } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../assets/css/searchProduct.css";
-import ProductPresentation from "./ProductPresentation";
 import { products } from "../services/auth/UsersService";
-import { Pagination } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { routes } from "../routes";
+import ProductPresentation from "./ProductPresentation";
 
 export default function SearchPresentation() {
   const [searchParams] = useSearchParams();

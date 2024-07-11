@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { routes } from "../routes";
-import backgroundImage from "../assets/images/backgroundDemo.jpg";
 import { useFormik } from "formik";
-import { forgotPasswordAPI } from "../services/auth/UsersService";
-import { toast } from "react-toastify";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import backgroundImage from "../assets/images/backgroundDemo.jpg";
+import { routes } from "../routes";
+import { forgotPasswordAPI } from "../services/auth/UsersService";
 
 export default function ForgotPassword() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
