@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
 import StaffHeader from "../components/StaffHeader";
-import { Link, useNavigate } from "react-router-dom";
-import { routes } from "../routes";
-import Footer from "../components/Footer";
-import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
     dashboard,
     formatPrice,
     ordersAll,
-    productsAll,
-    users,
-    vouchersAll,
+    users
 } from "../services/auth/UsersService";
-import BrandPresentation from "../components/BrandPresentation";
 import "../assets/css/homePage.css";
-import ProductPresentation from "../components/ProductPresentation";
 import AdminSideBar from "../components/AdminSideBar";
 import StaffBackToTop from "../components/StaffBackToTop";
 import {
@@ -30,7 +24,7 @@ import {
     Pie,
     ResponsiveContainer,
     LineChart,
-    Line,
+    Line
 } from "recharts";
 import { FcBusinessman, FcGlobe, FcMoneyTransfer, FcNext, FcPrevious, FcShipped } from "react-icons/fc";
 import { parse } from 'date-fns'
@@ -43,24 +37,25 @@ export default function Dashboard() {
     const [siteDashboard, setSiteDashboard] = useState(null);
     const [orderList, setOrderList] = useState([]);
     const [recentOrderList, setRecentOrderList] = useState([]);
-    const [productList, setProductList] = useState([]);
-    const [staffList, setStaffList] = useState([]);
-    const [voucherList, setVoucherList] = useState([]);
 
 
-    const [yearState, setYearState] = useState(new Date().getFullYear());
-    const [monthState, setMonthState] = useState(new Date().getMonth());
-    const [daily, setDaily] = useState(1)
-
-    const dateTimeFormat = "dd-MM-yyyy HH:mm:ss"
-    const dateFormat = "dd-MM-yyyy"
 
     const sevenDaysAgo = new Date()
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6)
     sevenDaysAgo.setHours(0, 0, 0, 0);
 
+    const [yearState, setYearState] = useState(new Date().getFullYear());
+    const [weekly, setWeekly] = useState(1)
+    const [startDate, setStartDate] = useState(sevenDaysAgo)
+    const [endDate, setEndDate] = useState(new Date())
+
+    const dateTimeFormat = "dd-MM-yyyy HH:mm:ss"
+    const dateFormat = "dd-MM-yyyy"
+
+
+
     const [selectedTypeTab, setSelectedTypeTab] = useState("REVENUE");
-    const [selectedChartTab, setSelectedChartTab] = useState("MONTHLY")
+    const [selectedChartTab, setSelectedChartTab] = useState("YEARLY")
 
     const handleTypeClick = (tab) => {
         setSelectedTypeTab(tab);
@@ -94,11 +89,6 @@ export default function Dashboard() {
                     const createdDate = parse(order.createdDate, dateTimeFormat, new Date())
                     return createdDate >= sevenDaysAgo
                 }))
-                setProductList(await productsAll());
-                setStaffList(
-                    (await users()).filter((user) => user.role === "ROLE_STAFF")
-                );
-                setVoucherList(await vouchersAll());
             } catch (error) {
                 console.error("Error fetching data:", error);
                 toast.error("Không thể tải dữ liệu");
@@ -107,8 +97,7 @@ export default function Dashboard() {
         fetchAllData();
     }, []);
 
-
-    const monthlyRevenueData = (year) => {
+    const yearlyRevenueData = () => {
         const months = [
             `Jan`,
             `Feb`,
@@ -126,343 +115,492 @@ export default function Dashboard() {
 
         const currentYear = new Date().getFullYear();
         const currentMonth = new Date().getMonth(); // 0-based, so 0 is Jan and 11 is Dec
-        const monthsToInclude = (year === currentYear) ? currentMonth + 1 : 12;
-
-        const monthlySummary = months.slice(0, monthsToInclude).map(month => ({
+        const monthsToInclude = (yearState === currentYear) ? currentMonth + 1 : 12;
+        const yearlySummary = months.slice(0, monthsToInclude).map(month => ({
             month,
             price: 0,
+            numberOfOrders: 0,
+            voucherApplied: 0,
+            noVoucher: 0
         }));
 
         orderList.forEach(order => {
             const createdDate = parse(order.createdDate, dateTimeFormat, new Date())
-            if (createdDate.getFullYear() == year) {
+            if (createdDate.getFullYear() == yearState) {
                 const monthIndex = createdDate.getMonth();
-                monthlySummary[monthIndex].price += order.postDiscountPrice;
+                yearlySummary[monthIndex].price += order.postDiscountPrice;
+                yearlySummary[monthIndex].numberOfOrders++;
+                if (order.voucher)
+                    yearlySummary[monthIndex].voucherApplied++
+                else
+                    yearlySummary[monthIndex].noVoucher++
             }
         });
 
-        const dailyRevenueData = (multiplier) => {
-            const today = new Date();
-            const startDate = new Date(today);
-            startDate.setDate(today.getDate() - 7 * multiplier + 1);
-            startDate.setHours(0, 0, 0, 0);
-            const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + 6); // Set endDate to 6 days after startDate
-            endDate.setHours(23, 59, 59, 999);
+        return yearlySummary;
+    }
 
-            const dailySummary = [];
+    const weeklyRevenueData = () => {
 
-            for (let i = 0; i < 7; i++) {
-                const date = new Date(startDate);
-                date.setDate(startDate.getDate() + i);
+        const weeklySummary = [];
 
-                const dateString = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                dailySummary.push({ date: dateString, price: 0 });
-            }
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(startDate);
+            date.setDate(startDate.getDate() + i);
 
-            orderList.forEach(order => {
-                const createdDate = parse(order.createdDate, dateTimeFormat, new Date());
-
-                // Check if createdDate is within the date range
-                if (createdDate >= startDate && createdDate <= endDate) {
-                    // Calculate day difference relative to startDate
-                    const dayDifference = Math.floor((createdDate - startDate) / (1000 * 60 * 60 * 24));
-
-                    if (dayDifference >= 0 && dayDifference < 7) {
-                        dailySummary[dayDifference].price += order.postDiscountPrice;
-                    }
-                }
+            const dateString = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            weeklySummary.push({
+                date: dateString,
+                price: 0,
+                numberOfOrders: 0,
+                voucherApplied: 0,
+                noVoucher: 0
             });
-
-            return dailySummary;
         }
 
-        const monthlyPaymentData = (year) => {
-            const monthlySummary = [
-                {
-                    method: 'COD',
-                    numberOfOrders: 0
-                },
-                {
-                    method: 'ONLINE',
-                    numberOfOrders: 0
-                }
-            ]
+        orderList.forEach(order => {
+            const createdDate = parse(order.createdDate, dateTimeFormat, new Date());
 
-            orderList.forEach(order => {
+            // Check if createdDate is within the date range
+            if (createdDate >= startDate && createdDate <= endDate) {
+                // Calculate day difference relative to startDate
+                const dayDifference = Math.floor((createdDate - startDate) / (1000 * 60 * 60 * 24));
+
+                if (dayDifference >= 0 && dayDifference < 7) {
+                    weeklySummary[dayDifference].price += order.postDiscountPrice;
+                    weeklySummary[dayDifference].numberOfOrders++
+                    if (order.voucher)
+                        weeklySummary[dayDifference].voucherApplied++
+                    else
+                        weeklySummary[dayDifference].noVoucher++
+                }
+            }
+        });
+
+        return weeklySummary;
+    }
+
+    const yearlyPaymentData = () => {
+        const yearlySummary = [
+            {
+                name: 'Thanh toán khi nhận hàng',
+                method: 'COD',
+                numberOfOrders: 0,
+                color: '#8884d8'
+            },
+            {
+                name: 'Thanh toán bằng VnPay',
+                method: 'ONLINE',
+                numberOfOrders: 0,
+                color: '#82ca9d'
+            }
+        ]
+
+        orderList.forEach(order => {
+            const createdDate = parse(order.createdDate, dateTimeFormat, new Date())
+            if (createdDate.getFullYear() == yearState) {
                 if (order.status.includes('COD')) {
-                    const codMethod = monthlySummary.find(method => method.method === 'COD');
+                    const codMethod = yearlySummary.find(method => method.method === 'COD');
                     if (codMethod) {
                         codMethod.numberOfOrders += 1;
                     }
                 } else if (order.status.includes('ONLINE')) {
-                    const onlineMethod = monthlySummary.find(method => method.method === 'ONLINE');
+                    const onlineMethod = yearlySummary.find(method => method.method === 'ONLINE');
                     if (onlineMethod) {
                         onlineMethod.numberOfOrders += 1;
                     }
                 }
-            });
-            return monthlySummary
+            }
+        });
+        return yearlySummary
+    }
+
+    const weeklyPaymentData = () => {
+        const weeklySummary = [
+            {
+                name: 'Thanh toán khi nhận hàng',
+                method: 'COD',
+                numberOfOrders: 0,
+                color: '#8884d8'
+            },
+            {
+                name: 'Thanh toán bằng VnPay',
+                method: 'ONLINE',
+                numberOfOrders: 0,
+                color: '#82ca9d'
+            }
+        ]
+
+        orderList.forEach(order => {
+            const createdDate = parse(order.createdDate, dateTimeFormat, new Date())
+            if (createdDate >= startDate && createdDate <= endDate) {
+                const dayDifference = Math.floor((createdDate - startDate) / (1000 * 60 * 60 * 24));
+                if (dayDifference >= 0 && dayDifference < 7) {
+                    if (order.status.includes('COD')) {
+                        const codMethod = weeklySummary.find(method => method.method === 'COD');
+                        if (codMethod) {
+                            codMethod.numberOfOrders += 1;
+                        }
+                    } else if (order.status.includes('ONLINE')) {
+                        const onlineMethod = weeklySummary.find(method => method.method === 'ONLINE');
+                        if (onlineMethod) {
+                            onlineMethod.numberOfOrders += 1;
+                        }
+                    }
+                }
+            }
+        })
+
+        return weeklySummary
+    }
+
+
+    const yearChange = (change) => {
+        if (change === 'increase' && yearState < new Date().getFullYear())
+            setYearState(yearState + 1)
+        else if (change === 'decrease')
+            setYearState(yearState - 1)
+    }
+
+    const weeklyChange = (change) => {
+        let changedWeekly = weekly;
+
+        if (change === 'increase') {
+            changedWeekly += 1;
+        } else if (change === 'decrease' && changedWeekly > 1) {
+            changedWeekly -= 1;
         }
 
-        const yearChange = (change) => {
-            if (change === 'increase')
-                setYearState(yearState + 1)
-            else if (change === 'decrease')
-                setYearState(yearState - 1)
+        setWeekly(changedWeekly);
+
+        let start = new Date(Date.now() - (7 * changedWeekly - 1) * 24 * 60 * 60 * 1000);
+        start.setHours(0, 0, 0, 0);
+        let end = new Date(start.getTime() + 6 * 24 * 60 * 60 * 1000);
+
+        if (changedWeekly !== 1) {
+            end.setHours(23, 59, 59, 999);
+        } else {
+            end = new Date()
         }
 
-        const dailyChange = (change) => {
-            if (change === 'increase')
-                setDaily(daily + 1)
-            else if (change === 'decrease' && daily >= 2)
-                setDaily(daily - 1)
-        }
-
-        const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#8dd1e1', '#a4de6c', '#d0ed57'];
+        setStartDate(start);
+        setEndDate(end);
+    }
 
 
-        const pieData = monthlyPaymentData(yearState).map((item, index) => ({
-            name: item.method,
-            value: item.numberOfOrders,
-            color: COLORS[index % COLORS.length], // Assign a color from the COLORS array
-        }));
+    const renderLabel = (pieData) => ({ name, value }) => {
+        const totalValue = pieData.reduce((acc, item) => acc + item.numberOfOrders, 0);
 
-        // Simple label formatter
-        const renderLabel = ({ name, value }) => {
-            const totalValue = pieData.reduce((acc, item) => acc + item.value, 0);
+        const percentage = ((value / totalValue) * 100).toFixed(2);
+        return `${percentage}%`;
+    };
 
-            const percentage = ((value / totalValue) * 100).toFixed(2);
-            return `${name}: ${percentage}%`;
-        };
+    return (
+        <div>
+            <StaffHeader />
+            <div className="manage-content">
+                <AdminSideBar />
+                {siteDashboard && orderList && (
+                    <div className="manage-content-detail">
+                        <main>
+                            <div className="main-title">
+                                <h5>BẢNG THỐNG KÊ</h5>
+                                <h6>(Dữ liệu tổng hợp từ 7 ngày gần nhất)</h6>
+                            </div>
 
-        return (
-            <div>
-                <StaffHeader />
-
-                <div className="manage-content">
-                    <AdminSideBar />
-                    {siteDashboard && (
-                        <div className="manage-content-detail">
-                            <main>
-                                <div className="main-title">
-                                    <h5>BẢNG THỐNG KÊ</h5>
-                                    <h6>(Dữ liệu tổng hợp từ 7 ngày gần nhất)</h6>
+                            <div className="main-cards">
+                                <div className="card">
+                                    <div className="card-inner">
+                                        <h5>TỔNG DOANH THU</h5>
+                                        <FcMoneyTransfer className="card-icon" />
+                                    </div>
+                                    <h4>
+                                        {formatPrice(
+                                            recentOrderList.reduce(
+                                                (total, order) => total + order.postDiscountPrice,
+                                                0
+                                            )
+                                        )}
+                                        đ
+                                    </h4>
                                 </div>
-
-                                <div className="main-cards">
-                                    <div className="card">
-                                        <div className="card-inner">
-                                            <h5>TỔNG DOANH THU</h5>
-                                            <FcMoneyTransfer className="card-icon" />
-                                        </div>
-                                        <h4>
-                                            {formatPrice(
-                                                recentOrderList.reduce(
-                                                    (total, order) => total + order.postDiscountPrice,
-                                                    0
-                                                )
-                                            )}
-                                            đ
-                                        </h4>
+                                <div className="card">
+                                    <div className="card-inner">
+                                        <h5>KHÁCH HÀNG MỚI</h5>
+                                        <FcBusinessman className="card-icon" />
                                     </div>
-                                    <div className="card">
-                                        <div className="card-inner">
-                                            <h5>KHÁCH HÀNG MỚI</h5>
-                                            <FcBusinessman className="card-icon" />
-                                        </div>
-                                        <h4>{recentCustomerList.length}</h4>
-                                    </div>
-                                    <div className="card">
-                                        <div className="card-inner">
-                                            <h5>TỔNG ĐƠN HÀNG</h5>
-                                            <FcShipped className="card-icon" />
-                                        </div>
-                                        <h4>{recentOrderList.length}</h4>
-                                    </div>
-                                    <div className="card">
-                                        <div className="card-inner">
-                                            <h5>LƯỢT TRUY CẬP</h5>
-                                            <FcGlobe className="card-icon" />
-                                        </div>
-                                        <h4>{siteDashboard.siteVisits}</h4>
-                                    </div>
+                                    <h4>{recentCustomerList.length}</h4>
                                 </div>
+                                <div className="card">
+                                    <div className="card-inner">
+                                        <h5>TỔNG ĐƠN HÀNG</h5>
+                                        <FcShipped className="card-icon" />
+                                    </div>
+                                    <h4>{recentOrderList.length}</h4>
+                                </div>
+                                <div className="card">
+                                    <div className="card-inner">
+                                        <h5>LƯỢT TRUY CẬP</h5>
+                                        <FcGlobe className="card-icon" />
+                                    </div>
+                                    <h4>{siteDashboard.siteVisits}</h4>
+                                </div>
+                            </div>
 
+                            <div>
+                                <button
+                                    style={{
+                                        marginRight: "15px",
+                                        borderRadius: "10px",
+                                        border: "1px solid rgb(67, 65, 65)",
+                                    }}
+                                    className={selectedTypeTab === "REVENUE" ? "selected" : ""}
+                                    onClick={() => handleTypeClick("REVENUE")}>
+                                    DOANH THU
+                                </button>
+                                <button
+                                    style={{
+                                        marginRight: "15px",
+                                        borderRadius: "10px",
+                                        border: "1px solid rgb(67, 65, 65)",
+                                    }}
+                                    className={selectedTypeTab === "ORDER" ? "selected" : ""}
+                                    onClick={() => handleTypeClick("ORDER")}>
+                                    ĐƠN HÀNG
+                                </button>
+                                <button
+                                    style={{
+                                        marginRight: "15px",
+                                        borderRadius: "10px",
+                                        border: "1px solid rgb(67, 65, 65)",
+                                    }}
+                                    className={selectedTypeTab === "PAYMENT" ? "selected" : ""}
+                                    onClick={() => handleTypeClick("PAYMENT")}>
+                                    THANH TOÁN
+                                </button>
+                            </div>
+
+                            <div>
+                                <button
+                                    style={{
+                                        marginRight: "15px",
+                                        borderRadius: "10px",
+                                        border: "1px solid rgb(67, 65, 65)",
+                                    }}
+                                    className={selectedChartTab === "YEARLY" ? "selected" : ""}
+                                    onClick={() => handleChartClick("YEARLY")}>
+                                    THEO NĂM
+                                </button>
+                                <button
+                                    style={{
+                                        marginRight: "15px",
+                                        borderRadius: "10px",
+                                        border: "1px solid rgb(67, 65, 65)",
+                                    }}
+                                    className={selectedChartTab === "WEEKLY" ? "selected" : ""}
+                                    onClick={() => handleChartClick("WEEKLY")}>
+                                    THEO TUẦN
+                                </button>
+                            </div>
+
+                            {selectedChartTab === 'YEARLY' &&
                                 <div>
-                                    <button
-                                        style={{
-                                            marginRight: "15px",
-                                            borderRadius: "10px",
-                                            border: "1px solid rgb(67, 65, 65)",
-                                        }}
-                                        className={selectedTypeTab === "REVENUE" ? "selected" : ""}
-                                        onClick={() => handleTypeClick("REVENUE")}>
-                                        DOANH THU
-                                    </button>
-                                    <button
-                                        style={{
-                                            marginRight: "15px",
-                                            borderRadius: "10px",
-                                            border: "1px solid rgb(67, 65, 65)",
-                                        }}
-                                        className={selectedTypeTab === "ORDER" ? "selected" : ""}
-                                        onClick={() => handleTypeClick("ORDER")}>
-                                        ĐƠN HÀNG
-                                    </button>
-                                    <button
-                                        style={{
-                                            marginRight: "15px",
-                                            borderRadius: "10px",
-                                            border: "1px solid rgb(67, 65, 65)",
-                                        }}
-                                        className={selectedTypeTab === "PAYMENT" ? "selected" : ""}
-                                        onClick={() => handleTypeClick("PAYMENT")}>
-                                        THANH TOÁN
-                                    </button>
+                                    <button onClick={() => yearChange('decrease')}>GIẢM</button>
+                                    <button onClick={() => yearChange('increase')}>TĂNG</button>
                                 </div>
+                            }
 
+                            {selectedChartTab === 'WEEKLY' &&
                                 <div>
-                                    <button
-                                        style={{
-                                            marginRight: "15px",
-                                            borderRadius: "10px",
-                                            border: "1px solid rgb(67, 65, 65)",
-                                        }}
-                                        className={selectedChartTab === "MONTHLY" ? "selected" : ""}
-                                        onClick={() => handleChartClick("MONTHLY")}>
-                                        THEO THÁNG
-                                    </button>
-                                    <button
-                                        style={{
-                                            marginRight: "15px",
-                                            borderRadius: "10px",
-                                            border: "1px solid rgb(67, 65, 65)",
-                                        }}
-                                        className={selectedChartTab === "DAILY" ? "selected" : ""}
-                                        onClick={() => handleChartClick("DAILY")}>
-                                        THEO NGÀY
-                                    </button>
+                                    <button onClick={() => weeklyChange('increase')}><FcPrevious /></button>
+                                    <button onClick={() => weeklyChange('decrease')}><FcNext /></button>
                                 </div>
+                            }
 
-                                {selectedChartTab === 'MONTHLY' &&
-                                    <div>
-                                        <button onClick={() => yearChange('decrease')}>GIẢM</button>
-                                        {yearState}
-                                        <button onClick={() => yearChange('increase')}>TĂNG</button>
-                                    </div>}
-
-                                {selectedChartTab === 'DAILY' &&
-                                    <div>
-                                        <button onClick={() => dailyChange('increase')}><FcPrevious /></button>
-                                        {daily}
-                                        <button onClick={() => dailyChange('decrease')}><FcNext /></button>
-                                    </div>}
-
-                                {selectedTypeTab === 'REVENUE' && selectedChartTab === 'MONTHLY' &&
-                                    <div className='charts'>
-
-                                        <ResponsiveContainer width="100%" height={400}>
-                                            <LineChart
-                                                data={monthlyRevenueData(yearState)}
-                                                margin={{
-                                                    top: 5,
-                                                    right: 30,
-                                                    left: 20,
-                                                    bottom: 5,
-                                                }}
-                                            >
+                            {selectedTypeTab === 'REVENUE' && selectedChartTab === 'YEARLY' &&
+                                <>
+                                    <div className="charts">
+                                        <ResponsiveContainer width={1000} height={400} >
+                                            <LineChart data={yearlyRevenueData()} >
                                                 <CartesianGrid strokeDasharray="3 3" />
                                                 <XAxis dataKey="month" interval={0} />
                                                 <YAxis />
                                                 <Tooltip />
                                                 <Legend />
-                                                <Line
-                                                    type="monotone"
-                                                    dataKey="price"
-                                                    stroke="#8884d8"
-                                                    activeDot={{ r: 8 }}
-                                                />
-                                                <Line type="monotone" dataKey="" stroke="#82ca9d" />
+                                                <Line name="Tổng số tiền" type="monotone" dataKey="price" stroke="#8884d8" strokeWidth="3" activeDot={{ r: 8 }} />
                                             </LineChart>
-                                            <h3>Monthly Revenue for {yearState}</h3> {/* Add your title here */}
-
                                         </ResponsiveContainer>
                                     </div>
-                                }
+                                    <h5>Doanh thu trong năm {yearState}</h5>
+                                </>
 
+                            }
 
-                                {selectedTypeTab === 'REVENUE' && selectedChartTab === 'DAILY' &&
+                            {selectedTypeTab === 'REVENUE' && selectedChartTab === 'WEEKLY' &&
+                                <>
                                     <div className='charts'>
-
-                                        <ResponsiveContainer width="100%" height={400}>
-                                            <LineChart
-                                                data={dailyRevenueData(daily)}
-                                                margin={{
-                                                    top: 5,
-                                                    right: 30,
-                                                    left: 20,
-                                                    bottom: 5,
-                                                }}>
+                                        <ResponsiveContainer width={1000} height={400} >
+                                            <LineChart data={weeklyRevenueData()}>
                                                 <CartesianGrid strokeDasharray="3 3" />
                                                 <XAxis dataKey="date" interval={0} />
                                                 <YAxis />
                                                 <Tooltip />
                                                 <Legend />
-                                                <Line type="monotone" dataKey="price" stroke="#8884d8" activeDot={{ r: 8 }} />
-                                                <Line type="monotone" dataKey="" stroke="#82ca9d" />
+                                                <Line name="Tổng số tiền" type="monotone" dataKey="price" stroke="#8884d8" strokeWidth="3" activeDot={{ r: 8 }} />
                                             </LineChart>
-
-                                            <h3>Monthly Revenue for {yearState}</h3>
-
                                         </ResponsiveContainer>
                                     </div>
-                                }
+                                    <h5>Doanh thu trong năm {startDate.getFullYear()}</h5>
+                                </>
+                            }
 
-                                {selectedTypeTab === 'PAYMENT' && selectedChartTab === 'MONTHLY' &&
-                                    <PieChart width={400} height={400}>
-                                        <Pie
-                                            data={pieData}
-                                            dataKey="value"
-                                            nameKey="name"
-                                            cx="50%"
-                                            cy="50%"
-                                            outerRadius={100}
-                                            fill="#8884d8"
-                                            label={renderLabel}
-                                        >
-                                            {pieData.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={entry.color} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip />
-                                        <Legend />
-                                    </PieChart>}
-                            </main>
-                        </div>
-                    )}
-                </div>
+                            {selectedTypeTab === 'ORDER' && selectedChartTab === 'YEARLY' &&
+                                <>
+                                    <div className='charts'>
+                                        <ResponsiveContainer width="100%" height={400}>
+                                            <BarChart
+                                                width={500}
+                                                height={300}
+                                                data={yearlyRevenueData()}
+                                            >
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="month" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Bar dataKey="numberOfOrders" fill="#8884d8" name="Tổng số lượng đơn hàng" barSize="15" />
+                                            </BarChart>
+
+                                        </ResponsiveContainer>
+                                        <ResponsiveContainer width="100%" height={400}>
+                                            <BarChart
+                                                width={500}
+                                                height={300}
+                                                data={yearlyRevenueData()}
+                                            >
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="month" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Bar dataKey="voucherApplied" fill="#82ca9d" name="Đơn hàng có áp dụng voucher" barSize="15" />
+                                                <Bar dataKey="noVoucher" fill="#ff7f50" name="Đơn hàng không áp dụng voucher" barSize="15" />
+                                            </BarChart>
+
+                                        </ResponsiveContainer>
+
+                                    </div>
+                                    <h5>Số lượng đơn hàng trong năm {yearState}</h5>
+                                </>
+                            }
+
+                            {selectedTypeTab === 'ORDER' && selectedChartTab === 'WEEKLY' &&
+                                <>
+                                    <div className='charts'>
+                                        <ResponsiveContainer width="100%" height={400}>
+                                            <BarChart
+                                                width={500}
+                                                height={300}
+                                                data={weeklyRevenueData()}
+                                            >
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="date" interval={0} />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Bar dataKey="numberOfOrders" fill="#8884d8" name="Tổng số lượng đơn hàng" barSize="20" />
+                                            </BarChart>
+
+                                        </ResponsiveContainer>
+                                        <ResponsiveContainer width="100%" height={400}>
+                                            <BarChart
+                                                width={500}
+                                                height={300}
+                                                data={weeklyRevenueData()}
+                                            >
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="date" interval={0} />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Bar dataKey="voucherApplied" fill="#82ca9d" name="Đơn hàng có áp dụng voucher" barSize="20" />
+                                                <Bar dataKey="noVoucher" fill="#ff7f50" name="Đơn hàng không áp dụng voucher" barSize="20" />
+                                            </BarChart>
+
+                                        </ResponsiveContainer>
+
+                                    </div>
+                                    <h5>Số lượng đơn hàng trong năm {startDate.getFullYear()}</h5>
+                                </>
+                            }
+
+
+                            {selectedTypeTab === 'PAYMENT' && selectedChartTab === 'YEARLY' &&
+                                <>
+
+                                    <div className="charts">
+                                        <ResponsiveContainer width="100%" height={400}>
+                                            <PieChart>
+                                                <Pie
+                                                    data={yearlyPaymentData()}
+                                                    dataKey="numberOfOrders"
+                                                    nameKey="method"
+                                                    cx="50%"
+                                                    cy="50%"
+                                                    outerRadius={100}
+                                                    fill="#8884d8"
+                                                    label={renderLabel(yearlyPaymentData())}
+                                                >
+                                                    {yearlyPaymentData().map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={entry.color} name={entry.name} />
+                                                    ))}
+
+                                                </Pie>
+                                                <Tooltip />
+                                                <Legend />
+                                            </PieChart>
+                                        </ResponsiveContainer>
+                                    </div>
+
+                                    <h5>Phương thức thanh toán trong năm {yearState}</h5>
+                                </>
+                            }
+
+                            {selectedTypeTab === 'PAYMENT' && selectedChartTab === 'WEEKLY' &&
+                                <>
+
+                                    <div className="charts">
+                                        <ResponsiveContainer width="100%" height={400}>
+                                            <PieChart>
+                                                <Pie
+                                                    data={weeklyPaymentData()}
+                                                    dataKey="numberOfOrders"
+                                                    nameKey="method"
+                                                    cx="50%"
+                                                    cy="50%"
+                                                    outerRadius={100}
+                                                    fill="#8884d8"
+                                                    label={renderLabel(weeklyPaymentData())}
+                                                >
+                                                    {weeklyPaymentData().map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={entry.color} name={entry.name} />
+                                                    ))}
+
+                                                </Pie>
+                                                <Tooltip />
+                                                <Legend />
+                                            </PieChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                    <h5>Phương thức thanh toán trong năm {startDate.getFullYear()}</h5>
+                                    <h5>Từ ngày {new Date(startDate).toLocaleDateString('en-GB')} đến ngày {new Date(endDate).toLocaleDateString('en-GB')} </h5>
+
+                                </>
+                            }
+                        </main>
+                    </div>
+                )}
             </div>
-        );
-    }
+        </div>
+    );
 }
-{/* <ResponsiveContainer width="100%" height="100%">
-  <BarChart
-    width={500}
-    height={300}
-    data={productList}
-    margin={{
-      top: 5,
-      right: 30,
-      left: 20,
-      bottom: 5,
-    }}>
-    <CartesianGrid strokeDasharray="3 3" />
-    <XAxis dataKey="productId" />
-    <YAxis />
-    <Tooltip />
-    <Legend />
-    <Bar dataKey="listedPrice" fill="#8884d8" />
-    <Bar dataKey="sellingPrice" fill="#82ca9d" />
-  </BarChart>
-</ResponsiveContainer>  */}
