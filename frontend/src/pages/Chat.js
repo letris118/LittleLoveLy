@@ -32,7 +32,7 @@ export default function Chat() {
   }, []);
 
   const connect = () => {
-    let Sock = new SockJS("http://localhost:8000/ws");
+    let Sock = new SockJS("http://localhost:8010/ws");
     stompClient = over(Sock);
     stompClient.connect({}, onConnected, onError);
   };
@@ -124,7 +124,8 @@ export default function Chat() {
                       key={index}
                       className={`message ${
                         chat.senderName === userData.username && "self"
-                      }`}>
+                      }`}
+                    >
                       {chat.senderName !== userData.username && (
                         <div className="avatar">
                           {displayName(chat.senderName)}

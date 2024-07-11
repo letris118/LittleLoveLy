@@ -55,7 +55,7 @@ export default function StaffChat() {
   }, [navigate]);
 
   const connect = () => {
-    let Sock = new SockJS("http://localhost:8000/ws");
+    let Sock = new SockJS("http://localhost:8010/ws");
     stompClient = over(Sock);
     stompClient.connect({}, onConnected, onError);
   };
@@ -141,7 +141,7 @@ export default function StaffChat() {
   return (
     <div>
       <StaffHeader />
-      <div className="content" style={{backgroundColor: "#f5f5f5"}}>
+      <div className="content" style={{ backgroundColor: "#f5f5f5" }}>
         <StaffSideBar />
 
         {userData.connected ? (
@@ -165,7 +165,8 @@ export default function StaffChat() {
                           className={`message ${
                             chat.senderName === userData.username && "self"
                           }`}
-                          key={index}>
+                          key={index}
+                        >
                           {chat.senderName !== userData.username && (
                             <div className="avatar">
                               {displayName(chat.senderName)}
@@ -210,7 +211,8 @@ export default function StaffChat() {
                         setTab(username);
                       }}
                       className={`member ${tab === username && "active"}`}
-                      key={index}>
+                      key={index}
+                    >
                       {userNames.get(username) || username}
                     </li>
                   ))}

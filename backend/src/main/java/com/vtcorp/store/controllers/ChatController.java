@@ -1,5 +1,6 @@
-package chat;
+package com.vtcorp.store.controllers;
 
+import com.vtcorp.store.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
