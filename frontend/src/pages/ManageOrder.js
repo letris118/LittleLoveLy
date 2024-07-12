@@ -19,7 +19,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
   styled,
 } from "@mui/material";
 
@@ -32,6 +31,7 @@ export default function ManageOrder() {
   const [isConfirmOrderDialogOpen, setIsConfirmOrderDialogOpen] =
     useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [filterStatus, setFilterStatus] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,7 +50,7 @@ export default function ManageOrder() {
         let response = await ordersAll();
         if (response) {
           setOrderList(response);
-          setFilteredOrders(response);
+          setFilteredOrders(applyStatusFilter(response, filterStatus));
         } else {
           setOrderList([]);
           setFilteredOrders([]);
@@ -63,21 +63,30 @@ export default function ManageOrder() {
       }
     };
     fetchOrders();
-  }, [refresh]);
+  }, [refresh, filterStatus]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
-      setFilteredOrders(orderList);
+      setFilteredOrders(applyStatusFilter(orderList, filterStatus));
     } else {
       const filtered = orderList.filter((order) =>
         order.orderId.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredOrders(filtered);
+      setFilteredOrders(applyStatusFilter(filtered, filterStatus));
     }
-  }, [searchQuery, orderList]);
+  }, [searchQuery, orderList, filterStatus]);
+
+  const applyStatusFilter = (orders, status) => {
+    if (status === "") return orders;
+    return orders.filter((order) => order.status.includes(status));
+  };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleStatusFilter = (status) => {
+    setFilterStatus(status);
   };
 
   const CustomDialog = styled(Dialog)({
@@ -149,6 +158,25 @@ export default function ManageOrder() {
   const handleCloseConfirmDialog = () => {
     setIsConfirmOrderDialogOpen(false);
   };
+
+  const getStatusDisplay = (status) => {
+    if (status === "COD_PENDING" || status === "ONLINE_PENDING") {
+      return { text: "Chưa xác nhận", color: "orange" };
+    } else if (status === "COD_CONFIRMED" || status === "ONLINE_CONFIRMED") {
+      return { text: "Đã xác nhận", color: "#2980b9" };
+    } else if (status === "COD_RECEIVED" || status === "ONLINE_RECEIVED") {
+      return { text: "Giao thành công", color: "green" };
+    }
+  };
+
+  const getPayMentDisplay = (status) => {
+    if (status.includes("COD")) {
+      return "Thanh toán khi nhận hàng";
+    } else if (status.includes("ONLINE")) {
+      return "Thanh toán bằng VnPay";
+    }
+  };
+
   return (
     <div>
       <StaffHeader />
@@ -166,9 +194,34 @@ export default function ManageOrder() {
                 onChange={handleSearchChange}
               />
             </div>
+            <div className="manage-button-search-bar">
+              <button
+                className={filterStatus === "PENDING" ? "selected" : ""}
+                onClick={() => handleStatusFilter("PENDING")}
+              >
+                Chưa xác nhận
+              </button>
+              <button
+                className={filterStatus === "CONFIRMED" ? "selected" : ""}
+                onClick={() => handleStatusFilter("CONFIRMED")}
+              >
+                Đã xác nhận
+              </button>
+              <button
+                className={filterStatus === "RECEIVED" ? "selected" : ""}
+                onClick={() => handleStatusFilter("RECEIVED")}
+              >
+                Giao thành công
+              </button>
+              <button
+                className={filterStatus === "" ? "selected" : ""}
+                onClick={() => handleStatusFilter("")}
+              >
+                Tất cả
+              </button>
+            </div>
           </div>
-
-          <table className="manage-table-none">
+          <table className="manage-table">
             <thead>
               <tr>
                 <th className="index-head" style={{ width: "5%" }}>
@@ -180,14 +233,14 @@ export default function ManageOrder() {
                 <th className="status-head" style={{ width: "10%" }}>
                   Tình trạng
                 </th>
+                <th className="orderId-head" style={{ width: "10%" }}>
+                  Mã đơn hàng
+                </th>
                 <th className="name-head" style={{ width: "15%" }}>
                   Người nhận
                 </th>
                 <th className="phone-head" style={{ width: "10%" }}>
                   Số điện thoại
-                </th>
-                <th className="trackingCode-head" style={{ width: "10%" }}>
-                  Mã đơn hàng
                 </th>
                 <th className="detail-head" style={{ width: "9%" }}>
                   Chi tiết
@@ -203,10 +256,13 @@ export default function ManageOrder() {
                     <td className="createdDate-body">
                       {new Date(order.createdDate).toLocaleDateString()}
                     </td>
-                    <td className="status-body">{order.status}</td>
+                    <td className="status-body"
+                      style={{ color: getStatusDisplay(order.status).color }}>
+                      {getStatusDisplay(order.status).text}
+                    </td>
+                    <td className="orderId-body">{order.orderId}</td>
                     <td className="name-body">{order.cusName}</td>
                     <td className="phone-body">{order.cusPhone}</td>
-                    <td className="detail-body">{order.orderId}</td>
                     <td className="update-body">
                       <Link
                         className="update-link"
@@ -254,7 +310,7 @@ export default function ManageOrder() {
                   <b>Tổng số sản phẩm:</b> {selectedOrder.orderDetails.length}
                 </p>
                 <p>
-                  <b>Tình trạng:</b> {selectedOrder.status}
+                  <b>Tình trạng:</b> {getStatusDisplay(selectedOrder.status).text}
                 </p>
                 <p>
                   <b>Mã vận đơn:</b> {selectedOrder.trackingCode}
@@ -296,14 +352,19 @@ export default function ManageOrder() {
                   <span>Phí vận chuyển:</span>
                   {formatPrice(selectedOrder.shippingFee)}đ
                 </p>
+
                 <p style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>Giảm giá:</span> -{" "}
                   {formatPrice(
                     selectedOrder.basePrice +
-                      selectedOrder.shippingFee -
-                      selectedOrder.postDiscountPrice
+                    selectedOrder.shippingFee -
+                    selectedOrder.postDiscountPrice
                   )}
                   đ
+                </p>
+                <p style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span>Phương thức thanh toán:</span>
+                  {getPayMentDisplay(selectedOrder.status)}
                 </p>
                 <p
                   style={{

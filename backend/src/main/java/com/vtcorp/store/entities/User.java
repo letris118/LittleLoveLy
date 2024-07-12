@@ -48,4 +48,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductReview> productReviews;
 
+    @OneToMany(mappedBy = "belongTo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> messages;
+
 }

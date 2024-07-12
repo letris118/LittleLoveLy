@@ -1,7 +1,6 @@
 package com.vtcorp.store.repositories;
 
 import com.vtcorp.store.entities.Article;
-import com.vtcorp.store.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
