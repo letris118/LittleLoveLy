@@ -124,7 +124,6 @@ public class ProductService {
         Product product = productMapper.toEntity(productRequestDTO);
         product.setNoSold(0);
         product.setActive(true);
-        product.setVisits(0L);
         product.setBrand(brand);
         product.setCategories(categories);
         List<ProductImage> images = handleProductImages(productRequestDTO.getNewImageFiles(), product);
@@ -205,14 +204,12 @@ public class ProductService {
         // annotation @Transactional is used to roll back the transaction if an exception occurs
         // any changes made to managed entities will be automatically saved to the database
         // no need to call save() method
-        Long visist = product.getVisits();
         productMapper.updateEntity(productRequestDTO, product);
         product.setBrand(brand);
         product.setCategories(categories);
         product.getProductImages().clear();
         product.getProductImages().addAll(newImages);
         product.setLastModifiedDate(new Date());
-        product.setVisits(visist);
         if (imagesToDelete != null) {
             removeImages(imagesToDelete);
         }

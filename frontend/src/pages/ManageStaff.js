@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import AdminHeader from "../components/AdminHeader";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "../assets/css/manage.css";
-import { 
+import {
   getUsersByRoleAll,
-  
+
 } from "../services/auth/UsersService";
 import AdminSideBar from "../components/AdminSideBar";
 import StaffBackToTop from "../components/StaffBackToTop";
@@ -28,7 +28,7 @@ export default function ManageStaff() {
 
     const fetchStaffs = async () => {
       try {
-        let response = await getUsersByRoleAll("ROLE_STAFF"); 
+        let response = await getUsersByRoleAll("ROLE_STAFF");
         if (response) {
           setStaffList(response);
         } else {
@@ -80,8 +80,8 @@ export default function ManageStaff() {
             <thead className="manage-table-head">
               <tr>
                 <th className="index-head" style={{ width: "5%" }}>STT</th>
-                <th className="username-head" style={{ width: "15%" }}>Tên tài khoản</th>
                 <th className="name-head" style={{ width: "19%" }}>Họ và tên</th>
+                <th className="username-head" style={{ width: "15%" }}>Tên tài khoản</th>
                 <th className="mail-head" style={{ width: "18%" }}>Gmail</th>
                 <th className="phone-head" style={{ width: "16%" }}>Số điện thoại</th>
                 <th className="regisDate-head" style={{ width: "16%" }}>Ngày đăng kí</th>
@@ -94,8 +94,8 @@ export default function ManageStaff() {
                 filteredStaffList.map((staff, index) => (
                   <tr key={index}>
                     <td className="index-body">{index + 1}</td>
-                    <td className="username-body">{staff.username}</td>
                     <td className="name-body">{staff.name}</td>
+                    <td className="username-body">{staff.username}</td>
                     <td className="mail-body">{staff.mail}</td>
                     <td className="phone-body">{staff.phone}</td>
                     <td className="regisDate-body">{staff.registeredDate}</td>
