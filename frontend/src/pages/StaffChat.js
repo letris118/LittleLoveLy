@@ -80,11 +80,6 @@ export default function StaffChat() {
     }
   };
 
-  // ti xoa
-  useEffect(() => {
-    console.log("Unread status:", unreadStatus);
-  }, [unreadStatus]);
-
   const fetchChatHistory = async (username) => {
     try {
       const response = await getChatHistory(username);
@@ -136,6 +131,12 @@ export default function StaffChat() {
     }
     if (tabRef.current !== sender) {
       setUnreadStatus((prev) => new Map(prev.set(sender, true)));
+    } else {
+      try {
+        markMessagesAsRead(sender);
+      } catch (error) {
+        console.error("Error marking messages as read:", error);
+      }
     }
     console.log("sender", sender);
     console.log("tab", tabRef.current);
