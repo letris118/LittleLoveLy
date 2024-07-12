@@ -12,7 +12,7 @@ export default function Chat() {
   const navigate = useNavigate();
   const chatBoxRef = useRef(null);
   const [messages, setMessages] = useState([]);
-  const [tab, setTab] = useState("staff01");
+  const [tab, setTab] = useState("staff");
   const [userData, setUserData] = useState({
     username: localStorage.getItem("username"),
     connected: false,

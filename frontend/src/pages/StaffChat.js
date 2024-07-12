@@ -14,7 +14,8 @@ export default function StaffChat() {
   const [conversations, setConversations] = useState(new Map());
   const [tab, setTab] = useState("");
   const [userData, setUserData] = useState({
-    username: localStorage.getItem("username"),
+    // username: localStorage.getItem("username"),
+    username: "staff",
     receivername: "",
     connected: false,
     message: "",
