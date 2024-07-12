@@ -53,9 +53,6 @@ public class ProductResponseDTO {
     private Date lastModifiedDate;
 
     @JsonView(Views.Product.class)
-    private Long visits;
-
-    @JsonView(Views.Product.class)
     private Brand brand;
 
     @JsonView(Views.Product.class)
