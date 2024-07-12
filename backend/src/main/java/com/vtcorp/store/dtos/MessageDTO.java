@@ -1,17 +1,19 @@
-package com.vtcorp.store.entities;
+package com.vtcorp.store.dtos;
 
 import com.vtcorp.store.constants.Status;
 import lombok.*;
+
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class Message {
+public class MessageDTO {
     private String senderName;
     private String receiverName;
     private String message;
-    private String date;
+    private Date date;
     private Status status;
 }
