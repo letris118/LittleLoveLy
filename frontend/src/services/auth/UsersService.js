@@ -383,6 +383,10 @@ const getCustomersUsedToChat = () => {
   return instance.get(`/chat/customers`);
 };
 
+const markMessagesAsRead = (username) => {
+  return instance.put(`/chat/read/${username}`);
+};
+
 export {
   loginAPI,
   users,
@@ -452,4 +456,5 @@ export {
   udateStaffPassword,
   getChatHistory,
   getCustomersUsedToChat,
+  markMessagesAsRead,
 };

@@ -21,6 +21,7 @@ public class Message {
     private String message;
     private Date date;
     private boolean isCustomer;
+    private boolean isRead = false;
 
     @ManyToOne
     @JoinColumn(name = "fk_customer_id", nullable = false)

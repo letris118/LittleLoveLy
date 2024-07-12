@@ -19,4 +19,5 @@ public class MessageDTO {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date date;
     private Status status;
+    private boolean isRead;
 }

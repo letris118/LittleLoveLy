@@ -1,13 +1,16 @@
 package com.vtcorp.store.controllers;
 
 import com.vtcorp.store.dtos.MessageDTO;
+import com.vtcorp.store.dtos.UserMessageReadDTO;
 import com.vtcorp.store.services.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -36,7 +39,13 @@ public class ChatController {
     }
 
     @GetMapping("/chat/customers")
-    public List<String> getCustomers() {
+    public List<UserMessageReadDTO> getCustomers() {
         return chatService.getCustomers();
+    }
+
+    @PutMapping("/chat/read/{username}")
+    public ResponseEntity<?> markAsRead(@PathVariable String username) {
+        chatService.markAsRead(username);
+        return ResponseEntity.ok().build();
     }
 }

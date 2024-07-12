@@ -2,6 +2,7 @@ package com.vtcorp.store.services;
 
 import com.vtcorp.store.constants.Role;
 import com.vtcorp.store.dtos.MessageDTO;
+import com.vtcorp.store.dtos.UserMessageReadDTO;
 import com.vtcorp.store.entities.Message;
 import com.vtcorp.store.entities.User;
 import com.vtcorp.store.repositories.MessageRepository;
@@ -29,7 +30,9 @@ public class ChatService {
 
     @Transactional
     public void saveAndSendMessage(MessageDTO messageDTO) {
-        messageRepository.save(toEntity(messageDTO));
+        Message msg = messageRepository.save(toEntity(messageDTO));
+        messageDTO.setDate(msg.getDate());
+        messageDTO.setRead(msg.isRead());
         simpMessagingTemplate.convertAndSendToUser(messageDTO.getReceiverName(), "/private", messageDTO);
     }
 
@@ -73,10 +76,15 @@ public class ChatService {
         }
         messageDTO.setMessage(message.getMessage());
         messageDTO.setDate(message.getDate());
+        messageDTO.setRead(message.isRead());
         return messageDTO;
     }
 
-    public List<String> getCustomers() {
-        return messageRepository.findDistinctBelongToUsernames();
+    public List<UserMessageReadDTO> getCustomers() {
+        return messageRepository.findUsernamesWithReadStatus();
+    }
+
+    public void markAsRead(String username) {
+        messageRepository.markMessagesAsReadByUser(username);
     }
 }
