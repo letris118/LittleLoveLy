@@ -141,7 +141,7 @@ export default function StaffChat() {
   return (
     <div>
       <StaffHeader />
-      <div className="content" style={{ backgroundColor: "#f5f5f5" }}>
+      <div className="content" style={{ backgroundColor: "#f5f6fa" }}>
         <StaffSideBar />
 
         {userData.connected ? (
