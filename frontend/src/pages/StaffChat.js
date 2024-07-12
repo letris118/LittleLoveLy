@@ -6,6 +6,10 @@ import "../assets/css/chat.css";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import { getUserInfo } from "../services/auth/UsersService";
+import {
+  getChatHistory,
+  getCustomersUsedToChat,
+} from "../services/auth/UsersService";
 var stompClient = null;
 
 export default function StaffChat() {
@@ -14,7 +18,6 @@ export default function StaffChat() {
   const [conversations, setConversations] = useState(new Map());
   const [tab, setTab] = useState("");
   const [userData, setUserData] = useState({
-    // username: localStorage.getItem("username"),
     username: "staff",
     receivername: "",
     connected: false,
@@ -49,11 +52,37 @@ export default function StaffChat() {
       if (!userRole || userRole !== "ROLE_STAFF") {
         navigate("/");
       } else {
+        fetchCustomersUsedToChat();
         connect();
       }
     };
     checkAuthentication();
   }, [navigate]);
+
+  const fetchCustomersUsedToChat = async () => {
+    try {
+      const response = await getCustomersUsedToChat();
+      if (response) {
+        for (const customer of response) {
+          conversations.set(customer, []);
+        }
+        setConversations(new Map(conversations));
+      }
+    } catch (error) {
+      console.error("Error fetching customers used to chat:", error);
+    }
+  };
+
+  const fetchChatHistory = async (username) => {
+    try {
+      const response = await getChatHistory(username);
+      if (response) {
+        setConversations(new Map([...conversations, [username, response]]));
+      }
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+    }
+  };
 
   const connect = () => {
     let Sock = new SockJS("http://localhost:8010/ws");
@@ -81,6 +110,9 @@ export default function StaffChat() {
   const onPrivateMessage = (payload) => {
     var payloadData = JSON.parse(payload.body);
     if (conversations.get(payloadData.senderName)) {
+      if (!conversations.get(payloadData.senderName).length) {
+        fetchChatHistory(payloadData.senderName);
+      }
       conversations.get(payloadData.senderName).push(payloadData);
       setConversations(new Map(conversations));
     } else {
@@ -127,7 +159,7 @@ export default function StaffChat() {
     if (chatBoxRef.current) {
       setTimeout(() => {
         chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-      }, 50);
+      }, 100);
     }
   };
 
@@ -138,6 +170,17 @@ export default function StaffChat() {
       return userNames.get(username);
     }
   };
+
+  const handleOpenChat = (username) => {
+    if (conversations.get(username).length === 0) {
+      fetchChatHistory(username);
+    }
+    setTab(username);
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [tab]);
 
   return (
     <div>
@@ -209,7 +252,7 @@ export default function StaffChat() {
                   .map((username, index) => (
                     <li
                       onClick={() => {
-                        setTab(username);
+                        handleOpenChat(username);
                       }}
                       className={`member ${tab === username && "active"}`}
                       key={index}

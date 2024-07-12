@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class ChatController {
 
     @Autowired
@@ -30,8 +30,13 @@ public class ChatController {
         return messageDTO;
     }
 
-    @GetMapping("/chat/history/{username}")
+    @GetMapping("/chat/customers/{username}")
     public List<MessageDTO> getChatHistory(@PathVariable String username) {
         return chatService.getChatHistory(username);
+    }
+
+    @GetMapping("/chat/customers")
+    public List<String> getCustomers() {
+        return chatService.getCustomers();
     }
 }

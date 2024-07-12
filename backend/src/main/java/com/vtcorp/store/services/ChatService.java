@@ -35,7 +35,7 @@ public class ChatService {
 
     public List<MessageDTO> getChatHistory(String username) {
         User user = userRepository.findById(username).orElseThrow(() -> new RuntimeException("User not found"));
-        List<Message> messages = messageRepository.findByBelongTo(user);
+        List<Message> messages = messageRepository.findByBelongToOrderByDateAsc(user);
         List<MessageDTO> messageDTOs = new ArrayList<>();
         for (Message message : messages) {
             messageDTOs.add(toDTO(message));
@@ -45,9 +45,9 @@ public class ChatService {
 
     private Message toEntity(MessageDTO messageDTO) {
         boolean isCustomer = true;
-        User customer = userRepository.findById(messageDTO.getSenderName()).orElseThrow(() -> new RuntimeException("Sender not found"));
-        if (!customer.getRole().equals(Role.ROLE_CUSTOMER)) {
-            customer = userRepository.findById(messageDTO.getReceiverName()).orElseThrow(() -> new RuntimeException("Receiver not found"));
+        User customer = userRepository.findById(messageDTO.getSenderName()).orElse(null);
+        if (customer == null || !customer.getRole().equals(Role.ROLE_CUSTOMER)) {
+            customer = userRepository.findById(messageDTO.getReceiverName()).orElseThrow(() -> new RuntimeException("Customer not found"));
             isCustomer = false;
         }
         Message message = new Message();
@@ -64,15 +64,19 @@ public class ChatService {
 
     private MessageDTO toDTO(Message message) {
         MessageDTO messageDTO = new MessageDTO();
-        if(message.isCustomer()){
+        if (message.isCustomer()) {
             messageDTO.setSenderName(message.getBelongTo().getUsername());
-            messageDTO.setReceiverName("staff01");
+            messageDTO.setReceiverName("staff");
         } else {
-            messageDTO.setSenderName("staff01");
+            messageDTO.setSenderName("staff");
             messageDTO.setReceiverName(message.getBelongTo().getUsername());
         }
         messageDTO.setMessage(message.getMessage());
         messageDTO.setDate(message.getDate());
         return messageDTO;
+    }
+
+    public List<String> getCustomers() {
+        return messageRepository.findDistinctBelongToUsernames();
     }
 }
