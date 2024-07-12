@@ -26,7 +26,7 @@ import {
     LineChart,
     Line
 } from "recharts";
-import { FcBusinessman, FcGlobe, FcMoneyTransfer, FcNext, FcPrevious, FcShipped } from "react-icons/fc";
+import { FcBusinessman, FcGlobe, FcMoneyTransfer, FcNext, FcPrevious, FcShipped, FcUp, FcDown } from "react-icons/fc";
 import { parse } from 'date-fns'
 import "../assets/css/dashboard.css"
 
@@ -298,23 +298,20 @@ export default function Dashboard() {
     return (
         <div>
             <StaffHeader />
-            <div className="manage-content">
+            <div className="dashBoard-manage-content">
                 <AdminSideBar />
                 {siteDashboard && orderList && (
-                    <div className="manage-content-detail">
+                    <div className="manage-dashBoard-detail">
                         <main>
-                            <div className="main-title">
-                                <h5>BẢNG THỐNG KÊ</h5>
-                                <h6>(Dữ liệu tổng hợp từ 7 ngày gần nhất)</h6>
-                            </div>
-
-                            <div className="main-cards">
-                                <div className="card">
+                            <div className="dashBoard-main-cards">
+                                <div className="admin-dashBoard-card">
                                     <div className="card-inner">
-                                        <h5>TỔNG DOANH THU</h5>
+                                        <div className="card-inner-title">
+                                            <a>TỔNG DOANH THU</a>
+                                        </div>
                                         <FcMoneyTransfer className="card-icon" />
                                     </div>
-                                    <h4>
+                                    <div className="card-inner-content">
                                         {formatPrice(
                                             recentOrderList.reduce(
                                                 (total, order) => total + order.postDiscountPrice,
@@ -322,285 +319,293 @@ export default function Dashboard() {
                                             )
                                         )}
                                         đ
-                                    </h4>
+                                    </div>
                                 </div>
-                                <div className="card">
+
+                                <div className="admin-dashBoard-card">
                                     <div className="card-inner">
-                                        <h5>KHÁCH HÀNG MỚI</h5>
+                                        <div className="card-inner-title">
+                                            <a>KHÁCH HÀNG MỚI</a>
+                                        </div>
                                         <FcBusinessman className="card-icon" />
+
                                     </div>
-                                    <h4>{recentCustomerList.length}</h4>
+                                    <div className="card-inner-content">
+                                        {recentCustomerList.length}
+                                    </div>
                                 </div>
-                                <div className="card">
+
+                                <div className="admin-dashBoard-card">
                                     <div className="card-inner">
-                                        <h5>TỔNG ĐƠN HÀNG</h5>
+                                        <div className="card-inner-title">
+                                            <a>TỔNG ĐƠN HÀNG</a>
+                                        </div>
                                         <FcShipped className="card-icon" />
+
                                     </div>
-                                    <h4>{recentOrderList.length}</h4>
+                                    <div className="card-inner-content">
+                                        {recentOrderList.length}
+                                    </div>
                                 </div>
-                                <div className="card">
+
+                                <div className="admin-dashBoard-card">
                                     <div className="card-inner">
-                                        <h5>LƯỢT TRUY CẬP</h5>
+                                        <div className="card-inner-title">
+                                            <a>LƯỢT TRUY CẬP</a>
+                                        </div>
                                         <FcGlobe className="card-icon" />
+
                                     </div>
-                                    <h4>{siteDashboard.siteVisits}</h4>
+                                    <div className="card-inner-content">
+                                        {siteDashboard.siteVisits}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="dashBoard-sort">
+                                <div className="dashBoard-sort-type">
+                                    <button
+                                        className={selectedTypeTab === "REVENUE" ? "selected" : ""}
+                                        onClick={() => handleTypeClick("REVENUE")}>
+                                        DOANH THU
+                                    </button>
+                                    <button
+                                        className={selectedTypeTab === "ORDER" ? "selected" : ""}
+                                        onClick={() => handleTypeClick("ORDER")}>
+                                        ĐƠN HÀNG
+                                    </button>
+                                    <button
+                                        className={selectedTypeTab === "PAYMENT" ? "selected" : ""}
+                                        onClick={() => handleTypeClick("PAYMENT")}>
+                                        THANH TOÁN
+                                    </button>
+                                </div>
+                                <div className="dashBoard-sort-time">
+                                    <button
+                                        className={selectedChartTab === "YEARLY" ? "selected" : ""}
+                                        onClick={() => handleChartClick("YEARLY")}>
+                                        THEO NĂM
+                                    </button>
+                                    <button
+                                        className={selectedChartTab === "WEEKLY" ? "selected" : ""}
+                                        onClick={() => handleChartClick("WEEKLY")}>
+                                        THEO TUẦN
+                                    </button>
                                 </div>
                             </div>
 
-                            <div>
-                                <button
-                                    style={{
-                                        marginRight: "15px",
-                                        borderRadius: "10px",
-                                        border: "1px solid rgb(67, 65, 65)",
-                                    }}
-                                    className={selectedTypeTab === "REVENUE" ? "selected" : ""}
-                                    onClick={() => handleTypeClick("REVENUE")}>
-                                    DOANH THU
-                                </button>
-                                <button
-                                    style={{
-                                        marginRight: "15px",
-                                        borderRadius: "10px",
-                                        border: "1px solid rgb(67, 65, 65)",
-                                    }}
-                                    className={selectedTypeTab === "ORDER" ? "selected" : ""}
-                                    onClick={() => handleTypeClick("ORDER")}>
-                                    ĐƠN HÀNG
-                                </button>
-                                <button
-                                    style={{
-                                        marginRight: "15px",
-                                        borderRadius: "10px",
-                                        border: "1px solid rgb(67, 65, 65)",
-                                    }}
-                                    className={selectedTypeTab === "PAYMENT" ? "selected" : ""}
-                                    onClick={() => handleTypeClick("PAYMENT")}>
-                                    THANH TOÁN
-                                </button>
-                            </div>
+                            {selectedTypeTab === 'REVENUE' && selectedChartTab === 'YEARLY' &&
+                                <div className="admin-dashBoard-charts-title" style={{ fontWeight: 'bold' }}>
+                                    Doanh thu trong năm {yearState}
+                                </div>
+                            }
 
-                            <div>
-                                <button
-                                    style={{
-                                        marginRight: "15px",
-                                        borderRadius: "10px",
-                                        border: "1px solid rgb(67, 65, 65)",
-                                    }}
-                                    className={selectedChartTab === "YEARLY" ? "selected" : ""}
-                                    onClick={() => handleChartClick("YEARLY")}>
-                                    THEO NĂM
-                                </button>
-                                <button
-                                    style={{
-                                        marginRight: "15px",
-                                        borderRadius: "10px",
-                                        border: "1px solid rgb(67, 65, 65)",
-                                    }}
-                                    className={selectedChartTab === "WEEKLY" ? "selected" : ""}
-                                    onClick={() => handleChartClick("WEEKLY")}>
-                                    THEO TUẦN
-                                </button>
-                            </div>
+                            {selectedTypeTab === 'REVENUE' && selectedChartTab === 'WEEKLY' &&
+                                <div className="admin-dashBoard-charts-title" style={{ fontWeight: 'bold' }}>
+                                    Doanh thu trong năm {startDate.getFullYear()}
+                                </div>
+                            }
+
+                            {selectedTypeTab === 'ORDER' && selectedChartTab === 'YEARLY' &&
+                                <div className="admin-dashBoard-charts-title" style={{ fontWeight: 'bold' }}>
+                                    Số lượng đơn hàng trong năm {yearState}
+                                </div>
+                            }
+
+                            {selectedTypeTab === 'ORDER' && selectedChartTab === 'WEEKLY' &&
+                                <div className="admin-dashBoard-charts-title" style={{ fontWeight: 'bold' }}>
+                                    Số lượng đơn hàng trong năm {startDate.getFullYear()}
+                                </div>
+                            }
+
+
+                            {selectedTypeTab === 'PAYMENT' && selectedChartTab === 'YEARLY' &&
+                                <div className="admin-dashBoard-charts-title" style={{ fontWeight: 'bold' }}>
+                                    Phương thức thanh toán trong năm {yearState}
+                                </div>
+                            }
+
+                            {selectedTypeTab === 'PAYMENT' && selectedChartTab === 'WEEKLY' &&
+                                <div className="admin-dashBoard-charts-title">
+                                    <div style={{ fontWeight: 'bold' }}>Phương thức thanh toán trong năm {startDate.getFullYear()}</div>
+                                    {new Date(startDate).toLocaleDateString('en-GB')}  -  {new Date(endDate).toLocaleDateString('en-GB')}
+                                </div>
+
+                            }
 
                             {selectedChartTab === 'YEARLY' &&
-                                <div>
-                                    <button onClick={() => yearChange('decrease')}>GIẢM</button>
-                                    <button onClick={() => yearChange('increase')}>TĂNG</button>
+                                <div className="admin-dashBoard-sort">
+                                    <button onClick={() => yearChange('decrease')}><FcDown /></button>
+                                    <button onClick={() => yearChange('increase')}><FcUp /></button>
                                 </div>
                             }
 
                             {selectedChartTab === 'WEEKLY' &&
-                                <div>
+                                <div className="admin-dashBoard-sort">
                                     <button onClick={() => weeklyChange('increase')}><FcPrevious /></button>
                                     <button onClick={() => weeklyChange('decrease')}><FcNext /></button>
                                 </div>
                             }
 
                             {selectedTypeTab === 'REVENUE' && selectedChartTab === 'YEARLY' &&
-                                <>
-                                    <div className="charts">
-                                        <ResponsiveContainer width={1000} height={400}  >
-                                            <LineChart data={yearlyRevenueData()} >
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="month" />
-                                                <YAxis />
-                                                <Tooltip />
-                                                <Legend />
-                                                <Line name="Tổng số tiền" type="monotone" dataKey="price" stroke="#8884d8" strokeWidth="3" activeDot={{ r: 8 }} />
-                                            </LineChart>
-                                        </ResponsiveContainer>
-                                    </div>
-                                    <h5>Doanh thu trong năm {yearState}</h5>
-                                </>
+                                <div className="admin-dashBoard-charts">
+                                    <ResponsiveContainer width={1000} height={400}  >
+                                        <LineChart data={yearlyRevenueData()} >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="month" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Line name="Tổng số tiền" type="monotone" dataKey="price" stroke="#8884d8" strokeWidth="3" activeDot={{ r: 8 }} />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </div>
 
                             }
 
                             {selectedTypeTab === 'REVENUE' && selectedChartTab === 'WEEKLY' &&
-                                <>
-                                    <div className='charts'>
-                                        <ResponsiveContainer width={1000} height={400} >
-                                            <LineChart data={weeklyRevenueData()}>
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="date" interval={0} />
-                                                <YAxis />
-                                                <Tooltip />
-                                                <Legend />
-                                                <Line name="Tổng số tiền" type="monotone" dataKey="price" stroke="#8884d8" strokeWidth="3" activeDot={{ r: 8 }} />
-                                            </LineChart>
-                                        </ResponsiveContainer>
-                                    </div>
-                                    <h5>Doanh thu trong năm {startDate.getFullYear()}</h5>
-                                </>
+                                <div className="admin-dashBoard-charts">
+                                    <ResponsiveContainer width={1000} height={400} >
+                                        <LineChart data={weeklyRevenueData()}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="date" interval={0} />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Line name="Tổng số tiền" type="monotone" dataKey="price" stroke="#8884d8" strokeWidth="3" activeDot={{ r: 8 }} />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </div>
                             }
 
                             {selectedTypeTab === 'ORDER' && selectedChartTab === 'YEARLY' &&
-                                <>
-                                    <div className='charts'>
-                                        <ResponsiveContainer width="100%" height={400}>
-                                            <BarChart
-                                                width={500}
-                                                height={300}
-                                                data={yearlyRevenueData()}
-                                            >
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="month" />
-                                                <YAxis />
-                                                <Tooltip />
-                                                <Legend />
-                                                <Bar dataKey="numberOfOrders" fill="#8884d8" name="Tổng số lượng đơn hàng" barSize="15" />
-                                            </BarChart>
+                                <div className="admin-dashBoard-charts">
+                                    <ResponsiveContainer width="100%" height={400}>
+                                        <BarChart
+                                            width={500}
+                                            height={300}
+                                            data={yearlyRevenueData()}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="month" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Bar dataKey="numberOfOrders" fill="#8884d8" name="Tổng số lượng đơn hàng" barSize="15" />
+                                        </BarChart>
 
-                                        </ResponsiveContainer>
-                                        <ResponsiveContainer width="100%" height={400}>
-                                            <BarChart
-                                                width={500}
-                                                height={300}
-                                                data={yearlyRevenueData()}
-                                            >
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="month" />
-                                                <YAxis />
-                                                <Tooltip />
-                                                <Legend />
-                                                <Bar dataKey="voucherApplied" fill="#82ca9d" name="Đơn hàng có áp dụng voucher" barSize="15" />
-                                                <Bar dataKey="noVoucher" fill="#ff7f50" name="Đơn hàng không áp dụng voucher" barSize="15" />
-                                            </BarChart>
+                                    </ResponsiveContainer>
+                                    <ResponsiveContainer width="100%" height={400}>
+                                        <BarChart
+                                            width={500}
+                                            height={300}
+                                            data={yearlyRevenueData()}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="month" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Bar dataKey="voucherApplied" fill="#82ca9d" name="Đơn hàng có áp dụng voucher" barSize="15" />
+                                            <Bar dataKey="noVoucher" fill="#ff7f50" name="Đơn hàng không áp dụng voucher" barSize="15" />
+                                        </BarChart>
 
-                                        </ResponsiveContainer>
-
-                                    </div>
-                                    <h5>Số lượng đơn hàng trong năm {yearState}</h5>
-                                </>
+                                    </ResponsiveContainer>
+                                </div>
                             }
 
                             {selectedTypeTab === 'ORDER' && selectedChartTab === 'WEEKLY' &&
-                                <>
-                                    <div className='charts'>
-                                        <ResponsiveContainer width="100%" height={400}>
-                                            <BarChart
-                                                width={500}
-                                                height={300}
-                                                data={weeklyRevenueData()}
-                                            >
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="date" interval={0} />
-                                                <YAxis />
-                                                <Tooltip />
-                                                <Legend />
-                                                <Bar dataKey="numberOfOrders" fill="#8884d8" name="Tổng số lượng đơn hàng" barSize="20" />
-                                            </BarChart>
+                                <div className="admin-dashBoard-charts">
+                                    <ResponsiveContainer width="100%" height={400}>
+                                        <BarChart
+                                            width={500}
+                                            height={300}
+                                            data={weeklyRevenueData()}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="date" interval={0} />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Bar dataKey="numberOfOrders" fill="#8884d8" name="Tổng số lượng đơn hàng" barSize="20" />
+                                        </BarChart>
 
-                                        </ResponsiveContainer>
-                                        <ResponsiveContainer width="100%" height={400}>
-                                            <BarChart
-                                                width={500}
-                                                height={300}
-                                                data={weeklyRevenueData()}
-                                            >
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="date" interval={0} />
-                                                <YAxis />
-                                                <Tooltip />
-                                                <Legend />
-                                                <Bar dataKey="voucherApplied" fill="#82ca9d" name="Đơn hàng có áp dụng voucher" barSize="20" />
-                                                <Bar dataKey="noVoucher" fill="#ff7f50" name="Đơn hàng không áp dụng voucher" barSize="20" />
-                                            </BarChart>
+                                    </ResponsiveContainer>
+                                    <ResponsiveContainer width="100%" height={400}>
+                                        <BarChart
+                                            width={500}
+                                            height={300}
+                                            data={weeklyRevenueData()}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="date" interval={0} />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Bar dataKey="voucherApplied" fill="#82ca9d" name="Đơn hàng có áp dụng voucher" barSize="20" />
+                                            <Bar dataKey="noVoucher" fill="#ff7f50" name="Đơn hàng không áp dụng voucher" barSize="20" />
+                                        </BarChart>
 
-                                        </ResponsiveContainer>
-
-                                    </div>
-                                    <h5>Số lượng đơn hàng trong năm {startDate.getFullYear()}</h5>
-                                </>
+                                    </ResponsiveContainer>
+                                </div>
                             }
 
 
                             {selectedTypeTab === 'PAYMENT' && selectedChartTab === 'YEARLY' &&
-                                <>
+                                <div className="admin-dashBoard-charts">
+                                    <ResponsiveContainer width="100%" height={400}>
+                                        <PieChart>
+                                            <Pie
+                                                data={yearlyPaymentData()}
+                                                dataKey="numberOfOrders"
+                                                nameKey="method"
+                                                cx="50%"
+                                                cy="50%"
+                                                outerRadius={100}
+                                                fill="#8884d8"
+                                                label={renderLabel(yearlyPaymentData())}
+                                            >
+                                                {yearlyPaymentData().map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={entry.color} name={entry.name} />
+                                                ))}
 
-                                    <div className="charts">
-                                        <ResponsiveContainer width="100%" height={400}>
-                                            <PieChart>
-                                                <Pie
-                                                    data={yearlyPaymentData()}
-                                                    dataKey="numberOfOrders"
-                                                    nameKey="method"
-                                                    cx="50%"
-                                                    cy="50%"
-                                                    outerRadius={100}
-                                                    fill="#8884d8"
-                                                    label={renderLabel(yearlyPaymentData())}
-                                                >
-                                                    {yearlyPaymentData().map((entry, index) => (
-                                                        <Cell key={`cell-${index}`} fill={entry.color} name={entry.name} />
-                                                    ))}
-
-                                                </Pie>
-                                                <Tooltip />
-                                                <Legend />
-                                            </PieChart>
-                                        </ResponsiveContainer>
-                                    </div>
-
-                                    <h5>Phương thức thanh toán trong năm {yearState}</h5>
-                                </>
+                                            </Pie>
+                                            <Tooltip />
+                                            <Legend />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </div>
                             }
 
                             {selectedTypeTab === 'PAYMENT' && selectedChartTab === 'WEEKLY' &&
-                                <>
+                                <div className="admin-dashBoard-charts">
+                                    <ResponsiveContainer width="100%" height={400}>
+                                        <PieChart>
+                                            <Pie
+                                                data={weeklyPaymentData()}
+                                                dataKey="numberOfOrders"
+                                                nameKey="method"
+                                                cx="50%"
+                                                cy="50%"
+                                                outerRadius={100}
+                                                fill="#8884d8"
+                                                label={renderLabel(weeklyPaymentData())}
+                                            >
+                                                {weeklyPaymentData().map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={entry.color} name={entry.name} />
+                                                ))}
 
-                                    <div className="charts">
-                                        <ResponsiveContainer width="100%" height={400}>
-                                            <PieChart>
-                                                <Pie
-                                                    data={weeklyPaymentData()}
-                                                    dataKey="numberOfOrders"
-                                                    nameKey="method"
-                                                    cx="50%"
-                                                    cy="50%"
-                                                    outerRadius={100}
-                                                    fill="#8884d8"
-                                                    label={renderLabel(weeklyPaymentData())}
-                                                >
-                                                    {weeklyPaymentData().map((entry, index) => (
-                                                        <Cell key={`cell-${index}`} fill={entry.color} name={entry.name} />
-                                                    ))}
-
-                                                </Pie>
-                                                <Tooltip />
-                                                <Legend />
-                                            </PieChart>
-                                        </ResponsiveContainer>
-                                    </div>
-                                    <h5>Phương thức thanh toán trong năm {startDate.getFullYear()}</h5>
-                                    <h5>Từ ngày {new Date(startDate).toLocaleDateString('en-GB')} đến ngày {new Date(endDate).toLocaleDateString('en-GB')} </h5>
-
-                                </>
+                                            </Pie>
+                                            <Tooltip />
+                                            <Legend />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </div>
                             }
                         </main>
                     </div>
                 )}
             </div>
+            <StaffBackToTop/>
         </div>
     );
 }
