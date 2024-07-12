@@ -1,17 +1,30 @@
 package com.vtcorp.store.entities;
 
-import com.vtcorp.store.constants.Status;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+import java.util.Date;
+
+@Entity
+@Data
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@NoArgsConstructor
+@Table(name = "message")
 public class Message {
-    private String senderName;
-    private String receiverName;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long messageId;
+
     private String message;
-    private String date;
-    private Status status;
+    private Date date;
+    private boolean isCustomer;
+    private boolean isRead = false;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_customer_id", nullable = false)
+    private User belongTo;
+
 }

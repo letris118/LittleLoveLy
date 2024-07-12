@@ -6,6 +6,11 @@ import "../assets/css/chat.css";
 import StaffHeader from "../components/StaffHeader";
 import StaffSideBar from "../components/StaffSideBar";
 import { getUserInfo } from "../services/auth/UsersService";
+import {
+  getChatHistory,
+  getCustomersUsedToChat,
+  markMessagesAsRead,
+} from "../services/auth/UsersService";
 var stompClient = null;
 
 export default function StaffChat() {
@@ -13,13 +18,15 @@ export default function StaffChat() {
   const chatBoxRef = useRef(null);
   const [conversations, setConversations] = useState(new Map());
   const [tab, setTab] = useState("");
+  const tabRef = useRef(tab);
   const [userData, setUserData] = useState({
-    username: localStorage.getItem("username"),
+    username: "staff",
     receivername: "",
     connected: false,
     message: "",
   });
   const [userNames, setUserNames] = useState(new Map());
+  const [unreadStatus, setUnreadStatus] = useState(new Map());
 
   useEffect(() => {
     const fetchUserNames = async () => {
@@ -48,11 +55,46 @@ export default function StaffChat() {
       if (!userRole || userRole !== "ROLE_STAFF") {
         navigate("/");
       } else {
+        fetchCustomersUsedToChat();
         connect();
       }
     };
     checkAuthentication();
   }, [navigate]);
+
+  const fetchCustomersUsedToChat = async () => {
+    try {
+      const response = await getCustomersUsedToChat();
+      if (response) {
+        const unreadMap = new Map();
+        for (const customer of response) {
+          const { username, allMessagesRead } = customer;
+          conversations.set(username, []);
+          unreadMap.set(username, !allMessagesRead);
+        }
+        setConversations(new Map(conversations));
+        setUnreadStatus(unreadMap);
+      }
+    } catch (error) {
+      console.error("Error fetching customers used to chat:", error);
+    }
+  };
+
+  // ti xoa
+  useEffect(() => {
+    console.log("Unread status:", unreadStatus);
+  }, [unreadStatus]);
+
+  const fetchChatHistory = async (username) => {
+    try {
+      const response = await getChatHistory(username);
+      if (response) {
+        setConversations(new Map([...conversations, [username, response]]));
+      }
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+    }
+  };
 
   const connect = () => {
     let Sock = new SockJS("http://localhost:8010/ws");
@@ -79,17 +121,30 @@ export default function StaffChat() {
 
   const onPrivateMessage = (payload) => {
     var payloadData = JSON.parse(payload.body);
-    if (conversations.get(payloadData.senderName)) {
-      conversations.get(payloadData.senderName).push(payloadData);
+    const sender = payloadData.senderName;
+    if (conversations.get(sender)) {
+      if (conversations.get(sender).length === 0) {
+        fetchChatHistory(sender);
+      }
+      conversations.get(sender).push(payloadData);
       setConversations(new Map(conversations));
     } else {
       let list = [];
       list.push(payloadData);
-      conversations.set(payloadData.senderName, list);
+      conversations.set(sender, list);
       setConversations(new Map(conversations));
     }
+    if (tabRef.current !== sender) {
+      setUnreadStatus((prev) => new Map(prev.set(sender, true)));
+    }
+    console.log("sender", sender);
+    console.log("tab", tabRef.current);
     scrollToBottom();
   };
+
+  useEffect(() => {
+    tabRef.current = tab;
+  }, [tab]);
 
   const onError = (err) => {
     console.log(err);
@@ -126,7 +181,7 @@ export default function StaffChat() {
     if (chatBoxRef.current) {
       setTimeout(() => {
         chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-      }, 50);
+      }, 100);
     }
   };
 
@@ -137,6 +192,23 @@ export default function StaffChat() {
       return userNames.get(username);
     }
   };
+
+  const handleOpenChat = async (username) => {
+    if (conversations.get(username).length === 0) {
+      fetchChatHistory(username);
+    }
+    setTab(username);
+    setUnreadStatus((prev) => new Map(prev.set(username, false)));
+    try {
+      await markMessagesAsRead(username);
+    } catch (error) {
+      console.error("Error marking messages as read:", error);
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [tab]);
 
   return (
     <div>
@@ -208,12 +280,15 @@ export default function StaffChat() {
                   .map((username, index) => (
                     <li
                       onClick={() => {
-                        setTab(username);
+                        handleOpenChat(username);
                       }}
                       className={`member ${tab === username && "active"}`}
                       key={index}
                     >
                       {userNames.get(username) || username}
+                      {unreadStatus.get(username) && (
+                        <span className=""> Unread</span>
+                      )}
                     </li>
                   ))}
               </ul>
