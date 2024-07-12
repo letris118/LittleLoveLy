@@ -3,12 +3,6 @@
     min-width: 1350px;
     background-color: #f5f6fa;
 }
-
-.manage-content-detail {
-    background-color: #f5f6fa;
-    padding: 20px 20px 20px 0;
-}
-
 .manage-content-detail {
     width: 80%;
     height: 100%;
@@ -22,17 +16,6 @@
     background-color: white;
 }
 
-.manage-table thead {
-    background-color: #f2f2f2;
-    color: #2d3436;
-}
-
-.manage-table th,
-.manage-table td {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-}
-
 .manage-table-none {
     margin-top: 20px;
     width: 100%;
@@ -40,11 +23,14 @@
     background-color: white;
 }
 
+.manage-table thead,
 .manage-table-none thead {
     background-color: #f2f2f2;
     color: #2d3436;
 }
 
+.manage-table th,
+.manage-table td,
 .manage-table-none th,
 .manage-table-none td {
     padding: 8px 12px;
@@ -87,9 +73,7 @@
 .regisDate-head,
 .createdDate-head,
 .status-head,
-.trackingCode-head,
-.createdDate-body,
-.status-body,
+.orderId-head,
 .detail-body,
 .regisDate-body,
 .username-head,
@@ -173,13 +157,39 @@
     text-decoration: none;
     background-color: #a7c9e5;
     border-radius: 10px;
-
 }
 
 .add-product-link:hover {
     background-color: #86bae4;
     ;
     border: 1px solid #5a95c6;
+}
+
+.manage-button-search-bar button{
+    margin-bottom: 20px;
+    display: inline-block;
+    margin-left: 15px;
+    width: 140px;
+    height: 50px;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ffff;
+    color: #808080;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 15px;
+    background-color: #ffff;
+    box-shadow: 0 0px 5px 0px #706f6faf;
+}
+
+.manage-button-search-bar button:hover{
+    background-color: #F2F2F2;
+    border: 1px solid #e3e3e3;
+}
+
+.manage-button-search-bar button.selected{
+    background-color: #F2F2F2;
+    border: 1px solid #e3e3e3;
 }
 
 .table-search-bar {
@@ -345,3 +355,4 @@
 .hidden-select {
     display: none;
 }
+

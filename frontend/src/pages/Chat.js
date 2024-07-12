@@ -1,10 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
+import { getChatHistory } from "../services/auth/UsersService";
+import _ from "lodash";
 
 let stompClient = null;
 
@@ -12,12 +20,21 @@ export default function Chat() {
   const navigate = useNavigate();
   const chatBoxRef = useRef(null);
   const [messages, setMessages] = useState([]);
-  const [tab, setTab] = useState("staff01");
+  const [tab, setTab] = useState("staff");
   const [userData, setUserData] = useState({
     username: localStorage.getItem("username"),
     connected: false,
     message: "",
   });
+
+  const scrollToBottom = useCallback(
+    _.debounce(() => {
+      if (chatBoxRef.current) {
+        chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+      }
+    }, 100),
+    [chatBoxRef]
+  );
 
   useEffect(() => {
     const checkAuthentication = () => {
@@ -26,10 +43,26 @@ export default function Chat() {
         navigate("/");
       } else {
         connect();
+        fetchChatHistory(localStorage.getItem("username"));
       }
     };
     checkAuthentication();
-  }, []);
+  }, [navigate]);
+
+  useLayoutEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
+  const fetchChatHistory = async (username) => {
+    try {
+      const response = await getChatHistory(username);
+      if (response) {
+        setMessages(response);
+      }
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+    }
+  };
 
   const connect = () => {
     let Sock = new SockJS("http://localhost:8010/ws");
@@ -38,7 +71,7 @@ export default function Chat() {
   };
 
   const onConnected = () => {
-    setUserData({ ...userData, connected: true });
+    setUserData((prevUserData) => ({ ...prevUserData, connected: true }));
     stompClient.subscribe(
       "/user/" + userData.username + "/private",
       onPrivateMessage
@@ -51,14 +84,12 @@ export default function Chat() {
 
   const onPrivateMessage = (payload) => {
     const message = JSON.parse(payload.body);
-
     setMessages((prevMessages) => [...prevMessages, message]);
-    scrollToBottom();
   };
 
   const handleMessage = (event) => {
     const { value } = event.target;
-    setUserData({ ...userData, message: value });
+    setUserData((prevUserData) => ({ ...prevUserData, message: value }));
   };
 
   const sendMessage = () => {
@@ -66,7 +97,6 @@ export default function Chat() {
       return;
     }
     if (stompClient) {
-      // Prepare message object
       const message = {
         senderName: userData.username,
         receiverName: tab,
@@ -74,25 +104,9 @@ export default function Chat() {
         status: "MESSAGE",
       };
 
-      // Send message via WebSocket
       stompClient.send("/app/private-message", {}, JSON.stringify(message));
-
-      // Update messages state with the sent message
       setMessages((prevMessages) => [...prevMessages, message]);
-
-      // Clear message input
-      setUserData({ ...userData, message: "" });
-
-      // Scroll to bottom of chat box
-      scrollToBottom();
-    }
-  };
-
-  const scrollToBottom = () => {
-    if (chatBoxRef.current) {
-      setTimeout(() => {
-        chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-      }, 50);
+      setUserData((prevUserData) => ({ ...prevUserData, message: "" }));
     }
   };
 
@@ -115,48 +129,46 @@ export default function Chat() {
         />
 
         {userData.connected ? (
-          <>
-            <div className="cus-chat">
-              <div className="cus-chatbox" ref={chatBoxRef}>
-                <ul className="chat-messages">
-                  {messages.map((chat, index) => (
-                    <li
-                      key={index}
-                      className={`message ${
-                        chat.senderName === userData.username && "self"
-                      }`}
-                    >
-                      {chat.senderName !== userData.username && (
-                        <div className="avatar">
-                          {displayName(chat.senderName)}
-                        </div>
-                      )}
-                      <div className="cus-message-data">{chat.message}</div>
-                      {chat.senderName === userData.username && (
-                        <div className="avatar self">
-                          {displayName(chat.senderName)}
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="cus-input">
-                <input
-                  type="text"
-                  placeholder="Nhập tin nhắn của bạn..."
-                  value={userData.message}
-                  onChange={handleMessage}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      sendMessage();
-                    }
-                  }}
-                />
-                <button onClick={sendMessage}>Gửi</button>
-              </div>
+          <div className="cus-chat">
+            <div className="cus-chatbox" ref={chatBoxRef}>
+              <ul className="chat-messages">
+                {messages.map((chat, index) => (
+                  <li
+                    key={index}
+                    className={`message ${
+                      chat.senderName === userData.username ? "self" : ""
+                    }`}
+                  >
+                    {chat.senderName !== userData.username && (
+                      <div className="avatar">
+                        {displayName(chat.senderName)}
+                      </div>
+                    )}
+                    <div className="cus-message-data">{chat.message}</div>
+                    {chat.senderName === userData.username && (
+                      <div className="avatar self">
+                        {displayName(chat.senderName)}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </>
+            <div className="cus-input">
+              <input
+                type="text"
+                placeholder="Nhập tin nhắn của bạn..."
+                value={userData.message}
+                onChange={handleMessage}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    sendMessage();
+                  }
+                }}
+              />
+              <button onClick={sendMessage}>Gửi</button>
+            </div>
+          </div>
         ) : (
           <h4 className="standing-by">
             Tính năng tạm thời không khả dụng. Vui lòng thử lại sau.
