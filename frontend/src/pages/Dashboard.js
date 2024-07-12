@@ -420,10 +420,10 @@ export default function Dashboard() {
                             {selectedTypeTab === 'REVENUE' && selectedChartTab === 'YEARLY' &&
                                 <>
                                     <div className="charts">
-                                        <ResponsiveContainer width={1000} height={400} >
+                                        <ResponsiveContainer width={1000} height={400}  >
                                             <LineChart data={yearlyRevenueData()} >
                                                 <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="month" interval={0} />
+                                                <XAxis dataKey="month" />
                                                 <YAxis />
                                                 <Tooltip />
                                                 <Legend />

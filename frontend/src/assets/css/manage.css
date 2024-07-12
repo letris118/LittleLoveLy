@@ -22,13 +22,23 @@
     background-color: white;
 }
 
-.manage-table thead {
+.manage-table-none {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.manage-table thead,
+.manage-table-none thead {
     background-color: #f2f2f2;
     color: #2d3436;
 }
 
 .manage-table th,
-.manage-table td {
+.manage-table td,
+.manage-table-none th,
+.manage-table-none td {
     padding: 8px 12px;
     border: 1px solid #ddd;
 }
@@ -346,3 +356,4 @@
 .hidden-select {
     display: none;
 }
+
