@@ -119,6 +119,7 @@ export default function Dashboard() {
         const yearlySummary = months.slice(0, monthsToInclude).map(month => ({
             month,
             price: 0,
+            itemQuantity: 0,
             numberOfOrders: 0,
             voucherApplied: 0,
             noVoucher: 0
@@ -127,15 +128,16 @@ export default function Dashboard() {
         orderList.forEach(order => {
             const createdDate = parse(order.createdDate, dateTimeFormat, new Date())
             if (createdDate.getFullYear() == yearState) {
-                const monthIndex = createdDate.getMonth();
-                yearlySummary[monthIndex].price += order.postDiscountPrice;
-                yearlySummary[monthIndex].numberOfOrders++;
+                const monthIndex = createdDate.getMonth()
+                yearlySummary[monthIndex].price += order.postDiscountPrice
+                yearlySummary[monthIndex].numberOfOrders++
+                yearlySummary[monthIndex].itemQuantity += order.totalQuantity
                 if (order.voucher)
                     yearlySummary[monthIndex].voucherApplied++
                 else
                     yearlySummary[monthIndex].noVoucher++
             }
-        });
+        })
 
         return yearlySummary;
     }
@@ -152,6 +154,7 @@ export default function Dashboard() {
             weeklySummary.push({
                 date: dateString,
                 price: 0,
+                itemQuantity: 0,
                 numberOfOrders: 0,
                 voucherApplied: 0,
                 noVoucher: 0
@@ -169,6 +172,7 @@ export default function Dashboard() {
                 if (dayDifference >= 0 && dayDifference < 7) {
                     weeklySummary[dayDifference].price += order.postDiscountPrice;
                     weeklySummary[dayDifference].numberOfOrders++
+                    weeklySummary[dayDifference].itemQuantity += order.totalQuantity
                     if (order.voucher)
                         weeklySummary[dayDifference].voucherApplied++
                     else
@@ -178,6 +182,18 @@ export default function Dashboard() {
         });
 
         return weeklySummary;
+    }
+
+    const avgItemsPerOrder = (revenueData) => {
+        const aggregate = {
+            numberOfOrders: 0,
+            itemQuantity: 0,
+        }
+        revenueData.forEach(data => {
+            aggregate.numberOfOrders += data.numberOfOrders
+            aggregate.itemQuantity += data.itemQuantity
+        })
+        return aggregate.itemQuantity / aggregate.numberOfOrders
     }
 
     const yearlyPaymentData = () => {
@@ -253,6 +269,7 @@ export default function Dashboard() {
 
         return weeklySummary
     }
+
 
 
     const yearChange = (change) => {
@@ -423,7 +440,7 @@ export default function Dashboard() {
                                         <ResponsiveContainer width={1000} height={400} >
                                             <LineChart data={yearlyRevenueData()} >
                                                 <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="month" interval={0} />
+                                                <XAxis dataKey="month" />
                                                 <YAxis />
                                                 <Tooltip />
                                                 <Legend />
@@ -433,7 +450,6 @@ export default function Dashboard() {
                                     </div>
                                     <h5>Doanh thu trong năm {yearState}</h5>
                                 </>
-
                             }
 
                             {selectedTypeTab === 'REVENUE' && selectedChartTab === 'WEEKLY' &&
@@ -442,7 +458,7 @@ export default function Dashboard() {
                                         <ResponsiveContainer width={1000} height={400} >
                                             <LineChart data={weeklyRevenueData()}>
                                                 <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="date" interval={0} />
+                                                <XAxis dataKey="date" />
                                                 <YAxis />
                                                 <Tooltip />
                                                 <Legend />
@@ -596,6 +612,17 @@ export default function Dashboard() {
                                     <h5>Từ ngày {new Date(startDate).toLocaleDateString('en-GB')} đến ngày {new Date(endDate).toLocaleDateString('en-GB')} </h5>
 
                                 </>
+                            }
+
+                            {selectedChartTab === 'YEARLY' &&
+                                <div>
+                                    Số lượng sản phẩm trung bình mỗi đơn hàng: {avgItemsPerOrder(yearlyRevenueData()) || "Không có dữ liệu"}
+                                </div>
+                            }
+                            {selectedChartTab === 'WEEKLY' &&
+                                <div>
+                                    Số lượng sản phẩm trung bình mỗi đơn hàng: {avgItemsPerOrder(weeklyRevenueData()) || "Không có dữ liệu"}
+                                </div>
                             }
                         </main>
                     </div>
