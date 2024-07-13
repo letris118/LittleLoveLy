@@ -119,6 +119,7 @@ export default function Dashboard() {
         const yearlySummary = months.slice(0, monthsToInclude).map(month => ({
             month,
             price: 0,
+            itemQuantity: 0,
             numberOfOrders: 0,
             voucherApplied: 0,
             noVoucher: 0
@@ -127,15 +128,16 @@ export default function Dashboard() {
         orderList.forEach(order => {
             const createdDate = parse(order.createdDate, dateTimeFormat, new Date())
             if (createdDate.getFullYear() == yearState) {
-                const monthIndex = createdDate.getMonth();
-                yearlySummary[monthIndex].price += order.postDiscountPrice;
-                yearlySummary[monthIndex].numberOfOrders++;
+                const monthIndex = createdDate.getMonth()
+                yearlySummary[monthIndex].price += order.postDiscountPrice
+                yearlySummary[monthIndex].numberOfOrders++
+                yearlySummary[monthIndex].itemQuantity += order.totalQuantity
                 if (order.voucher)
                     yearlySummary[monthIndex].voucherApplied++
                 else
                     yearlySummary[monthIndex].noVoucher++
             }
-        });
+        })
 
         return yearlySummary;
     }
@@ -152,6 +154,7 @@ export default function Dashboard() {
             weeklySummary.push({
                 date: dateString,
                 price: 0,
+                itemQuantity: 0,
                 numberOfOrders: 0,
                 voucherApplied: 0,
                 noVoucher: 0
@@ -169,6 +172,7 @@ export default function Dashboard() {
                 if (dayDifference >= 0 && dayDifference < 7) {
                     weeklySummary[dayDifference].price += order.postDiscountPrice;
                     weeklySummary[dayDifference].numberOfOrders++
+                    weeklySummary[dayDifference].itemQuantity += order.totalQuantity
                     if (order.voucher)
                         weeklySummary[dayDifference].voucherApplied++
                     else
@@ -178,6 +182,18 @@ export default function Dashboard() {
         });
 
         return weeklySummary;
+    }
+
+    const avgItemsPerOrder = (revenueData) => {
+        const aggregate = {
+            numberOfOrders: 0,
+            itemQuantity: 0,
+        }
+        revenueData.forEach(data => {
+            aggregate.numberOfOrders += data.numberOfOrders
+            aggregate.itemQuantity += data.itemQuantity
+        })
+        return aggregate.itemQuantity / aggregate.numberOfOrders
     }
 
     const yearlyPaymentData = () => {
@@ -599,6 +615,17 @@ export default function Dashboard() {
                                             <Legend />
                                         </PieChart>
                                     </ResponsiveContainer>
+                                </div>
+                            }
+
+                            {selectedChartTab === 'YEARLY' &&
+                                <div>
+                                    Số lượng sản phẩm trung bình mỗi đơn hàng: {avgItemsPerOrder(yearlyRevenueData()) || "Không có dữ liệu"}
+                                </div>
+                            }
+                            {selectedChartTab === 'WEEKLY' &&
+                                <div>
+                                    Số lượng sản phẩm trung bình mỗi đơn hàng: {avgItemsPerOrder(weeklyRevenueData()) || "Không có dữ liệu"}
                                 </div>
                             }
                         </main>

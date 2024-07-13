@@ -31,6 +31,7 @@ export default function ManageOrder() {
   const [isConfirmOrderDialogOpen, setIsConfirmOrderDialogOpen] =
     useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [filterStatus, setFilterStatus] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,7 +50,7 @@ export default function ManageOrder() {
         let response = await ordersAll();
         if (response) {
           setOrderList(response);
-          setFilteredOrders(response);
+          setFilteredOrders(applyStatusFilter(response, filterStatus));
         } else {
           setOrderList([]);
           setFilteredOrders([]);
@@ -62,21 +63,30 @@ export default function ManageOrder() {
       }
     };
     fetchOrders();
-  }, [refresh]);
+  }, [refresh, filterStatus]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
-      setFilteredOrders(orderList);
+      setFilteredOrders(applyStatusFilter(orderList, filterStatus));
     } else {
       const filtered = orderList.filter((order) =>
         order.orderId.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredOrders(filtered);
+      setFilteredOrders(applyStatusFilter(filtered, filterStatus));
     }
-  }, [searchQuery, orderList]);
+  }, [searchQuery, orderList, filterStatus]);
+
+  const applyStatusFilter = (orders, status) => {
+    if (status === "") return orders;
+    return orders.filter((order) => order.status.includes(status));
+  };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleStatusFilter = (status) => {
+    setFilterStatus(status);
   };
 
   const CustomDialog = styled(Dialog)({
@@ -185,9 +195,30 @@ export default function ManageOrder() {
               />
             </div>
             <div className="manage-button-search-bar">
-              <button>Chưa xác nhận</button>
-              <button>Đã xác nhận</button>
-              <button>Giao thành công</button>
+              <button
+                className={filterStatus === "PENDING" ? "selected" : ""}
+                onClick={() => handleStatusFilter("PENDING")}
+              >
+                Chưa xác nhận
+              </button>
+              <button
+                className={filterStatus === "CONFIRMED" ? "selected" : ""}
+                onClick={() => handleStatusFilter("CONFIRMED")}
+              >
+                Đã xác nhận
+              </button>
+              <button
+                className={filterStatus === "RECEIVED" ? "selected" : ""}
+                onClick={() => handleStatusFilter("RECEIVED")}
+              >
+                Giao thành công
+              </button>
+              <button
+                className={filterStatus === "" ? "selected" : ""}
+                onClick={() => handleStatusFilter("")}
+              >
+                Tất cả
+              </button>
             </div>
           </div>
           <table className="manage-table">

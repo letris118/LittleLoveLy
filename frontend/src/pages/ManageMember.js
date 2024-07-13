@@ -235,11 +235,11 @@ export default function ManageMember() {
                 <th className="index-head" style={{ width: "5%" }}>
                   STT
                 </th>
-                <th className="usernam-head" style={{ width: "15%" }}>
-                  Tên tài khoản
-                </th>
                 <th className="name-head" style={{ width: "19%" }}>
                   Họ và tên
+                </th>
+                <th className="usernam-head" style={{ width: "15%" }}>
+                  Tên tài khoản
                 </th>
                 <th className="mail-head" style={{ width: "18%" }}>
                   Gmail
@@ -264,8 +264,8 @@ export default function ManageMember() {
                 filteredCustomerList.map((customer, index) => (
                   <tr key={index}>
                     <td className="index-body">{index + 1}</td>
-                    <td className="username-body">{customer.username}</td>
                     <td className="name-body">{customer.name}</td>
+                    <td className="username-body">{customer.username}</td>
                     <td className="mail-body">{customer.mail}</td>
                     <td className="phone-body">{customer.phone}</td>
                     <td className="point-body">{customer.point}</td>

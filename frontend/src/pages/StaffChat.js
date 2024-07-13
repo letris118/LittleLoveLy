@@ -220,13 +220,8 @@ export default function StaffChat() {
         {userData.connected ? (
           <>
             {tab === "" ? (
-              <div className="standing-by">
-                <h3>Hiện không có tin nhắn</h3>
-                <p>Vui lòng chờ khách hàng bắt đầu trò chuyện.</p>
-                <p>
-                  Khi một khách hàng gửi tin nhắn, tên của họ sẽ xuất hiện trong
-                  danh sách bên phải.
-                </p>
+              <div className="staff-chat"> 
+                 <p>Vui lòng chọn 1 khách hàng trong danh sách bên phải để bắt đầu cuộc trò chuyện!</p>
               </div>
             ) : (
               <div className="staff-chat">
@@ -286,10 +281,11 @@ export default function StaffChat() {
                       className={`member ${tab === username && "active"}`}
                       key={index}
                     >
-                      {userNames.get(username) || username}
+                     
                       {unreadStatus.get(username) && (
-                        <span className=""> Unread</span>
+                        <span className="staff-unread-chat"> ! </span>
                       )}
+                      {userNames.get(username) || username}
                     </li>
                   ))}
               </ul>
