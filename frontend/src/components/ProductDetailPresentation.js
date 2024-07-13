@@ -36,6 +36,19 @@ export default function ProductDetailPresentation() {
   const [activateSubmit, setActivateSubmit] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
+  const parseDate = (dateString) => {
+    const [datePart, timePart] = dateString.split(" ");
+    const [day, month, year] = datePart.split("-").map(Number);
+    const [hours, minutes, seconds] = timePart.split(":").map(Number);
+    return new Date(year, month - 1, day, hours, minutes, seconds);
+  };
+
+  const sortReviewsByNewest = (reviews) => {
+    return [...reviews].sort(
+      (a, b) => parseDate(b.uploadedDate) - parseDate(a.uploadedDate)
+    );
+  };
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -50,7 +63,8 @@ export default function ProductDetailPresentation() {
         if (product) {
           setProductInfo(product);
           setSelectedImage(product.productImages[0].imageId);
-          setFilteredReviews(product.productReviews);
+          const sortedReviews = sortReviewsByNewest(product.productReviews);
+          setFilteredReviews(sortedReviews);
 
           const username = localStorage.getItem("username");
           if (username) {
@@ -83,7 +97,9 @@ export default function ProductDetailPresentation() {
         const response = await getProductById(productInfo.productId);
         if (response) {
           setProductInfo(response);
-          handleNewestFilter();
+          setSelectedButton("newest");
+          const sortedReviews = sortReviewsByNewest(response.productReviews);
+          setFilteredReviews(sortedReviews);
         }
       } catch (error) {
         console.error("Error refreshing reviews:", error);
@@ -258,15 +274,15 @@ export default function ProductDetailPresentation() {
     const filtered = productInfo.productReviews.filter(
       (review) => review.star >= star && review.star < star + 1
     );
-    setFilteredReviews(filtered);
+    const sortedReviews = sortReviewsByNewest(filtered);
+    setFilteredReviews(sortedReviews);
   };
 
   const handleNewestFilter = () => {
     setSelectedButton("newest");
-    const sortedReviews = [...productInfo.productReviews].sort(
-      (a, b) => new Date(b.uploadedDate) - new Date(a.uploadedDate)
-    );
+    const sortedReviews = sortReviewsByNewest(productInfo.productReviews);
     setFilteredReviews(sortedReviews);
+    console.log("Newest reviews");
   };
 
   const handleCommentSubmit = async (e) => {
@@ -285,7 +301,7 @@ export default function ProductDetailPresentation() {
       );
       setComment("");
       setRating(0);
-      setActivateSubmit(false);
+      // setActivateSubmit(false);
       setRefresh(!refresh);
       toast.success("Đánh giá của bạn đã được gửi.", { autoClose: 2000 });
       console.log("Review submitted successfully");
@@ -503,6 +519,73 @@ export default function ProductDetailPresentation() {
           />
         </div>
 
+        <div className="product-detail-reviews-inp">
+          <h5
+            style={{
+              marginBottom: "10px",
+              fontWeight: "bold",
+              fontFamily: "MuseoModerno",
+            }}
+          >
+            Nhận xét
+          </h5>
+          {localStorage.getItem("userRole") === "ROLE_CUSTOMER" ? (
+            <form onSubmit={handleCommentSubmit}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "5px 0",
+                }}
+              >
+                <Rating
+                  value={rating}
+                  onChange={(event, newValue) => setRating(newValue)}
+                  size="large"
+                />
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Input
+                  placeholder="Hãy nêu cảm nhận của bạn về sản phẩm"
+                  onChange={(e) => setComment(e.target.value)}
+                  multiline
+                  rows={2}
+                  fullWidth
+                  style={{
+                    marginLeft: "10px",
+                    padding: "0 10px",
+                    height: "80px",
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  marginTop: "10px",
+                }}
+              >
+                <Button
+                  type="submit"
+                  variant="contained"
+                  style={{
+                    marginTop: "10px",
+                    backgroundColor: activateSubmit ? "#FF469E" : "gray",
+                    color: "white",
+                  }}
+                  disabled={!activateSubmit}
+                >
+                  Gửi đánh giá
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <div style={{ textAlign: "center", padding: "10px 0 20px 0" }}>
+              Mời bạn đăng nhập / đăng kí để sử dụng tính năng này
+            </div>
+          )}
+        </div>
         <div
           className="product-detail-reviews"
           style={{ minHeight: "50vh", minWidth: "1100px" }}
@@ -637,73 +720,6 @@ export default function ProductDetailPresentation() {
               </div>
             )}
           </div>
-        </div>
-        <div className="product-detail-reviews-inp">
-          <h5
-            style={{
-              marginBottom: "10px",
-              fontWeight: "bold",
-              fontFamily: "MuseoModerno",
-            }}
-          >
-            Nhận xét
-          </h5>
-          {localStorage.getItem("userRole") === "ROLE_CUSTOMER" ? (
-            <form onSubmit={handleCommentSubmit}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  margin: "5px 0",
-                }}
-              >
-                <Rating
-                  value={rating}
-                  onChange={(event, newValue) => setRating(newValue)}
-                  size="large"
-                />
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Input
-                  placeholder="Hãy nêu cảm nhận của bạn về sản phẩm"
-                  onChange={(e) => setComment(e.target.value)}
-                  multiline
-                  rows={2}
-                  fullWidth
-                  style={{
-                    marginLeft: "10px",
-                    padding: "0 10px",
-                    height: "80px",
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  marginTop: "10px",
-                }}
-              >
-                <Button
-                  type="submit"
-                  variant="contained"
-                  style={{
-                    marginTop: "10px",
-                    backgroundColor: activateSubmit ? "#FF469E" : "gray",
-                    color: "white",
-                  }}
-                  disabled={!activateSubmit}
-                >
-                  Gửi đánh giá
-                </Button>
-              </div>
-            </form>
-          ) : (
-            <div style={{ textAlign: "center", padding: "10px 0 20px 0" }}>
-              Mời bạn đăng nhập / đăng kí để sử dụng tính năng này
-            </div>
-          )}
         </div>
       </div>
     </div>
