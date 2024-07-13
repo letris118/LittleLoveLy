@@ -222,11 +222,11 @@ export default function ManageOrder() {
                 filteredOrders.map((order, index) => (
                   <tr key={index}>
                     <td className="index-body">{index + 1}</td>
-                    <td className="createdDate-body">
-                      {new Date(order.createdDate).toLocaleDateString()}
-                    </td>
-                    <td className="status-body"
-                      style={{ color: getStatusDisplay(order.status).color }}>
+                    <td className="createdDate-body">{order.createdDate}</td>
+                    <td
+                      className="status-body"
+                      style={{ color: getStatusDisplay(order.status).color }}
+                    >
                       {getStatusDisplay(order.status).text}
                     </td>
                     <td className="orderId-body">{order.orderId}</td>
@@ -279,7 +279,8 @@ export default function ManageOrder() {
                   <b>Tổng số sản phẩm:</b> {selectedOrder.orderDetails.length}
                 </p>
                 <p>
-                  <b>Tình trạng:</b> {getStatusDisplay(selectedOrder.status).text}
+                  <b>Tình trạng:</b>{" "}
+                  {getStatusDisplay(selectedOrder.status).text}
                 </p>
                 <p>
                   <b>Mã vận đơn:</b> {selectedOrder.trackingCode}
@@ -326,8 +327,8 @@ export default function ManageOrder() {
                   <span>Giảm giá:</span> -{" "}
                   {formatPrice(
                     selectedOrder.basePrice +
-                    selectedOrder.shippingFee -
-                    selectedOrder.postDiscountPrice
+                      selectedOrder.shippingFee -
+                      selectedOrder.postDiscountPrice
                   )}
                   đ
                 </p>
