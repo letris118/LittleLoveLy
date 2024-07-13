@@ -84,7 +84,7 @@ export default function StaffChat() {
     try {
       const response = await getChatHistory(username);
       if (response) {
-        setConversations(new Map([...conversations, [username, response]]));
+        return new Map([[username, response]]);
       }
     } catch (error) {
       console.error("Error fetching chat history:", error);
@@ -117,29 +117,22 @@ export default function StaffChat() {
   const onPrivateMessage = (payload) => {
     var payloadData = JSON.parse(payload.body);
     const sender = payloadData.senderName;
-    if (conversations.get(sender)) {
-      if (conversations.get(sender).length === 0) {
-        fetchChatHistory(sender);
-      }
-      conversations.get(sender).push(payloadData);
-      setConversations(new Map(conversations));
-    } else {
-      let list = [];
-      list.push(payloadData);
-      conversations.set(sender, list);
-      setConversations(new Map(conversations));
-    }
-    if (tabRef.current !== sender) {
-      setUnreadStatus((prev) => new Map(prev.set(sender, true)));
-    } else {
+    if (tabRef.current === sender) {
+      // If the sender is the current tab, add the message to conversations
+      let currentConversations = conversations.get(sender) || [];
+      currentConversations.push(payloadData);
+      setConversations(
+        new Map(conversations.set(sender, currentConversations))
+      );
       try {
         markMessagesAsRead(sender);
       } catch (error) {
         console.error("Error marking messages as read:", error);
       }
+    } else {
+      // If the sender is not the current tab, update unread status only
+      setUnreadStatus((prev) => new Map(prev.set(sender, true)));
     }
-    console.log("sender", sender);
-    console.log("tab", tabRef.current);
     scrollToBottom();
   };
 
@@ -195,8 +188,12 @@ export default function StaffChat() {
   };
 
   const handleOpenChat = async (username) => {
-    if (conversations.get(username).length === 0) {
-      fetchChatHistory(username);
+    if (tab && conversations.has(tab)) {
+      setConversations((prev) => new Map(prev).set(tab, []));
+    }
+    const newConversations = await fetchChatHistory(username);
+    if (newConversations) {
+      setConversations((prev) => new Map([...prev, ...newConversations]));
     }
     setTab(username);
     setUnreadStatus((prev) => new Map(prev.set(username, false)));
@@ -220,8 +217,11 @@ export default function StaffChat() {
         {userData.connected ? (
           <>
             {tab === "" ? (
-              <div className="staff-chat"> 
-                 <p>Vui lòng chọn 1 khách hàng trong danh sách bên phải để bắt đầu cuộc trò chuyện!</p>
+              <div className="staff-chat">
+                <p>
+                  Vui lòng chọn 1 khách hàng trong danh sách bên phải để bắt đầu
+                  cuộc trò chuyện!
+                </p>
               </div>
             ) : (
               <div className="staff-chat">
@@ -281,7 +281,6 @@ export default function StaffChat() {
                       className={`member ${tab === username && "active"}`}
                       key={index}
                     >
-                     
                       {unreadStatus.get(username) && (
                         <span className="staff-unread-chat"> ! </span>
                       )}
