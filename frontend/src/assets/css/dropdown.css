@@ -137,3 +137,7 @@
 #manage-dropdown-basic {
   background-color: #ffffff;
 }
+
+#staff-dropdown-basic.dropdown-toggle.btn.btn-primary::after{
+  content: none;
+}
