@@ -20,7 +20,7 @@ export default function SearchPresentation() {
       try {
         let response = await products();
         if (response) {
-          const filteredProducts = response.filter((product) =>
+          const filteredProducts = response.products.filter((product) =>
             product.name.toLowerCase().includes(searchTerm.toLowerCase())
           );
           const uniqueProducts = Array.from(
@@ -110,7 +110,8 @@ export default function SearchPresentation() {
               color: activeButton === "bestSeller" ? "white" : "",
             }}
             onClick={() => handleSort("bestSeller", "bestSeller")}
-            disabled={currentItems.length === 0}>
+            disabled={currentItems.length === 0}
+          >
             Bán chạy
           </button>
         </div>
@@ -124,7 +125,8 @@ export default function SearchPresentation() {
               color: activeButton === "newest" ? "white" : "",
             }}
             onClick={() => handleSort("newest", "newest")}
-            disabled={currentItems.length === 0}>
+            disabled={currentItems.length === 0}
+          >
             Hàng mới
           </button>
         </div>
@@ -138,7 +140,8 @@ export default function SearchPresentation() {
               color: activeButton === "asc" ? "white" : "",
             }}
             onClick={() => handleSort("asc", "asc")}
-            disabled={currentItems.length === 0}>
+            disabled={currentItems.length === 0}
+          >
             Giá Thấp - Cao
           </button>
         </div>
@@ -152,7 +155,8 @@ export default function SearchPresentation() {
               color: activeButton === "desc" ? "white" : "",
             }}
             onClick={() => handleSort("desc", "desc")}
-            disabled={currentItems.length === 0}>
+            disabled={currentItems.length === 0}
+          >
             Giá Cao - Thấp
           </button>
         </div>
@@ -167,7 +171,8 @@ export default function SearchPresentation() {
               textAlign: "center",
               marginTop: "30px",
               fontSize: "20px",
-            }}>
+            }}
+          >
             Không tìm thấy sản phẩm
           </p>
         )}

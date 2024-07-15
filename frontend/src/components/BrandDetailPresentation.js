@@ -105,7 +105,8 @@ export default function BrandDetailPresentation() {
     <div>
       <div
         className="brand-row-1"
-        style={{ minWidth: "1000px", display: "flex", alignItems: "center" }}>
+        style={{ minWidth: "1000px", display: "flex", alignItems: "center" }}
+      >
         <div className="brand-row-1-left">
           <div className="row-1-left">
             <div className="row-1-left-content">
@@ -124,12 +125,14 @@ export default function BrandDetailPresentation() {
                   height: "100%",
                   padding: "20px 20px",
                   borderRadius: "20px",
-                }}>
+                }}
+              >
                 <div
                   className="row-1-left-img"
                   style={{
                     backgroundImage: `url(${instance.defaults.baseURL}/images/brands/${brandInfo.logo})`,
-                  }}></div>
+                  }}
+                ></div>
                 <div className="row-1-left-text" style={{ zIndex: "1" }}>
                   <span
                     style={{
@@ -137,7 +140,8 @@ export default function BrandDetailPresentation() {
                       color: "white",
                       fontFamily: "MuseoModerno",
                       fontWeight: "bold",
-                    }}>
+                    }}
+                  >
                     {brandInfo.name}
                   </span>
                   <div
@@ -152,13 +156,15 @@ export default function BrandDetailPresentation() {
                       display: "flex",
                       alignItems: "center",
                       border: "3px solid #FF379B",
-                    }}>
+                    }}
+                  >
                     <i
-                      class="fa-solid fa-circle-check"
+                      className="fa-solid fa-circle-check"
                       style={{
                         color: "#FF379B",
                         fontSize: "20px",
-                      }}></i>{" "}
+                      }}
+                    ></i>{" "}
                     <span style={{ color: "#FF379B", fontWeight: "bold" }}>
                       Chính hãng
                     </span>
@@ -171,19 +177,20 @@ export default function BrandDetailPresentation() {
         <div className="brand-row-1-right">
           <div className="row-1-right">
             <span>
-              <i class="fa-solid fa-check" style={{ color: "green" }}></i> 100%
-              chất lượng
+              <i className="fa-solid fa-check" style={{ color: "green" }}></i>{" "}
+              100% chất lượng
             </span>
             <span>
-              <i class="fa-solid fa-check" style={{ color: "green" }}></i> Phân
-              phối chính hãng
+              <i className="fa-solid fa-check" style={{ color: "green" }}></i>{" "}
+              Phân phối chính hãng
             </span>
           </div>
         </div>
       </div>
       <div
         className="brand-row-2"
-        style={{ minWidth: "1000px", marginTop: "20px" }}>
+        style={{ minWidth: "1000px", marginTop: "20px" }}
+      >
         <div className="filter-row">
           <div>
             <button
@@ -195,7 +202,8 @@ export default function BrandDetailPresentation() {
                 color: activeButton === "bestSeller" ? "white" : "",
               }}
               onClick={() => handleSort("bestSeller", "bestSeller")}
-              disabled={currentItems.length === 0}>
+              disabled={currentItems.length === 0}
+            >
               Bán chạy
             </button>
           </div>
@@ -209,7 +217,8 @@ export default function BrandDetailPresentation() {
                 color: activeButton === "newest" ? "white" : "",
               }}
               onClick={() => handleSort("newest", "newest")}
-              disabled={currentItems.length === 0}>
+              disabled={currentItems.length === 0}
+            >
               Hàng mới
             </button>
           </div>
@@ -223,7 +232,8 @@ export default function BrandDetailPresentation() {
                 color: activeButton === "asc" ? "white" : "",
               }}
               onClick={() => handleSort("asc", "asc")}
-              disabled={currentItems.length === 0}>
+              disabled={currentItems.length === 0}
+            >
               Giá Thấp - Cao
             </button>
           </div>
@@ -237,7 +247,8 @@ export default function BrandDetailPresentation() {
                 color: activeButton === "desc" ? "white" : "",
               }}
               onClick={() => handleSort("desc", "desc")}
-              disabled={currentItems.length === 0}>
+              disabled={currentItems.length === 0}
+            >
               Giá Cao - Thấp
             </button>
           </div>
@@ -254,7 +265,8 @@ export default function BrandDetailPresentation() {
           borderRadius: "20px",
           marginTop: "20px",
           minHeight: "500px",
-        }}>
+        }}
+      >
         <div>
           <ProductPresentation products={currentItems} />
         </div>

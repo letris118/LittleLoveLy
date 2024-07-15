@@ -3,14 +3,14 @@ import StaffHeader from "../components/StaffHeader";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import Footer from "../components/Footer";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { articles, brands, products } from "../services/auth/UsersService";
 import BrandPresentation from "../components/BrandPresentation";
 import "../assets/css/homePage.css";
 import ProductPresentation from "../components/ProductPresentation";
 import StaffSideBar from "../components/StaffSideBar";
 import ArticlePresentation from "../components/ArticlePresentation";
-import StaffBackToTop from "../components/StaffBackToTop"
+import StaffBackToTop from "../components/StaffBackToTop";
 export default function StaffHomePage() {
   const [productList, setProductList] = useState([]);
   const [brandList, setBrandList] = useState([]);
@@ -90,7 +90,8 @@ export default function StaffHomePage() {
                 <h4>Thương hiệu</h4>
                 <Link
                   to={routes.staffBrandList}
-                  style={{ textDecoration: "none", color: "#ff469e" }}>
+                  style={{ textDecoration: "none", color: "#ff469e" }}
+                >
                   Xem tất cả <i className="fa-solid fa-arrow-right"></i>
                 </Link>
               </div>
@@ -103,7 +104,8 @@ export default function StaffHomePage() {
                 <h4>Thông tin bổ ích</h4>
                 <Link
                   to={routes.staffArticleList}
-                  style={{ textDecoration: "none", color: "#ff469e" }}>
+                  style={{ textDecoration: "none", color: "#ff469e" }}
+                >
                   Xem tất cả <i className="fa-solid fa-arrow-right"></i>
                 </Link>
               </div>
@@ -114,7 +116,8 @@ export default function StaffHomePage() {
                 <h4>Sản phẩm</h4>
                 <Link
                   to={routes.staffProductList}
-                  style={{ textDecoration: "none", color: "#ff469e" }}>
+                  style={{ textDecoration: "none", color: "#ff469e" }}
+                >
                   Xem tất cả <i className="fa-solid fa-arrow-right"></i>
                 </Link>
               </div>

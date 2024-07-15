@@ -69,8 +69,7 @@ export default function UpdateArticle() {
       const response = await updateArticle(id, formData);
       if (response) {
         toast.success("Cập nhập bài viết thành công!");
-        navigate('/manage-article');
-
+        navigate("/manage-article");
       } else {
         toast.error("Không thể lưu bài viết");
       }
@@ -131,18 +130,16 @@ export default function UpdateArticle() {
   };
 
   const handleReload = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     window.location.reload();
-  }
+  };
 
   return (
     <div>
-
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />
         <div className="add-update-content-detail">
-
           <form onSubmit={handleSubmit}>
             <div className="manage-form-input">
               <div className="manage-form-group">
@@ -159,7 +156,7 @@ export default function UpdateArticle() {
                 <label>Nội dung:</label>
                 <div className="manage-form-control">
                   <ReactQuill
-                    style={{ backgroundColor: 'white' }}
+                    style={{ backgroundColor: "white" }}
                     ref={quillRef}
                     value={content}
                     modules={modules}
@@ -170,9 +167,11 @@ export default function UpdateArticle() {
               </div>
             </div>
             <div className="manage-form-btn">
-              <button className="save-manage-btn save-manage-link"
+              <button
+                className="save-manage-btn save-manage-link"
                 type="submit"
-                disabled={isSubmitting}>
+                disabled={isSubmitting}
+              >
                 Lưu bài viết
               </button>
 
