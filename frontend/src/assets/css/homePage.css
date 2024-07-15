@@ -207,7 +207,6 @@ header.manage-header {
   z-index: 1000;
   background-color: #1e272e;
   padding: 20px;
-  /* color: #ff469e; */
   width: 100%;
   min-width: 1350px;
 }
@@ -216,25 +215,13 @@ header.manage-header {
   height: 200vh;
 }
 
-/* .manage-store-name {
-  min-width: 180px;
-  margin-left: 40px;
-  height: 60px;
-} */
-
 .manage-header img {
-  /* font-family: "Courgette", cursive;
-  font-size: 27px;
-  text-decoration: none;
-  font-weight: 600; */
   width: 162px;
   margin-left: 40px;
 }
 
 .manage-search-bar {
   display: flex;
-  /* justify-content: space-between; */
-  /* margin: 0 auto; */
   font-size: 22px;
   font-weight: bold;
   margin-left: 250px;
