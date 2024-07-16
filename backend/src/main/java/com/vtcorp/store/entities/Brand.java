@@ -18,13 +18,13 @@ public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(Views.Product.class)
+    @JsonView({Views.Product.class, Views.ProductManagementView.class})
     private long brandId;
 
-    @JsonView(Views.Product.class)
+    @JsonView({Views.Product.class, Views.ProductManagementView.class})
     private String name;
 
-    @JsonView(Views.Product.class)
+    @JsonView({Views.Product.class, Views.ProductManagementView.class})
     private String logo;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)

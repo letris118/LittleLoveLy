@@ -126,9 +126,8 @@ export default function AddArticle() {
                   <input
                     type="text"
                     value={title}
-
-                    onChange={handleTitleChange} />
-
+                    onChange={handleTitleChange}
+                  />
                 </div>
               </div>
 

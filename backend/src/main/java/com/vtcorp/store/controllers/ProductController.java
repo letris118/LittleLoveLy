@@ -6,6 +6,9 @@ import com.vtcorp.store.dtos.ReviewRequestDTO;
 import com.vtcorp.store.jsonview.Views;
 import com.vtcorp.store.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +27,21 @@ public class ProductController {
 
     @Operation(summary = "Get all products")
     @GetMapping("/all")
-    @JsonView(Views.Product.class)
-    public ResponseEntity<?> getAllProducts() {
+    @JsonView(Views.ProductManagementView.class)
+    public ResponseEntity<?> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "-1") int size,
+            @RequestParam(defaultValue = "productId") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
         try {
-            return ResponseEntity.ok(productService.getAllProducts());
+            Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+            Pageable pageable;
+            if (page == 0 && size == -1) {
+                pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
+            } else {
+                pageable = PageRequest.of(page, size, sort);
+            }
+            return ResponseEntity.ok(productService.getAllProducts(pageable));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -35,10 +49,21 @@ public class ProductController {
 
     @Operation(summary = "Get active products")
     @GetMapping
-    @JsonView(Views.Product.class)
-    public ResponseEntity<?> getActiveProducts() {
+    @JsonView(Views.ProductCustomerView.class)
+    public ResponseEntity<?> getActiveProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "-1") int size,
+            @RequestParam(defaultValue = "productId") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
         try {
-            return ResponseEntity.ok(productService.getActiveProducts());
+            Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+            Pageable pageable;
+            if (page == 0 && size == -1) {
+                pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
+            } else {
+                pageable = PageRequest.of(page, size, sort);
+            }
+            return ResponseEntity.ok(productService.getActiveProducts(pageable));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -102,10 +127,22 @@ public class ProductController {
 
     @Operation(summary = "Get all products by search query")
     @GetMapping("/all/search")
-    @JsonView(Views.Product.class)
-    public ResponseEntity<?> getAllProductsBySearchQuery(@RequestParam String searchQuery) {
+    @JsonView(Views.ProductManagementView.class)
+    public ResponseEntity<?> getAllProductsBySearchQuery(
+            @RequestParam String searchQuery,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "-1") int size,
+            @RequestParam(defaultValue = "productId") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
         try {
-            return ResponseEntity.ok(productService.getAllProductsBySearchQuery(searchQuery));
+            Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+            Pageable pageable;
+            if (page == 0 && size == -1) {
+                pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
+            } else {
+                pageable = PageRequest.of(page, size, sort);
+            }
+            return ResponseEntity.ok(productService.getAllProductsBySearchQuery(searchQuery, pageable));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -122,16 +159,16 @@ public class ProductController {
         }
     }
 
-    @Operation(summary = "Sort products by field and by ASC or DESC - Only for staff")
-    @GetMapping("/sort")
-    @JsonView(Views.Product.class)
-    public ResponseEntity<?> getAllProductsSortByNameAsc(@RequestParam String field, @RequestParam boolean isAsc) {
-        try {
-            return ResponseEntity.ok(productService.getAllProductsByFieldAndAscOrDesc(field, isAsc));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+//    @Operation(summary = "Sort products by field and by ASC or DESC - Only for staff")
+//    @GetMapping("/sort")
+//    @JsonView(Views.Product.class)
+//    public ResponseEntity<?> getAllProductsSortByNameAsc(@RequestParam String field, @RequestParam boolean isAsc) {
+//        try {
+//            return ResponseEntity.ok(productService.getAllProductsByFieldAndAscOrDesc(field, isAsc));
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
 
     @Operation(summary = "Add product")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import StaffHeader from "../components/StaffHeader";
 import { toast } from "react-toastify";
 import {
@@ -90,6 +90,7 @@ export default function UpdateProduct() {
 
   useEffect(() => {
     const fetchProductDetails = async () => {
+      console.time("Fetch Products Time");
       const queryParams = new URLSearchParams(location.search);
       const productId = queryParams.get("id");
 
@@ -105,6 +106,7 @@ export default function UpdateProduct() {
         console.error(error);
         toast.error("Không thể tải thông tin sản phẩm!");
       }
+      console.timeEnd("Fetch Products Time");
     };
 
     const fetchBrandsAndCategories = async () => {
@@ -125,7 +127,7 @@ export default function UpdateProduct() {
 
   useEffect(() => {
     if (!productInfo || !allCategories || !allBrands) {
-      return; 
+      return;
     }
 
     const initialCategoryElements = productInfo.categories.map(
@@ -133,7 +135,6 @@ export default function UpdateProduct() {
         const categorySelect = (
           <select name="categoryIds" required>
             <option value={category.categoryId}>{category.name}</option>{" "}
-            
             {allCategories
               .filter((c) => c.categoryId !== category.categoryId)
               .map((c, idx) => (
@@ -143,7 +144,7 @@ export default function UpdateProduct() {
               ))}
           </select>
         );
-        return { id: index + 1, content: categorySelect }; 
+        return { id: index + 1, content: categorySelect };
       }
     );
 
@@ -200,7 +201,8 @@ export default function UpdateProduct() {
 
       if (
         !window.confirm(
-          `Bạn đang sử dụng ${productRequestDTO.getAll("imageIds").length
+          `Bạn đang sử dụng ${
+            productRequestDTO.getAll("imageIds").length
           } hình ảnh có sẵn`
         )
       )
@@ -211,7 +213,7 @@ export default function UpdateProduct() {
         productRequestDTO
       );
       toast.success("Cập nhập sản phẩm thành công!");
-        navigate('/manage-product');
+      navigate("/manage-product");
     } catch (error) {
       console.error(error);
       toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!");
@@ -273,11 +275,9 @@ export default function UpdateProduct() {
       <div className="manage-content">
         <StaffSideBar />
         <div className="add-update-content-detail">
-
           {productInfo ? (
             <form onSubmit={handleSubmit}>
               <div className="manage-form-input">
-              
                 {/* Product NAME */}
                 <div className="manage-form-group">
                   <label>Tên sản phẩm</label>
@@ -286,7 +286,8 @@ export default function UpdateProduct() {
                       type="text"
                       name="name"
                       required
-                      defaultValue={productInfo.name}></input>
+                      defaultValue={productInfo.name}
+                    ></input>
                   </div>
                 </div>
 
@@ -300,7 +301,8 @@ export default function UpdateProduct() {
                       step="500"
                       min="0"
                       required
-                      defaultValue={productInfo.listedPrice}></input>
+                      defaultValue={productInfo.listedPrice}
+                    ></input>
                   </div>
                 </div>
 
@@ -314,7 +316,8 @@ export default function UpdateProduct() {
                       step="500"
                       min="0"
                       required
-                      defaultValue={productInfo.sellingPrice}></input>
+                      defaultValue={productInfo.sellingPrice}
+                    ></input>
                   </div>
                 </div>
 
@@ -341,7 +344,8 @@ export default function UpdateProduct() {
                       name="stock"
                       step="1"
                       min="1"
-                      defaultValue={productInfo.stock}></input>
+                      defaultValue={productInfo.stock}
+                    ></input>
                   </div>
                 </div>
 
@@ -381,7 +385,8 @@ export default function UpdateProduct() {
                               borderRadius: "10px",
                               border: "1px solid rgb(67, 65, 65)",
                             }}
-                            onClick={addNewCategoryElement}>
+                            onClick={addNewCategoryElement}
+                          >
                             Thêm
                           </button>
                         )}
@@ -392,7 +397,8 @@ export default function UpdateProduct() {
                               borderRadius: "10px",
                               border: "1px solid rgb(67, 65, 65)",
                             }}
-                            onClick={removeCategoryElement}>
+                            onClick={removeCategoryElement}
+                          >
                             Hủy bỏ
                           </button>
                         )}
@@ -430,7 +436,8 @@ export default function UpdateProduct() {
                             borderRadius: "10px",
                             border: "1px solid rgb(67, 65, 65)",
                           }}
-                          onClick={addNewImageElement}>
+                          onClick={addNewImageElement}
+                        >
                           Thêm
                         </button>
                       )}
@@ -441,7 +448,8 @@ export default function UpdateProduct() {
                             borderRadius: "10px",
                             border: "1px solid rgb(67, 65, 65)",
                           }}
-                          onClick={removeImageElement}>
+                          onClick={removeImageElement}
+                        >
                           Hủy bỏ
                         </button>
                       )}
@@ -454,7 +462,8 @@ export default function UpdateProduct() {
               <div className="manage-form-btn">
                 <button
                   className="save-manage-btn save-manage-link"
-                  type="submit">
+                  type="submit"
+                >
                   Lưu sản phẩm
                 </button>
 

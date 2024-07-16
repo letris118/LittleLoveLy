@@ -1,14 +1,19 @@
 package com.vtcorp.store.services;
 
+import com.vtcorp.store.dtos.ProductListResponseDTO;
 import com.vtcorp.store.dtos.ProductRequestDTO;
 import com.vtcorp.store.dtos.ProductResponseDTO;
 import com.vtcorp.store.dtos.ReviewRequestDTO;
+import com.vtcorp.store.dtos.projections.ProductBuyerView;
+import com.vtcorp.store.dtos.projections.ProductManagementView;
 import com.vtcorp.store.entities.*;
 import com.vtcorp.store.mappers.ProductMapper;
 import com.vtcorp.store.mappers.ProductReviewMapper;
 import com.vtcorp.store.repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,12 +52,21 @@ public class ProductService {
         this.productReviewRepository = productReviewRepository;
     }
 
-    public List<ProductResponseDTO> getAllProducts() {
-        return mapProductsToProductResponseDTOs(productRepository.findAll());
+    public ProductListResponseDTO getAllProducts(Pageable pageable) {
+        Page<ProductManagementView> projectedProducts = productRepository.findAllBy(pageable);
+        List<ProductResponseDTO> products = productMapper.toResponseDTOs(projectedProducts.getContent());
+        return new ProductListResponseDTO(products, projectedProducts.getTotalPages());
     }
 
-    public List<ProductResponseDTO> getActiveProducts() {
-        return mapProductsToProductResponseDTOs(productRepository.findByActive(true));
+    public ProductListResponseDTO getActiveProducts(Pageable pageable) {
+        Page<ProductBuyerView> projectedProducts = productRepository.findByActiveTrue(pageable);
+        List<ProductResponseDTO> products = new ArrayList<>();
+        for (ProductBuyerView projectedProduct : projectedProducts.getContent()) {
+            ProductResponseDTO dto = productMapper.toResponseDTO(projectedProduct);
+            dto.setAverageRating(calculateAverageRating(projectedProduct.getProductReviews()));
+            products.add(dto);
+        }
+        return new ProductListResponseDTO(products, projectedProducts.getTotalPages());
     }
 
     public ProductResponseDTO getProductById(Long id) {
@@ -96,16 +110,21 @@ public class ProductService {
 
     }
 
-    public List<ProductResponseDTO> getAllProductsBySearchQuery(String searchQuery) {
-        List<Product> products = productRepository.findByNameContainingIgnoreCase(searchQuery);
-
-        return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
+    public ProductListResponseDTO getAllProductsBySearchQuery(String searchQuery, Pageable pageable) {
+        searchQuery = escapeSpecialCharacters(searchQuery);
+        Page<ProductManagementView> projectedProducts = productRepository.findByNameContainingIgnoreCase(searchQuery, pageable);
+        List<ProductResponseDTO> products = productMapper.toResponseDTOs(projectedProducts.getContent());
+        return new ProductListResponseDTO(products, projectedProducts.getTotalPages());
     }
 
     public List<ProductResponseDTO> getActiveProductsBySearchQuery(String searchQuery) {
         List<Product> products = productRepository.findByNameContainingIgnoreCaseAndActive(searchQuery, true);
 
         return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
+    }
+
+    private String escapeSpecialCharacters(String input) {
+        return input.replace("%", "\\%").replace("_", "\\_").replace("[", "\\[").replace("]", "\\]").replace("^", "\\^").replace("\\", "\\\\");
     }
 
     public List<ProductResponseDTO> getAllProductsByFieldAndAscOrDesc(String field, boolean isAsc) {
@@ -290,6 +309,4 @@ public class ProductService {
         }
         return productResponseDTOs;
     }
-
-
 }

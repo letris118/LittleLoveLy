@@ -332,7 +332,7 @@ export default function ManageOrder() {
                       </div>
                       <div className="popup-detail-right">
                         <Link
-                          to={`${routes.products}/${orderDetail.product.name}`}
+                          to={`${routes.products}/${orderDetail.product.productId}/${orderDetail.product.name}`}
                           style={{ textDecoration: "none" }}
                         >
                           <div style={{ fontWeight: "bold", color: "black" }}>

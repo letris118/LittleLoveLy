@@ -16,14 +16,13 @@ import {
   checkBoughtProduct,
   formatPrice,
   getProductById,
-  products,
   updateCart,
 } from "../services/auth/UsersService";
 
 export default function ProductDetailPresentation() {
   const [productInfo, setProductInfo] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const { name: productName } = useParams();
+  const { id: productId } = useParams();
   const navigate = useNavigate();
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -52,14 +51,7 @@ export default function ProductDetailPresentation() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        let response = await products();
-        const decodedProductName = decodeURIComponent(productName).replace(
-          /\n/g,
-          ""
-        );
-        const product = response.find(
-          (product) => product.name.replace(/\n/g, "") === decodedProductName
-        );
+        const product = await getProductById(productId);
         if (product) {
           setProductInfo(product);
           setSelectedImage(product.productImages[0].imageId);
@@ -89,12 +81,12 @@ export default function ProductDetailPresentation() {
       }
     };
     fetchProduct();
-  }, [productName]);
+  }, [productId]);
 
   useEffect(() => {
     const refreshReviews = async () => {
       try {
-        const response = await getProductById(productInfo.productId);
+        const response = await getProductById(productId);
         if (response) {
           setProductInfo(response);
           setSelectedButton("newest");
@@ -106,7 +98,7 @@ export default function ProductDetailPresentation() {
       }
     };
     refreshReviews();
-  }, [refresh, productInfo?.productId]);
+  }, [refresh]);
 
   const handleIncrease = useCallback(() => {
     setQuantity((prevQuantity) =>

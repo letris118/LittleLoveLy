@@ -12,4 +12,10 @@ public class Views {
 
     public static class Product {
     }
+
+    public static class ProductCustomerView {
+    }
+
+    public static class ProductManagementView {
+    }
 }

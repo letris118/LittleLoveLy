@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { products } from "../services/auth/UsersService";
 import ProductPresentation from "../components/ProductPresentation";
@@ -8,12 +8,15 @@ import Footer from "../components/Footer";
 import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function ProductList() {
   const [productList, setProductList] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const itemsPerPage = 50;
 
@@ -29,29 +32,19 @@ export default function ProductList() {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
-        let response = await products();
-
+        let response;
+        const params = {
+          page: currentPage - 1,
+          size: itemsPerPage,
+          sortBy: sortOrder ? getSortField(sortOrder) : undefined,
+          direction: sortOrder ? getSortDirection(sortOrder) : undefined,
+        };
+        response = await products(params);
         if (response) {
-          const uniqueProducts = Array.from(
-            new Set(response.map((product) => product.productId))
-          ).map((id) => {
-            return response.find((product) => product.productId === id);
-          });
-          if (sortOrder) {
-            uniqueProducts.sort((a, b) => {
-              if (sortOrder === "asc") {
-                return a.sellingPrice - b.sellingPrice;
-              } else if (sortOrder === "desc") {
-                return b.sellingPrice - a.sellingPrice;
-              } else if (sortOrder === "bestSeller") {
-                return b.noSold - a.noSold;
-              } else if (sortOrder === "newest") {
-                return b.addedDate - a.addedDate;
-              }
-            });
-          }
-          setProductList(uniqueProducts);
+          setProductList(response.products);
+          setTotalPages(response.totalPages);
         } else {
           setProductList([]);
         }
@@ -59,9 +52,39 @@ export default function ProductList() {
         console.error("Error fetching products:", error);
         setProductList([]);
       }
+      setLoading(false);
     };
+
     fetchProducts();
-  }, [sortOrder]);
+  }, [sortOrder, currentPage]);
+
+  const getSortField = (order) => {
+    switch (order) {
+      case "asc":
+      case "desc":
+        return "sellingPrice";
+      case "bestSeller":
+        return "noSold";
+      case "newest":
+        return "addedDate";
+      default:
+        return undefined;
+    }
+  };
+
+  const getSortDirection = (order) => {
+    switch (order) {
+      case "asc":
+        return "asc";
+      case "desc":
+        return "desc";
+      case "bestSeller":
+      case "newest":
+        return "desc";
+      default:
+        return undefined;
+    }
+  };
 
   const CustomPagination = styled(Pagination)({
     "& .MuiPaginationItem-root": {
@@ -71,20 +94,6 @@ export default function ProductList() {
       },
     },
   });
-
-  const totalPages = useMemo(
-    () => Math.ceil(productList.length / itemsPerPage),
-    [productList.length]
-  );
-
-  const currentItems = useMemo(
-    () =>
-      productList.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      ),
-    [currentPage, productList]
-  );
 
   const handleSort = (order, buttonName) => {
     setSortOrder(order);
@@ -116,7 +125,7 @@ export default function ProductList() {
                     color: activeButton === "bestSeller" ? "white" : "",
                   }}
                   onClick={() => handleSort("bestSeller", "bestSeller")}
-                  disabled={currentItems.length === 0}
+                  disabled={loading}
                 >
                   Bán chạy
                 </button>
@@ -131,7 +140,7 @@ export default function ProductList() {
                     color: activeButton === "newest" ? "white" : "",
                   }}
                   onClick={() => handleSort("newest", "newest")}
-                  disabled={currentItems.length === 0}
+                  disabled={loading}
                 >
                   Hàng mới
                 </button>
@@ -146,7 +155,7 @@ export default function ProductList() {
                     color: activeButton === "asc" ? "white" : "",
                   }}
                   onClick={() => handleSort("asc", "asc")}
-                  disabled={currentItems.length === 0}
+                  disabled={loading}
                 >
                   Giá Thấp - Cao
                 </button>
@@ -161,7 +170,7 @@ export default function ProductList() {
                     color: activeButton === "desc" ? "white" : "",
                   }}
                   onClick={() => handleSort("desc", "desc")}
-                  disabled={currentItems.length === 0}
+                  disabled={loading}
                 >
                   Giá Cao - Thấp
                 </button>
@@ -173,7 +182,13 @@ export default function ProductList() {
               </div>
 
               <div className="row-3-bottom">
-                <ProductPresentation products={currentItems} />
+                {loading ? (
+                  <div style={{ textAlign: "center", marginTop: "20px" }}>
+                    <CircularProgress style={{ color: "rgba(255,0,132,1)" }} />
+                  </div>
+                ) : (
+                  <ProductPresentation products={productList} />
+                )}
               </div>
 
               <div
@@ -185,6 +200,7 @@ export default function ProductList() {
                   page={currentPage}
                   onChange={(event, page) => setCurrentPage(page)}
                   color="primary"
+                  disabled={loading}
                 />
               </div>
             </div>

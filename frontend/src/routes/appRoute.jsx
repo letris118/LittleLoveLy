@@ -72,7 +72,10 @@ export default function AppRoute() {
         <Route path={`${routes.brands}/:name`} element={<BrandDetail />} />
 
         <Route path={routes.products} element={<ProductList />} />
-        <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
+        <Route
+          path={`${routes.products}/:id/:name`}
+          element={<ProductDetail />}
+        />
 
 
 
@@ -83,7 +86,6 @@ export default function AppRoute() {
         <Route path={routes.searchProduct} element={<SearchProduct />} />
         <Route path={routes.gift} element={<Gift />} />
 
-        
         <Route path={routes.staffChat} element={<StaffChat />} />
 
         <Route path={routes.manageProduct} element={<ManageProduct />} />
@@ -118,10 +120,7 @@ export default function AppRoute() {
         <Route path={routes.searchProduct} element={<SearchProduct />} />
         <Route path={routes.gift} element={<Gift />} />
         <Route path={routes.order} element={<Order />} />
-       
-       
-       
- 
+
         <Route path={routes.profileCustomer} element={<ProfileCus />} />
         <Route path={routes.chat} element={<Chat />} />
 

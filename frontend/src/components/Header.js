@@ -24,7 +24,7 @@ export default function Header({ handleLogoutSuccess }) {
     if (event.target.value) {
       try {
         const response = await products();
-        const filteredResults = response.filter((product) =>
+        const filteredResults = response.products.filter((product) =>
           product.name.toLowerCase().includes(event.target.value.toLowerCase())
         );
         setSearchResults(filteredResults);
@@ -51,7 +51,7 @@ export default function Header({ handleLogoutSuccess }) {
         {/* logo + store name to return home page */}
         <div className="store-name">
           <Link to={routes.homePage} style={{ color: "#ff469e" }}>
-            <img src="../assets/images/logo.png" alt="page logo" />
+            <img src="/assets/images/logo.png" alt="page logo" />
           </Link>
         </div>
 
@@ -59,7 +59,8 @@ export default function Header({ handleLogoutSuccess }) {
         <div className="search-bar" style={{ position: "relative" }}>
           <form
             onSubmit={handleSearchSubmit}
-            style={{ display: "flex", alignItems: "center" }}>
+            style={{ display: "flex", alignItems: "center" }}
+          >
             <div style={{ display: "flex", width: "70%" }}>
               <input
                 type="text"
@@ -69,10 +70,7 @@ export default function Header({ handleLogoutSuccess }) {
               />
               <div className="search-icon">
                 <button type="submit">
-                  <img
-                    src="../assets/images/search_icon.png"
-                    alt="search logo"
-                  />
+                  <img src="/assets/images/search_icon.png" alt="search logo" />
                 </button>
               </div>
             </div>
@@ -86,16 +84,19 @@ export default function Header({ handleLogoutSuccess }) {
                 right: 0,
                 zIndex: 10,
                 width: 600,
-              }}>
+              }}
+            >
               <MenuList>
                 {searchResults.slice(0, 5).map((result) => (
                   <MenuItem
                     key={result.productId}
                     component={Link}
-                    to={`${routes.products}/${result.name}`}>
+                    to={`${routes.products}/${result.productId}/${result.name}`}
+                  >
                     <ListItemAvatar>
                       {result.productImages.slice(0, 1).map((image) => (
                         <Avatar
+                          key={image.imageId}
                           src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
                         />
                       ))}
@@ -114,7 +115,8 @@ export default function Header({ handleLogoutSuccess }) {
                 {searchResults.length > 5 && (
                   <MenuItem
                     component={Link}
-                    to={`${routes.searchProduct}?search_term=${searchTerm}`}>
+                    to={`${routes.searchProduct}?search_term=${searchTerm}`}
+                  >
                     <ListItemText
                       primary={
                         <>
@@ -134,7 +136,8 @@ export default function Header({ handleLogoutSuccess }) {
               display: "flex",
               justifyContent: "end",
               width: "50%",
-            }}>
+            }}
+          >
             {localStorage.getItem("token") ? (
               <DropdownMenu
                 handleLogoutSuccess={handleLogoutSuccess}

@@ -4,7 +4,7 @@ import { routes } from "../routes";
 
 const Breadcrumb = ({ value, customName }) => {
   const location = useLocation();
-  const pathnames = location.pathname.split("/").filter((x) => x);
+  const pathnames = location.pathname.split("/").filter((x) => x && isNaN(x));
 
   return (
     <nav aria-label="breadcrumb">
