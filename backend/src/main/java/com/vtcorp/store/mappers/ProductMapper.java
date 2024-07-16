@@ -23,5 +23,7 @@ public interface ProductMapper {
 
     ProductResponseDTO toResponseDTO(ProductBuyerView productBuyerView);
 
-    List<ProductResponseDTO> toResponseDTOs(List<ProductManagementView> productManagementViews);
+    List<ProductResponseDTO> toManagementResponseDTOs(List<ProductManagementView> productManagementViews);
+
+    List<ProductResponseDTO> toBuyerViewResponseDTOs(List<ProductBuyerView> productBuyerViews);
 }

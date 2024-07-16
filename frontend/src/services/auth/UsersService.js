@@ -79,6 +79,20 @@ const productsAll = ({
   );
 };
 
+//search active products
+const searchProducts = ({
+  searchQuery,
+  page = 0,
+  size = -1,
+  sortBy = "productId",
+  direction = "asc",
+} = {}) => {
+  const encodedSearchQuery = encodeURIComponent(searchQuery);
+  return instance.get(
+    `/api/products/search?searchQuery=${encodedSearchQuery}&page=${page}&size=${size}&sortBy=${sortBy}&direction=${direction}`
+  );
+};
+
 //search all
 const searchAllProducts = ({
   searchQuery,
@@ -486,4 +500,5 @@ export {
   getCustomersUsedToChat,
   markMessagesAsRead,
   searchAllProducts,
+  searchProducts,
 };

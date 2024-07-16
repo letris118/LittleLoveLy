@@ -13,7 +13,7 @@ public class Views {
     public static class Product {
     }
 
-    public static class ProductCustomerView {
+    public static class ProductBuyerView {
     }
 
     public static class ProductManagementView {

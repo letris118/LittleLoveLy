@@ -54,7 +54,7 @@ public class ProductService {
 
     public ProductListResponseDTO getAllProducts(Pageable pageable) {
         Page<ProductManagementView> projectedProducts = productRepository.findAllBy(pageable);
-        List<ProductResponseDTO> products = productMapper.toResponseDTOs(projectedProducts.getContent());
+        List<ProductResponseDTO> products = productMapper.toManagementResponseDTOs(projectedProducts.getContent());
         return new ProductListResponseDTO(products, projectedProducts.getTotalPages());
     }
 
@@ -113,14 +113,15 @@ public class ProductService {
     public ProductListResponseDTO getAllProductsBySearchQuery(String searchQuery, Pageable pageable) {
         searchQuery = escapeSpecialCharacters(searchQuery);
         Page<ProductManagementView> projectedProducts = productRepository.findByNameContainingIgnoreCase(searchQuery, pageable);
-        List<ProductResponseDTO> products = productMapper.toResponseDTOs(projectedProducts.getContent());
+        List<ProductResponseDTO> products = productMapper.toManagementResponseDTOs(projectedProducts.getContent());
         return new ProductListResponseDTO(products, projectedProducts.getTotalPages());
     }
 
-    public List<ProductResponseDTO> getActiveProductsBySearchQuery(String searchQuery) {
-        List<Product> products = productRepository.findByNameContainingIgnoreCaseAndActive(searchQuery, true);
-
-        return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
+    public ProductListResponseDTO getActiveProductsBySearchQuery(String searchQuery, Pageable pageable) {
+        searchQuery = escapeSpecialCharacters(searchQuery);
+        Page<ProductBuyerView> projectedProducts = productRepository.findByNameContainingIgnoreCaseAndActiveTrue(searchQuery, pageable);
+        List<ProductResponseDTO> products = productMapper.toBuyerViewResponseDTOs(projectedProducts.getContent());
+        return new ProductListResponseDTO(products, projectedProducts.getTotalPages());
     }
 
     private String escapeSpecialCharacters(String input) {
