@@ -56,13 +56,55 @@ const checkBoughtProduct = (username, productId) => {
 
 // =========================================PRODUCT===========================================
 //get active products
-const products = () => {
-  return instance.get("/api/products");
+const products = ({
+  page = 0,
+  size = -1,
+  sortBy = "productId",
+  direction = "asc",
+} = {}) => {
+  return instance.get(
+    `/api/products?page=${page}&size=${size}&sortBy=${sortBy}&direction=${direction}`
+  );
 };
 
 //get all
-const productsAll = () => {
-  return instance.get("/api/products/all");
+const productsAll = ({
+  page = 0,
+  size = -1,
+  sortBy = "productId",
+  direction = "asc",
+} = {}) => {
+  return instance.get(
+    `/api/products/all?page=${page}&size=${size}&sortBy=${sortBy}&direction=${direction}`
+  );
+};
+
+//search active products
+const searchProducts = ({
+  searchQuery,
+  page = 0,
+  size = -1,
+  sortBy = "productId",
+  direction = "asc",
+} = {}) => {
+  const encodedSearchQuery = encodeURIComponent(searchQuery);
+  return instance.get(
+    `/api/products/search?searchQuery=${encodedSearchQuery}&page=${page}&size=${size}&sortBy=${sortBy}&direction=${direction}`
+  );
+};
+
+//search all
+const searchAllProducts = ({
+  searchQuery,
+  page = 0,
+  size = -1,
+  sortBy = "productId",
+  direction = "asc",
+} = {}) => {
+  const encodedSearchQuery = encodeURIComponent(searchQuery);
+  return instance.get(
+    `/api/products/all/search?searchQuery=${encodedSearchQuery}&page=${page}&size=${size}&sortBy=${sortBy}&direction=${direction}`
+  );
 };
 
 //set deactive
@@ -457,4 +499,6 @@ export {
   getChatHistory,
   getCustomersUsedToChat,
   markMessagesAsRead,
+  searchAllProducts,
+  searchProducts,
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import StaffHeader from "../components/StaffHeader";
+import AdminHeader from "../components/AdminHeader";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -313,7 +313,7 @@ export default function Dashboard() {
 
     return (
         <div>
-            <StaffHeader />
+            <AdminHeader />
             <div className="dashBoard-manage-content">
                 <AdminSideBar />
                 {siteDashboard && orderList && (
@@ -619,12 +619,12 @@ export default function Dashboard() {
                             }
 
                             {selectedChartTab === 'YEARLY' &&
-                                <div>
+                                <div className="admin-dashboard-chart-detail">
                                     Số lượng sản phẩm trung bình mỗi đơn hàng: {avgItemsPerOrder(yearlyRevenueData()) || "Không có dữ liệu"}
                                 </div>
                             }
                             {selectedChartTab === 'WEEKLY' &&
-                                <div>
+                                <div className="admin-dashboard-chart-detail">
                                     Số lượng sản phẩm trung bình mỗi đơn hàng: {avgItemsPerOrder(weeklyRevenueData()) || "Không có dữ liệu"}
                                 </div>
                             }

@@ -15,7 +15,7 @@ import ManageVoucher from "../pages/ManageVoucher";
 import ProductList from "../pages/ProductList";
 import ProductDetail from "../pages/ProductDetail";
 import Cart from "../pages/Cart";
-import StaffHomePage from "../pages/StaffHomePage";
+
 import StaffChat from "../pages/StaffChat";
 import Chat from "../pages/Chat";
 import ManageGift from "../pages/ManageGift";
@@ -72,9 +72,12 @@ export default function AppRoute() {
         <Route path={`${routes.brands}/:name`} element={<BrandDetail />} />
 
         <Route path={routes.products} element={<ProductList />} />
-        <Route path={`${routes.products}/:name`} element={<ProductDetail />} />
+        <Route
+          path={`${routes.products}/:id/:name`}
+          element={<ProductDetail />}
+        />
 
-        <Route path={routes.staffHomePage} element={<StaffHomePage />} />
+
 
         <Route path={routes.checkout} element={<Checkout />} />
         <Route path={routes.articles} element={<ArticleList />} />
@@ -83,7 +86,6 @@ export default function AppRoute() {
         <Route path={routes.searchProduct} element={<SearchProduct />} />
         <Route path={routes.gift} element={<Gift />} />
 
-        
         <Route path={routes.staffChat} element={<StaffChat />} />
 
         <Route path={routes.manageProduct} element={<ManageProduct />} />
@@ -118,10 +120,7 @@ export default function AppRoute() {
         <Route path={routes.searchProduct} element={<SearchProduct />} />
         <Route path={routes.gift} element={<Gift />} />
         <Route path={routes.order} element={<Order />} />
-       
-       
-       
- 
+
         <Route path={routes.profileCustomer} element={<ProfileCus />} />
         <Route path={routes.chat} element={<Chat />} />
 
