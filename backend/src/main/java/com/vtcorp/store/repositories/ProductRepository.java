@@ -30,7 +30,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<ProductManagementView> findByNameContainingIgnoreCase(String searchQuery, Pageable pageable);
 
-    List<Product> findByNameContainingIgnoreCaseAndActive(String searchQuery, boolean active);
+    Page<ProductBuyerView> findByNameContainingIgnoreCaseAndActiveTrue(String searchQuery, Pageable pageable);
 
     List<Product> findByBrand(Brand brand);
 

@@ -44,7 +44,7 @@ export default function ManageProduct() {
     debounce((query) => {
       setFinalSearchQuery(query);
       setCurrentPage(1);
-    }, 150),
+    }, 200),
     []
   );
 

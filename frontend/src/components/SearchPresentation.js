@@ -1,59 +1,79 @@
 import { Pagination } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../assets/css/searchProduct.css";
-import { products } from "../services/auth/UsersService";
+import { searchProducts } from "../services/auth/UsersService";
 import ProductPresentation from "./ProductPresentation";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function SearchPresentation() {
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("search_term");
-  const [searchProducts, setSearchProduct] = useState([]);
+  const [productList, setProductList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState(null);
   const [activeButton, setActiveButton] = useState(null);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(false);
   const itemsPerPage = 40;
 
   useEffect(() => {
     const fetchProducts = async (searchTerm) => {
+      setLoading(true);
       try {
-        let response = await products();
+        let response;
+        const params = {
+          searchQuery: searchTerm,
+          page: currentPage - 1,
+          size: itemsPerPage,
+          sortBy: sortOrder ? getSortField(sortOrder) : undefined,
+          direction: sortOrder ? getSortDirection(sortOrder) : undefined,
+        };
+        response = await searchProducts(params);
         if (response) {
-          const filteredProducts = response.products.filter((product) =>
-            product.name.toLowerCase().includes(searchTerm.toLowerCase())
-          );
-          const uniqueProducts = Array.from(
-            new Set(filteredProducts.map((product) => product.productId))
-          ).map((id) => {
-            return filteredProducts.find((product) => product.productId === id);
-          });
-
-          if (sortOrder) {
-            uniqueProducts.sort((a, b) => {
-              if (sortOrder === "asc") {
-                return a.sellingPrice - b.sellingPrice;
-              } else if (sortOrder === "desc") {
-                return b.sellingPrice - a.sellingPrice;
-              } else if (sortOrder === "bestSeller") {
-                return b.noSold - a.noSold;
-              } else if (sortOrder === "newest") {
-                return b.addedDate - a.addedDate;
-              }
-            });
-          }
-          setSearchProduct(uniqueProducts);
+          setProductList(response.products);
+          setTotalPages(response.totalPages);
         } else {
-          setSearchProduct([]);
+          setProductList([]);
         }
       } catch (error) {
         console.error("Error fetching products:", error);
-        setSearchProduct([]);
+        setProductList([]);
       }
+      setLoading(false);
     };
 
     fetchProducts(searchTerm);
-  }, [searchTerm, sortOrder]);
+  }, [searchTerm, sortOrder, currentPage]);
+
+  const getSortField = (order) => {
+    switch (order) {
+      case "asc":
+      case "desc":
+        return "sellingPrice";
+      case "bestSeller":
+        return "noSold";
+      case "newest":
+        return "addedDate";
+      default:
+        return undefined;
+    }
+  };
+
+  const getSortDirection = (order) => {
+    switch (order) {
+      case "asc":
+        return "asc";
+      case "desc":
+        return "desc";
+      case "bestSeller":
+      case "newest":
+        return "desc";
+      default:
+        return undefined;
+    }
+  };
 
   const CustomPagination = styled(Pagination)({
     "& .MuiPaginationItem-root": {
@@ -63,20 +83,6 @@ export default function SearchPresentation() {
       },
     },
   });
-
-  const totalPages = useMemo(
-    () => Math.ceil(searchProducts.length / itemsPerPage),
-    [searchProducts.length]
-  );
-
-  const currentItems = useMemo(
-    () =>
-      searchProducts.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      ),
-    [currentPage, searchProducts]
-  );
 
   const handleSort = (order, buttonName) => {
     setSortOrder(order);
@@ -88,7 +94,7 @@ export default function SearchPresentation() {
     <div>
       <span>
         <p style={{ color: "#4b4a4a" }}>
-          {currentItems.length > 0 ? (
+          {productList.length > 0 ? (
             <i
               className="fa-solid fa-circle-check"
               style={{ color: "green" }}
@@ -110,7 +116,7 @@ export default function SearchPresentation() {
               color: activeButton === "bestSeller" ? "white" : "",
             }}
             onClick={() => handleSort("bestSeller", "bestSeller")}
-            disabled={currentItems.length === 0}
+            disabled={productList.length === 0 || loading}
           >
             Bán chạy
           </button>
@@ -125,7 +131,7 @@ export default function SearchPresentation() {
               color: activeButton === "newest" ? "white" : "",
             }}
             onClick={() => handleSort("newest", "newest")}
-            disabled={currentItems.length === 0}
+            disabled={productList.length === 0 || loading}
           >
             Hàng mới
           </button>
@@ -140,7 +146,7 @@ export default function SearchPresentation() {
               color: activeButton === "asc" ? "white" : "",
             }}
             onClick={() => handleSort("asc", "asc")}
-            disabled={currentItems.length === 0}
+            disabled={productList.length === 0 || loading}
           >
             Giá Thấp - Cao
           </button>
@@ -155,34 +161,41 @@ export default function SearchPresentation() {
               color: activeButton === "desc" ? "white" : "",
             }}
             onClick={() => handleSort("desc", "desc")}
-            disabled={currentItems.length === 0}
+            disabled={productList.length === 0 || loading}
           >
             Giá Cao - Thấp
           </button>
         </div>
       </div>
 
-      <div className="search-product-container">
-        {currentItems.length > 0 ? (
-          <ProductPresentation products={currentItems} />
-        ) : (
-          <p
-            style={{
-              textAlign: "center",
-              marginTop: "30px",
-              fontSize: "20px",
-            }}
-          >
-            Không tìm thấy sản phẩm
-          </p>
-        )}
-      </div>
+      {loading ? (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <CircularProgress style={{ color: "rgba(255,0,132,1)" }} />
+        </div>
+      ) : (
+        <div className="search-product-container">
+          {productList.length > 0 ? (
+            <ProductPresentation products={productList} />
+          ) : (
+            <p
+              style={{
+                textAlign: "center",
+                marginTop: "30px",
+                fontSize: "20px",
+              }}
+            >
+              Không tìm thấy sản phẩm
+            </p>
+          )}
+        </div>
+      )}
       <div className="pagination-container" style={{ textAlign: "center" }}>
         <CustomPagination
           count={totalPages}
           page={currentPage}
           onChange={(event, page) => setCurrentPage(page)}
           color="primary"
+          disabled={loading}
         />
       </div>
     </div>

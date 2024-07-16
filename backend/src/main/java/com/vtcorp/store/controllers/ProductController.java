@@ -49,7 +49,7 @@ public class ProductController {
 
     @Operation(summary = "Get active products")
     @GetMapping
-    @JsonView(Views.ProductCustomerView.class)
+    @JsonView(Views.ProductBuyerView.class)
     public ResponseEntity<?> getActiveProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "-1") int size,
@@ -150,10 +150,22 @@ public class ProductController {
 
     @Operation(summary = "Get active products by search query")
     @GetMapping("/search")
-    @JsonView(Views.Product.class)
-    public ResponseEntity<?> getActiveProductsBySearchQuery(@RequestParam String searchQuery) {
+    @JsonView(Views.ProductBuyerView.class)
+    public ResponseEntity<?> getActiveProductsBySearchQuery(
+            @RequestParam String searchQuery,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "-1") int size,
+            @RequestParam(defaultValue = "productId") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
         try {
-            return ResponseEntity.ok(productService.getActiveProductsBySearchQuery(searchQuery));
+            Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+            Pageable pageable;
+            if (page == 0 && size == -1) {
+                pageable = PageRequest.of(0, Integer.MAX_VALUE, sort);
+            } else {
+                pageable = PageRequest.of(page, size, sort);
+            }
+            return ResponseEntity.ok(productService.getActiveProductsBySearchQuery(searchQuery, pageable));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

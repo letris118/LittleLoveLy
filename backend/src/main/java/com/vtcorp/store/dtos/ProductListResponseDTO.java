@@ -13,9 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductListResponseDTO {
 
-    @JsonView({Views.ProductCustomerView.class, Views.ProductManagementView.class})
+    @JsonView({Views.ProductBuyerView.class, Views.ProductManagementView.class})
     private List<ProductResponseDTO> products;
 
-    @JsonView({Views.ProductCustomerView.class, Views.ProductManagementView.class})
+    @JsonView({Views.ProductBuyerView.class, Views.ProductManagementView.class})
     private int totalPages;
 }

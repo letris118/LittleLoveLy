@@ -17,22 +17,22 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductResponseDTO {
 
-    @JsonView({Views.Product.class, Views.ProductCustomerView.class, Views.ProductManagementView.class})
+    @JsonView({Views.Product.class, Views.ProductBuyerView.class, Views.ProductManagementView.class})
     private long productId;
 
-    @JsonView({Views.Product.class, Views.ProductCustomerView.class, Views.ProductManagementView.class})
+    @JsonView({Views.Product.class, Views.ProductBuyerView.class, Views.ProductManagementView.class})
     private String name;
 
     @JsonView(Views.Product.class)
     private Double listedPrice;
 
-    @JsonView({Views.Product.class, Views.ProductCustomerView.class, Views.ProductManagementView.class})
+    @JsonView({Views.Product.class, Views.ProductBuyerView.class, Views.ProductManagementView.class})
     private Double sellingPrice;
 
     @JsonView(Views.Product.class)
     private String description;
 
-    @JsonView({Views.Product.class, Views.ProductCustomerView.class})
+    @JsonView({Views.Product.class, Views.ProductBuyerView.class})
     private Integer noSold;
 
     @JsonView({Views.Product.class, Views.ProductManagementView.class})
@@ -41,7 +41,7 @@ public class ProductResponseDTO {
     @JsonView({Views.Product.class, Views.ProductManagementView.class})
     private boolean active;
 
-    @JsonView({Views.Product.class, Views.ProductCustomerView.class})
+    @JsonView({Views.Product.class, Views.ProductBuyerView.class})
     private double averageRating;
 
     @JsonView(Views.Product.class)
@@ -58,7 +58,7 @@ public class ProductResponseDTO {
     @JsonView(Views.Product.class)
     private List<Category> categories;
 
-    @JsonView({Views.Product.class, Views.ProductCustomerView.class, Views.ProductManagementView.class})
+    @JsonView({Views.Product.class, Views.ProductBuyerView.class, Views.ProductManagementView.class})
     private List<ProductImage> productImages;
 
     @JsonView(Views.Product.class)
