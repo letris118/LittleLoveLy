@@ -154,7 +154,7 @@ export default function UpdateArticle() {
               </div>
               <div className="manage-form-group">
                 <label>Nội dung:</label>
-                <div className="manage-form-control">
+                <div className="manage-form-control-article">
                   <ReactQuill
                     style={{ backgroundColor: "white" }}
                     ref={quillRef}
