@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { toast } from "react-toastify";
@@ -12,20 +12,18 @@ import {
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
-import StaffBackToTop from "../components/StaffBackToTop"
+import StaffBackToTop from "../components/StaffBackToTop";
+
 export default function ManageGift() {
   const [giftList, setGiftList] = useState([]);
   const [filteredGifts, setFilteredGifts] = useState([]);
-  const [sortBy, setSortBy] = useState(null);
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [sortByActive, setSortByActive] = useState(null);
-  const [sortOrderActive, setSortOrderActive] = useState('asc');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const giftsPerPage = 20;
-
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [sortBy, setSortBy] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
   const navigate = useNavigate();
-  const location = useLocation();
+
   useEffect(() => {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
@@ -55,48 +53,6 @@ export default function ManageGift() {
     fetchGifts();
   }, [navigate]);
 
-  const sortGifts = (field) => {
-    let sortedGifts = [...filteredGifts];
-    if (field === 'active') {
-      sortedGifts.sort((a, b) => (a.active === b.active ? 0 : a.active ? -1 : 1));
-    } else {
-      sortedGifts.sort((a, b) => {
-        if (field === 'name') {
-          return a.name.localeCompare(b.name);
-        } else if (field === 'point') {
-          return a.point - b.point;
-        } else if (field === 'stock') {
-          return a.stock - b.stock;
-        }
-        return 0;
-      });
-    }
-    if (sortOrder === 'desc') {
-      sortedGifts.reverse();
-    }
-    setFilteredGifts(sortedGifts);
-  };
-
-  const handleSort = (field) => {
-    if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(field);
-      setSortOrder('asc');
-    }
-    sortGifts(field);
-  };
-
-  const handleActiveSort = () => {
-    if (sortByActive === 'active') {
-      setSortOrderActive(sortOrderActive === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortByActive('active');
-      setSortOrderActive('asc');
-    }
-    sortGifts('active');
-  };
-
   const handleToggle = async (giftId, currentStatus) => {
     if (currentStatus) {
       await deactivateGift(giftId);
@@ -121,18 +77,34 @@ export default function ManageGift() {
     setCurrentPage(1);
   };
 
-  const indexOfLastGift = currentPage * giftsPerPage;
-  const indexOfFirstGift = indexOfLastGift - giftsPerPage;
-  const currentGifts = filteredGifts.slice(indexOfFirstGift, indexOfLastGift);
-  const totalPages = Math.ceil(filteredGifts.length / giftsPerPage);
+  const handleSort = (field) => {
+    const isAsc = sortBy === field && sortOrder === 'asc';
+    setSortBy(field);
+    setSortOrder(isAsc ? 'desc' : 'asc');
 
-  const handleClick = (pageNumber) => {
+    const sorted = [...filteredGifts].sort((a, b) => {
+      let valueA = a[field] ?? '';
+      let valueB = b[field] ?? '';
+
+      if (valueA < valueB) return isAsc ? -1 : 1;
+      if (valueA > valueB) return isAsc ? 1 : -1;
+      return 0;
+    });
+
+    setFilteredGifts(sorted);
+  };
+
+  const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
+  const indexOfLastGift = currentPage * itemsPerPage;
+  const indexOfFirstGift = indexOfLastGift - itemsPerPage;
+  const currentGifts = filteredGifts.slice(indexOfFirstGift, indexOfLastGift);
+  const totalPages = Math.ceil(filteredGifts.length / itemsPerPage);
+
   return (
     <div>
-
       <StaffHeader />
       <div className="manage-content">
         <StaffSideBar />
@@ -156,12 +128,7 @@ export default function ManageGift() {
             <thead className="manage-table-head">
               <tr>
                 <th className="index-head" style={{ width: '5%' }}>STT</th>
-                <th className="name-head" style={{ width: '22%' }} onClick={() => handleSort('name')}>
-                  Tên quà tặng
-                  {sortBy === 'name' && (
-                    <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
-                  )}
-                </th>
+                <th className="name-head" style={{ width: '22%' }}>Tên quà tặng</th>
                 <th className="img-head" style={{ width: '15%' }}>Hình ảnh</th>
                 <th className="name-head" style={{ width: '15%' }} onClick={() => handleSort('point')}>
                   Điểm đổi quà
@@ -175,10 +142,10 @@ export default function ManageGift() {
                     <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
                   )}
                 </th>
-                <th className="img-head" style={{ width: '11%' }} onClick={handleActiveSort}>
+                <th className="img-head" style={{ width: '11%' }} onClick={() => handleSort('active')}>
                   Trạng thái
-                  {sortByActive === 'active' && (
-                    <span>{sortOrderActive === 'asc' ? ' ▲' : ' ▼'}</span>
+                  {sortBy === 'active' && (
+                    <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
                   )}
                 </th>
                 <th className="img-head" style={{ width: '9%' }}>Chỉnh sửa</th>
@@ -202,19 +169,17 @@ export default function ManageGift() {
                     <td className="active-body">
                       <Switch
                         onChange={() => handleToggle(gift.giftId, gift.active)}
-                        checked={gift.active}
+                        checked={gift.active ?? false}
                         offColor="#ff0000"
                         onColor="#27ae60"
                       />
                     </td>
                     <td className="update-body">
-                      <Link
-                        to={`${routes.updateGift}/${gift.name}?id=${gift.giftId}`} className="update-link">
+                      <Link to={`${routes.updateGift}/${gift.name}?id=${gift.giftId}`} className="update-link">
                         Chi tiết
                       </Link>
                     </td>
                   </tr>
-
                 ))
               ) : (
                 <tr>
@@ -231,14 +196,13 @@ export default function ManageGift() {
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i + 1}
-                onClick={() => handleClick(i + 1)}
+                onClick={() => handlePageChange(i + 1)}
                 className={currentPage === i + 1 ? 'active' : ''}
               >
                 {i + 1}
               </button>
             ))}
           </div>
-
         </div>
       </div>
       <StaffBackToTop />
