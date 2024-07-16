@@ -110,16 +110,21 @@ public class ProductService {
 
     }
 
-    public List<ProductResponseDTO> getAllProductsBySearchQuery(String searchQuery) {
-        List<Product> products = productRepository.findByNameContainingIgnoreCase(searchQuery);
-
-        return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
+    public ProductListResponseDTO getAllProductsBySearchQuery(String searchQuery, Pageable pageable) {
+        searchQuery = escapeSpecialCharacters(searchQuery);
+        Page<ProductManagementView> projectedProducts = productRepository.findByNameContainingIgnoreCase(searchQuery, pageable);
+        List<ProductResponseDTO> products = productMapper.toResponseDTOs(projectedProducts.getContent());
+        return new ProductListResponseDTO(products, projectedProducts.getTotalPages());
     }
 
     public List<ProductResponseDTO> getActiveProductsBySearchQuery(String searchQuery) {
         List<Product> products = productRepository.findByNameContainingIgnoreCaseAndActive(searchQuery, true);
 
         return products != null ? mapProductsToProductResponseDTOs(products) : Collections.emptyList();
+    }
+
+    private String escapeSpecialCharacters(String input) {
+        return input.replace("%", "\\%").replace("_", "\\_").replace("[", "\\[").replace("]", "\\]").replace("^", "\\^").replace("\\", "\\\\");
     }
 
     public List<ProductResponseDTO> getAllProductsByFieldAndAscOrDesc(String field, boolean isAsc) {

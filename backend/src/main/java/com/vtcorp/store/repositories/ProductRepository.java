@@ -28,7 +28,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT DISTINCT p FROM Product p JOIN p.categories c WHERE c.categoryId IN ?1 and p.active = true")
     List<Product> findActiveByCategories(List<Long> categoryIds);
 
-    List<Product> findByNameContainingIgnoreCase(String searchQuery);
+    Page<ProductManagementView> findByNameContainingIgnoreCase(String searchQuery, Pageable pageable);
 
     List<Product> findByNameContainingIgnoreCaseAndActive(String searchQuery, boolean active);
 

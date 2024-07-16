@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
@@ -7,18 +7,22 @@ import Switch from "react-switch";
 import instance from "../services/auth/customize-axios";
 import {
   productsAll,
+  searchAllProducts,
   deactivateProduct,
   activateProduct,
 } from "../services/auth/UsersService";
 import StaffSideBar from "../components/StaffSideBar";
 import "../assets/css/manage.css";
 import StaffBackToTop from "../components/StaffBackToTop";
+import CircularProgress from "@mui/material/CircularProgress";
+import debounce from "lodash/debounce";
 
 export default function ManageProduct() {
   const [productList, setProductList] = useState([]);
   const [sortBy, setSortBy] = useState("productId");
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchQuery, setSearchQuery] = useState("");
+  const [finalSearchQuery, setFinalSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -36,17 +40,32 @@ export default function ManageProduct() {
     checkAuthentication();
   }, [navigate]);
 
+  const debouncedSetFinalQuery = useCallback(
+    debounce((query) => {
+      setFinalSearchQuery(query);
+      setCurrentPage(1);
+    }, 150),
+    []
+  );
+
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       console.time("Fetch Products Time");
       try {
-        let response = await productsAll({
+        let params = {
           page: currentPage - 1,
           size: productsPerPage,
           sortBy: sortBy,
           direction: sortOrder,
-        });
+        };
+        let response;
+        if (finalSearchQuery !== "") {
+          params.searchQuery = finalSearchQuery;
+          response = await searchAllProducts(params);
+        } else {
+          response = await productsAll(params);
+        }
         if (response) {
           const validProducts = response.products.filter(
             (product) =>
@@ -73,7 +92,17 @@ export default function ManageProduct() {
     };
 
     fetchProducts();
-  }, [currentPage, sortBy, sortOrder]);
+    // Cleanup function to cancel any pending debounce
+    return () => {
+      debouncedSetFinalQuery.cancel();
+    };
+  }, [
+    currentPage,
+    sortBy,
+    sortOrder,
+    finalSearchQuery,
+    debouncedSetFinalQuery,
+  ]);
 
   const handleSort = (field) => {
     if (sortBy === field) {
@@ -105,14 +134,8 @@ export default function ManageProduct() {
   };
 
   const handleSearch = (event) => {
-    const query = event.target.value.toLowerCase();
-    setSearchQuery(query);
-
-    const filtered = productList.filter((product) =>
-      product.name.toLowerCase().includes(query)
-    );
-    setProductList(filtered);
-    setCurrentPage(1);
+    setSearchQuery(event.target.value.toLowerCase());
+    debouncedSetFinalQuery(event.target.value.toLowerCase());
   };
 
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -152,7 +175,7 @@ export default function ManageProduct() {
                 <th
                   className="name-head"
                   style={{ width: "20%" }}
-                  onClick={() => handleSort("name")}
+                  onClick={() => !loading && handleSort("name")}
                 >
                   Tên sản phẩm
                   {sortBy === "name" && (
@@ -168,7 +191,7 @@ export default function ManageProduct() {
                 <th
                   className="stock-head"
                   style={{ width: "8%" }}
-                  onClick={() => handleSort("stock")}
+                  onClick={() => !loading && handleSort("stock")}
                 >
                   Tồn kho
                   {sortBy === "stock" && (
@@ -178,7 +201,7 @@ export default function ManageProduct() {
                 <th
                   className="sellingPrice-head"
                   style={{ width: "10%" }}
-                  onClick={() => handleSort("sellingPrice")}
+                  onClick={() => !loading && handleSort("sellingPrice")}
                 >
                   Giá bán
                   {sortBy === "sellingPrice" && (
@@ -188,7 +211,7 @@ export default function ManageProduct() {
                 <th
                   className="active-head"
                   style={{ width: "9%" }}
-                  onClick={() => handleSort("active")}
+                  onClick={() => !loading && handleSort("active")}
                 >
                   Trạng thái
                   {sortBy === "active" && (
@@ -205,69 +228,79 @@ export default function ManageProduct() {
               </tr>
             </thead>
 
-            <tbody>
-              {productList.length > 0 ? (
-                productList.map((product, index) => (
-                  <tr key={product.productId}>
-                    <td className="index-body">
-                      {indexOfFirstProduct + index + 1}
-                    </td>
-                    <td className="name-body">{product.name}</td>
-                    <td className="img-body">
-                      {product.productImages.slice(0, 1).map((image) => (
-                        <img
-                          key={image.imageId}
-                          src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
-                          alt={product.name}
-                          style={{ width: "30%", height: "30%" }}
-                        />
-                      ))}
-                    </td>
-
-                    <td className="brand-body">
-                      <img
-                        src={`${instance.defaults.baseURL}/images/brands/${product.brand.logo}`}
-                        alt={product.brand.name}
-                        style={{ width: "50%", height: "50%" }}
-                      />
-                    </td>
-
-                    <td className="stock-body">{product.stock}</td>
-                    <td className="sellingPrice-body">
-                      {product.sellingPrice}
-                    </td>
-                    <td className="active-body">
-                      <Switch
-                        onChange={() =>
-                          handleToggle(product.productId, product.active)
-                        }
-                        checked={product.active}
-                        offColor="#ff0000"
-                        onColor="#27ae60"
-                      />
-                    </td>
-
-                    <td className="update-body">
-                      <Link
-                        to={`${routes.updateProduct}/${product.name}?id=${product.productId}`}
-                        className="update-link"
-                      >
-                        Chi tiết
-                      </Link>
-                    </td>
-                    <td className="lastModified-body">
-                      {product.lastModifiedDate}
-                    </td>
-                  </tr>
-                ))
-              ) : (
+            {loading ? (
+              <tbody>
                 <tr>
-                  <td colSpan="8" style={{ textAlign: "center" }}>
-                    Không có sản phẩm nào phù hợp
+                  <td colSpan="9" style={{ textAlign: "center" }}>
+                    <CircularProgress color="inherit" />
                   </td>
                 </tr>
-              )}
-            </tbody>
+              </tbody>
+            ) : (
+              <tbody>
+                {productList.length > 0 ? (
+                  productList.map((product, index) => (
+                    <tr key={product.productId}>
+                      <td className="index-body">
+                        {indexOfFirstProduct + index + 1}
+                      </td>
+                      <td className="name-body">{product.name}</td>
+                      <td className="img-body">
+                        {product.productImages.slice(0, 1).map((image) => (
+                          <img
+                            key={image.imageId}
+                            src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
+                            alt={product.name}
+                            style={{ width: "30%", height: "30%" }}
+                          />
+                        ))}
+                      </td>
+
+                      <td className="brand-body">
+                        <img
+                          src={`${instance.defaults.baseURL}/images/brands/${product.brand.logo}`}
+                          alt={product.brand.name}
+                          style={{ width: "50%", height: "50%" }}
+                        />
+                      </td>
+
+                      <td className="stock-body">{product.stock}</td>
+                      <td className="sellingPrice-body">
+                        {product.sellingPrice}
+                      </td>
+                      <td className="active-body">
+                        <Switch
+                          onChange={() =>
+                            handleToggle(product.productId, product.active)
+                          }
+                          checked={product.active}
+                          offColor="#ff0000"
+                          onColor="#27ae60"
+                        />
+                      </td>
+
+                      <td className="update-body">
+                        <Link
+                          to={`${routes.updateProduct}/${product.name}?id=${product.productId}`}
+                          className="update-link"
+                        >
+                          Chi tiết
+                        </Link>
+                      </td>
+                      <td className="lastModified-body">
+                        {product.lastModifiedDate}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="8" style={{ textAlign: "center" }}>
+                      Không có sản phẩm nào phù hợp
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            )}
           </table>
 
           {/* Pagination */}
@@ -277,6 +310,7 @@ export default function ManageProduct() {
                 key={i + 1}
                 onClick={() => setCurrentPage(i + 1)}
                 className={currentPage === i + 1 ? "active" : ""}
+                disabled={loading}
               >
                 {i + 1}
               </button>

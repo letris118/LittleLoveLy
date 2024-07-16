@@ -79,6 +79,20 @@ const productsAll = ({
   );
 };
 
+//search all
+const searchAllProducts = ({
+  searchQuery,
+  page = 0,
+  size = -1,
+  sortBy = "productId",
+  direction = "asc",
+} = {}) => {
+  const encodedSearchQuery = encodeURIComponent(searchQuery);
+  return instance.get(
+    `/api/products/all/search?searchQuery=${encodedSearchQuery}&page=${page}&size=${size}&sortBy=${sortBy}&direction=${direction}`
+  );
+};
+
 //set deactive
 const deactivateProduct = (productId) => {
   return instance.put(`/api/products/deactivate/${productId}`);
@@ -471,4 +485,5 @@ export {
   getChatHistory,
   getCustomersUsedToChat,
   markMessagesAsRead,
+  searchAllProducts,
 };
