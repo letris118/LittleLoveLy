@@ -131,7 +131,7 @@ export default function UpdateVoucher() {
 
                                 {/* LIMIT */}
                                 <div className="manage-form-group">
-                                    <label>Giới hạn</label>
+                                    <label>Số lượng</label>
                                     <div className="manage-form-control">
                                         <input
                                             type="number"

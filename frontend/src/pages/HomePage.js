@@ -59,9 +59,9 @@ export default function HomePage() {
 
     const fetchProducts = async () => {
       try {
-        let response = await products();
+        let response = await products({ size: 20 });
         if (response) {
-          setProductList(response.slice(0, 20));
+          setProductList(response.products);
         } else {
           setProductList([]);
         }
@@ -81,7 +81,7 @@ export default function HomePage() {
         }
       } catch (error) {
         console.error("Error fetching brands:", error);
-        setArticleList([]);
+        setBrandList([]);
       }
     };
 
@@ -95,11 +95,12 @@ export default function HomePage() {
         }
       } catch (error) {
         console.error("Error fetching articles:", error);
-        setBrandList([]);
+        setArticleList([]);
       }
     };
 
     const fetchCartData = async () => {
+      console.time("Fetch Cart Data Time");
       try {
         const resCart = await getCart();
         const cart = [];
@@ -118,6 +119,7 @@ export default function HomePage() {
       } catch (error) {
         console.error("Error fetching cart:", error);
       }
+      console.timeEnd("Fetch Cart Data Time");
     };
 
     fetchBrands();

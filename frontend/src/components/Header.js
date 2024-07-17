@@ -6,35 +6,51 @@ import {
   MenuList,
   Paper,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
 import instance from "../services/auth/customize-axios";
-import { formatPrice, products } from "../services/auth/UsersService";
+import { formatPrice, searchProducts } from "../services/auth/UsersService";
 import DropdownMenu from "./DropdownMenu";
+import debounce from "lodash/debounce";
 
 export default function Header({ handleLogoutSuccess }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const navigate = useNavigate();
 
-  const handleSearchChange = async (event) => {
-    setSearchTerm(event.target.value);
-    if (event.target.value) {
-      try {
-        const response = await products();
-        const filteredResults = response.filter((product) =>
-          product.name.toLowerCase().includes(event.target.value.toLowerCase())
-        );
-        setSearchResults(filteredResults);
-      } catch (error) {
-        console.error("Error fetching products:", error);
+  const debouncedSearch = useCallback(
+    debounce(async (term) => {
+      if (term) {
+        try {
+          const response = await searchProducts({
+            searchQuery: term,
+            size: 5,
+          });
+          setSearchResults(response.products);
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      } else {
+        setSearchResults([]);
       }
-    } else {
-      setSearchResults([]);
-    }
+    }, 200),
+    []
+  );
+
+  const handleSearchChange = (event) => {
+    const term = event.target.value;
+    setSearchTerm(term);
+    debouncedSearch(term);
   };
+
+  // Cleanup debounced function on component unmount
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
@@ -43,7 +59,8 @@ export default function Header({ handleLogoutSuccess }) {
     }
     setSearchTerm("");
     setSearchResults([]);
-    navigate(`${routes.searchProduct}?search_term=${searchTerm}`);
+    const encodedSearchTerm = encodeURIComponent(searchTerm);
+    navigate(`${routes.searchProduct}?search_term=${encodedSearchTerm}`);
   };
   return (
     <>
@@ -51,7 +68,7 @@ export default function Header({ handleLogoutSuccess }) {
         {/* logo + store name to return home page */}
         <div className="store-name">
           <Link to={routes.homePage} style={{ color: "#ff469e" }}>
-            <img src="../assets/images/logo.png" alt="page logo" />
+            <img src="/assets/images/logo.png" alt="page logo" />
           </Link>
         </div>
 
@@ -59,7 +76,8 @@ export default function Header({ handleLogoutSuccess }) {
         <div className="search-bar" style={{ position: "relative" }}>
           <form
             onSubmit={handleSearchSubmit}
-            style={{ display: "flex", alignItems: "center" }}>
+            style={{ display: "flex", alignItems: "center" }}
+          >
             <div style={{ display: "flex", width: "70%" }}>
               <input
                 type="text"
@@ -69,10 +87,7 @@ export default function Header({ handleLogoutSuccess }) {
               />
               <div className="search-icon">
                 <button type="submit">
-                  <img
-                    src="../assets/images/search_icon.png"
-                    alt="search logo"
-                  />
+                  <img src="/assets/images/search_icon.png" alt="search logo" />
                 </button>
               </div>
             </div>
@@ -86,16 +101,19 @@ export default function Header({ handleLogoutSuccess }) {
                 right: 0,
                 zIndex: 10,
                 width: 600,
-              }}>
+              }}
+            >
               <MenuList>
-                {searchResults.slice(0, 5).map((result) => (
+                {searchResults.map((result) => (
                   <MenuItem
                     key={result.productId}
                     component={Link}
-                    to={`${routes.products}/${result.name}`}>
+                    to={`${routes.products}/${result.productId}/${result.name}`}
+                  >
                     <ListItemAvatar>
                       {result.productImages.slice(0, 1).map((image) => (
                         <Avatar
+                          key={image.imageId}
                           src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
                         />
                       ))}
@@ -114,7 +132,8 @@ export default function Header({ handleLogoutSuccess }) {
                 {searchResults.length > 5 && (
                   <MenuItem
                     component={Link}
-                    to={`${routes.searchProduct}?search_term=${searchTerm}`}>
+                    to={`${routes.searchProduct}?search_term=${searchTerm}`}
+                  >
                     <ListItemText
                       primary={
                         <>
@@ -134,7 +153,8 @@ export default function Header({ handleLogoutSuccess }) {
               display: "flex",
               justifyContent: "end",
               width: "50%",
-            }}>
+            }}
+          >
             {localStorage.getItem("token") ? (
               <DropdownMenu
                 handleLogoutSuccess={handleLogoutSuccess}
