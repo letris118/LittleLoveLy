@@ -2,10 +2,7 @@ package com.vtcorp.store.controllers;
 
 import com.vtcorp.store.services.DashboardService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/dashboard")
@@ -26,7 +23,7 @@ public class DashboardController {
         }
     }
 
-    @PatchMapping("/site-visits")
+    @PutMapping("/site-visits")
     ResponseEntity<?> getSiteVisits() {
         try {
             return ResponseEntity.ok(dashboardService.increaseSiteVisit());
