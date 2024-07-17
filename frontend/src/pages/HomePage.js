@@ -13,6 +13,7 @@ import {
   articles,
   brands,
   getCart,
+  increaseSiteVisits,
   products,
 } from "../services/auth/UsersService";
 
@@ -26,6 +27,7 @@ export default function HomePage() {
   const location = useLocation();
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
@@ -37,6 +39,11 @@ export default function HomePage() {
     };
     checkAuthentication();
   }, [navigate]);
+
+  useEffect(() => {
+    increaseSiteVisits()
+  }, [navigate])
+
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);

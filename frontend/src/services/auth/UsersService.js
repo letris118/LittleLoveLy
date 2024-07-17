@@ -343,7 +343,7 @@ const dashboard = () => {
 };
 
 const increaseSiteVisits = () => {
-  return instance.patch("api/dashboard/site-visits");
+  return instance.put("api/dashboard/site-visits");
 };
 
 const confirmOrder = (orderId) => {
