@@ -18,6 +18,7 @@ import debounce from "lodash/debounce";
 export default function Header({ handleLogoutSuccess }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
   const navigate = useNavigate();
 
   const debouncedSearch = useCallback(
@@ -29,6 +30,7 @@ export default function Header({ handleLogoutSuccess }) {
             size: 5,
           });
           setSearchResults(response.products);
+          setTotalPages(response.totalPages);
         } catch (error) {
           console.error("Error fetching products:", error);
         }
@@ -129,7 +131,7 @@ export default function Header({ handleLogoutSuccess }) {
                     />
                   </MenuItem>
                 ))}
-                {searchResults.length > 5 && (
+                {totalPages > 1 && (
                   <MenuItem
                     component={Link}
                     to={`${routes.searchProduct}?search_term=${searchTerm}`}
