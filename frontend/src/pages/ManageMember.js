@@ -206,6 +206,7 @@ export default function ManageMember() {
       setFilteredCustomerList(
         customerList.filter((customer) =>
           customer.username.toLowerCase().includes(query.toLowerCase())
+          || customer.name.toLowerCase().includes(query.toLowerCase())
         )
       );
     }
