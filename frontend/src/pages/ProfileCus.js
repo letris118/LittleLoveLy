@@ -368,9 +368,12 @@ export default function ProfileCus() {
   const PasswordForm = ({ handleClose }) => {
     const validationSchema = Yup.object({
       currentPassword: Yup.string().required("Vui lòng điền mật khẩu hiện tại"),
-      newPassword: Yup.string().required(
-        "Vui lòng điền mật khẩu mong muốn đổi"
-      ),
+      newPassword: Yup.string()
+        .required("Vui lòng điền mật khẩu mới")
+        .matches(
+          /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
+          "Mật khẩu phải chứa ít nhất 8 ký tự và tối đa 16 ký tự, bao gồm ít nhất một chữ số, một chữ cái viết thường, một chữ cái viết hoa, và một ký tự đặc biệt, và không chứa khoảng trắng"
+        ),
       confirmNewPassword: Yup.string()
         .oneOf([Yup.ref("newPassword"), null], "Xác nhận mật này không đúng")
         .required("Vui lòng xác nhận mật khẩu mong muốn đổi"),
