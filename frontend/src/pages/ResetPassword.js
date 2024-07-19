@@ -5,6 +5,9 @@ import backgroundImage from "../assets/images/backgroundDemo.jpg";
 import { useFormik } from "formik";
 import { resetPasswordAPI } from "../services/auth/UsersService";
 import { toast } from "react-toastify";
+import * as Yup from "yup";
+import Tooltip from "@mui/material/Tooltip";
+import { FaExclamationCircle } from "react-icons/fa";
 
 export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
@@ -40,8 +43,19 @@ export default function ResetPassword() {
   const formik = useFormik({
     initialValues: {
       password: "",
+      confirmPassword: "",
     },
-    enableReinitialize: true,
+    validationSchema: Yup.object({
+      password: Yup.string()
+        .required("Vui lòng điền mật khẩu mới")
+        .matches(
+          /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
+          "Mật khẩu phải chứa ít nhất 8 ký tự và tối đa 16 ký tự, bao gồm ít nhất một chữ số, một chữ cái viết thường, một chữ cái viết hoa, và một ký tự đặc biệt, và không chứa khoảng trắng"
+        ),
+      confirmPassword: Yup.string()
+        .required("Vui lòng điền đầy đủ mật khẩu")
+        .oneOf([Yup.ref("password"), null], "Mật khẩu không trùng nhau"),
+    }),
     onSubmit: async () => {
       const searchParams = new URLSearchParams(location.search);
       const token = searchParams.get("token");
@@ -89,7 +103,6 @@ export default function ResetPassword() {
                       type={showPassword ? "text" : "password"}
                       className="form-control"
                       placeholder="Nhập mật khẩu mới"
-                      required
                       name="password"
                       value={formik.values.password}
                       onChange={formik.handleChange}
@@ -103,8 +116,17 @@ export default function ResetPassword() {
                       }
                       onClick={() => {
                         setShowPassword((prevState) => !prevState);
-                      }}
-                    ></span>
+                      }}></span>
+                    {formik.touched.password && formik.errors.password && (
+                      <Tooltip
+                        title={formik.errors.password}
+                        placement="right"
+                        arrow>
+                        <span className="tooltip-icon">
+                          <FaExclamationCircle />
+                        </span>
+                      </Tooltip>
+                    )}
                   </div>
                   <div className="form-group">
                     <input
@@ -112,7 +134,6 @@ export default function ResetPassword() {
                       type={showConfirmPassword ? "text" : "password"}
                       className="form-control"
                       placeholder="Xác nhận mật khẩu"
-                      required
                     />
                     <span
                       toggle="#confirm-password-field"
@@ -123,15 +144,24 @@ export default function ResetPassword() {
                       }
                       onClick={() => {
                         setShowConfirmPassword((prevState) => !prevState);
-                      }}
-                    ></span>
+                      }}></span>
+                    {formik.touched.confirmPassword &&
+                      formik.errors.confirmPassword && (
+                        <Tooltip
+                          title={formik.errors.confirmPassword}
+                          placement="right"
+                          arrow>
+                          <span className="tooltip-icon">
+                            <FaExclamationCircle />
+                          </span>
+                        </Tooltip>
+                      )}
                   </div>
                   <div className="form-group">
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="form-control btn btn-primary submit px-3"
-                    >
+                      className="form-control btn btn-primary submit px-3">
                       Xác nhận
                     </button>
                   </div>
