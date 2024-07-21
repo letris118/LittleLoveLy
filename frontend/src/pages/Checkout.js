@@ -17,6 +17,7 @@ import {
   getUserInfo,
   previewOrder,
 } from "../services/auth/UsersService";
+import { API_BASE_URL } from "../config";
 
 Yup.addMethod(Yup.object, "validatePhoneAndAddress", function (message) {
   return this.test("validatePhoneAndAddress", message, async function (value) {
@@ -99,7 +100,7 @@ export default function Checkout() {
     }
     fetchUserInfo();
   }, []);
-  
+
   const formik = useFormik({
     initialValues: {
       cusName: savedValues.cusName || userInfo.name || "",
@@ -157,13 +158,13 @@ export default function Checkout() {
     submitCartItems.push(...submitGiftItems);
     setSubmitCart(submitCartItems);
 
-    fetch("http://localhost:8010/api/orders/cities")
+    fetch(`${API_BASE_URL}/api/orders/cities`)
       .then((response) => response.json())
       .then((data) => setCities(data.data));
 
     const fetchDistricts = (province) => {
       if (province) {
-        fetch(`http://localhost:8010/api/orders/districts/${province}`)
+        fetch(`${API_BASE_URL}/api/orders/districts/${province}`)
           .then((response) => response.json())
           .then((data) => setDistricts(data.data));
         setWards([]);
@@ -174,7 +175,7 @@ export default function Checkout() {
 
     const fetchWards = (district) => {
       if (district) {
-        fetch(`http://localhost:8010/api/orders/wards/${district}`)
+        fetch(`${API_BASE_URL}/api/orders/wards/${district}`)
           .then((response) => response.json())
           .then((data) => setWards(data.data));
       } else {

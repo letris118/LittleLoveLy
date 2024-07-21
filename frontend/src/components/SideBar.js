@@ -1,8 +1,26 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../routes";
+import { getUserInfo } from "../services/auth/UsersService";
 
 const Sidebar = ({ role, customerName, customerPoint, loggedIn = true }) => {
+  const customerPointRef = useRef(null);
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      try {
+        let res = await getUserInfo(localStorage.getItem("username"));
+        if (res) {
+          localStorage.setItem("point", res.point);
+          customerPointRef.current = res.point;
+        }
+      } catch (error) {
+        console.error("Error fetching user points:", error);
+      }
+    };
+    if (loggedIn && role === "ROLE_CUSTOMER") {
+      fetchUserPoints();
+    }
+  }, []);
   return (
     <div className="side-bar">
       {loggedIn && role === "ROLE_CUSTOMER" ? (

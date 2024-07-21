@@ -1,9 +1,10 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { routes } from "../../routes";
+import { API_BASE_URL } from "../../config";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8010",
+  baseURL: `${API_BASE_URL}`,
 });
 
 instance.interceptors.request.use(

@@ -11,6 +11,7 @@ import com.vtcorp.store.repositories.ArticleRepository;
 import com.vtcorp.store.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +36,9 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ProductRepository productRepository;
     private final ArticleImageRepository articleImageRepository;
+
+    @Value("${app.base.url}")
+    private String appBaseUrl;
 
     @Autowired
     public ArticleService(ArticleRepository articleRepository, ProductRepository productRepository, ArticleMapper articleMapper, ArticleImageRepository articleImageRepository) {
@@ -130,7 +134,7 @@ public class ArticleService {
 
     private String handleImages(String content, Article article, List<ArticleImage> articleImages) {
         Pattern patternBase64 = Pattern.compile("data:image/(png|jpg|jpeg);base64,([^\"]*)");
-        Pattern patternUrl = Pattern.compile("http://localhost:8010/images/articles/([^\"]*)");
+        Pattern patternUrl = Pattern.compile(appBaseUrl + "/images/articles/([^\"]*)");
         Matcher matcherBase64 = patternBase64.matcher(content);
         Matcher matcherUrl = patternUrl.matcher(content);
         int i = 0;
@@ -165,7 +169,7 @@ public class ArticleService {
                 throw new RuntimeException("File is not accessible after saving: " + imagePath);
             }
             // Replace the Base64 encoded image in the content with the image URL
-            String imageUrl = "http://localhost:8010/images/articles/" + fileName;
+            String imageUrl = appBaseUrl + "/images/articles/" + fileName;
             content = content.replace(matcherBase64.group(0), imageUrl);
             // Create a new ArticleImage object and add it to the list
             ArticleImage articleImage = new ArticleImage();

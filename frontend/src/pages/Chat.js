@@ -13,6 +13,7 @@ import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
 import { getChatHistory } from "../services/auth/UsersService";
 import _ from "lodash";
+import { API_BASE_URL } from "../config";
 
 let stompClient = null;
 
@@ -65,7 +66,7 @@ export default function Chat() {
   };
 
   const connect = () => {
-    let Sock = new SockJS("http://localhost:8010/ws");
+    let Sock = new SockJS(`${API_BASE_URL}/ws`);
     stompClient = over(Sock);
     stompClient.connect({}, onConnected, onError);
   };
