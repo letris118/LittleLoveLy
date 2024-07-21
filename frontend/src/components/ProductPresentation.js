@@ -16,8 +16,7 @@ export default function ProductPresentation({ products }) {
               to={`${routes.products}/${product.productId}/${encodeURIComponent(
                 product.name.replace(/\n/g, "")
               )}`}
-              style={{ textDecoration: "none" }}
-            >
+              style={{ textDecoration: "none" }}>
               {product.productImages.slice(0, 1).map((image) => (
                 <img
                   src={`${instance.defaults.baseURL}/images/products/${image.imagePath}`}
@@ -32,8 +31,7 @@ export default function ProductPresentation({ products }) {
               to={`${routes.products}/${product.productId}/${encodeURIComponent(
                 product.name.replace(/\n/g, "")
               )}`}
-              style={{ textDecoration: "none" }}
-            >
+              style={{ textDecoration: "none" }}>
               {product.name}
             </Link>
           </div>
@@ -49,12 +47,30 @@ export default function ProductPresentation({ products }) {
             <div className="product-card-noSold">({product.noSold})</div>
           </div>
           <div className="product-card-price">
-            {formatPrice(product.sellingPrice)}đ
+            {product.sellingPrice === product.listedPrice ? (
+              <div>{formatPrice(product.sellingPrice)}đ</div>
+            ) : (
+              <div style={{ display: "flex" }}>
+                {formatPrice(product.sellingPrice)}đ
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-end",
+                    textDecoration: "line-through",
+                    paddingBottom: "3px",
+                    fontSize: "10px",
+                    marginLeft: "5px",
+                    fontWeight: "lighter",
+                    opacity: "0.8",
+                  }}>
+                  {formatPrice(product.listedPrice)}đ
+                </div>
+              </div>
+            )}
             <Link
               to={`${routes.products}/${product.productId}/${encodeURIComponent(
                 product.name.replace(/\n/g, "")
-              )}`}
-            >
+              )}`}>
               <i className="fa-solid fa-cart-shopping"></i>
             </Link>
           </div>
