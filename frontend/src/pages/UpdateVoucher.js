@@ -1,9 +1,9 @@
-import React, { useEffect, useState} from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import StaffHeader from "../components/StaffHeader"
 import { toast } from "react-toastify"
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 import {
     getVoucherById,
     updateVoucher
@@ -11,11 +11,12 @@ import {
 import StaffSideBar from "../components/StaffSideBar"
 import "../assets/css/manage.css"
 import StaffBackToTop from "../components/StaffBackToTop"
+
 export default function UpdateVoucher() {
     const [voucherInfo, setVoucherInfo] = useState(null)
-    const [selectedType, setSelectedType] = useState('');
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
+    const [selectedType, setSelectedType] = useState('')
+    const [startDate, setStartDate] = useState(null)
+    const [endDate, setEndDate] = useState(null)
     const location = useLocation()
     const navigate = useNavigate()
 
@@ -32,80 +33,71 @@ export default function UpdateVoucher() {
 
     useEffect(() => {
         const fetchVoucherDetails = async () => {
-            const queryParams = new URLSearchParams(location.search);
-            const voucherId = queryParams.get('id');
+            const queryParams = new URLSearchParams(location.search)
+            const voucherId = queryParams.get('id')
 
             try {
-                const voucherResponse = await getVoucherById(voucherId);
+                const voucherResponse = await getVoucherById(voucherId)
                 if (voucherResponse) {
-                    setVoucherInfo(voucherResponse);
-                    setSelectedType(voucherResponse.type);
-                    const [sday, smonth, syear] = voucherResponse.startDate.split('-');
-                    const [eday, emonth, eyear] = voucherResponse.endDate.split('-');
+                    setVoucherInfo(voucherResponse)
+                    setSelectedType(voucherResponse.type)
+                    const [sday, smonth, syear] = voucherResponse.startDate.split('-')
+                    const [eday, emonth, eyear] = voucherResponse.endDate.split('-')
 
-                    setStartDate(new Date(`${syear}-${smonth}-${sday}`));
-                    setEndDate(new Date(`${eyear}-${emonth}-${eday}`));
+                    setStartDate(new Date(`${syear}-${smonth}-${sday}`))
+                    setEndDate(new Date(`${eyear}-${emonth}-${eday}`))
                 } else {
-                    toast.error("Không thể tải thông tin voucher!");
+                    toast.error("Không thể tải thông tin voucher!")
                 }
             } catch (error) {
-                console.error(error);
-                toast.error("Không thể tải thông tin voucher!");
+                console.error(error)
+                toast.error("Không thể tải thông tin voucher!")
             }
-        };
+        }
 
-        fetchVoucherDetails();
-    }, [location.search]);
+        fetchVoucherDetails()
+    }, [location.search])
 
     const handleButtonClick = (type) => {
-        setSelectedType(type);
-    };
+        setSelectedType(type)
+    }
 
     const handleSubmit = async (e) => {
         try {
-            e.preventDefault();
-            const voucherRequestDTO = new FormData(e.target);
-            voucherRequestDTO.append('voucherId', voucherInfo.voucherId);
-            voucherRequestDTO.append('type', selectedType);
+            e.preventDefault()
+            const voucherRequestDTO = new FormData(e.target)
+            voucherRequestDTO.append('voucherId', voucherInfo.voucherId)
+            voucherRequestDTO.append('type', selectedType)
             voucherRequestDTO.append('startDate', formatDate(startDate.toLocaleDateString('en-GB')))
             voucherRequestDTO.append('endDate', formatDate(endDate.toLocaleDateString('en-GB')))
 
-            await updateVoucher(voucherRequestDTO.get('voucherId'), voucherRequestDTO);
-            toast.success("Cập nhập voucher thành công!");
-            navigate('/manage-voucher');
+            await updateVoucher(voucherRequestDTO.get('voucherId'), voucherRequestDTO)
+            toast.success("Cập nhập voucher thành công!")
+            navigate('/manage-voucher')
 
         } catch (error) {
-            console.error(error);
-            toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!");
+            console.error(error)
+            toast.error("Đã xảy ra lỗi, vui lòng thử lại sau!")
         }
-    };
+    }
 
     if (!voucherInfo) {
         return <div>Loading...</div>
     }
     const handleReload = (e) => {
         e.preventDefault()
-        window.location.reload();
+        window.location.reload()
     }
 
     const formatDate = (dateString) => {
-        // Split the date string into day, month, and year
-        const [day, month, year] = dateString.split('/');
-
-        // Array of month abbreviations
+        const [day, month, year] = dateString.split('/')
         const monthAbbreviations = [
             'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-        ];
-
-        // Map the month to its abbreviation
-        const monthAbbreviation = monthAbbreviations[parseInt(month, 10) - 1];
-
-        // Format the date in 'dd MMM yyyy' format
-        const formattedDate = `${day} ${monthAbbreviation} ${year}`;
-
-        return formattedDate;
-    };
+        ]
+        const monthAbbreviation = monthAbbreviations[parseInt(month, 10) - 1]
+        return `${day} ${monthAbbreviation} ${year}`
+    }
 
     return (
         <div>
@@ -116,7 +108,6 @@ export default function UpdateVoucher() {
                     {voucherInfo ? (
                         <form onSubmit={handleSubmit}>
                             <div className="manage-form-input">
-                                {/* TITLE */}
                                 <div className="manage-form-group">
                                     <label>Tên voucher</label>
                                     <div className="manage-form-control">
@@ -129,7 +120,6 @@ export default function UpdateVoucher() {
                                     </div>
                                 </div>
 
-                                {/* LIMIT */}
                                 <div className="manage-form-group">
                                     <label>Số lượng</label>
                                     <div className="manage-form-control">
@@ -142,7 +132,6 @@ export default function UpdateVoucher() {
                                     </div>
                                 </div>
 
-                                {/* DESCRIPTION */}
                                 <div className="manage-form-group">
                                     <label>Mô tả voucher</label>
                                     <div className="manage-form-control">
@@ -155,7 +144,6 @@ export default function UpdateVoucher() {
                                     </div>
                                 </div>
 
-                                {/* min_order_amount */}
                                 <div className="manage-form-group">
                                     <label>Giá trị đơn hàng yêu cầu</label>
                                     <div className="manage-form-control">
@@ -169,7 +157,6 @@ export default function UpdateVoucher() {
                                     </div>
                                 </div>
 
-                                {/* TYPE */}
                                 <div className="manage-form-group">
                                     <label>Phân loại</label>
                                     <div className="manage-form-type-voucher-control">
@@ -208,7 +195,6 @@ export default function UpdateVoucher() {
                                     </div>
                                 </div>
 
-                                {/* Conditional Fields based on type */}
                                 {selectedType === 'FLAT' && (
                                     <div className="manage-form-group">
                                         <label>Số tiền giảm</label>
@@ -271,35 +257,46 @@ export default function UpdateVoucher() {
                                     </div>
                                 )}
 
-                                {/* START DATE */}
                                 <div className="manage-form-group">
                                     <label>Ngày có hiệu lực</label>
                                     <div className="manage-form-control">
                                         <DatePicker
                                             selected={startDate}
-                                            onChange={(date) => setStartDate(date)}
+                                            onChange={(date) => {
+                                                if (date <= endDate) {
+                                                    setStartDate(date)
+                                                } else {
+                                                    toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc")
+                                                }
+                                            }}
+                                            dateFormat="dd-MM-yyyy"
                                             required
-                                            dateFormat="dd/MM/yyyy"
                                         />
                                     </div>
                                 </div>
 
-                                {/* END DATE */}
                                 <div className="manage-form-group">
                                     <label>Ngày hết hiệu lực</label>
                                     <div className="manage-form-control">
                                         <DatePicker
                                             selected={endDate}
-                                            onChange={(date) => setEndDate(date)}
+                                            onChange={(date) => {
+                                                if (date >= startDate) {
+                                                    setEndDate(date)
+                                                } else {
+                                                    toast.error("Ngày kết thúc không được nhỏ hơn ngày bắt đầu")
+                                                }
+                                            }}
+                                            dateFormat="dd-MM-yyyy"
                                             required
-                                            dateFormat="dd/MM/yyyy"
                                         />
                                     </div>
                                 </div>
+
                             </div>
 
-                            {/*  BUTTON */}
-                            <div className="manage-form-btn">
+                           {/*  BUTTON */}
+                           <div className="manage-form-btn">
                                 <button className="save-manage-btn save-manage-link" type="submit">
                                     Lưu voucher
                                 </button>
@@ -311,7 +308,7 @@ export default function UpdateVoucher() {
                             </div>
                         </form>
                     ) : (
-                        <p>Đang tải thông tin sản phẩm...</p>
+                        <p>Đang tải thông tin voucher...</p>
                     )}
                 </div>
             </div>
@@ -319,5 +316,3 @@ export default function UpdateVoucher() {
         </div>
     )
 }
-
-
