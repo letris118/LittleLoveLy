@@ -49,8 +49,9 @@ export default function ManageOrder() {
       try {
         let response = await ordersAll();
         if (response) {
-          setOrderList(response);
-          setFilteredOrders(applyStatusFilter(response, filterStatus));
+          const sortedOrders = response.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+          setOrderList(sortedOrders);
+          setFilteredOrders(applyStatusFilter(sortedOrders, filterStatus));
         } else {
           setOrderList([]);
           setFilteredOrders([]);
@@ -384,11 +385,15 @@ export default function ManageOrder() {
             )}
           </DialogContent>
           <DialogActions>
-            <CustomButton onClick={() => handleConfirmOrder(selectedOrder)}>
-              Xác nhận đơn
-            </CustomButton>
-            <CustomButton onClick={handleClose}>Đóng</CustomButton>
-          </DialogActions>
+          <CustomButton onClick={handleClose}>Đóng</CustomButton>
+          {selectedOrder &&
+            (selectedOrder.status === "COD_PENDING" ||
+              selectedOrder.status === "ONLINE_PENDING") && (
+              <CustomButton onClick={() => handleConfirmOrder(selectedOrder)}>
+                Xác nhận đơn hàng
+              </CustomButton>
+            )}
+        </DialogActions>
         </CustomDialog>
         <CustomDialog
           open={isConfirmOrderDialogOpen}
