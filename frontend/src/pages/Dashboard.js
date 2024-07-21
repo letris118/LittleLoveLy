@@ -193,7 +193,8 @@ export default function Dashboard() {
             aggregate.numberOfOrders += data.numberOfOrders
             aggregate.itemQuantity += data.itemQuantity
         })
-        return aggregate.itemQuantity / aggregate.numberOfOrders
+        const average = aggregate.itemQuantity / aggregate.numberOfOrders;
+        return parseFloat(average.toFixed(2));
     }
 
     const yearlyPaymentData = () => {
@@ -632,7 +633,7 @@ export default function Dashboard() {
                     </div>
                 )}
             </div>
-            <StaffBackToTop/>
+            <StaffBackToTop />
         </div>
     );
 }
