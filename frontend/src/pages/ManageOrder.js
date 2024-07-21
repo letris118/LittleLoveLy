@@ -45,11 +45,20 @@ export default function ManageOrder() {
     };
     checkAuthentication();
 
+    const parseDate = (dateString) => {
+      const [datePart, timePart] = dateString.split(" ");
+      const [day, month, year] = datePart.split("-").map(Number);
+      const [hours, minutes, seconds] = timePart.split(":").map(Number);
+      return new Date(year, month - 1, day, hours, minutes, seconds);
+    };
+
     const fetchOrders = async () => {
       try {
         let response = await ordersAll();
         if (response) {
-          const sortedOrders = response.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+          const sortedOrders = response.sort(
+            (a, b) => parseDate(b.createdDate) - parseDate(a.createdDate)
+          );
           setOrderList(sortedOrders);
           setFilteredOrders(applyStatusFilter(sortedOrders, filterStatus));
         } else {
@@ -198,26 +207,22 @@ export default function ManageOrder() {
             <div className="manage-button-search-bar">
               <button
                 className={filterStatus === "PENDING" ? "selected" : ""}
-                onClick={() => handleStatusFilter("PENDING")}
-              >
+                onClick={() => handleStatusFilter("PENDING")}>
                 Chưa xác nhận
               </button>
               <button
                 className={filterStatus === "CONFIRMED" ? "selected" : ""}
-                onClick={() => handleStatusFilter("CONFIRMED")}
-              >
+                onClick={() => handleStatusFilter("CONFIRMED")}>
                 Đã xác nhận
               </button>
               <button
                 className={filterStatus === "RECEIVED" ? "selected" : ""}
-                onClick={() => handleStatusFilter("RECEIVED")}
-              >
+                onClick={() => handleStatusFilter("RECEIVED")}>
                 Giao thành công
               </button>
               <button
                 className={filterStatus === "" ? "selected" : ""}
-                onClick={() => handleStatusFilter("")}
-              >
+                onClick={() => handleStatusFilter("")}>
                 Tất cả
               </button>
             </div>
@@ -257,8 +262,7 @@ export default function ManageOrder() {
                     <td className="createdDate-body">{order.createdDate}</td>
                     <td
                       className="status-body"
-                      style={{ color: getStatusDisplay(order.status).color }}
-                    >
+                      style={{ color: getStatusDisplay(order.status).color }}>
                       {getStatusDisplay(order.status).text}
                     </td>
                     <td className="orderId-body">{order.orderId}</td>
@@ -267,8 +271,7 @@ export default function ManageOrder() {
                     <td className="update-body">
                       <Link
                         className="update-link"
-                        onClick={() => handleOrderClick(order)}
-                      >
+                        onClick={() => handleOrderClick(order)}>
                         Xem
                       </Link>
                     </td>
@@ -288,8 +291,7 @@ export default function ManageOrder() {
           open={!!selectedOrder}
           onClose={handleClose}
           fullWidth
-          maxWidth="sm"
-        >
+          maxWidth="sm">
           <CustomDialogTitle>Chi tiết đơn hàng</CustomDialogTitle>
           <DialogContent>
             {selectedOrder && (
@@ -322,8 +324,7 @@ export default function ManageOrder() {
                   {selectedOrder.orderDetails.map((orderDetail) => (
                     <div
                       style={{ display: "flex", margin: "20px 0" }}
-                      key={orderDetail.product.productId}
-                    >
+                      key={orderDetail.product.productId}>
                       <div className="popup-detail-left">
                         <img
                           src={`${instance.defaults.baseURL}/images/products/${orderDetail.product.productImages[0].imagePath}`}
@@ -334,8 +335,7 @@ export default function ManageOrder() {
                       <div className="popup-detail-right">
                         <Link
                           to={`${routes.products}/${orderDetail.product.productId}/${orderDetail.product.name}`}
-                          style={{ textDecoration: "none" }}
-                        >
+                          style={{ textDecoration: "none" }}>
                           <div style={{ fontWeight: "bold", color: "black" }}>
                             {orderDetail.product.name}
                           </div>
@@ -359,8 +359,8 @@ export default function ManageOrder() {
                   <span>Giảm giá:</span> -{" "}
                   {formatPrice(
                     selectedOrder.basePrice +
-                    selectedOrder.shippingFee -
-                    selectedOrder.postDiscountPrice
+                      selectedOrder.shippingFee -
+                      selectedOrder.postDiscountPrice
                   )}
                   đ
                 </p>
@@ -374,8 +374,7 @@ export default function ManageOrder() {
                     justifyContent: "space-between",
                     borderTop: "1px solid #9fa0a0b0",
                     padding: "10px 0",
-                  }}
-                >
+                  }}>
                   <span>
                     <b>Thành tiền:</b>{" "}
                   </span>
@@ -385,7 +384,6 @@ export default function ManageOrder() {
             )}
           </DialogContent>
           <DialogActions>
-
             {selectedOrder &&
               (selectedOrder.status === "COD_PENDING" ||
                 selectedOrder.status === "ONLINE_PENDING") && (
@@ -400,8 +398,7 @@ export default function ManageOrder() {
           open={isConfirmOrderDialogOpen}
           onClose={handleCloseConfirmDialog}
           fullWidth
-          maxWidth="xs"
-        >
+          maxWidth="xs">
           <CustomDialogTitle>Xác nhận đơn hàng</CustomDialogTitle>
           <DialogContent>
             <span style={{ fontSize: "18px" }}>
