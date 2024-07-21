@@ -23,7 +23,7 @@ public class ProductResponseDTO {
     @JsonView({Views.Product.class, Views.ProductBuyerView.class, Views.ProductManagementView.class})
     private String name;
 
-    @JsonView(Views.Product.class)
+    @JsonView({Views.Product.class, Views.ProductBuyerView.class})
     private Double listedPrice;
 
     @JsonView({Views.Product.class, Views.ProductBuyerView.class, Views.ProductManagementView.class})

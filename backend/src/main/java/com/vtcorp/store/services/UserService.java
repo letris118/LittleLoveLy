@@ -10,6 +10,7 @@ import com.vtcorp.store.repositories.VoucherRepository;
 import com.vtcorp.store.utils.CodeGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,6 +32,12 @@ public class UserService {
     private final UserMapper userMapper;
     private final EmailSenderService emailSenderService;
     private final VoucherRepository voucherRepository;
+
+    @Value("${app.base.url}")
+    private String appBaseUrl;
+
+    @Value("${frontend.base.url}")
+    private String frontendBaseUrl;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
@@ -100,7 +107,7 @@ public class UserService {
     public String forgotPassword(MailDTO mailDTO) {
         User user = userRepository.findByMail(mailDTO.getMail()).orElseThrow(() -> new IllegalArgumentException("Mail not found"));
         String token = tokenService.generatePasswordResetToken(mailDTO.getMail());
-        String link = "http://localhost:3000/reset-password?token=" + token;
+        String link = frontendBaseUrl + "/reset-password?token=" + token;
         emailSenderService.sendForgotPasswordEmailAsync(mailDTO.getMail(), user.getName(), link);
         return "Check your email to recover password";
     }
@@ -145,7 +152,7 @@ public class UserService {
             throw new IllegalArgumentException("Mail already exists");
         }
         String token = tokenService.generateMailChangeToken(username, newMail);
-        String link = "http://localhost:8010/api/auth/confirm-change-mail?token=" + token;
+        String link = appBaseUrl + "/api/auth/confirm-change-mail?token=" + token;
         emailSenderService.sendChangeEmailAsync(newMail, user.getName(), link);
         return "Check your email to confirm mail change";
     }
@@ -158,7 +165,7 @@ public class UserService {
         user.setMail(newEmail);
         userRepository.save(user);
         emailSenderService.sendSuccessChangeEmailAsync(user.getMail(), user.getName());
-        return "http://localhost:3000/profile?msg=mail-changed";
+        return frontendBaseUrl + "/profile?msg=mail-changed";
     }
 
     public List<UserResponseDTO> getUsersByRole(String role) {

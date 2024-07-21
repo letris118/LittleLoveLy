@@ -11,6 +11,7 @@ import com.vtcorp.store.repositories.*;
 import com.vtcorp.store.utils.CodeGenerator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +32,9 @@ public class OrderService {
     private final VoucherRepository voucherRepository;
     private final EmailSenderService emailSenderService;
     private final OrderDetailRepository orderDetailRepository;
+
+    @Value("${frontend.base.url}")
+    private String frontendBaseUrl;
 
     @Autowired
     public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService, PaymentService paymentService, VoucherRepository voucherRepository, EmailSenderService emailSenderService, OrderDetailRepository orderDetailRepository) {
@@ -345,10 +349,10 @@ public class OrderService {
             handleStockChange(order);
             orderRepository.save(order);
             emailSenderService.sendOrderPlacedEmailAsync(order.getCusMail(), order.getOrderId());
-            return "http://localhost:3000/?status=payment-success";
+            return frontendBaseUrl + "/?status=payment-success";
         } else {
             handlePaymentFail(order);
-            return "http://localhost:3000/?status=payment-fail";
+            return frontendBaseUrl + "/?status=payment-fail";
         }
     }
 
