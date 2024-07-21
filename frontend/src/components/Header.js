@@ -78,8 +78,7 @@ export default function Header({ handleLogoutSuccess }) {
         <div className="search-bar" style={{ position: "relative" }}>
           <form
             onSubmit={handleSearchSubmit}
-            style={{ display: "flex", alignItems: "center" }}
-          >
+            style={{ display: "flex", alignItems: "center" }}>
             <div style={{ display: "flex", width: "70%" }}>
               <input
                 type="text"
@@ -103,15 +102,13 @@ export default function Header({ handleLogoutSuccess }) {
                 right: 0,
                 zIndex: 10,
                 width: 600,
-              }}
-            >
+              }}>
               <MenuList>
                 {searchResults.map((result) => (
                   <MenuItem
                     key={result.productId}
                     component={Link}
-                    to={`${routes.products}/${result.productId}/${result.name}`}
-                  >
+                    to={`${routes.products}/${result.productId}/${result.name}`}>
                     <ListItemAvatar>
                       {result.productImages.slice(0, 1).map((image) => (
                         <Avatar
@@ -134,8 +131,7 @@ export default function Header({ handleLogoutSuccess }) {
                 {totalPages > 1 && (
                   <MenuItem
                     component={Link}
-                    to={`${routes.searchProduct}?search_term=${searchTerm}`}
-                  >
+                    to={`${routes.searchProduct}?search_term=${searchTerm}`}>
                     <ListItemText
                       primary={
                         <>
@@ -150,13 +146,27 @@ export default function Header({ handleLogoutSuccess }) {
               </MenuList>
             </Paper>
           )}
+
           <div
             style={{
               display: "flex",
               justifyContent: "end",
               width: "50%",
-            }}
-          >
+            }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                paddingRight: "30px",
+                fontSize: "17px",
+                paddingTop: "5px",
+              }}>
+              <Link to={routes.cart}>
+                <i
+                  class="fa-solid fa-cart-shopping"
+                  style={{ color: "black" }}></i>
+              </Link>
+            </div>
             {localStorage.getItem("token") ? (
               <DropdownMenu
                 handleLogoutSuccess={handleLogoutSuccess}

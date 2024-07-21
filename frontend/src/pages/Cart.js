@@ -61,26 +61,42 @@ export default function Cart() {
     });
   }, []);
 
-  const handleQuantityChange = useCallback((index, value) => {
-    const userRole = localStorage.getItem("userRole");
-    const maxQuantity = userRole === "ROLE_CUSTOMER" ? 50 : 10;
+  const handleQuantityChange = useCallback(
+    async (index, value) => {
+      const userRole = localStorage.getItem("userRole");
+      const maxQuantity = userRole === "ROLE_CUSTOMER" ? 50 : 10;
+      const currentProduct = cartItems[index];
 
-    setCartItems((prevItems) => {
-      const updatedCartItems = [...prevItems];
-      if (value > 0 && value <= maxQuantity) {
-        updatedCartItems[index].quantity = value;
-        localStorage.setItem("cart", JSON.stringify(updatedCartItems));
-        if (userRole === "ROLE_CUSTOMER") {
-          updateCart(updatedCartItems[index].productId, "product", value).catch(
-            (error) => {
-              console.error("Error updating cart item:", error);
+      try {
+        const response = await instance.get(
+          `api/products/${currentProduct.productId}`
+        );
+        const availableStock = response.stock;
+
+        if (value <= maxQuantity && value <= availableStock) {
+          setCartItems((prevItems) => {
+            const updatedCartItems = [...prevItems];
+            updatedCartItems[index].quantity = value;
+            localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+            if (userRole === "ROLE_CUSTOMER") {
+              updateCart(
+                updatedCartItems[index].productId,
+                "product",
+                value
+              ).catch((error) => {
+                console.error("Error updating cart item:", error);
+              });
             }
-          );
+
+            return updatedCartItems;
+          });
         }
+      } catch (error) {
+        console.error("Error updating cart:", error);
       }
-      return updatedCartItems;
-    });
-  }, []);
+    },
+    [cartItems]
+  );
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {
