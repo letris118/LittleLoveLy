@@ -47,11 +47,18 @@ export default function Order() {
     [ordersList.length]
   );
 
+  const parseDate = (dateString) => {
+    const [datePart, timePart] = dateString.split(" ");
+    const [day, month, year] = datePart.split("-").map(Number);
+    const [hours, minutes, seconds] = timePart.split(":").map(Number);
+    return new Date(year, month - 1, day, hours, minutes, seconds);
+  };
+
   const fetchOrders = async (username) => {
     try {
       const response = await getOrdersByUsername(username);
       const sortedResponse = response.sort(
-        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+        (a, b) => parseDate(b.createdDate) - parseDate(a.createdDate)
       );
       if (sortedResponse) {
         setOrdersList(sortedResponse);
@@ -396,6 +403,7 @@ export default function Order() {
               <p>
                 <b>Mã đơn hàng:</b> {selectedOrder.orderId}
               </p>
+
               <p>
                 <b>Địa chỉ giao hàng: </b>
                 {selectedOrder.cusStreet +
@@ -474,6 +482,14 @@ export default function Order() {
                 </span>
                 {formatPrice(selectedOrder.postDiscountPrice)}đ
               </p>
+              <div
+                style={{
+                  fontSize: "15px",
+                  textAlign: "right",
+                  opacity: "0.7",
+                }}>
+                <i>{selectedOrder.createdDate}</i>
+              </div>
             </div>
           )}
         </DialogContent>
