@@ -99,6 +99,7 @@ export default function Checkout() {
     }
     fetchUserInfo();
   }, []);
+  
   const formik = useFormik({
     initialValues: {
       cusName: savedValues.cusName || userInfo.name || "",

@@ -208,8 +208,7 @@ export default function Order() {
             style={{
               backgroundColor: "white",
               borderRadius: "20px",
-            }}
-          >
+            }}>
             <div className="row-top">
               <h4>Đơn hàng</h4>
             </div>
@@ -217,6 +216,7 @@ export default function Order() {
               <div className="search-order">
                 <form onSubmit={formik.handleSubmit}>
                   <input
+                    className="input-search"
                     type="text"
                     placeholder="Nhập mã đơn hàng"
                     name="search"
@@ -226,8 +226,7 @@ export default function Order() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="search-btn"
-                  >
+                    className="btn-search">
                     Tìm
                   </button>
                 </form>
@@ -241,12 +240,10 @@ export default function Order() {
                           <div
                             className="order-product"
                             key={orderDetail.product.productId}
-                            style={{ cursor: "pointer" }}
-                          >
+                            style={{ cursor: "pointer" }}>
                             <div
                               className="order-product-img"
-                              style={{ cursor: "pointer" }}
-                            >
+                              style={{ cursor: "pointer" }}>
                               <img
                                 src={`${instance.defaults.baseURL}/images/products/${orderDetail.product.productImages[0].imagePath}`}
                                 alt={orderDetail.product.name}
@@ -257,22 +254,19 @@ export default function Order() {
                               style={{
                                 borderRight: "1px solid #9fa0a0b0",
                                 cursor: "pointer",
-                              }}
-                            >
+                              }}>
                               <div
                                 style={{
                                   fontWeight: "bold",
                                   fontSize: "17px",
                                   color: "black",
-                                }}
-                              >
+                                }}>
                                 <Link
                                   to={`${routes.products}/${orderDetail.product.productId}/${orderDetail.product.name}`}
                                   style={{
                                     textDecoration: "none",
                                     color: "black",
-                                  }}
-                                >
+                                  }}>
                                   {orderDetail.product.name}
                                 </Link>
                               </div>
@@ -283,8 +277,7 @@ export default function Order() {
                             </div>
                             <div
                               className="order-product-right"
-                              style={{ width: "45%" }}
-                            >
+                              style={{ width: "45%" }}>
                               <div
                                 style={{
                                   display: "flex",
@@ -292,8 +285,7 @@ export default function Order() {
                                   borderBottom: "1px solid #9fa0a0b0",
                                   marginTop: "10px",
                                   cursor: "pointer",
-                                }}
-                              >
+                                }}>
                                 <div>{order.orderDetails.length} sản phẩm</div>
                                 <div style={{ color: "black" }}>
                                   Thành tiền:{" "}
@@ -301,8 +293,7 @@ export default function Order() {
                                     style={{
                                       color: "#ff469e",
                                       fontWeight: "bold",
-                                    }}
-                                  >
+                                    }}>
                                     {formatPrice(order.postDiscountPrice)}đ
                                   </span>
                                 </div>
@@ -315,15 +306,13 @@ export default function Order() {
                                     fontSize: "15px",
                                     marginRight: "20px",
                                     color: "black",
-                                  }}
-                                >
+                                  }}>
                                   Tình trạng:&nbsp;
                                   <span
                                     style={{
                                       color: "#ff469e",
                                       fontWeight: "bold",
-                                    }}
-                                  >
+                                    }}>
                                     {getStatusNotification(order.status)}
                                   </span>
                                 </div>
@@ -343,8 +332,7 @@ export default function Order() {
                                         color: "white",
                                         fontWeight: "bold",
                                         marginRight: "10px",
-                                      }}
-                                    >
+                                      }}>
                                       Đã nhận hàng
                                     </button>
                                   ) : (
@@ -360,8 +348,7 @@ export default function Order() {
                                       backgroundColor: "#ff469e",
                                       color: "white",
                                       fontWeight: "bold",
-                                    }}
-                                  >
+                                    }}>
                                     Chi tiết
                                   </button>
                                 </div>
@@ -385,8 +372,7 @@ export default function Order() {
               style={{
                 textAlign: "center",
                 padding: "20px 0",
-              }}
-            >
+              }}>
               <CustomPagination
                 count={totalPages}
                 page={currentPage}
@@ -402,8 +388,7 @@ export default function Order() {
         open={!!selectedOrder}
         onClose={handleClose}
         fullWidth
-        maxWidth="sm"
-      >
+        maxWidth="sm">
         <CustomDialogTitle>Chi tiết đơn hàng</CustomDialogTitle>
         <DialogContent>
           {selectedOrder && (
@@ -438,8 +423,7 @@ export default function Order() {
                 {selectedOrder.orderDetails.map((orderDetail) => (
                   <div
                     style={{ display: "flex", margin: "20px 0" }}
-                    key={orderDetail.product.productId}
-                  >
+                    key={orderDetail.product.productId}>
                     <div className="popup-detail-left">
                       <img
                         src={`${instance.defaults.baseURL}/images/products/${orderDetail.product.productImages[0].imagePath}`}
@@ -450,8 +434,7 @@ export default function Order() {
                     <div className="popup-detail-right">
                       <Link
                         to={`${routes.products}/${orderDetail.product.productId}/${orderDetail.product.name}`}
-                        style={{ textDecoration: "none" }}
-                      >
+                        style={{ textDecoration: "none" }}>
                         <div style={{ fontWeight: "bold", color: "black" }}>
                           {orderDetail.product.name}
                         </div>
@@ -485,8 +468,7 @@ export default function Order() {
                   justifyContent: "space-between",
                   borderTop: "1px solid #9fa0a0b0",
                   padding: "10px 0",
-                }}
-              >
+                }}>
                 <span>
                   <b>Thành tiền:</b>{" "}
                 </span>

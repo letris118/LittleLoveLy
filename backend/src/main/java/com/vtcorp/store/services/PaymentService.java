@@ -42,7 +42,7 @@ public class PaymentService {
     @Value("${vnpay.timeOutInMinutes}")
     private int timeout;
 
-    public PaymentResponseDTO createPayment(String orderId, double price, String ipAddress, Date CreatedDate) {
+    public PaymentResponseDTO createPayment(String orderId, double price, String ipAddress) {
         long amount = Math.round(price * 100.0);
 
         Map<String, String> vnp_Params = new HashMap<>();
@@ -59,11 +59,10 @@ public class PaymentService {
         vnp_Params.put("vnp_ReturnUrl", vnp_ReturnUrl);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        String vnp_CreateDate = formatter.format(CreatedDate);
+        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Asia/Saigon"));
+        formatter.setTimeZone(TimeZone.getTimeZone("Asia/Saigon"));
+        String vnp_CreateDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
-        cld.setTime(CreatedDate);
         cld.add(Calendar.MINUTE, timeout);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);

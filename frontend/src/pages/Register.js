@@ -16,7 +16,12 @@ const checkChema = Yup.object({
     .required("Vui lòng nhập email"),
   phone: Yup.string().required("Vui lòng điền số điện thoại"),
   name: Yup.string().required("Vui lòng điền họ và tên"),
-  password: Yup.string().required("Vui lòng điền mật khẩu"),
+  password: Yup.string()
+    .required("Vui lòng điền mật khẩu")
+    .matches(
+      /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
+      "Mật khẩu phải chứa ít nhất 8 ký tự và tối đa 16 ký tự, bao gồm ít nhất một chữ số, một chữ cái viết thường, một chữ cái viết hoa, và một ký tự đặc biệt, và không chứa khoảng trắng"
+    ),
   confirmPassword: Yup.string()
     .required("Vui lòng điền đầy đủ mật khẩu")
     .oneOf([Yup.ref("password"), null], "Mật khẩu không trùng nhau"),

@@ -25,6 +25,7 @@ import {
   changeMailAPI,
 } from "../services/auth/UsersService";
 import { toast } from "react-toastify";
+import * as Yup from "yup";
 export default function ProfileCus() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -175,6 +176,17 @@ export default function ProfileCus() {
     const [localDistricts, setLocalDistricts] = useState(districts);
     const [localWards, setLocalWards] = useState(wards);
 
+    const validationSchema = Yup.object({
+      name: Yup.string().required("Vui lòng điền đầy đủ thông tin"),
+      phone: Yup.string()
+        .required("Vui lòng điền đầy đủ thông tin")
+        .matches(/^\d+$/, "Số điện thoại không hợp lệ"),
+      cityId: Yup.string().required("Vui lòng điền đầy đủ thông tin"),
+      districtId: Yup.string().required("Vui lòng điền đầy đủ thông tin"),
+      wardId: Yup.string().required("Vui lòng điền đầy đủ thông tin"),
+      street: Yup.string().required("Vui lòng điền đầy đủ thông tin"),
+    });
+
     const formik = useFormik({
       initialValues: {
         name: cusInfo.name || "",
@@ -185,6 +197,7 @@ export default function ProfileCus() {
         street: cusInfo.street || "",
       },
       enableReinitialize: true,
+      validationSchema: validationSchema,
       onSubmit: async (values) => {
         try {
           const username = localStorage.getItem("username");
@@ -257,6 +270,8 @@ export default function ProfileCus() {
             fullWidth
             margin="normal"
             sx={{ marginBottom: "20px" }}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
           />
         </div>
         <div>
@@ -267,6 +282,8 @@ export default function ProfileCus() {
             onChange={formik.handleChange}
             fullWidth
             margin="normal"
+            error={formik.touched.phone && Boolean(formik.errors.phone)}
+            helperText={formik.touched.phone && formik.errors.phone}
           />
         </div>
         <div>
@@ -278,7 +295,8 @@ export default function ProfileCus() {
             fullWidth
             SelectProps={{ native: true }}
             margin="normal"
-          >
+            error={formik.touched.cityId && Boolean(formik.errors.cityId)}
+            helperText={formik.touched.cityId && formik.errors.cityId}>
             <option value="">Chọn Tỉnh / Thành Phố</option>
             {cities.map((item) => (
               <option key={item.CityID} value={item.CityID}>
@@ -296,7 +314,10 @@ export default function ProfileCus() {
             fullWidth
             SelectProps={{ native: true }}
             margin="normal"
-          >
+            error={
+              formik.touched.districtId && Boolean(formik.errors.districtId)
+            }
+            helperText={formik.touched.districtId && formik.errors.districtId}>
             <option value="">Chọn Quận / Huyện</option>
             {localDistricts.map((item) => (
               <option key={item.DistrictID} value={item.DistrictID}>
@@ -314,7 +335,8 @@ export default function ProfileCus() {
             fullWidth
             SelectProps={{ native: true }}
             margin="normal"
-          >
+            error={formik.touched.wardId && Boolean(formik.errors.wardId)}
+            helperText={formik.touched.wardId && formik.errors.wardId}>
             <option value="">Chọn Phường / Xã</option>
             {localWards.map((item) => (
               <option key={item.WardCode} value={item.WardCode}>
@@ -331,6 +353,8 @@ export default function ProfileCus() {
             onChange={formik.handleChange}
             fullWidth
             margin="normal"
+            error={formik.touched.street && Boolean(formik.errors.street)}
+            helperText={formik.touched.street && formik.errors.street}
           />
         </div>
         <DialogActions>
@@ -342,6 +366,19 @@ export default function ProfileCus() {
   };
 
   const PasswordForm = ({ handleClose }) => {
+    const validationSchema = Yup.object({
+      currentPassword: Yup.string().required("Vui lòng điền mật khẩu hiện tại"),
+      newPassword: Yup.string()
+        .required("Vui lòng điền mật khẩu mới")
+        .matches(
+          /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
+          "Mật khẩu phải chứa ít nhất 8 ký tự và tối đa 16 ký tự, bao gồm ít nhất một chữ số, một chữ cái viết thường, một chữ cái viết hoa, và một ký tự đặc biệt, và không chứa khoảng trắng"
+        ),
+      confirmNewPassword: Yup.string()
+        .oneOf([Yup.ref("newPassword"), null], "Xác nhận mật này không đúng")
+        .required("Vui lòng xác nhận mật khẩu mong muốn đổi"),
+    });
+
     const formik = useFormik({
       initialValues: {
         currentPassword: "",
@@ -349,6 +386,7 @@ export default function ProfileCus() {
         confirmNewPassword: "",
       },
       enableReinitialize: true,
+      validationSchema: validationSchema,
       onSubmit: async (values) => {
         try {
           if (
@@ -380,6 +418,13 @@ export default function ProfileCus() {
             onChange={formik.handleChange}
             fullWidth
             margin="normal"
+            error={
+              formik.touched.currentPassword &&
+              Boolean(formik.errors.currentPassword)
+            }
+            helperText={
+              formik.touched.currentPassword && formik.errors.currentPassword
+            }
           />
         </div>
         <div>
@@ -389,6 +434,10 @@ export default function ProfileCus() {
             onChange={formik.handleChange}
             fullWidth
             margin="normal"
+            error={
+              formik.touched.newPassword && Boolean(formik.errors.newPassword)
+            }
+            helperText={formik.touched.newPassword && formik.errors.newPassword}
           />
         </div>
         <div>
@@ -399,6 +448,14 @@ export default function ProfileCus() {
             fullWidth
             SelectProps={{ native: true }}
             margin="normal"
+            error={
+              formik.touched.confirmNewPassword &&
+              Boolean(formik.errors.confirmNewPassword)
+            }
+            helperText={
+              formik.touched.confirmNewPassword &&
+              formik.errors.confirmNewPassword
+            }
           />
         </div>
         <DialogActions>
@@ -410,11 +467,18 @@ export default function ProfileCus() {
   };
 
   const MailForm = ({ handleClose }) => {
+    const validationSchema = Yup.object({
+      newMail: Yup.string()
+        .email("Email không hợp lệ")
+        .required("Vui lòng điền email"),
+    });
+
     const formik = useFormik({
       initialValues: {
         newMail: "",
       },
       enableReinitialize: true,
+      validationSchema: validationSchema,
       onSubmit: async (values) => {
         try {
           if (await changeMailAPI(values.newMail)) {
@@ -436,11 +500,13 @@ export default function ProfileCus() {
       <form onSubmit={formik.handleSubmit}>
         <div>
           <CustomTextField
-            label="Nhập Mail"
+            label="Nhập email bạn muốn thay đổi"
             name="newMail"
             onChange={formik.handleChange}
             fullWidth
             margin="normal"
+            error={formik.touched.newMail && Boolean(formik.errors.newMail)}
+            helperText={formik.touched.newMail && formik.errors.newMail}
           />
         </div>
         <DialogActions>
@@ -538,8 +604,7 @@ export default function ProfileCus() {
       </CustomDialog>
       <CustomDialog
         open={openChangePasswordDialog}
-        onClose={handleCloseChangePassword}
-      >
+        onClose={handleCloseChangePassword}>
         <CustomDialogTitle>Đổi mật khẩu</CustomDialogTitle>
         <DialogContent>
           <PasswordForm handleClose={handleCloseChangePassword} />
@@ -547,8 +612,7 @@ export default function ProfileCus() {
       </CustomDialog>
       <CustomDialog
         open={openChangeGmailDialog}
-        onClose={handleCloseChangeGmail}
-      >
+        onClose={handleCloseChangeGmail}>
         <CustomDialogTitle>Đổi gmail</CustomDialogTitle>
         <DialogContent>
           <MailForm handleClose={handleCloseChangeGmail} />

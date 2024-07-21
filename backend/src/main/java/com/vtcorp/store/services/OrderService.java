@@ -322,7 +322,7 @@ public class OrderService {
         if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.VN_PAY)) {
             order = orderRepository.save(order);
             double finalPrice = evaluateOrder.getPostDiscountPrice();
-            return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress, order.getCreatedDate());
+            return paymentService.createPayment(order.getOrderId(), finalPrice, ipAddress);
         } else if (orderRequestDTO.getPaymentMethod().equals(PaymentMethod.COD)) {
             order.setStatus(CODPaymentStatus.COD_PENDING);
             handleStockChange(order);
