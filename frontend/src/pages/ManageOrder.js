@@ -49,8 +49,9 @@ export default function ManageOrder() {
       try {
         let response = await ordersAll();
         if (response) {
-          setOrderList(response);
-          setFilteredOrders(applyStatusFilter(response, filterStatus));
+          const sortedOrders = response.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+          setOrderList(sortedOrders);
+          setFilteredOrders(applyStatusFilter(sortedOrders, filterStatus));
         } else {
           setOrderList([]);
           setFilteredOrders([]);
@@ -115,7 +116,7 @@ export default function ManageOrder() {
     marginBottom: "20px",
     marginRight: "5px",
     borderRadius: "10px",
-    width: "150px",
+    width: "200px",
   });
 
   const handleOrderClick = async (order) => {
@@ -358,8 +359,8 @@ export default function ManageOrder() {
                   <span>Giảm giá:</span> -{" "}
                   {formatPrice(
                     selectedOrder.basePrice +
-                      selectedOrder.shippingFee -
-                      selectedOrder.postDiscountPrice
+                    selectedOrder.shippingFee -
+                    selectedOrder.postDiscountPrice
                   )}
                   đ
                 </p>
@@ -384,9 +385,14 @@ export default function ManageOrder() {
             )}
           </DialogContent>
           <DialogActions>
-            <CustomButton onClick={() => handleConfirmOrder(selectedOrder)}>
-              Xác nhận đơn
-            </CustomButton>
+
+            {selectedOrder &&
+              (selectedOrder.status === "COD_PENDING" ||
+                selectedOrder.status === "ONLINE_PENDING") && (
+                <CustomButton onClick={() => handleConfirmOrder(selectedOrder)}>
+                  Xác nhận đơn hàng
+                </CustomButton>
+              )}
             <CustomButton onClick={handleClose}>Đóng</CustomButton>
           </DialogActions>
         </CustomDialog>
