@@ -116,7 +116,7 @@ export default function ManageOrder() {
     marginBottom: "20px",
     marginRight: "5px",
     borderRadius: "10px",
-    width: "150px",
+    width: "200px",
   });
 
   const handleOrderClick = async (order) => {
@@ -359,8 +359,8 @@ export default function ManageOrder() {
                   <span>Giảm giá:</span> -{" "}
                   {formatPrice(
                     selectedOrder.basePrice +
-                      selectedOrder.shippingFee -
-                      selectedOrder.postDiscountPrice
+                    selectedOrder.shippingFee -
+                    selectedOrder.postDiscountPrice
                   )}
                   đ
                 </p>
@@ -385,15 +385,16 @@ export default function ManageOrder() {
             )}
           </DialogContent>
           <DialogActions>
-          <CustomButton onClick={handleClose}>Đóng</CustomButton>
-          {selectedOrder &&
-            (selectedOrder.status === "COD_PENDING" ||
-              selectedOrder.status === "ONLINE_PENDING") && (
-              <CustomButton onClick={() => handleConfirmOrder(selectedOrder)}>
-                Xác nhận đơn hàng
-              </CustomButton>
-            )}
-        </DialogActions>
+
+            {selectedOrder &&
+              (selectedOrder.status === "COD_PENDING" ||
+                selectedOrder.status === "ONLINE_PENDING") && (
+                <CustomButton onClick={() => handleConfirmOrder(selectedOrder)}>
+                  Xác nhận đơn hàng
+                </CustomButton>
+              )}
+            <CustomButton onClick={handleClose}>Đóng</CustomButton>
+          </DialogActions>
         </CustomDialog>
         <CustomDialog
           open={isConfirmOrderDialogOpen}
