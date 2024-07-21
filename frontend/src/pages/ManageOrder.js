@@ -384,11 +384,15 @@ export default function ManageOrder() {
             )}
           </DialogContent>
           <DialogActions>
-            <CustomButton onClick={() => handleConfirmOrder(selectedOrder)}>
-              Xác nhận đơn
-            </CustomButton>
-            <CustomButton onClick={handleClose}>Đóng</CustomButton>
-          </DialogActions>
+          <CustomButton onClick={handleClose}>Đóng</CustomButton>
+          {selectedOrder &&
+            (selectedOrder.status === "COD_PENDING" ||
+              selectedOrder.status === "ONLINE_PENDING") && (
+              <CustomButton onClick={() => handleConfirmOrder(selectedOrder)}>
+                Xác nhận đơn hàng
+              </CustomButton>
+            )}
+        </DialogActions>
         </CustomDialog>
         <CustomDialog
           open={isConfirmOrderDialogOpen}
