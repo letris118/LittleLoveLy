@@ -103,6 +103,19 @@ export default function Cart() {
       toast.error("Mời bạn mua 1 sản phẩm để nhận thưởng !", {
         autoClose: 2000,
       });
+    } else if (
+      cartItems.reduce(
+        (total, item) => total + item.sellingPrice * item.quantity,
+        0
+      ) > 20000000
+    ) {
+      toast.info(
+        "Đơn hàng của bạn đang vượt quá số tiền cho phép trong chính sách của chúng tôi (20,000,000 VNĐ). Vui lòng thử lại sau.",
+        {
+          autoClose: 3000,
+        }
+      );
+      return;
     } else {
       navigate(routes.checkout);
     }

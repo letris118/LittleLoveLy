@@ -18,6 +18,9 @@ public class EmailSenderService {
     @Value("${spring.mail.username}")
     private String fromEmail;
 
+    @Value("${frontend.base.url}")
+    private String frontendBaseUrl;
+
     public EmailSenderService(JavaMailSender mailSender, TemplateEngine templateEngine) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
@@ -48,7 +51,7 @@ public class EmailSenderService {
 
             Context context = new Context();
             context.setVariable("name", userName);
-            context.setVariable("loginPageLink", "http://localhost:3000/login");
+            context.setVariable("loginPageLink", frontendBaseUrl + "/login");
             String htmlContent = templateEngine.process("welcomeMail.html", context);
 
             helper.setFrom(fromEmail, "LittleLoveLy");
@@ -156,7 +159,7 @@ public class EmailSenderService {
 
             Context context = new Context();
             context.setVariable("orderId", orderId);
-            context.setVariable("orderPageLink", "http://localhost:3000/order?id=" + orderId);
+            context.setVariable("orderPageLink", frontendBaseUrl + "/order?id=" + orderId);
             String htmlContent = templateEngine.process("orderSuccess.html", context);
 
             helper.setFrom(fromEmail, "LittleLoveLy");

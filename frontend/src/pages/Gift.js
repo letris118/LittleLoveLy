@@ -167,13 +167,20 @@ export default function Gift() {
 
     return (
       <>
-        Bạn có chắc chắn muốn đổi <b>"{selectedGift?.name}"</b> không?
+        <i style={{ fontSize: "12px" }}>
+          <b style={{ color: "red" }}>*Lưu ý:</b>
+          <span>
+            {" "}
+            Bạn <b>không thể hoàn lại điểm</b> sau khi đổi quà
+          </span>
+        </i>{" "}
+        <br />
+        Bạn có chắc chắn muốn đổi <b>"{selectedGift?.name}"</b> không? <br />
         <DialogActions>
           <CustomButton
             onClick={handleConfirmExchange}
             color="primary"
-            disabled={isProcessing}
-          >
+            disabled={isProcessing}>
             Đồng ý
           </CustomButton>
           <CustomButton onClick={handleCloseDialog}>Hủy</CustomButton>
@@ -203,8 +210,7 @@ export default function Gift() {
             style={{
               backgroundColor: "white",
               borderRadius: "20px",
-            }}
-          >
+            }}>
             <div className="row-top">
               <h4>Tất cả phần quà</h4>
             </div>
@@ -212,8 +218,7 @@ export default function Gift() {
               className="content-gift-row"
               style={{
                 minHeight: "100vh",
-              }}
-            >
+              }}>
               <GiftPresentation
                 giftstList={currentItems}
                 onExchange={handleExchange}
@@ -224,8 +229,7 @@ export default function Gift() {
               style={{
                 textAlign: "center",
                 padding: "20px 0",
-              }}
-            >
+              }}>
               <CustomPagination
                 count={totalPages}
                 page={currentPage}

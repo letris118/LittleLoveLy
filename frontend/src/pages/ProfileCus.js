@@ -375,7 +375,7 @@ export default function ProfileCus() {
           "Mật khẩu phải chứa ít nhất 8 ký tự và tối đa 16 ký tự, bao gồm ít nhất một chữ số, một chữ cái viết thường, một chữ cái viết hoa, và một ký tự đặc biệt, và không chứa khoảng trắng"
         ),
       confirmNewPassword: Yup.string()
-        .oneOf([Yup.ref("newPassword"), null], "Xác nhận mật này không đúng")
+        .oneOf([Yup.ref("newPassword"), null], "Xác nhận mật khẩu không đúng")
         .required("Vui lòng xác nhận mật khẩu mong muốn đổi"),
     });
 
@@ -414,6 +414,7 @@ export default function ProfileCus() {
         <div>
           <CustomTextField
             label="Mật khẩu hiện tại *"
+            type="password"
             name="currentPassword"
             onChange={formik.handleChange}
             fullWidth
@@ -430,6 +431,7 @@ export default function ProfileCus() {
         <div>
           <CustomTextField
             label="Mật khẩu mới *"
+            type="password"
             name="newPassword"
             onChange={formik.handleChange}
             fullWidth
@@ -443,6 +445,7 @@ export default function ProfileCus() {
         <div>
           <CustomTextField
             label="Xác nhận mật khẩu mới *"
+            type="password"
             name="confirmNewPassword"
             onChange={formik.handleChange}
             fullWidth

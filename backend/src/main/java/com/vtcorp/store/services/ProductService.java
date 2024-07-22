@@ -10,7 +10,7 @@ import com.vtcorp.store.entities.*;
 import com.vtcorp.store.mappers.ProductMapper;
 import com.vtcorp.store.mappers.ProductReviewMapper;
 import com.vtcorp.store.repositories.*;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

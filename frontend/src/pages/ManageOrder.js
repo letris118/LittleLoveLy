@@ -31,7 +31,7 @@ export default function ManageOrder() {
   const [isConfirmOrderDialogOpen, setIsConfirmOrderDialogOpen] =
     useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [filterStatus, setFilterStatus] = useState("");
+  const [filterStatus, setFilterStatus] = useState("PENDING");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,7 +57,7 @@ export default function ManageOrder() {
         let response = await ordersAll();
         if (response) {
           const sortedOrders = response.sort(
-            (a, b) => parseDate(b.createdDate) - parseDate(a.createdDate)
+            (a, b) => parseDate(a.createdDate) - parseDate(b.createdDate)
           );
           setOrderList(sortedOrders);
           setFilteredOrders(applyStatusFilter(sortedOrders, filterStatus));
@@ -183,7 +183,7 @@ export default function ManageOrder() {
     if (status.includes("COD")) {
       return "Thanh toán khi nhận hàng";
     } else if (status.includes("ONLINE")) {
-      return "Thanh toán bằng VnPay";
+      return "Thanh toán bằng VNPay";
     }
   };
 
@@ -342,6 +342,31 @@ export default function ManageOrder() {
                         </Link>
                         <div>x {orderDetail.quantity}</div>
                         <div>{formatPrice(orderDetail.price)}đ</div>
+                      </div>
+                    </div>
+                  ))}
+                  {selectedOrder.giftIncludings.map((giftIncludings) => (
+                    <div
+                      style={{ display: "flex", margin: "20px 0" }}
+                      key={giftIncludings.gift.giftId}>
+                      <div className="popup-detail-left">
+                        <img
+                          src={`${instance.defaults.baseURL}/images/gifts/${giftIncludings.gift.imagePath}`}
+                          alt={giftIncludings.gift.name}
+                          style={{ width: "100px", height: "100px" }}
+                        />
+                      </div>
+                      <div className="popup-detail-right">
+                        <div style={{ fontWeight: "bold", color: "black" }}>
+                          {giftIncludings.gift.name} - <i>[Quà tặng]</i>
+                        </div>
+                        <div>x {giftIncludings.quantity}</div>
+                        <div>
+                          {giftIncludings.point}{" "}
+                          <i
+                            className="fa-solid fa-coins"
+                            style={{ color: "rgb(201, 201, 7)" }}></i>
+                        </div>
                       </div>
                     </div>
                   ))}
