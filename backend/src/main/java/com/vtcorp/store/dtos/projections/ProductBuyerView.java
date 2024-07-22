@@ -7,8 +7,9 @@ import java.util.List;
 
 public interface ProductBuyerView {
     long getProductId();
-    String getName();    
+    String getName();
     Integer getNoSold();
+    Double getListedPrice();
     Double getSellingPrice();
     List<ProductReview> getProductReviews();
     List<ProductImage> getProductImages();
