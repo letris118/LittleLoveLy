@@ -58,6 +58,7 @@ const checkoutSchema = Yup.object({
 
 export default function Checkout() {
   const [cartItems, setCartItems] = useState([]);
+  const [giftItems, setGiftItems] = useState([]);
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -152,6 +153,7 @@ export default function Checkout() {
     const storedCartItems = JSON.parse(localStorage.getItem("cart")) || [];
     const storedGifts = JSON.parse(localStorage.getItem("gifts")) || [];
     setCartItems(storedCartItems);
+    setGiftItems(storedGifts);
     const submitCartItems = storedCartItems.map((item) => ({
       id: item.productId,
       itemType: "product",
@@ -451,6 +453,37 @@ export default function Checkout() {
                             textAlign: "center",
                           }}>
                           {formatPrice(item.sellingPrice * item.quantity)}đ
+                        </div>
+                      </div>
+                    ))}
+                    {giftItems.map((item) => (
+                      <div
+                        className="content-checkout-product-item"
+                        key={item.giftId}>
+                        <div
+                          style={{
+                            width: "50%",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            fontWeight: "bold",
+                            backgroundColor: "rgba(255, 197, 226, 0.538)",
+                            borderRadius: "10px",
+                            paddingTop: "10px",
+                            paddingLeft: "5px",
+                          }}>
+                          {item.name}
+                        </div>
+                        <div
+                          style={{
+                            width: "20%",
+                            paddingTop: "10px",
+                            flexGrow: 1,
+                            textAlign: "center",
+                          }}>
+                          <b>
+                            <i>-- Quà tặng --</i>
+                          </b>
                         </div>
                       </div>
                     ))}
