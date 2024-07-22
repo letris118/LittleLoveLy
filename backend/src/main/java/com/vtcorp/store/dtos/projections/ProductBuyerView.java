@@ -9,7 +9,6 @@ public interface ProductBuyerView {
     long getProductId();
     String getName();
     Integer getNoSold();
-    Double getListedPrice();
     Double getSellingPrice();
     Double getListedPrice();
     List<ProductReview> getProductReviews();

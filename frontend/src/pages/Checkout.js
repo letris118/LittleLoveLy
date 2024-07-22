@@ -23,6 +23,7 @@ import {
   getUserInfo,
   previewOrder,
 } from "../services/auth/UsersService";
+import { API_BASE_URL } from "../config";
 
 Yup.addMethod(Yup.object, "validatePhoneAndAddress", function (message) {
   return this.test("validatePhoneAndAddress", message, async function (value) {
@@ -36,7 +37,11 @@ Yup.addMethod(Yup.object, "validatePhoneAndAddress", function (message) {
           message: "Số điện thoại không hợp lệ",
         });
       }
-      if (response.code_message && response.code_message === "ERR_OVERLOAD") {
+      if (
+        response.code_message &&
+        (response.code_message === "ERR_OVERLOAD" ||
+          response.code_message === "RECEIVE_WARD_IS_DISABLED")
+      ) {
         return createError({
           path: "cusWardCode",
           message: "Chưa hỗ trợ giao hàng ở quận/huyện này",
@@ -201,13 +206,13 @@ export default function Checkout() {
     submitCartItems.push(...submitGiftItems);
     setSubmitCart(submitCartItems);
 
-    fetch("http://localhost:8010/api/orders/cities")
+    fetch(`${API_BASE_URL}/api/orders/cities`)
       .then((response) => response.json())
       .then((data) => setCities(data.data));
 
     const fetchDistricts = (province) => {
       if (province) {
-        fetch(`http://localhost:8010/api/orders/districts/${province}`)
+        fetch(`${API_BASE_URL}/api/orders/districts/${province}`)
           .then((response) => response.json())
           .then((data) => setDistricts(data.data));
         setWards([]);
@@ -218,7 +223,7 @@ export default function Checkout() {
 
     const fetchWards = (district) => {
       if (district) {
-        fetch(`http://localhost:8010/api/orders/wards/${district}`)
+        fetch(`${API_BASE_URL}/api/orders/wards/${district}`)
           .then((response) => response.json())
           .then((data) => setWards(data.data));
       } else {
@@ -372,7 +377,8 @@ export default function Checkout() {
                         id="paymentMethod"
                         name="paymentMethod"
                         value={formik.values.paymentMethod}
-                        onChange={formik.handleChange}>
+                        onChange={formik.handleChange}
+                      >
                         <option value="">Chọn phương thức thanh toán</option>
                         <option value="VN_PAY">VNPay</option>
                         <option value="COD">Thanh toán khi nhận hàng</option>
@@ -391,7 +397,8 @@ export default function Checkout() {
                         id="city"
                         name="cusCityCode"
                         value={formik.values.cusCityCode}
-                        onChange={handleCityChange}>
+                        onChange={handleCityChange}
+                      >
                         <option value="">Chọn Tỉnh / Thành Phố</option>
                         {cities?.map((item) => (
                           <option key={item.CityID} value={item.CityID}>
@@ -411,7 +418,8 @@ export default function Checkout() {
                         id="district"
                         name="cusDistrictId"
                         value={formik.values.cusDistrictId}
-                        onChange={handleDistrictChange}>
+                        onChange={handleDistrictChange}
+                      >
                         <option value="">Chọn Quận / Huyện</option>
                         {districts?.map((item) => (
                           <option key={item.DistrictID} value={item.DistrictID}>
@@ -431,7 +439,8 @@ export default function Checkout() {
                         id="ward"
                         name="cusWardCode"
                         value={formik.values.cusWardCode}
-                        onChange={formik.handleChange}>
+                        onChange={formik.handleChange}
+                      >
                         <option value="">Chọn Phường / Xã</option>
                         {wards?.map((item) => (
                           <option key={item.WardCode} value={item.WardCode}>
@@ -464,7 +473,8 @@ export default function Checkout() {
                     {cartItems.map((item) => (
                       <div
                         className="content-checkout-product-item"
-                        key={item.productId}>
+                        key={item.productId}
+                      >
                         <div
                           style={{
                             width: "50%",
@@ -476,7 +486,8 @@ export default function Checkout() {
                             borderRadius: "10px",
                             paddingTop: "10px",
                             paddingLeft: "5px",
-                          }}>
+                          }}
+                        >
                           {item.name}
                         </div>
                         <div
@@ -484,7 +495,8 @@ export default function Checkout() {
                             width: "20%",
                             paddingTop: "10px",
                             textAlign: "center",
-                          }}>
+                          }}
+                        >
                           {formatPrice(item.sellingPrice)}đ
                         </div>
                         <span style={{ paddingTop: "10px" }}>x</span>
@@ -493,7 +505,8 @@ export default function Checkout() {
                             width: "7%",
                             paddingTop: "10px",
                             textAlign: "center",
-                          }}>
+                          }}
+                        >
                           {item.quantity}
                         </div>{" "}
                         <span style={{ paddingTop: "10px" }}> = </span>
@@ -502,7 +515,8 @@ export default function Checkout() {
                             width: "20%",
                             paddingTop: "10px",
                             textAlign: "center",
-                          }}>
+                          }}
+                        >
                           {formatPrice(item.sellingPrice * item.quantity)}đ
                         </div>
                       </div>
@@ -510,7 +524,8 @@ export default function Checkout() {
                     {giftItems.map((item) => (
                       <div
                         className="content-checkout-product-item"
-                        key={item.giftId}>
+                        key={item.giftId}
+                      >
                         <div
                           style={{
                             width: "50%",
@@ -522,7 +537,8 @@ export default function Checkout() {
                             borderRadius: "10px",
                             paddingTop: "10px",
                             paddingLeft: "5px",
-                          }}>
+                          }}
+                        >
                           {item.name}
                         </div>
                         <div
@@ -531,7 +547,8 @@ export default function Checkout() {
                             paddingTop: "10px",
                             flexGrow: 1,
                             textAlign: "center",
-                          }}>
+                          }}
+                        >
                           <b>
                             <i>-- Quà tặng --</i>
                           </b>
@@ -548,7 +565,8 @@ export default function Checkout() {
                           alignItems: "center",
                           height: "35px",
                           width: "100%",
-                        }}>
+                        }}
+                      >
                         <b>Tổng tiền hàng:</b>
                         <span>{formatPrice(evaluateResult.basePrice)}đ</span>
                       </div>
@@ -559,7 +577,8 @@ export default function Checkout() {
                           alignItems: "center",
                           height: "35px",
                           width: "100%",
-                        }}>
+                        }}
+                      >
                         <b>Tổng phí giao hàng:</b>
                         <span>{formatPrice(evaluateResult.shippingFee)}đ</span>
                       </div>
@@ -571,7 +590,8 @@ export default function Checkout() {
                           height: "35px",
                           width: "100%",
                           borderBottom: "1px solid #7c7c7caa",
-                        }}>
+                        }}
+                      >
                         <b>Giảm giá:</b>
                         <span>
                           -
@@ -590,7 +610,8 @@ export default function Checkout() {
                           alignItems: "center",
                           height: "35px",
                           width: "100%",
-                        }}>
+                        }}
+                      >
                         <b>Tổng thanh toán:</b>
                         <span>
                           {formatPrice(evaluateResult.postDiscountPrice)}đ
@@ -612,7 +633,8 @@ export default function Checkout() {
                             fontSize: "17px",
                             fontWeight: "550",
                             marginRight: "12px",
-                          }}>
+                          }}
+                        >
                           Voucher
                         </button>
                       ) : (
@@ -631,7 +653,8 @@ export default function Checkout() {
                           fontSize: "17px",
                           fontWeight: "550",
                           float: "right",
-                        }}>
+                        }}
+                      >
                         Mua ngay
                       </button>
                     </div>
@@ -645,7 +668,8 @@ export default function Checkout() {
       <Footer />
       <CustomDialog
         open={openVoucherDialog}
-        onClose={() => handleCloseVoucherDialog(formik.values.voucherId)}>
+        onClose={() => handleCloseVoucherDialog(formik.values.voucherId)}
+      >
         <CustomDialogTitle>Mã giảm giá</CustomDialogTitle>
         <DialogContent>
           <VoucherPresentation
@@ -674,7 +698,8 @@ export default function Checkout() {
             onClick={handleConfirmPurchase}
             variant="contained"
             color="primary"
-            disabled={isSubmitting}>
+            disabled={isSubmitting}
+          >
             Xác nhận
           </CustomButton>
         </DialogContent>
