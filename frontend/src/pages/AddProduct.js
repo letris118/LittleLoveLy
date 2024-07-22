@@ -131,8 +131,10 @@ export default function AddProduct() {
     const fetchBrandsAndCategories = async () => {
       try {
         const brandResponse = await brands();
+        const sortedBrands = brandResponse.sort((a, b) => a.name.localeCompare(b.name));
         const categoryResponse = await categories();
-        setAllBrands(brandResponse);
+        
+        setAllBrands(sortedBrands);
         setAllCategories(categoryResponse);
       } catch (error) {
         console.error("Đã xảy ra lỗi:", error, ", vui lòng thử lại sau!");
