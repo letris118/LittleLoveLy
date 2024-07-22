@@ -31,7 +31,7 @@ export default function ManageOrder() {
   const [isConfirmOrderDialogOpen, setIsConfirmOrderDialogOpen] =
     useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [filterStatus, setFilterStatus] = useState("");
+  const [filterStatus, setFilterStatus] = useState("PENDING");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,7 +57,7 @@ export default function ManageOrder() {
         let response = await ordersAll();
         if (response) {
           const sortedOrders = response.sort(
-            (a, b) => parseDate(b.createdDate) - parseDate(a.createdDate)
+            (a, b) => parseDate(a.createdDate) - parseDate(b.createdDate)
           );
           setOrderList(sortedOrders);
           setFilteredOrders(applyStatusFilter(sortedOrders, filterStatus));
@@ -183,7 +183,7 @@ export default function ManageOrder() {
     if (status.includes("COD")) {
       return "Thanh toán khi nhận hàng";
     } else if (status.includes("ONLINE")) {
-      return "Thanh toán bằng VnPay";
+      return "Thanh toán bằng VNPay";
     }
   };
 

@@ -9,7 +9,7 @@ import com.vtcorp.store.mappers.VoucherMapper;
 import com.vtcorp.store.repositories.ProductRepository;
 import com.vtcorp.store.repositories.UserRepository;
 import com.vtcorp.store.repositories.VoucherRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +65,7 @@ public class VoucherService {
         Voucher voucher = voucherMapper.toEntity(voucherRequestDTO);
         voucher.setActive(true);
         voucher.setAppliedCount(0);
+        voucher.setStartDate(toStartOfDate(voucher.getStartDate()));
         voucher.setEndDate(toEndOfDate(voucher.getEndDate()));
         for (User user : users) {
             user.getVouchers().add(voucher);
@@ -80,6 +81,7 @@ public class VoucherService {
         Integer appliedCount = voucher.getAppliedCount();
         voucherMapper.updateEntity(voucherRequestDTO, voucher);
         voucher.setAppliedCount(appliedCount);
+        voucher.setStartDate(toStartOfDate(voucher.getStartDate()));
         voucher.setEndDate(toEndOfDate(voucher.getEndDate()));
         return mapVoucherToVoucherResponseDTO(voucher);
     }
@@ -106,10 +108,18 @@ public class VoucherService {
         return voucherResponseDTOS;
     }
 
+    private Date toStartOfDate(Date startDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.set(Calendar.HOUR_OF_DAY, 17);
+        return calendar.getTime();
+    }
+
     private Date toEndOfDate(Date endDate) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(endDate);
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.HOUR_OF_DAY, 16);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);

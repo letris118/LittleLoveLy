@@ -79,11 +79,26 @@ export default function AddProduct() {
     try {
       e.preventDefault();
       const productRequestDTO = new FormData(e.target);
-      productRequestDTO.append("description", description);
+      productRequestDTO.append("description", description.trim());
+
+      const regex = /^[0-9A-Z]/
+      if (!regex.test(productRequestDTO.get("name").trim())) {
+        toast.error("Chữ cái đầu trong tên sản phẩm phải là kí tự in hoa hoặc số 0-9!");
+        return
+      }
+
+      if (productRequestDTO.get("sellingPrice") > productRequestDTO.get("listedPrice")) {
+        toast.error("Giá bán phải thấp hơn hoặc bằng giá niêm yết!");
+        return;
+      }
+
+      console.log(productRequestDTO.get("sellingPrice"))
+      console.log(productRequestDTO.get("listedPrice"))
 
       const uniqueCategoryIds = new Set(
         productRequestDTO.getAll("categoryIds")
       );
+
       if (
         uniqueCategoryIds.size !==
         productRequestDTO.getAll("categoryIds").length
@@ -314,7 +329,7 @@ export default function AddProduct() {
 
               {/* Product IMAGE */}
               <div className="manage-form-group">
-                <label>Hình minh họa sản phẩm</label>
+                <label>Hình minh họa sản phẩm (Chỉ chấp nhận các file .png và .jpg)</label>
                 <div className="manage-form-control-img">
                   {imageElements.map((e) => (
                     <div key={e.id}>

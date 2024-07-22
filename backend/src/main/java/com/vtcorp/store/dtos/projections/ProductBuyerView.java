@@ -11,6 +11,7 @@ public interface ProductBuyerView {
     Integer getNoSold();
     Double getListedPrice();
     Double getSellingPrice();
+    Double getListedPrice();
     List<ProductReview> getProductReviews();
     List<ProductImage> getProductImages();
 }

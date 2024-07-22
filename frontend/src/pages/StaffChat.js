@@ -11,6 +11,7 @@ import {
   getCustomersUsedToChat,
   markMessagesAsRead,
 } from "../services/auth/UsersService";
+import { API_BASE_URL } from "../config";
 var stompClient = null;
 
 export default function StaffChat() {
@@ -92,7 +93,7 @@ export default function StaffChat() {
   };
 
   const connect = () => {
-    let Sock = new SockJS("http://localhost:8010/ws");
+    let Sock = new SockJS(`${API_BASE_URL}/ws`);
     stompClient = over(Sock);
     stompClient.connect({}, onConnected, onError);
   };

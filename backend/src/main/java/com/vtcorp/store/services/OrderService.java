@@ -9,9 +9,11 @@ import com.vtcorp.store.constants.PaymentMethod;
 import com.vtcorp.store.mappers.OrderMapper;
 import com.vtcorp.store.repositories.*;
 import com.vtcorp.store.utils.CodeGenerator;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +33,9 @@ public class OrderService {
     private final VoucherRepository voucherRepository;
     private final EmailSenderService emailSenderService;
     private final OrderDetailRepository orderDetailRepository;
+
+    @Value("${frontend.base.url}")
+    private String frontendBaseUrl;
 
     @Autowired
     public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, UserRepository userRepository, ProductRepository productRepository, GiftRepository giftRepository, GHNService ghnService, PaymentService paymentService, VoucherRepository voucherRepository, EmailSenderService emailSenderService, OrderDetailRepository orderDetailRepository) {
@@ -83,33 +88,6 @@ public class OrderService {
         }
         return orderMapper.toCartResponseDTO(cart);
     }
-
-//    @Transactional
-//    public CartResponseDTO addItemToCart(String username, CartItemDTO cartItemDTO) {
-//        User user = userRepository.findById(username)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        Order cart = orderRepository.findByUserAndStatus(user, "CART");
-//        if (cart == null) {
-//            cart = Order.builder()
-//                    .orderId(CodeGenerator.generateOrderID())
-//                    .user(user)
-//                    .status("CART")
-//                    .orderDetails(new ArrayList<>())
-//                    .giftIncludings(new ArrayList<>())
-//                    .build();
-//        }
-//
-//        if (cartItemDTO.getItemType().equals("product")) {
-//            updateOrderDetail(cart, cartItemDTO, false);
-//        } else if (cartItemDTO.getItemType().equals("gift")) {
-//            updateGiftIncluding(cart, cartItemDTO, user, false);
-//        } else {
-//            throw new IllegalArgumentException("Item type not found");
-//        }
-//
-//        return orderMapper.toCartResponseDTO(orderRepository.save(cart));
-//    }
 
     @Transactional
     public CartResponseDTO removeItemFromCart(String username, CartItemDTO cartItemDTO) {
@@ -246,7 +224,7 @@ public class OrderService {
         return new OrderEvaluationDTO(totalProductQuantity, totalPoints, basePrice, finalBasePrice, shippingFee, finalShippingFee, postDiscountPrice, bonusPoint);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public Object createOrder(OrderRequestDTO orderRequestDTO, String username, String ipAddress) {
         List<CartItemDTO> cartItems = orderRequestDTO.getCartItems();
         OrderEvaluationDTO evaluateOrder = evaluateOrder(orderRequestDTO);
@@ -265,13 +243,14 @@ public class OrderService {
             order.setOrderDetails(new ArrayList<>());
             order.setGiftIncludings(new ArrayList<>());
         }
+
         Long voucherId = orderRequestDTO.getVoucherId();
-        Voucher voucher = (voucherId == null) ? null : voucherRepository.findById(voucherId).orElse(null);
+        Voucher voucher = (voucherId == null) ? null : voucherRepository.findByIdWithLock(voucherId).orElse(null);
         List<OrderDetail> orderDetails = new ArrayList<>();
         List<GiftIncluding> giftIncludings = new ArrayList<>();
         for (CartItemDTO item : cartItems) {
             if (item.getItemType().equals("product")) {
-                Product product = productRepository.findById(item.getId())
+                Product product = productRepository.findByIdWithLock(item.getId())
                         .orElseThrow(() -> new RuntimeException("Product not found"));
                 if (product.getStock() == null || product.getStock() < item.getQuantity()) {
                     throw new IllegalArgumentException("Insufficient stock for product");
@@ -284,13 +263,10 @@ public class OrderService {
                         .price(product.getSellingPrice())
                         .build());
             } else if (item.getItemType().equals("gift") && user != null) {
-                Gift gift = giftRepository.findById(item.getId())
+                Gift gift = giftRepository.findByIdWithLock(item.getId())
                         .orElseThrow(() -> new RuntimeException("Gift not found"));
                 if (gift.getStock() == null || gift.getStock() < item.getQuantity()) {
                     throw new IllegalArgumentException("Insufficient stock for gift");
-                }
-                if (gift.getPoint() == null || gift.getPoint() * item.getQuantity() > user.getPoint()) {
-                    throw new IllegalArgumentException("Insufficient point for gift");
                 }
                 giftIncludings.add(GiftIncluding.builder()
                         .giftIncludingId(new GiftIncluding.GiftIncludingId(order.getOrderId(), gift.getGiftId()))
@@ -345,10 +321,10 @@ public class OrderService {
             handleStockChange(order);
             orderRepository.save(order);
             emailSenderService.sendOrderPlacedEmailAsync(order.getCusMail(), order.getOrderId());
-            return "http://localhost:3000/?status=payment-success";
+            return frontendBaseUrl + "/?status=payment-success";
         } else {
             handlePaymentFail(order);
-            return "http://localhost:3000/?status=payment-fail";
+            return frontendBaseUrl + "/?status=payment-fail";
         }
     }
 

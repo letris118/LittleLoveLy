@@ -116,12 +116,14 @@ export default function ResetPassword() {
                       }
                       onClick={() => {
                         setShowPassword((prevState) => !prevState);
-                      }}></span>
+                      }}
+                    ></span>
                     {formik.touched.password && formik.errors.password && (
                       <Tooltip
                         title={formik.errors.password}
                         placement="right"
-                        arrow>
+                        arrow
+                      >
                         <span className="tooltip-icon">
                           <FaExclamationCircle />
                         </span>
@@ -134,6 +136,9 @@ export default function ResetPassword() {
                       type={showConfirmPassword ? "text" : "password"}
                       className="form-control"
                       placeholder="Xác nhận mật khẩu"
+                      name="confirmPassword"
+                      value={formik.values.confirmPassword}
+                      onChange={formik.handleChange}
                     />
                     <span
                       toggle="#confirm-password-field"
@@ -144,13 +149,15 @@ export default function ResetPassword() {
                       }
                       onClick={() => {
                         setShowConfirmPassword((prevState) => !prevState);
-                      }}></span>
+                      }}
+                    ></span>
                     {formik.touched.confirmPassword &&
                       formik.errors.confirmPassword && (
                         <Tooltip
                           title={formik.errors.confirmPassword}
                           placement="right"
-                          arrow>
+                          arrow
+                        >
                           <span className="tooltip-icon">
                             <FaExclamationCircle />
                           </span>
@@ -161,7 +168,8 @@ export default function ResetPassword() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="form-control btn btn-primary submit px-3">
+                      className="form-control btn btn-primary submit px-3"
+                    >
                       Xác nhận
                     </button>
                   </div>
