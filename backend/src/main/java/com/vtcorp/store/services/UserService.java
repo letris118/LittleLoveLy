@@ -8,7 +8,7 @@ import com.vtcorp.store.mappers.UserMapper;
 import com.vtcorp.store.repositories.UserRepository;
 import com.vtcorp.store.repositories.VoucherRepository;
 import com.vtcorp.store.utils.CodeGenerator;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;

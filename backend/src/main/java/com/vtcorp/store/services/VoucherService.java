@@ -9,7 +9,7 @@ import com.vtcorp.store.mappers.VoucherMapper;
 import com.vtcorp.store.repositories.ProductRepository;
 import com.vtcorp.store.repositories.UserRepository;
 import com.vtcorp.store.repositories.VoucherRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

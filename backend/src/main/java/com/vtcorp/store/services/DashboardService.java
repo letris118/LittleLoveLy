@@ -2,7 +2,7 @@ package com.vtcorp.store.services;
 
 import com.vtcorp.store.entities.Dashboard;
 import com.vtcorp.store.repositories.DashboardRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

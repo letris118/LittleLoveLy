@@ -9,10 +9,11 @@ import com.vtcorp.store.constants.PaymentMethod;
 import com.vtcorp.store.mappers.OrderMapper;
 import com.vtcorp.store.repositories.*;
 import com.vtcorp.store.utils.CodeGenerator;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,33 +88,6 @@ public class OrderService {
         }
         return orderMapper.toCartResponseDTO(cart);
     }
-
-//    @Transactional
-//    public CartResponseDTO addItemToCart(String username, CartItemDTO cartItemDTO) {
-//        User user = userRepository.findById(username)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        Order cart = orderRepository.findByUserAndStatus(user, "CART");
-//        if (cart == null) {
-//            cart = Order.builder()
-//                    .orderId(CodeGenerator.generateOrderID())
-//                    .user(user)
-//                    .status("CART")
-//                    .orderDetails(new ArrayList<>())
-//                    .giftIncludings(new ArrayList<>())
-//                    .build();
-//        }
-//
-//        if (cartItemDTO.getItemType().equals("product")) {
-//            updateOrderDetail(cart, cartItemDTO, false);
-//        } else if (cartItemDTO.getItemType().equals("gift")) {
-//            updateGiftIncluding(cart, cartItemDTO, user, false);
-//        } else {
-//            throw new IllegalArgumentException("Item type not found");
-//        }
-//
-//        return orderMapper.toCartResponseDTO(orderRepository.save(cart));
-//    }
 
     @Transactional
     public CartResponseDTO removeItemFromCart(String username, CartItemDTO cartItemDTO) {
@@ -250,7 +224,7 @@ public class OrderService {
         return new OrderEvaluationDTO(totalProductQuantity, totalPoints, basePrice, finalBasePrice, shippingFee, finalShippingFee, postDiscountPrice, bonusPoint);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public Object createOrder(OrderRequestDTO orderRequestDTO, String username, String ipAddress) {
         List<CartItemDTO> cartItems = orderRequestDTO.getCartItems();
         OrderEvaluationDTO evaluateOrder = evaluateOrder(orderRequestDTO);
@@ -269,6 +243,7 @@ public class OrderService {
             order.setOrderDetails(new ArrayList<>());
             order.setGiftIncludings(new ArrayList<>());
         }
+
         Long voucherId = orderRequestDTO.getVoucherId();
         Voucher voucher = (voucherId == null) ? null : voucherRepository.findByIdWithLock(voucherId).orElse(null);
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -292,9 +267,6 @@ public class OrderService {
                         .orElseThrow(() -> new RuntimeException("Gift not found"));
                 if (gift.getStock() == null || gift.getStock() < item.getQuantity()) {
                     throw new IllegalArgumentException("Insufficient stock for gift");
-                }
-                if (gift.getPoint() == null || gift.getPoint() * item.getQuantity() > user.getPoint()) {
-                    throw new IllegalArgumentException("Insufficient point for gift");
                 }
                 giftIncludings.add(GiftIncluding.builder()
                         .giftIncludingId(new GiftIncluding.GiftIncludingId(order.getOrderId(), gift.getGiftId()))

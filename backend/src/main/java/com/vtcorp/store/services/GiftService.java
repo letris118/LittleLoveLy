@@ -5,7 +5,7 @@ import com.vtcorp.store.dtos.GiftResponseDTO;
 import com.vtcorp.store.entities.Gift;
 import com.vtcorp.store.entities.ProductImage;
 import com.vtcorp.store.mappers.GiftMapper;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.vtcorp.store.repositories.GiftRepository;

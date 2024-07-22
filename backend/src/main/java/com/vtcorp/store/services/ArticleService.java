@@ -9,7 +9,7 @@ import com.vtcorp.store.mappers.ArticleMapper;
 import com.vtcorp.store.repositories.ArticleImageRepository;
 import com.vtcorp.store.repositories.ArticleRepository;
 import com.vtcorp.store.repositories.ProductRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
