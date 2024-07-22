@@ -270,12 +270,12 @@ public class OrderService {
             order.setGiftIncludings(new ArrayList<>());
         }
         Long voucherId = orderRequestDTO.getVoucherId();
-        Voucher voucher = (voucherId == null) ? null : voucherRepository.findById(voucherId).orElse(null);
+        Voucher voucher = (voucherId == null) ? null : voucherRepository.findByIdWithLock(voucherId).orElse(null);
         List<OrderDetail> orderDetails = new ArrayList<>();
         List<GiftIncluding> giftIncludings = new ArrayList<>();
         for (CartItemDTO item : cartItems) {
             if (item.getItemType().equals("product")) {
-                Product product = productRepository.findById(item.getId())
+                Product product = productRepository.findByIdWithLock(item.getId())
                         .orElseThrow(() -> new RuntimeException("Product not found"));
                 if (product.getStock() == null || product.getStock() < item.getQuantity()) {
                     throw new IllegalArgumentException("Insufficient stock for product");
@@ -288,7 +288,7 @@ public class OrderService {
                         .price(product.getSellingPrice())
                         .build());
             } else if (item.getItemType().equals("gift") && user != null) {
-                Gift gift = giftRepository.findById(item.getId())
+                Gift gift = giftRepository.findByIdWithLock(item.getId())
                         .orElseThrow(() -> new RuntimeException("Gift not found"));
                 if (gift.getStock() == null || gift.getStock() < item.getQuantity()) {
                     throw new IllegalArgumentException("Insufficient stock for gift");
