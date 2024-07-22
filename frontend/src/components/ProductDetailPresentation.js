@@ -447,11 +447,21 @@ export default function ProductDetailPresentation() {
                 &nbsp;đã bán
               </div>
               <div className="product-detail-condition">
-                Còn:{" "}
-                <b>
-                  <u>{productInfo?.stock}</u>
-                </b>{" "}
-                sản phẩm
+                {productInfo?.stock > 0 ? (
+                  <>
+                    Còn{" "}
+                    <b>
+                      <u>{productInfo?.stock}</u>
+                    </b>{" "}
+                    sản phẩm
+                  </>
+                ) : (
+                  <>
+                    <b>
+                      <i style={{ color: "red" }}>Hết hàng</i>
+                    </b>
+                  </>
+                )}
               </div>
             </div>
             <div className="product-detail-price">
