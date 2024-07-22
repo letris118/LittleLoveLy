@@ -345,6 +345,31 @@ export default function ManageOrder() {
                       </div>
                     </div>
                   ))}
+                  {selectedOrder.giftIncludings.map((giftIncludings) => (
+                    <div
+                      style={{ display: "flex", margin: "20px 0" }}
+                      key={giftIncludings.gift.giftId}>
+                      <div className="popup-detail-left">
+                        <img
+                          src={`${instance.defaults.baseURL}/images/gifts/${giftIncludings.gift.imagePath}`}
+                          alt={giftIncludings.gift.name}
+                          style={{ width: "100px", height: "100px" }}
+                        />
+                      </div>
+                      <div className="popup-detail-right">
+                        <div style={{ fontWeight: "bold", color: "black" }}>
+                          {giftIncludings.gift.name} - <i>[Quà tặng]</i>
+                        </div>
+                        <div>x {giftIncludings.quantity}</div>
+                        <div>
+                          {giftIncludings.point}{" "}
+                          <i
+                            className="fa-solid fa-coins"
+                            style={{ color: "rgb(201, 201, 7)" }}></i>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 <p style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>Tổng tiền hàng:</span>{" "}

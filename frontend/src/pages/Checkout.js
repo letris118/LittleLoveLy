@@ -1,4 +1,10 @@
-import { Dialog, DialogContent, DialogTitle, styled } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  styled,
+} from "@mui/material";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +23,6 @@ import {
   getUserInfo,
   previewOrder,
 } from "../services/auth/UsersService";
-import { API_BASE_URL } from "../config";
 
 Yup.addMethod(Yup.object, "validatePhoneAndAddress", function (message) {
   return this.test("validatePhoneAndAddress", message, async function (value) {
@@ -69,6 +74,7 @@ export default function Checkout() {
   const [evaluateResult, setEvaluateResult] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -78,6 +84,7 @@ export default function Checkout() {
         navigate("/");
       }
     };
+
     checkAuthentication();
   }, [navigate]);
 
@@ -117,44 +124,70 @@ export default function Checkout() {
     },
     enableReinitialize: true,
     validationSchema: checkoutSchema,
-    onSubmit: async (values) => {
-      setIsSubmitting(true);
-      localStorage.setItem("formValues", JSON.stringify(values));
-      try {
-        const response = await createOrder(values);
-        if (response) {
-          if (formik.values.paymentMethod === "VN_PAY") {
-            window.location.href = response.data;
-          } else {
-            localStorage.removeItem("cart");
-            localStorage.removeItem("gifts");
-            localStorage.removeItem("formValues");
-            toast.success("Đặt hàng thành công");
-            navigate(routes.homePage);
+    onSubmit: () => {
+      if (evaluateResult.basePrice > 20000000) {
+        toast.info(
+          "Đơn hàng của bạn đang vượt quá số tiền cho phép trong chính sách của chúng tôi (20,000,000 VNĐ). Vui lòng thử lại sau.",
+          {
+            autoClose: 3000,
           }
-        }
-      } catch (error) {
-        if (
-          error.response &&
-          error.response.data === "Insufficient stock for product"
-        ) {
-          toast.error("Sản phẩm vượt quá số lượng tồn kho !");
-        } else {
-          toast.error("Đã có lỗi xảy ra khi đặt hàng, vui lại thử lại sau");
-        }
-
-        console.error("Error during form submission", error);
-      } finally {
-        setIsSubmitting(false);
+        );
+        return;
+      } else {
+        setOpenConfirmDialog(true);
       }
     },
   });
+
+  const handleConfirmPurchase = async () => {
+    setIsSubmitting(true);
+    setOpenConfirmDialog(false);
+    localStorage.setItem("formValues", JSON.stringify(formik.values));
+    try {
+      const response = await createOrder(formik.values);
+      if (response) {
+        if (formik.values.paymentMethod === "VN_PAY") {
+          window.location.href = response.data;
+        } else {
+          localStorage.removeItem("cart");
+          localStorage.removeItem("gifts");
+          localStorage.removeItem("formValues");
+          toast.success("Đặt hàng thành công");
+          navigate(routes.homePage);
+        }
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data === "Insufficient stock for product"
+      ) {
+        toast.error("Sản phẩm vượt quá số lượng tồn kho !");
+      } else {
+        toast.error("Đã có lỗi xảy ra khi đặt hàng, vui lại thử lại sau");
+      }
+
+      console.error("Error during form submission", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem("cart")) || [];
     const storedGifts = JSON.parse(localStorage.getItem("gifts")) || [];
     setCartItems(storedCartItems);
     setGiftItems(storedGifts);
+
+    if (
+      storedCartItems.reduce(
+        (total, item) => total + item.sellingPrice * item.quantity,
+        0
+      ) > 20000000
+    ) {
+      navigate(routes.cart);
+      return;
+    }
+
     const submitCartItems = storedCartItems.map((item) => ({
       id: item.productId,
       itemType: "product",
@@ -168,13 +201,13 @@ export default function Checkout() {
     submitCartItems.push(...submitGiftItems);
     setSubmitCart(submitCartItems);
 
-    fetch(`${API_BASE_URL}/api/orders/cities`)
+    fetch("http://localhost:8010/api/orders/cities")
       .then((response) => response.json())
       .then((data) => setCities(data.data));
 
     const fetchDistricts = (province) => {
       if (province) {
-        fetch(`${API_BASE_URL}/api/orders/districts/${province}`)
+        fetch(`http://localhost:8010/api/orders/districts/${province}`)
           .then((response) => response.json())
           .then((data) => setDistricts(data.data));
         setWards([]);
@@ -185,7 +218,7 @@ export default function Checkout() {
 
     const fetchWards = (district) => {
       if (district) {
-        fetch(`${API_BASE_URL}/api/orders/wards/${district}`)
+        fetch(`http://localhost:8010/api/orders/wards/${district}`)
           .then((response) => response.json())
           .then((data) => setWards(data.data));
       } else {
@@ -248,6 +281,10 @@ export default function Checkout() {
     formik.setFieldValue("voucherId", voucherId);
   };
 
+  const handleConfirmDialogClose = () => {
+    setOpenConfirmDialog(false);
+  };
+
   const CustomDialogTitle = styled(DialogTitle)({
     fontWeight: "bold",
     backgroundColor: "#ff469e",
@@ -263,6 +300,19 @@ export default function Checkout() {
     "& .MuiPaper-root": {
       borderRadius: "20px",
     },
+  });
+
+  const CustomButton = styled(Button)({
+    backgroundColor: "hotpink",
+    color: "white",
+    "&:hover": {
+      background:
+        "linear-gradient(90deg, rgba(255,0,132,0.8) 0%, rgba(255,99,132,0.8) 100%)",
+    },
+    margin: "10px 0 5px 0",
+    marginRight: "10px",
+    borderRadius: "10px",
+    float: "right",
   });
 
   return (
@@ -603,6 +653,30 @@ export default function Checkout() {
             basePrice={evaluateResult.basePrice}
             handleClose={handleCloseVoucherDialog}
           />
+        </DialogContent>
+      </CustomDialog>
+
+      <CustomDialog open={openConfirmDialog} onClose={handleConfirmDialogClose}>
+        <CustomDialogTitle>
+          <i class="fa-solid fa-triangle-exclamation"></i> Lưu ý
+        </CustomDialogTitle>
+        <DialogContent>
+          <p>
+            <b>
+              Hệ thống hiện tại chưa hỗ trợ chính sách đổi trả. Bạn có chắc chắn
+              muốn xác nhận mua đơn hàng này không?
+            </b>
+          </p>
+          <CustomButton onClick={handleConfirmDialogClose} variant="contained">
+            Hủy
+          </CustomButton>
+          <CustomButton
+            onClick={handleConfirmPurchase}
+            variant="contained"
+            color="primary"
+            disabled={isSubmitting}>
+            Xác nhận
+          </CustomButton>
         </DialogContent>
       </CustomDialog>
     </div>
