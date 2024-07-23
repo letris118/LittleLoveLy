@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { routes } from "../routes";
 import StaffHeader from "../components/StaffHeader";
 import { toast } from "react-toastify";
-import Switch from 'react-switch';
+import Switch from "react-switch";
 import {
   vouchersAll,
   deactivateVoucher,
@@ -16,19 +16,23 @@ import StaffBackToTop from "../components/StaffBackToTop";
 export default function ManageVoucher() {
   const [voucherList, setVoucherList] = useState([]);
   const [filteredVouchers, setFilteredVouchers] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [sortBy, setSortBy] = useState(null);
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortOrder, setSortOrder] = useState("asc");
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    console.log(sortOrder);
+  }, [sortOrder]);
 
   useEffect(() => {
     const checkAuthentication = () => {
       const userRole = localStorage.getItem("userRole");
       if (!userRole || userRole !== "ROLE_STAFF") {
-        navigate('/');
+        navigate("/");
       }
     };
     checkAuthentication();
@@ -60,9 +64,11 @@ export default function ManageVoucher() {
       await activateVoucher(voucherId);
     }
 
-    setFilteredVouchers(prevState =>
-      prevState.map(voucher =>
-        voucher.voucherId === voucherId ? { ...voucher, active: !voucher.active } : voucher
+    setFilteredVouchers((prevState) =>
+      prevState.map((voucher) =>
+        voucher.voucherId === voucherId
+          ? { ...voucher, active: !voucher.active }
+          : voucher
       )
     );
   };
@@ -71,34 +77,41 @@ export default function ManageVoucher() {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = voucherList.filter(voucher =>
-      voucher.title && voucher.title.toLowerCase().includes(query)
+    const filtered = voucherList.filter(
+      (voucher) => voucher.title && voucher.title.toLowerCase().includes(query)
     );
     setFilteredVouchers(filtered);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const handleSort = (field) => {
-    const isAsc = sortBy === field && sortOrder === 'asc';
+    const isAsc = sortBy === field && sortOrder === "asc";
+    const nextSortOrder = isAsc ? "desc" : "asc";
     setSortBy(field);
-    setSortOrder(isAsc ? 'desc' : 'asc');
+    setSortOrder(nextSortOrder);
 
     const sorted = [...filteredVouchers].sort((a, b) => {
-      let valueA = a[field] ?? '';
-      let valueB = b[field] ?? '';
+      let valueA = a[field] ?? "";
+      let valueB = b[field] ?? "";
 
-      if (field === 'startDate' || field === 'endDate') {
-        valueA = new Date(valueA);
-        valueB = new Date(valueB);
+      if (field === "startDate" || field === "endDate") {
+        valueA = parseDate(valueA);
+        valueB = parseDate(valueB);
       }
 
-      if (valueA < valueB) return sortOrder === 'asc' ? -1 : 1;
-      if (valueA > valueB) return sortOrder === 'asc' ? 1 : -1;
+      if (valueA < valueB) return nextSortOrder === "asc" ? -1 : 1;
+      if (valueA > valueB) return nextSortOrder === "asc" ? 1 : -1;
       return 0;
     });
 
     setFilteredVouchers(sorted);
   };
+
+  function parseDate(dateString) {
+    const [day, month, year] = dateString.split("-");
+    // Note: Months are 0-indexed in JavaScript Date constructor
+    return new Date(year, month - 1, day);
+  }
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -106,22 +119,25 @@ export default function ManageVoucher() {
 
   const getVoucherTypeDisplay = (type) => {
     switch (type) {
-      case 'FLAT':
-        return 'Giảm tiền hàng';
-      case 'FREE_SHIPPING':
-        return 'Miễn phí giao hàng';
-      case 'PERCENTAGE':
-        return 'Giảm phần trăm tiền hàng';
-      case 'DISCOUNT_SHIPPING':
-        return 'Giảm phí giao hàng';
+      case "FLAT":
+        return "Giảm tiền hàng";
+      case "FREE_SHIPPING":
+        return "Miễn phí giao hàng";
+      case "PERCENTAGE":
+        return "Giảm phần trăm tiền hàng";
+      case "DISCOUNT_SHIPPING":
+        return "Giảm phí giao hàng";
       default:
-        return 'Không xác định';
+        return "Không xác định";
     }
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredVouchers.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredVouchers.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
   const totalPages = Math.ceil(filteredVouchers.length / itemsPerPage);
 
   return (
@@ -148,59 +164,93 @@ export default function ManageVoucher() {
           <table className="manage-table">
             <thead>
               <tr>
-                <th className="index-head" style={{ width: '5%' }}>STT</th>
-                <th className="name-head" style={{ width: '12%' }}>Tiêu đề</th>
-                <th className="limit-head" style={{ width: '10%' }} onClick={() => handleSort('limit')}>
+                <th className="index-head" style={{ width: "5%" }}>
+                  STT
+                </th>
+                <th className="name-head" style={{ width: "12%" }}>
+                  Tiêu đề
+                </th>
+                <th
+                  className="limit-head"
+                  style={{ width: "10%" }}
+                  onClick={() => handleSort("limit")}
+                >
                   Số lượng
-                  {sortBy === 'limit' && (
-                    <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
+                  {sortBy === "limit" && (
+                    <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
-                <th className="type-head" style={{ width: '12%' }}>Phân loại</th>
-                <th className="description-head" style={{ width: '15%' }}>Miêu tả</th>
-                <th className="startDate-head" style={{ width: '12%' }} onClick={() => handleSort('startDate')}>
+                <th className="type-head" style={{ width: "12%" }}>
+                  Phân loại
+                </th>
+                <th className="description-head" style={{ width: "15%" }}>
+                  Miêu tả
+                </th>
+                <th
+                  className="startDate-head"
+                  style={{ width: "12%" }}
+                  onClick={() => handleSort("startDate")}
+                >
                   Ngày bắt đầu
-                  {sortBy === 'startDate' && (
-                    <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
+                  {sortBy === "startDate" && (
+                    <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
-                <th className="endDate-head" style={{ width: '12%' }} onClick={() => handleSort('endDate')}>
+                <th
+                  className="endDate-head"
+                  style={{ width: "12%" }}
+                  onClick={() => handleSort("endDate")}
+                >
                   Ngày hết hạn
-                  {sortBy === 'endDate' && (
-                    <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
+                  {sortBy === "endDate" && (
+                    <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
-                <th className="active-head" style={{ width: '11%' }} onClick={() => handleSort('active')}>
+                <th
+                  className="active-head"
+                  style={{ width: "11%" }}
+                  onClick={() => handleSort("active")}
+                >
                   Trạng thái
-                  {sortBy === 'active' && (
-                    <span>{sortOrder === 'asc' ? ' ▲' : ' ▼'}</span>
+                  {sortBy === "active" && (
+                    <span>{sortOrder === "asc" ? " ▲" : " ▼"}</span>
                   )}
                 </th>
-                <th className="update-head" style={{ width: '10%' }}>Chỉnh sửa</th>
+                <th className="update-head" style={{ width: "10%" }}>
+                  Chỉnh sửa
+                </th>
               </tr>
             </thead>
             <tbody>
               {currentItems.length > 0 ? (
                 currentItems.map((voucher, index) => (
                   <tr key={voucher.voucherId}>
-                    <td className="index-body">{indexOfFirstItem + index + 1}</td>
+                    <td className="index-body">
+                      {indexOfFirstItem + index + 1}
+                    </td>
                     <td className="name-body">{voucher.title}</td>
                     <td className="limit-body">{voucher.limit}</td>
-                    <td className="type-body">{getVoucherTypeDisplay(voucher.type)}</td>
+                    <td className="type-body">
+                      {getVoucherTypeDisplay(voucher.type)}
+                    </td>
                     <td className="description-body">{voucher.description}</td>
                     <td className="startDate-body">{voucher.startDate}</td>
                     <td className="endDate-body">{voucher.endDate}</td>
                     <td className="active-body">
                       <Switch
-                        onChange={() => handleToggle(voucher.voucherId, voucher.active)}
+                        onChange={() =>
+                          handleToggle(voucher.voucherId, voucher.active)
+                        }
                         checked={voucher.active ?? false}
                         offColor="#ff0000"
                         onColor="#27ae60"
                       />
                     </td>
                     <td className="update-body">
-                      <Link to={`${routes.updateVoucher}/${voucher.title}?id=${voucher.voucherId}`}
-                        className="update-link">
+                      <Link
+                        to={`${routes.updateVoucher}/${voucher.title}?id=${voucher.voucherId}`}
+                        className="update-link"
+                      >
                         Chi tiết
                       </Link>
                     </td>
@@ -220,7 +270,7 @@ export default function ManageVoucher() {
               <button
                 key={i}
                 onClick={() => handlePageChange(i + 1)}
-                className={i + 1 === currentPage ? 'active' : ''}
+                className={i + 1 === currentPage ? "active" : ""}
               >
                 {i + 1}
               </button>
